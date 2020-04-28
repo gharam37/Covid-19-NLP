@@ -1,0 +1,1900 @@
+{
+    "paper_id": "e7a9f9cbeed88b25f6d3b25f059284a6449781e3",
+    "metadata": {
+        "title": "Lies, Gosh Darn Lies, and Not Enough Good Statistics: Why Epidemic Model Parameter Estimation Fails",
+        "authors": [
+            {
+                "first": "Daniel",
+                "middle": [
+                    "E"
+                ],
+                "last": "Platt",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM T. J. Watson Research Center",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Laxmi",
+                "middle": [],
+                "last": "Parida",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM T. J. Watson Research Center",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Pierre",
+                "middle": [],
+                "last": "Zalloua",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Harvard University",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "An opportunity exists in exploring epidemic modeling as a novel way to determine physiological and demic parameters for genetic association studies on a population/environmental (quasi) epidemiological study level. First, the spread of SARS-COV-2 has produced population specific lineages; second, epidemic spread model parameters are tied directly to these physiological and demic rates (e. g. incubation time, recovery time, transmission rate); and third, these parameters may serve as novel phenotypes to associate with region-specific genetic mutations as well as demic characteristics (e. g. age structure, cultural observance of personal space, crowdedness). Therefore, we sought to understand whether the parameters of epidemic models could be determined from the trajectory of infections, recovery, and hospitalizations prior to peak, and also to evaluate the quality and comparability of data between jurisdictions reporting their statistics necessary for the analysis of model parameters across populations. We found that, analytically, the pre-peak growth of an epidemic is limited by a subset of the model variates, and that the rate limiting variables are dominated by the expanding eigenmode of their equations. The variates quickly converge to the ratio of eigenvector components of the positive growth rate, which determines the doubling time. There are 9 parameters and 4 independent components in the eigenmode, leaving 5 undetermined parameters. Those parameters can be strikingly population dependent, and can have significant impact on estimates of hospital loads downstream. Without a sound framework, measurements of infection rates and other parameters are highly corrupted by uneven testing rates to uneven counting and reporting of relevant values. From the standpoint of phenotype parameters, this means that structured experiments must be performed to estimate these parameters in order to perform genetic association studies, or to construct viable models that accurately predict critical quantities such as hospitalization loads.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Infection 1,2 , transcription and replication 3,4 by SARS-COV-2 involves a number of rate limiting interactions with host cells that are likely to be modulated by mutations in cellular as well as viral genes. At the same time, phylogenetic analysis shows geographic specificity 5, 6 , indicating that geographic regions may show specific exposure to distinctive SNP combinations, or viral haplotypes, in SARS-COV-2. This specificity suggests a benefit to exploring relationships between duration of the prodromic phase, proportions of asymptomatic cases 7 , proportions of severe cases, rates of recovery, among other infection attributes 8 , that define temporal progression of compartmental epidemic models, starting with SIR (Susceptible-Infected-Recovered) models 9 . Beside host and viral genetic impacts, other aspects driving SARS-COV-2 rates are population specific and demic, such as the impact of age on both asymptomatic and mild cases, as well as the proportion of severe and critical cases. Other aspects include normal social distance, and how effectively social-distancing rules have been followed. Hospital survival may also reflect impacts of some genetic susceptibility, presence of comorbidities (Hypertension, Diabetes, Asthma, lung disease, obesity and others yet to be identified) as well as the level of stress on the region's medical facilities and medical staff.",
+            "cite_spans": [
+                {
+                    "start": 278,
+                    "end": 280,
+                    "text": "5,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 281,
+                    "end": 282,
+                    "text": "6",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 639,
+                    "end": 640,
+                    "text": "8",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 768,
+                    "end": 769,
+                    "text": "9",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper, we seek to identify the limitations of using compartmental models to estimate or test hypotheses concerning parameters governing the growth of SARS-COV-2 epidemics. We also seek to investigate what type of epidemic variable tracking is necessary to effectively quantify the parameters that are suitable for hypothesis testing at the level of environmental exposure in epidemiological studies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Compartmental models count individuals at different stages of progression of a disease, where each stage of progression is marked by an event that has a well-defined rate. For example, from time of infection to the time the person can transmit disease has a time distribution, that, for enough people in the compartment, will tend to center on an average by the central limit theorem for large enough samples drawn from any given distribution. There is evidence that COVID-19 presents symptomatic cases and asymptomatic cases, with asymptomatic cases [10] [11] [12] less likely to be identified and isolated [13] [14] [15] [16] [17] . There is an incubation period after infection that lasts until the incubating individuals become infectious. There has been some early estimates based on confirmed cases 13, 18 with more evidence of pre-symptomatic transmission being noted 19, 20 yielding faster incubation. Incubation partly accounts for the observed lag when social distancing or other viral spread prevention policies are imposed. For the most part, infections appear to be transmittable prior to overt symptoms, allowing for a pre-symptomatic period that may convert to symptomatic. At the same time, some of those asymptomatic people remain asymptomatic until they are non-contagious 11 . Patients may still be infectious for several days after symptomatic recovery. Symptomatic patients likely to be hospitalized are hospitalized more quickly than non-hospitalized patients recover. Hospitalized patients in ICU or required immediate ventilation tend to experience a longer time to recovery than nonhospitalized patients. Those that stay on the ventilator for long periods tend to have a high mortality rate, and may stay on the ventilator for many weeks prior to dying. 8 A compartmental model that captures the conditions status and durations count susceptible population members , incubating , infectious asymptomatic , infectious symptomatic , infectious people who will be hospitalized , those hospitalized who recover , and hospitalized leading to mortality . Recoveries are , and mortalities are . The time from exposed to infectious is , where is partitioned into contributions to asymptomatic infectious , symptomatic infectious , and infectious that will be hospitalized , so that = + + . Total removal time among asymptotic infectious is , with a fraction going to infectious symptomatic. Infectious symptomatic removal time is . The period prior to hospitalization is ( + ) . The rate that the proportion that recovers is , and that which dies is . The model equations, reflecting an underlying Markov chain, expressing these connections and rates are: Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 551,
+                    "end": 555,
+                    "text": "[10]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 556,
+                    "end": 560,
+                    "text": "[11]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 561,
+                    "end": 565,
+                    "text": "[12]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 608,
+                    "end": 612,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 613,
+                    "end": 617,
+                    "text": "[14]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 618,
+                    "end": 622,
+                    "text": "[15]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 623,
+                    "end": 627,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 628,
+                    "end": 632,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 805,
+                    "end": 808,
+                    "text": "13,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 809,
+                    "end": 811,
+                    "text": "18",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 875,
+                    "end": 878,
+                    "text": "19,",
+                    "ref_id": null
+                },
+                {
+                    "start": 879,
+                    "end": 881,
+                    "text": "20",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1291,
+                    "end": 1293,
+                    "text": "11",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1779,
+                    "end": 1780,
+                    "text": "8",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2673,
+                    "end": 2680,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "The rate of infection for a susceptible individual depends on the probability that an infectious viral load is transferred, multiplied by the rate of encounters a susceptible individual has. The encounters can involve: other susceptible individuals, or symptomatic infectious people, which as a group tends to be isolated with a corresponding depressed rate of encounters , and undetected asymptomatic infectious people whose interaction rate is substantially higher, subject to social distancing regulations. The fraction of infectious symptomatic individuals that a given susceptible individual may encounter is , and the total number of susceptible individuals exposed to infectious symptomatic cases is . Likewise, that for asymptomatic cases, the rate of symptomatic infections is . These terms drive the creation of new infections in the population. The force of the symptomatic group is the coefficient of , or . The number of the susceptible group that an individual can infect over their entire period of infectiousness is the reproduction number = , and similarly for the asymptomatic infectious group. These numbers primarily drive the rate of growth of the infection in the population, which early in the expansion is measured by the doubling time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Early in the evolution of the infection, which may be defined as when \u2212 \u226a , the variables immediately involved in the feedback loop determine the rate limiting step. Therefore, identifying the eigenvectors represent the linear combinations of , , , and that grow or decay with the that eigenvalue. The combinations of eigenmodes is determined by initial conditions. The leading eigenvalue will dominate with exponential growth yielding fixed proportions of each of the , , , and to each other. The other terms turn out to identify rates related to the delay time for the system to respond to changes in distancing policy due to incubation time, to imbalances between symptomatic and asymptomatic patients, and to the decay of .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Data from New York State were obtained from The COVID Tracking Project 21 . Table 1 . Published times for compartmental conversions, proportions, and derived rates.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 76,
+                    "end": 83,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Value Notes 5.1 (4.5-5.8) days 22 , 5.2 (4.1 -7.0) 19 ",
+            "cite_spans": [
+                {
+                    "start": 51,
+                    "end": 53,
+                    "text": "19",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Times"
+        },
+        {
+            "text": "Testing in New York State, starting on 03/04/2020, labeled as day 1. On 3/13, day 10, NY State received permission to contract for its own SARS-COV-2 testing. Statewide \"distancing\" started on 3/20, day 17, with the signing of the \"New York State on Pause\" bill. Prior to that, local jurisdictions had already been imposing local ordinances against assembly, and started closing schools. Figure 1 shows the cumulative total testing and positive test numbers indexed by day. Testing has been driven by tracking contacts of discovered cases which is reflected heavily in the close alignment of total tests and positive tests. On 3/13, the total number of tests increased from 308 to 3200, with surges to the 5,000 level, then 7,000, then 14,000 showing rapid subsequent . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 388,
+                    "end": 396,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "growth. Early in the testing, from day 1 to 19, the rate of growth of positive cases was = 0.3519 \u00b1 0.01390, corresponding to a doubling time of 1.97 \u00b1 0.08. From day 20 to day 30, the rate of growth of positive cases was = 0.2027 \u00b1 0.0076, corresponding to a doubling time of 3.42 \u00b1 0.13. These numbers suggested very high rates of contagious transmission. These doubling times were reported by Governor Cuomo in some of his earliest briefings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "If, as tracking numbers increased, testing surveillance was broad enough to pick up community spread individuals proportional to total numbers of tests applied, then the proportion of positives from the tests may reflect population rates. However, if rates are tightly limited to immediate known cases, then the reported positives will be a better estimate of underlying population, since the fraction of those seeking medical assistance should be proportional to the exposed number in the population. When available tests increased, the apparent rate grew substantially. Therefore, infected population growth may be more closely reflected in the fraction of positive results normalized by total number of tests applied, in spite of very highly biased sampling selection. For a given proportion of ill patients who seek help, this should track . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 20.20071928 doi: medRxiv preprint with the fraction of the population who is ill. However, this may be subject to growing awareness of the population to get help with COVID-19 infections.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "20.20071928 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "First, consider the idea that tests may be broad enough to sample spread. When test numbers were low, the likelihood that targeted testing would reflect the general population was also low and sampling uncertainties large. Therefore, a lower bound on testing levels was applied. This cut samples prior to 3/20. Later, test ratios started to demonstrate a downwards bend. This shoulder was cut for samples beyond 3/30. New York doubling time was estimated from a regression between the log of positive test ratios versus time, yielding = 0.0471 \u00b1 0.0095 with a doubling time of 14.7 \u00b1 3.0 adjusting for testing counts. In the alternative scenario, positive samples reflect the proportion of symptomatic patients seeking medical aid, a possibility since the testing was so closely tied to diagnosed patients plus contact surveillance. A regression was performed on the cumulative positive counts shown in Figure 2c ) yielding = 0.1170 \u00b1 0.0021 per day, with a doubling time of 5.9 \u00b1 0.1 days.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 903,
+                    "end": 912,
+                    "text": "Figure 2c",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.20.20071928 doi: medRxiv preprint CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.20.20071928 doi: medRxiv preprint last eigenvalue is = \u22120.143, associated with the decay of from equilibrium values with eigenvector = ( 0 0 0 1 ). Figure 3 shows a log-linear plot of the rate-limiting variables for a numerical integration of the entire system of differential equations. The pre-peak segment shows a clear view of how the system is dominated by the leading exponential eigenmode of the growth, including the proportions between variables represented in the eigenvector of the leading eigenvalue, which determines the slope. . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 258,
+                    "end": 266,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . Figure 4 shows the evolution of the system variables in a linear-linear plot. The lags in the peak variables shown in figure 4a identify the peak pulse through the system of linear equations. The \"est\" entries in Table 1 for represent values commensurate with (but not a fit to) the NY hospitalization levels 21 . They are a factor of 12 smaller than those fitting the Wuhan hospitalization rate 8 . As such, it is clear that the impact of COVID on features such as progression to hospitalization, response to treatment for symptomatic patients, whether patients are identified in time to stop progression to serious or critical stages may impact survivability. The model predicts 3294 fatalities per million, peak recovering hospitalizations of 3347 on day 111, and peak mortality hospitalization (primarily long-term ventilator load) of 1732 on day 114. Figure 4b includes susceptible and recovered variables. The range of variation of these variables appears to dwarf the fraction of the population that is incubating, infected, or involved with hospital load. One feature of the equations is that the rate of flow of individuals through a compartment may not be reflected in the total number in the compartments at any given time, even at their peaks. At the end, these rates would leave 24,738 per million uninfected and susceptible, with 971,967 recovered per million. Table 2 . Exponential growth rates, corresponding doubling times for various populations and measurements given available data.",
+            "cite_spans": [
+                {
+                    "start": 387,
+                    "end": 389,
+                    "text": "21",
+                    "ref_id": null
+                },
+                {
+                    "start": 474,
+                    "end": 475,
+                    "text": "8",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 78,
+                    "end": 86,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 196,
+                    "end": 205,
+                    "text": "figure 4a",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 291,
+                    "end": 298,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 934,
+                    "end": 943,
+                    "text": "Figure 4b",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 1453,
+                    "end": 1460,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The difficulty in understanding how the testing protocol impacts estimations of rates is illustrated in the New York State rates shown in Table 2 . Considering cases as a representative sample of a fixed proportion of the infected population argues for computing a rate based on cumulative cases. If, on the other hand, the testing generated a random sample of the broader population, more testing would identify more individuals simply because there were more tests. If so, the proportion of positives to total tests may be a closer approximation to the population, and the total positives would be proportional to the square of the actual proportion of diseases, resulting in a doubling of . That seems to be roughly what was observed between the two New York State regressions. On the other hand, cumulative rates for two other . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 138,
+                    "end": 145,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Region"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Region"
+        },
+        {
+            "text": "jurisdictions, Lebanon and New South Wales, Australia, show rates similar to each of the two New York State numbers. And while the New York State proportional model gives an expected factor of 2 in the rate, it is the cumulative rate that more closely resembles the growth and peak in New York, not the relative proportion rate. More, the shifts in test availability and distancing initiation are all visible in the New York data, which contributes to the difficulty even of identifying exponential growth regimes, much less identifying an exponential rate that constrains the available model parameter space.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Region"
+        },
+        {
+            "text": "One of the major goals of epidemic modeling is to predict mortality and resource load on community medical facilities: how many beds, how many ventilators, how much pharmaceuticals, among other resources will be needed to get through the epidemic. Early epidemic growth for this system is dominated by the largest eigenvalue of 9 coefficients governing the rate-limiting variables. This eigenvalue determines the doubling time of the growth, and imposes one constraint on those coefficients; the eigenvectors impose three more constraints on the system, leaving five coefficients undetermined. Essentially, all of the ratelimiting relevant epidemic variables grow at the same rate maintaining fixed ratios. However, as they near peak, the variable trajectories become more differentiated, with lagging or leading peaks emerging as the impact of filters through the system of equations. However, at peak, it is already too late to allow time to acquire and deploy needed resources to hospitals and clinics. By itself, the trajectory of these models in pre-peak growth offer little hint as to final needs. Further, there are a number of combinations of parameters that would yield the same leading eigenvector and eigenvalue.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "More so, the parameters that govern these epidemic models tend to reflect physiological rates of how the disease expresses itself in individuals, as well as effects that are moderated by demic characteristics. Examples are age structure in the population, which impacts both asymptomatic cases 11, 26 and severity of disease 8 . Identification of asymptomatic cases has been problematic since testing protocols tended to require symptoms, or contacts with known infected people. One case in California went untested for 10 days because she had no known contacts. Cases that advance to severe or critical depend on other factors, such as treatment modalities prior to development of advanced symptoms. The rate of transmission depends on physiological parameters as well as normal social distance and social distancing response to an epidemic, how public institutions such as schools are run, how grocery shopping interactions are handled, whether known infections are isolated and other factors specific to each community. Given how widely these parameters may vary from population to population, how they vary: how they depend on the geographically specific dominating SARS-COV-2 lineages dominant within a given geography 5, 6 , and how they depend on behavioral, social, age structure, and other factors of a population, it is worth seeking whether and how these factors relate to the expressed epidemic model rate parameters as phenotypes.",
+            "cite_spans": [
+                {
+                    "start": 294,
+                    "end": 297,
+                    "text": "11,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 298,
+                    "end": 300,
+                    "text": "26",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1224,
+                    "end": 1226,
+                    "text": "5,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1227,
+                    "end": 1228,
+                    "text": "6",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Since the problem of identifying rate limiting parameters prior to peak is underdetermined, these rates must be determined elsewhere. Most statistical reporting does not provide nearly enough information to extract these factors, even at an environmental (quasi-) epidemiological experimental design standards. Further, jurisdictions are applying tests to try to identify new cases that are related to other identified cases through contact. The \"enrollment protocol\" was not designed to understand the spread in the population, but rather to try to identify patients and remove them from circulation by isolating them. More and broader testing is applied as test kits become more available. Test kits may not be uniform with loss of sensitivity depending on the stage of the infection and/or the type of swab taken (Nasal, nasopharyngeal or sputum). From jurisdiction to jurisdiction, testing and reporting protocols vary, making it difficult to compare jurisdictions, or even the same jurisdiction to itself from day to day. The rate of growth and doubling time may reflect availability and levels of testing more than the actual disease in the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Perhaps the best way to acquire the necessary parameters would be a prospective longitudinal study cohorts in multiple jurisdictions. Enrollment should be randomized, reflect regional characteristics such as sex and age, and the criteria should be shared across populations participating in the study. During the course of the study, subjects will be monitored for changes in status a) from susceptible to incubating recording dates of exposure (if possible), b) to infectious (symptomatic or asymptomatic, with a clearly defined standard for determining possible \"infectious\" condition) conversion and dates, c1) for asymptomatic to symptomatic conversions and dates or c2) recovery dates, d) symptomatic to recovery conversion dates, or e1) hospitalization dates, e2) recovery from hospitalization dates, e3) ICU admission dates, e4) ICU recovery date, e5) ventilator treatment start date, e6) ventilator recovery date, e7) date of death. A record of how each subject moves through the model compartments, together with time distributions, can provide phenotypic parameters that modelling alone cannot, offering insight into the biology, response of the disease to medications, comorbid conditions, demic characterizations, and other features relevant to the impact of COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Further, these parameters provide a uniform basis for comparisons between populations necessary for complete model constructions that yield distributions of trajectories and confidence intervals for timing and peak loads, and which can provide a full epidemiological exploration of how individual subject phenotypes respond to environmental, genetic, comorbid, and behavioral factors that may yield valuable information for biological, clinical and pharmaceutical development. As such, these models may be used to test and verify measurements of physiological parameters, and to identify evidence whether some factor strong enough to generate deviations is missing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "A response to an article in Nature 27 stated: \"A well-known lawyer, now a judge, once grouped witnesses into three classes: simple liars, damned liars, and experts. He did not mean that the expert uttered things which he knew to be untrue, but that by the emphasis which he laid on certain statements, and by what has been defined as a highly cultivated faculty of evasion, the effect was actually worse than if he had.\" The statement was applied to the specific issue of expert forensic testimony. The statement has been restated as \"lies, damn lies, and statistics.\" The message serves as a warning that statistics collected for certain purposes may not be suited to other purposes. That unsuitability does not reflect any attempt at obfuscation. Specifically, in this case, the use of testing, positive test counts, etc are tilted towards identifying patients who are likely to have specific treatment needs, and to try to identify contacts to stop epidemic spread. These uses render the reported statistics problematic for modeling. Physiological parameters based on identified patients may be biased in terms of the patients who were identified, and the methods by which they were identified. Further, protocols shifted as previously unrecognized community spread and asymptomatic individuals were recognized to be significant contributors to viral spread.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Finally, modeling not only can provide important information planners need for capacity loads, but models can also test whether the parameters as understood describe how the disease behaves in a population. A failure to predict may indicate an important factor in the disease's behavior that had not been recognized. In order for this to work, a more formally structured prospective cohort study, with adequate annotations of pharmaceuticals, comorbidities, and other factors, is likely the best way to ensure all the rates are measured on a consistent footing throughout the course of the epidemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The Proximal Origin of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Andersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rambaut",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Lipkin",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Holmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Garry",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nat. Med",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1--3",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41591-020-0820-9"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Structural Basis of Receptor Recognition by SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Aihara",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Geng",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Auerbach",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nature",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2179-y"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Dynamics of Coronavirus Replication-Transcription Complexes",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Reggiori",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J M"
+                    ],
+                    "last": "Rottier",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A M"
+                    ],
+                    "last": "Haan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "De",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J. Virol",
+            "volume": "2010",
+            "issn": "4",
+            "pages": "2134--2149",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/JVI.01716-09"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "An Overview of Their Replication and Pathogenesis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Fehr",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Perlman",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Coronaviruses",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "1282",
+            "issn": "",
+            "pages": "1--23",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-1-4939-2438-7_1"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Variant Analysis of COVID-19 Genomes",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Koyama",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Platt",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Parida",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Bull World Health Organ",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2471/BLT.20.253591"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Phylogenetic Network Analysis of SARS-CoV-2 Genomes",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Forster",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Forster",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Renfrew",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Forster",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proc. Natl. Acad. Sci. 2020",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.2004999117"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Temporal Dynamics in Viral Shedding and Transmissibility of COVID-19",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Mo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nat. Med",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41591-020-0869-5"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Report of the WHO-China Joint Mission on Coronavirus Disease",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A Contribution to the Mathematical Theory of Epidemics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "",
+            "volume": "115",
+            "issn": "",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Presumed Asymptomatic Carrier Transmission of COVID-19 | Global Health",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "D.-Y",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA | JAMA Network",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Clinical Characteristics of 24 Asymptomatic Infections with COVID-19 Screened among Close Contacts in Nanjing",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yi",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. Sci. China Life Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11427-020-1661-4"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Estimating the Asymptomatic Proportion of Coronavirus Disease 2019 (COVID-19) Cases on Board the Diamond Princess Cruise Ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2807/1560-7917.ES.2020.25.10.2000180"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Investigating the Impact of Asymptomatic Carriers on COVID-19 Transmission | medRxiv",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Aguilar",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Faust",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Westafer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gutierrez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.18.20037994v3"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Evolving Epidemiology and Impact of Non-Pharmaceutical Interventions on the Outbreak of Coronavirus Disease",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.03.20030593"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Substantial Undocumented Infection Facilitates the Rapid Dissemination of Novel Coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Modelling the Impact of COVID-19 in Australia to Inform Transmission Reducing Measures and Health System Preparedness",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Moss",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wood",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shearer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Black",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mccaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mcvernon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Predicting the Impact of Asymptomatic Transmission, Non-Pharmaceutical Intervention and Testing on the Spread of COVID19",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kaufman",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bianco",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Estimating the Generation Interval for COVID-19 Based on Symptom Onset Data",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ganyani",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Kremer",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Torneri",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Faes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.05.20031815"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Transmission Interval Estimates Suggest Pre-Symptomatic Spread of COVID-19",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tindale",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Coombe",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Stockdale",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Garlock",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "Y V"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Saraswat",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-H",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Colijn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.03.20029983"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The Incubation Period of Coronavirus Disease 2019 (COVID-19) From Publicly Reported Confirmed Cases: Estimation and Application",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Meredith",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Azman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Reich",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lessler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann. Intern. Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-0504"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Estimation of the Asymptomatic Ratio of Novel Coronavirus Infections (COVID-19)",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kobayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Suzuki",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-M",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Miyama",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Int. J. Infect. Dis",
+            "volume": "2020",
+            "issn": "0",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Republic of Lebanon Ministry of Public Health",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Epidemic Data for Novel Coronavirus COVID-19",
+            "authors": [
+                {
+                    "first": "Wolfram",
+                    "middle": [],
+                    "last": "Research",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Will Children Reveal Their Secret? The Coronavirus Dilemma",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cristiani",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Mancino",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Matera",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nenna",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pierangeli",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Scagnolari",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Midulla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eur. Respir. J",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1183/13993003.00749-2020"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "The Whole Duty of a Chemist",
+            "authors": [],
+            "year": null,
+            "venue": "Nature",
+            "volume": "1885",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Note that = 0, indicating conversions of all individuals in the system are accounted for. Parameter values derived from publications are listed in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "governing the system in this regime is = This has solutions of the form ( ) = (0). The may be diagonalized by a of are eigenvectors , where = . This is an eigen equation, where the s determine the time rate of exponential growth or decay with doubling time = , and",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Levels of total testing and positive cases identified in New York State.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Log-linear regression estimate of from New York State growth of fraction of positive tests. a) linear regression representing a segment of the positive test rate vs. time; b) linear regression from a) represented within the entire test rate vs. time dataset; c) is a fit to the log of the positive test count vs days starting at 20 days. Taking guidance from Table 1, values = 04748, and = 0.1071 yields a doubling time close to New York State from Figure 2c. Figure 1 presents a loglinear plot of the growth of the complete model equations integrated numerically using solve_ivp() employing RK45 from scipy, clearly showing that the early growth is dominated by a leading exponential mode. The early lead-in shows the effects of decaying modes as the initial conditions converge to the fixed ratios of the leading eigenmode components. The leading eigenvalue is = 0.1171, yielding a doubling time of 5.9 days, with eigenvector = ( 0.6457 0.4212 0.6369 0.0081 ). The component associated with incubation decay is = \u22120.483, associated with a response to policy change delay half-life of 1.4 days. Its eigenvalue is = ( 0.8940 \u22120.2671 \u22120.3596 \u22120.0085 ). The eigenvalue = \u22120.0750 with half-life of 9.2 days is associated with deviations between and from the dominating growth eigenvector, and has an eigenvector of = ( \u22120.0064 0.2172 \u22120.9761 \u22120.0003 ) . The",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Log-linear plot of rate-limiting variables in the full system of equations integrated numerically.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "The evolution of the model given the apparent doubling time represented by the regression inFigure 2. The peaks in variables in (a) show lagging as the compartments move through their sequence. The susceptible and recovered variables are included in (b).",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

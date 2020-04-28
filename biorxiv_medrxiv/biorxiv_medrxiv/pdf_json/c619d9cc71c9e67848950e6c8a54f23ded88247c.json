@@ -1,0 +1,1473 @@
+{
+    "paper_id": "c619d9cc71c9e67848950e6c8a54f23ded88247c",
+    "metadata": {
+        "title": "Dynamics of COVID-19 epidemics: SEIR models underestimate peak infection rates and overestimate epidemic duration",
+        "authors": [
+            {
+                "first": "Alastair",
+                "middle": [],
+                "last": "Grant",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of East Anglia",
+                    "location": {
+                        "postCode": "NR4 7TJ",
+                        "settlement": "Norwich",
+                        "country": "UK"
+                    }
+                },
+                "email": "a.grant@uea.ac.uk"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Compartment models of infectious diseases, such as SEIR, are being used extensively to model the COVID-19 epidemic. Transitions between compartments are modelled either as instantaneous rates in differential equations, or as transition probabilities in discrete time difference or matrix equations. These models give accurate estimates of the position of equilibrium points, when the rate at which individuals enter each stage is equal to the rate at which they exit from it. However, they do not accurately capture the distribution of times that an individual spends in each compartment, so do not accurately capture the transient dynamics of epidemics. Here we show how matrix models can provide a straightforward route to accurately model stage durations, and thus correctly reproduce epidemic dynamics. We apply this approach to modelling the dynamics of a COVID-19 epidemic. We show that a SEIR model underestimates peak infection rates (by a factor of three using published parameter estimates based on the progress of the epidemic in Wuhan) and substantially overestimates epidemic persistence after the peak has passed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Mathematical models are widely used to understand and predict the dynamics of epidemics, and to assess the likely effectiveness of different disease management measures such as quarantining of infected individuals. Standard compartment models of disease, such as SEIR, are being widely used to model the dynamics of the COVID-19 epidemic (Berger, Herkenhoff, & Mongey, 2020; Danon, Brooks-Pollock, Bailey, & Keeling, 2020; Fang, Nie, & Penny, 2020; Huang, Yang, Dai, Tian, & Chen, 2020; Kucharski et al.; Pan et al., 2020; Prem et al.; Read, Bridgen, Cummings, Ho, & Jewell, 2020; Tang et al., 2020; Teslya et al., 2020; Wu, Leung, & Leung, 2020; C. Yang & Wang, 2020; Z. Yang et al., 2020) . This model groups all \"exposed\" and \"infective\" individuals into single compartments. The rate at which susceptible individuals acquire infection is a function of the number of infective individuals present (as well as infectivity and contact rates). But these models express other transitions from one compartment to the next as the reciprocal of the average time that an individual spends in the first compartment. In the simplest SEIR formulation, exposed individuals spend T e days before becoming infective and infective individuals spend T i days before recovering [or dying], so the transition rates from E to I and from I to R are functions of T e -1 and T i -1 respectively. So the models do not track information on the time at which an individual was exposed or when they became infective.",
+            "cite_spans": [
+                {
+                    "start": 338,
+                    "end": 374,
+                    "text": "(Berger, Herkenhoff, & Mongey, 2020;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 375,
+                    "end": 422,
+                    "text": "Danon, Brooks-Pollock, Bailey, & Keeling, 2020;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 423,
+                    "end": 448,
+                    "text": "Fang, Nie, & Penny, 2020;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 449,
+                    "end": 486,
+                    "text": "Huang, Yang, Dai, Tian, & Chen, 2020;",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 487,
+                    "end": 504,
+                    "text": "Kucharski et al.;",
+                    "ref_id": null
+                },
+                {
+                    "start": 505,
+                    "end": 522,
+                    "text": "Pan et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 523,
+                    "end": 535,
+                    "text": "Prem et al.;",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 536,
+                    "end": 580,
+                    "text": "Read, Bridgen, Cummings, Ho, & Jewell, 2020;",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 581,
+                    "end": 599,
+                    "text": "Tang et al., 2020;",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 600,
+                    "end": 620,
+                    "text": "Teslya et al., 2020;",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 621,
+                    "end": 646,
+                    "text": "Wu, Leung, & Leung, 2020;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 647,
+                    "end": 668,
+                    "text": "C. Yang & Wang, 2020;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 669,
+                    "end": 690,
+                    "text": "Z. Yang et al., 2020)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Under this formulation, the distribution of residence times of an individual within a stage is exponentially distributed. This is biologically unreasonable, as it means that the most probable residence time in a stage is 0 for a continuous time model and a single time step for a discrete time model. In addition, some individuals spend very much longer than the average in a model compartment than is the case in reality. These standard formulations are able to give an accurate prediction of equilibrium points, as at equilibrium the number in each compartment is timeinvariant, with equal numbers entering and leaving. They are, however, unable to accurately describe the dynamics of epidemics (Krylova & Earn, 2013; Lloyd, 2001a Lloyd, , 2001b Wearing, Rohani, & Keeling, 2005) .",
+            "cite_spans": [
+                {
+                    "start": 697,
+                    "end": 719,
+                    "text": "(Krylova & Earn, 2013;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 720,
+                    "end": 732,
+                    "text": "Lloyd, 2001a",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 733,
+                    "end": 747,
+                    "text": "Lloyd, , 2001b",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 748,
+                    "end": 781,
+                    "text": "Wearing, Rohani, & Keeling, 2005)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Consider, for example, the introduction of a pathogen as an impulse function to a population consisting entirely of susceptibles, as might occur in a bioterrorism event. For simplicity we assume that the resulting disease has constant incubation and infective periods. A proportion of the population will acquire the pathogen and move into the E compartment. At the end of the incubation period, these will display symptoms and become I's. If secondary infection is not possible, not further individuals will enter into the E compartment and individuals in I will remain in this compartment for the infective period before transitioning to R, unless they die. We would like a Grant SEIR Models of COVID-19 06/04/2020 12:18 Page 3 model to preserve the shape of the initial impulse function, as it passes through the E and I compartments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "But in a continuous time formulation, some individuals will immediately move from the exposed compartment, through infected and to recovering. In a discrete time model, the same will happen over the next two time-steps. Other individuals will spend substantially longer than average in both the E and I compartments, and the pathogen will persist in the model for much longer than it will in reality. This also has important implications for disease management -the standard models with exponentially distributed stage durations over-estimate the effectiveness of quarantine as a management intervention and under-estimate the importance of early detection (Wearing et al., 2005) . We provide a worked example of this in the COVID-19 modelling section below.",
+            "cite_spans": [
+                {
+                    "start": 657,
+                    "end": 679,
+                    "text": "(Wearing et al., 2005)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "These problems have been recognised previously. It is possible to retain the relative simplicity of an ODE formulation by subdividing compartments into a number of sequential stages (Bailey, 1964; Lloyd, 2001b) . This leads to so-called Erlang distributed models, which can be formulated using the same parameters as the ODE formulation, although the number of state variables is increased (Krylova & Earn, 2013) . But extending this approach to model arbitrarily distributed stage durations requires the use of more mathematically challenging integro-differential, delay differential, or partial differential equations (Lloyd, 2001a ).",
+            "cite_spans": [
+                {
+                    "start": 182,
+                    "end": 196,
+                    "text": "(Bailey, 1964;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 197,
+                    "end": 210,
+                    "text": "Lloyd, 2001b)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 390,
+                    "end": 412,
+                    "text": "(Krylova & Earn, 2013)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 620,
+                    "end": 633,
+                    "text": "(Lloyd, 2001a",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "An alternative approach is to use a matrix model which identifies individuals that have spent different times in the E and I compartments (in effect doing the same as Erlang distributed models), but in a way which can incorporate arbitrary distributed stage durations. Matrix models have the additional advantage that it is straightforward to incorporate stochastic process variation into the model and to model numbers of individuals in each stage as integers, which will be of particular benefit for modelling the initial stages of an epidemic. The number of individuals in each compartment, and how long they have been there, is tracked in a vector:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An Alternative modelling approach"
+        },
+        {
+            "text": "SEIR Models of COVID-19 06/04/2020 12:18 Page 4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An Alternative modelling approach"
+        },
+        {
+            "text": "In each time step, this is multiplied by a matrix in which terms on the leading diagonal represent the probability of staying in that state (this would apply to S and R). Terms on the subdiagonal are the probabilities of moving to the next state, with the value 1 to \"age\" all individuals in a state by one time step (for example, to move individuals from E 1 to E 2 without any mortality. An expression for the probability of a susceptible acquiring infection appears in the first column of the second row with the probability of a susceptible not becoming infected in the top left corner. Other entries in the top row are the probabilities of moving back to being susceptible at the end of the infective period; entries in the bottom row are the probabilities of moving into the recovering compartment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An Alternative modelling approach"
+        },
+        {
+            "text": "If the infective period is a fixed length, then the second last element on the bottom row will be the survival rate from the last infected day to become recovering (with the bottom right hand element being the survival probability for R's). If there is variation in the duration of the infective period, there will be non-zero entries in more of the elements on the bottom row, and variation in the duration of the latent period can be captured in a similar way. So for a model with an incubation period of 1 or 2 days, an infective period of between 3 and 4 days and no mortality, we might have (with zeros in the projection matrix and subscripts for time step in the population vector omitted for clarity):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An Alternative modelling approach"
+        },
+        {
+            "text": "X is the probability of a susceptible being infected (which will be a function of I = \u03a3I i ); 10% of exposed individuals become infective after one day, while the remainder become infective after 2 days. The infective period is 4 days in 70% of individuals, but only 3 days in the remaining 30%. There is a 1% chance of an infected individual recovering without acquiring immunity, and thus returning to the susceptible pool. Once individuals have recovered and acquired immunity, they remain in the R compartment indefinitely. Figure 1 shows the time course of an epidemic resulting from a population consisting of 1000 of susceptibles in which a single individual has recently acquired infection. The incubation period is fixed at 4 days and the infectious period is fixed at 5 days. Infectivity is high. Each individual encounters 20 others per day, with a probability of 0.5 of acquiring the infection from each encounter with an infective. In the standard SEIR model (Fig. 1a) , the number of exposed individuals has increased before day 5, even though the initial primary case is not yet infective. The number of . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 528,
+                    "end": 536,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 972,
+                    "end": 981,
+                    "text": "(Fig. 1a)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "An Alternative modelling approach"
+        },
+        {
+            "text": "The copyright holder for this preprint However, the persistence of the epidemic is relatively long, with some infective individuals still remaining beyond day 35. By contrast, the fixed stage duration model (Fig. 1b) correctly predicts that the number of exposed individuals remains low until after day 5, as secondary infection can only occur when the primary case becomes infective. There is then a linear increase in the number of exposed individuals until day 10, until secondary cases start to become infective and the infection then undergoes exponential growth. The peak number of infectives is not reached until day 19, and is higher than in the SEIR model, but the epidemic then rapidly declines, and becomes extinct on day 25.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 207,
+                    "end": 216,
+                    "text": "(Fig. 1b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint An Application to COVID-19 epidemics If we initiate the model with 1000 newly exposed individuals, and set secondary infection rates to zero, then the SEIR model does a rather poor job of preserving this impulse function (Fig.   2a ). Infected and recovered individuals start to appear on day 2 and day 3 respectively. Numbers of infected individuals peak on day 9, but only 32% of the population is infected at this point, with 44% remaining in the E compartment and 24% already recovered. Appreciable numbers of infected individuals are still present after day 40. We have also used the same expressions for infection rates in an explicit time SEIR matrix formulation that generates a fixed length latent period (Fig. 2b) , and an infective period of 10 days for 75% of individuals and 11 days for the remaining 25%. This correctly shows 100% of the population moving from exposed to infective on day 8, and all individuals recovering by day 19.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 260,
+                    "end": 270,
+                    "text": "(Fig.   2a",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 753,
+                    "end": 762,
+                    "text": "(Fig. 2b)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "So the discrete time SEIR model performs rather poorly at tracking the time course of a cohort of individuals infected at the same time. We might, therefore, expect it to perform poorly at tracking the dynamics of a rapidly growing epidemic. An epidemic that starts with a single newly exposed individual reaches a peak on day 104, with 22.8% of the population infected (Fig. 3a) . The time course of the epidemic using the explicit time SEIR matrix model is shown in Figure 3b . Initial growth . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 370,
+                    "end": 379,
+                    "text": "(Fig. 3a)",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 468,
+                    "end": 477,
+                    "text": "Figure 3b",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. and R (purple) Figure 3b , Time course of a COVID-19 epidemic beginning with a single exposed individual, modelled using explicit time SEIR matrix model. Other details as in Figure 3a .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 307,
+                    "end": 316,
+                    "text": "Figure 3b",
+                    "ref_id": null
+                },
+                {
+                    "start": 466,
+                    "end": 475,
+                    "text": "Figure 3a",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 65,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We have shown that standard SEIR (and other compartment) disease models fail to correctly replicate the movement of individuals through compartments. This means that they have distributions of residence times in each stage that only resemble reality to the extent of having the same expected values, with radically different values of all higher moments. This has been known for some time (Krylova & Earn, 2013; Lloyd, 2001a Lloyd, , 2001b Wearing et al., 2005) and solutions to the challenge are available (Krylova & Earn, 2013; Lloyd, 2001b) . But the huge simplicity of compartment models relative to Erlang distributed; integro-differential or delay differential models has meant that they have continued to play a prominent role in disease modelling, including many published papers modelling COVID-19 (see introduction). However, their discarding of information on the length of time individuals have been in a compartment creates serious deficiencies in the ability of compartment models to replicate the dynamics of real epidemics, such as COVID-19. In the examples examined here, including a model using parameter values based on COVID-19 dynamics in Wuhan, SEIR models underestimate the proportion of the population that will be Infected when the epidemic is at its peak and overestimate the epidemic duration, by factors of three and two respectively. The models in this paper show that the peak of infection in our explicit time model may be either earlier or later than the peak in the simple SEIR model. The implications of our findings for state policies to manage of COVID-19 epidemics are not clear. If SEIR models use parameter values estimated independently from data they will underestimate the proportion of the population which will be infected at the epidemic's peak. But if inverse modelling uses SEIR models to estimate parameters from disease time series (Fang et al., 2020) , they may give parameter estimates that are too pessimistic. Another consideration is Wearing et al. (2005) assessment that the standard models overestimate the effectiveness of quarantine and underestimate the importance of early detection.",
+            "cite_spans": [
+                {
+                    "start": 389,
+                    "end": 411,
+                    "text": "(Krylova & Earn, 2013;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 412,
+                    "end": 424,
+                    "text": "Lloyd, 2001a",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 425,
+                    "end": 439,
+                    "text": "Lloyd, , 2001b",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 440,
+                    "end": 461,
+                    "text": "Wearing et al., 2005)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 507,
+                    "end": 529,
+                    "text": "(Krylova & Earn, 2013;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 530,
+                    "end": 543,
+                    "text": "Lloyd, 2001b)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1881,
+                    "end": 1900,
+                    "text": "(Fang et al., 2020)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1988,
+                    "end": 2009,
+                    "text": "Wearing et al. (2005)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It is to be hoped that national policies are being guided by a range of disease models, including ones which deal more effectively with the known time course of infection within individuals, such as agent/individual based models (Chang, Harding, Zachreson, Cliff, & Prokopenko, 2020; Ferguson et al., 2006) and time since infection models (Cori, Ferguson, Fraser, & Cauchemez, 2013; Flaxman et al., 2020; Fraser, 2007) . But the domination of the published scientific literature by compartment models may be in danger of creating a discontinuity between the views held in the research community and the modelling that is informing national decision making about the management of COVID-19. We believe that the approach outlined here provides a valuable solution to the problem of incorporating a time dimension within each compartment. This allows the correct recreation of time dynamics within each compartment, while retaining the simplicity of a matrix based model and the details of the model's assumptions can immediately be seen by examining the projection matrix.",
+            "cite_spans": [
+                {
+                    "start": 229,
+                    "end": 283,
+                    "text": "(Chang, Harding, Zachreson, Cliff, & Prokopenko, 2020;",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 284,
+                    "end": 306,
+                    "text": "Ferguson et al., 2006)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 339,
+                    "end": 382,
+                    "text": "(Cori, Ferguson, Fraser, & Cauchemez, 2013;",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 383,
+                    "end": 404,
+                    "text": "Flaxman et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 405,
+                    "end": 418,
+                    "text": "Fraser, 2007)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It also allows the straightforward use of tools for sensitivity/elasticity analyses of both population . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 sizes and selection intensity on the virus characteristics (Grant, 1997; Grant & Benton, 2000) . The model here could readily be adapted to incorporate infectivity during the latent period; variance in the duration of the latent and infected stages and incomplete immunity of recovered individuals, and we hope that it will be of some use to the COVID-19 modelling community.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 155,
+                    "end": 168,
+                    "text": "(Grant, 1997;",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 169,
+                    "end": 190,
+                    "text": "Grant & Benton, 2000)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 ",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Some stochastic models for small epidemics in large populations",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "T J"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                }
+            ],
+            "year": 1964,
+            "venue": "The Royal Statistical Society Series C-Applied Statistics",
+            "volume": "13",
+            "issn": "1",
+            "pages": "9--19",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "An SEIR Infectious Disease Model with Testing and Conditional Quarantine",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Berger",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Herkenhoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mongey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Economics Working Paper",
+            "volume": "",
+            "issn": "",
+            "pages": "2020--2045",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Modelling transmission and control of the COVID-19 pandemic in Australia",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Harding",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zachreson",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Cliff",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Prokopenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fraser",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cauchemez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "American Journal of Epidemiology",
+            "volume": "178",
+            "issn": "9",
+            "pages": "1505--1512",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/aje/kwt133"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "A spatial model of CoVID-19 transmission in England and Wales: early spread and peak timing. medRxiv",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Danon",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Brooks-Pollock",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.02.12.20022566"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Transmission dynamics of the COVID-19 outbreak and effectiveness of government interventions: A data-driven analysis",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Nie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Penny",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Medical Virology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/jmv.25750"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Strategies for mitigating an influenza pandemic",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A T"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fraser",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Cajka",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Cooley",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Burke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Nature",
+            "volume": "442",
+            "issn": "7101",
+            "pages": "448--452",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nature04795"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Estimating the number of infections and the impact of non-pharmaceutical interventions on COVID-19 in 11 European countries",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhatt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Estimating Individual and Household Reproduction Numbers in an Emerging Epidemic",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fraser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Plos One",
+            "volume": "2",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0000758"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Selection pressures on vital rates in density-dependent populations",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Grant",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the Royal Society B-Biological Sciences",
+            "volume": "264",
+            "issn": "",
+            "pages": "303--306",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rspb.1997.0043"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Elasticity analysis for density-dependent populations in stochastic environments",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Grant",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Benton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Ecology",
+            "volume": "81",
+            "issn": "3",
+            "pages": "680--693",
+            "other_ids": {
+                "DOI": [
+                    "10.2307/177369"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Epidemic situation and forecasting of COVID-19 in and outside China",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Dai",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Bull World Health Organ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2471/BLT.20.255158"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Effects of the infectious period distribution on predicted transitions in childhood disease dynamics",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Krylova",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J D"
+                    ],
+                    "last": "Earn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Journal of the Royal Society Interface",
+            "volume": "",
+            "issn": "84",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rsif.2013.0098"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study. The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flasche",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30144-4"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Destabilization of epidemic models with the inclusion of realistic distributions of infectious periods",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lloyd",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the Royal Society B-Biological Sciences",
+            "volume": "268",
+            "issn": "",
+            "pages": "985--993",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rspb.2001.1599"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Realistic distributions of infectious periods in epidemic models: Changing patterns of persistence and dynamics",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lloyd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Theoretical Population Biology",
+            "volume": "60",
+            "issn": "1",
+            "pages": "59--71",
+            "other_ids": {
+                "DOI": [
+                    "10.1006/tpbi.2001.1525"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Effectiveness of control strategies for Coronavirus Disease 2019: a SEIR dynamic modeling study",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Bull World Health Organ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2471/BLT.20.253807"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Klepac, P. The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China: a modelling study. The Lancet Public Health",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "30073--30079",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2468-2667(20"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Novel coronavirus 2019-nCoV: early estimation of epidemiological parameters and epidemic predictions. medRxiv",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.23.20018549"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Estimation of the Transmission Risk of the 2019-nCoV and Its Implication for Public Health Interventions",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/jcm9020462"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Impact of self-imposed prevention measures and short-term government intervention on mitigating and delaying a COVID-19 epidemic. medRxiv",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Teslya",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pham",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Godijk",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Kretzschmar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C J"
+                    ],
+                    "last": "Bootsma",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rozhnova",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.12.20034827"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Appropriate models for the management of infectious diseases",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wearing",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Plos Medicine",
+            "volume": "2",
+            "issn": "7",
+            "pages": "621--627",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pmed.0020174"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s0140-6736(20)30260-9"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "A mathematical model for the novel coronavirus epidemic in Wuhan",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. Mathematical Biosciences and Engineering",
+            "volume": "17",
+            "issn": "3",
+            "pages": "2708--2724",
+            "other_ids": {
+                "DOI": [
+                    "10.3934/mbe.2020148"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Modified SEIR and AI prediction of the epidemics trend of COVID-19 in China under public health interventions",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-S",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zanin",
+                    "suffix": ""
+                },
+                {
+                    "first": ".",
+                    "middle": [
+                        "."
+                    ],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Thoracic Disease",
+            "volume": "12",
+            "issn": "3",
+            "pages": "165--174",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Time course of an epidemic beginning with a single exposed individual. Latent period is 4 days; infectious period is 5 days Standard discrete time. Infection probability is high (see text for details); SEIR formulation. S (Blue), E (Red), I (yellow) and R (purple)Figure 1bTime course of an epidemic beginning with a single exposed individual when using explicit time SEIR matrix model to maintain correct stage durations. Colour codes asFigure 1a",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Next, we applying this modelling framework to a published model of theCOVID-19 outbreak. Fang   et al. (2020)  modelled the progress of the epidemic in Wuhan City using a continuous time SEIR model: Where \u03b2, the infection rate, is given by \u03b2 = \u03b2 0 k, \u03b2 0 is the probability of infection per encounter with an infected individual and k is the number of people encountered per day. \u03c9= 1/T e , where T e is the latent period and \u03b3 = 1/T i , where T i is the average recovery time of infectives. This formulation assumes that individuals are not infectious during the latent period. These authors used initial parameter estimates of \u03b2 0 = 0.1; k = 10; T e = 7 and T i = 10.25 and a population size of 10 million. We have formulated this as a discrete time SEIR model with a time step of one day (see supplementary material).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Time course of a single cohort of newly infected individuals through the E (blue), I (red)and R (yellow) compartments of a discrete time SEIR model of COVID-19(Fang et al., 2020).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Time course of a single cohort of newly infected individuals through the E, I and R compartments of explicit time SEIR matrix model of COVID-19. Other details as in Figure 2a",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Time course of a COVID-19 epidemic beginning with a single exposed individual. Standard discrete time SEIR formulation using parameter values from(Fang et al., 2020). S (Blue), E (Red), I (yellow)",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "should only just have started to appear, and the number of infective individuals peaks on day 13.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,1202 @@
+{
+    "paper_id": "b6201f7dd387df80e0afd6e24d86acd9d68f12a4",
+    "metadata": {
+        "title": "Estimate of Covid prevalence using imperfect data",
+        "authors": [
+            {
+                "first": "Witold",
+                "middle": [
+                    "R"
+                ],
+                "last": "Rudnicki",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Bialystok",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The real number of people who were truly infected with SARS-CoV-2, is certainly significantly larger than the official record. Few countries have tracking and testing procedures that are sufficiently robust to discover nearly all infections. In most countries they are inadequate, hence the true extent of the pandemic is unknown. The current study proposes the estimate of the COVID-19 extent for countries with sufficiently high number of deaths and cases. The estimate is based on a simple model of mortality. This model was developed for a reference country with a large number of cases and high intensity of COVID-19 testing. The model is then applied to compute apparent mortality in the target and reference countries. The number of cases in the target country is then estimated assuming constant underlying true mortality. The estimate of cases in most countries is significantly higher than the official record. As of April 12, 2020, the global estimate is 5.2 million compared to 1.8 million in the official record. The models developed in this study are available at covidmodel.net. The model ignores several factors that are known to influence mortality, such as the demographics and health condition of population, state of epidemic and sociological differences between countries. While the model is rough, it nevertheless provides a unified approach to producing a systematic global estimate of the extent of the COVID-19 epidemic and can be useful for its monitoring.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "A new pneumonia disease of viral origin, COVID-19, caused by SARS-CoV-2, appeared in China in December 2019 [1, 2] . The infection quickly spread worldwide [3] . As of April 12, 2020, the officially recorded number of cases reached 1,852,257 and the number of deaths officially attributed to COVID-19 reached 114,194 1 .",
+            "cite_spans": [
+                {
+                    "start": 108,
+                    "end": 111,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 112,
+                    "end": 114,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 156,
+                    "end": 159,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The true prevalence of the disease is certainly larger than the officially recorded cases. The differences in testing protocols, available resources and policies between countries result in widely varying estimates of mortality and prevalence of COVID [4] . Omitting the asymptomatic and mild cases from testing, results in a large apparent mortality and underestimation of the true number of infections.",
+            "cite_spans": [
+                {
+                    "start": 252,
+                    "end": 255,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "On the other hand, the testing policy influences the number of deaths attributed to COVID-19 to a much lower extent. Some cases may be lost due to insufficient testing. Additionally, the policies of attributing deaths to COVID-19 or other co-occuring conditions may vary between countries. Nevertheless, the influence of these factors on the final death count should be lower than the influence of the testing procedures on the count of cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Therefore, one can use the official death count and the estimate of mortality to imply the number of cases. Unfortunately, the estimates of the mortality are highly variable and depend on the applied methodology [5, 6, 7, 8] as well as true fraction of asymptotic cases. The fraction of asymptomatic infections in COVID-19 has been estimated to be less than 20% using Diamond Princess data [9] . It has been also implicitly estimated using epidemics modelling to be more than 90% [10] . It is also known, that mortality varies strongly with age, comorbidity, and the ability of a healthcare system to cope with the epidemic [11, 12] . An additional problem for applying the mortality estimates from the countries in different phase of the epidemic, is that the distribution of times between onset of symptoms and death is known very imprecisely.",
+            "cite_spans": [
+                {
+                    "start": 212,
+                    "end": 215,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 216,
+                    "end": 218,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 219,
+                    "end": 221,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 222,
+                    "end": 224,
+                    "text": "8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 390,
+                    "end": 393,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 480,
+                    "end": 484,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 624,
+                    "end": 628,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 629,
+                    "end": 632,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the current study we propose a methodology that generates an estimate on the current state of epidemic in a given country using the reported deaths and reference epidemiology data from the reference country. The model aims at estimating what would be the number of positive tests, if testing was performed to the standards of the best testing countries. The reference country is selected using known testing policies, a sufficiently long cases history to develop models, and the state of the epidemic that is similar to target countries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The data for modelling COVID-19 epidemics is obtained from the John Hopkins University [13] . All models are based on the simple assumption, that the underlying biology of the viral infection is identical in all countries, and therefore the differences in the apparent mortality rate arise due to the different levels of detection of true cases.",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 91,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "This assumption is certainly an oversimplification, since it is already known that the mortality varies very strongly between age groups and therefore the true mortality in a given country depends on the population structure. What is more, the mortality depends on the capacity of the healthcare system in the country to provide the appropriate treatment to patients. This capacity may depend also on the state of the epidemic, and resources available to build the adequate temporary infrastructure etc. Another factor in variability in mortality can be attributed to differences in social behaviour -e.g. how prevalent are multi-generational households, the frequencies and intensity of social contacts, in particular between younger and older generations etc. The number of factors contributing to the true mortality is so large that it is impossible to account for them within the time-frame of the study. Therefore, all these factors are omitted and left to the country-based adjustment which can be done externally.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "Another assumption underlying the study is that the countries which are most likely to detect the highest percentage of asymptomatic and mild cases are those which perform most tests per capita and at the same time have low reported mortality. Hence, the estimate of true mortality using these countries is the least biased.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "The total number of cases in the target country is obtained in all models as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "where, T C c e (d) is an estimate of total number of cases in the target country, M c (d) is an apparent mortality in the target country and M r (d) is an apparent mortality in the reference country.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "The first model directly converts epidemic state in a reference country to the target country. The estimate of mortality of COVID-19 in a country for day d is obtained as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1."
+        },
+        {
+            "text": "where, M (d) is an estimate of mortality at day d, T D(d) is a total number of deaths recorded at the day d, and T C(d\u2212\u03c4 ) is a total number of cases recorded \u03c4 days before day d. The \u03c4 is an empirically obtained parameter that corresponds to the delay between the time of test and the death of the patient. The value of the \u03c4 was determined empirically for the reference country for model 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1."
+        },
+        {
+            "text": "Both second and third model are simplifications of the following formal model of deaths:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "where number of new deaths in day d is obtained as the integral over time of the distribution of death times from the onset of symptoms, multiplied by a number of new cases in a given time. Stating this differently, when the true number of new cases on day t is given by N (t), then the number of deaths on day t + \u03c4 is determined by the overall mortality M and probability that death will occur in day t + \u03c4 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "Model 2 uses the point estimate of the probability distribution p(t) from equation 3 in the following form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "The mortality is then estimated from parameters of the simple linear regression without intercept, where current number of deaths is proportional to the current number of deaths:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "Model 3 uses the uniform estimate of the probability distribution p(t) from equation 3 in the following form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "The mortality is then estimated from the average number of new cases in the period starting d \u2212 T max day earlier and ending d \u2212 T min days earlier, again using linear regression without the intercept:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "Both Model 2 and Model 3 are drastic simplifications of the model described by the Eq. 3. Nevertheless, in the exponential growth phase they have one significant advantage over more realistic distributions, namely they require fewer parameters, and therefore are less prone to overfitting. Effectively, they represent the effects of convolution of distribution of time to death and exponential growth. All parameters for the models, namely the time offset between test result and death \u03c4 and time span for deaths [T min , T max were derived for the reference country by fitting models 2 and 3. The quality of the fit between the models and data is estimated using the square of the correlation coefficient between number of deaths estimated by the model and the true data. The final form of the models is then obtained as a weighted average with Model 1:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "where M f (i) is the final estimate of mortality for Model i, r 2 i is the square of the correlation coefficient between deaths and earlier cases for Model i, M (1) is the estimate of mortality from Model 1, and M (i) for i \u2208 {2, 3} is the regression coefficient from Equations 5 and 8, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models 2 and 3"
+        },
+        {
+            "text": "The upper and lower estimate for Model 1, was obtained respectively as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Error estimates"
+        },
+        {
+            "text": ". For Models 2 and 3, the standard deviation of parameters of linear regression were computed and the estimates of the upper and lower bounds for the model are obtained as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Error estimates"
+        },
+        {
+            "text": "CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Error estimates"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20064840 doi: medRxiv preprint Figure 1 : Simple estimation of Covid mortality for countries with more than thirty registered deaths. The mortality is computed by dividing the total number of deaths by total number of cases.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 107,
+                    "end": 115,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The final estimate of mortality in the target country is obtained by computing results of available models and taking the average of them. The number of available models depends on the available data. Models are computed only for countries that have reached at least 30 total deaths, a sufficiently long time before building of the model. The time span required is at least 3, 17 or 23 days, for models 1, 2 and 3, respectively. The estimates of the lower and upper bounds of the estimate are obtained by averaging the bounds computed for available models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The reference was selected with the following requirements:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference Country"
+        },
+        {
+            "text": "\u2022 the reference country should have a high level of testing,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference Country"
+        },
+        {
+            "text": "\u2022 a healthcare system that hasn't been overwhelmed with the epidemic,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference Country"
+        },
+        {
+            "text": "\u2022 low mortality, 5 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference Country"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20064840 doi: medRxiv preprint \u2022 a relatively long history of epidemics development,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "\u2022 and a sufficiently large number of cases and deaths that would allow to build a reliable model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "An additional requirement for consideration is the level of political freedom that allows independent monitoring of the official statistics. There are two countries that fit this description best, namely South Korea and Germany, see Figure 1 . Among this pair Germany has far more registered deaths (3,022 deaths registered in Germany and 214 in South Korea, as of April 12, 2020) 2 What is more, Germany is currently in the growth phase of the epidemic with nearly 4000 new cases recorded daily, whereas South Korea has managed to supress the epidemics, from over 500 daily cases in late February and early March to the level of less than 30 cases in April 10 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 233,
+                    "end": 241,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "To examine the quality of the models for reference country, the modelling procedure was performed nine times with data terminated at each of the first nine days of April 2020. The values of mortalities, as well as the estimates of quality of fit of the model obtained for Germany, are shown in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 294,
+                    "end": 301,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Models 1 and 2, give a similar estimate of mortality that is substantially lower than that of Model 3. This happens because the number of cases used by these models is recorded with a 7 days offset with the number of deaths, whereas in Model 3, the number of cases is average over time span that is significantly shifted towards longer times, effectively contributing less cases to the denominator in Eq. 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "On the other hand, the Model 3 fits reference data to a much larger extent, with r-squared varying between 0.85 and nearly perfect 0.99. All models give a relatively stable estimate of mortality for the first five days, but then the estimates starts to rise systematically. What is more, the quality of the fit between the model and the observations also decreases after the first five days. There are several possible explanations for this effect. This drift may arise due to the changing dynamics of the epidemic, resulting in a worse fit of the models to the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The observed increase of apparent mortality may also signal that, at the end of March, the extent of testing became systematically worse relative to the number of true cases. The increase of mortality could also be genuine due to approaching the limits of healthcare system capacity, or due to a larger number of older patients infected later in the epidemic. It is likely that all factors contribute to some extent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The models described in the previous sections were applied to all countries in the world for which data is available. The mortality obtained for countries for which all three models were computed is presented in Table 2 . The correction factors derived from the models are displayed along the mortality. They are defined as: Table 1 : Mortality and quality of fit for three models obtained for Germany. where, C i is a correction factor obtained from model i for the target country t; M i t and M i r are the mortalities computed from model i for target and reference country, respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 212,
+                    "end": 219,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 325,
+                    "end": 332,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "With the exception of South Korea and China, the results of all models are close to each other for each country.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Model 3, shows a slightly higher mortality than Models 1 and 2. This effect can be expected, since Model 3 uses estimate of cases that is effectively shifted towards a lower number of cases, for countries in the rapid growth of the epidemic. The results of Model 3 are divergent both for South Korea and China, where Model 3 returns estimate of mortality that is roughly 3 times higher than Models 1 and 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "For most examined countries, with two exceptions, the mortality estimates obtained from all models is significantly larger than mortality for Germany. The exceptions are South Korea and Austria. South Korea by extensive testing and tracking of infections has managed to contain the epidemic and was able to quench the average number of new cases from nearly 800 in the beginning of March 2020, to less than 50 in the first ten days of April. Similarly, Austria performed extensive testing and apparently, as of April 10, managed to reduce the average number of cases from 800 at the end of March 2020, to around 300 at the time of the current study. Models 2 and 3 are in a good agreement with data for countries that are in the growth phase of the epidemic. In particular, it is remarkable that models with parameters optimised for German data fit extremely well to data collected for USA. Apparently, they adequately describe the convolution of distribution of probability from the test with rapid, nearly exponential, growth of number of new cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "On the other hand, these models don't correlate well with data for countries that either successfully quenched the epidemics (such as China and South Korea), or managed to at least stabilise it and somewhat decrease the number of new cases, such as Switzerland or Austria. This is expected, since these models were developed using data from the growth phase of epidemics. One should note, that in the case of low value of r-squared, the reported results Table 2 : Mortality and quality of fit for three models for countries with largest number of recorded deaths. M 1 , M 2 f and M 3 f are estimates of mortality obtained in models 1, 2 and 3, respectively; c 1 , c 2 and c 3 are correction factors derived from models 1, 2 and 3; r 2 (M 2 ) and r 2 (M 3 ) are r-squared computed for the models 2 and 3. Countries are sorted in a increasing order by value of mortality computed from Model 1. Only countries for which all three models were computed are shown. All computations performed for data available at April 10.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 454,
+                    "end": 461,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "from both models are obtained mostly using formula as in Model 1 (see Eq. 9), with slightly different number of cases and deaths that are taken into account due to different weighting schemes. Therefore, their results are still meaningful, although redundant to the results of Model 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "Interestingly, in the case of Spain and Italy, there is a significant discrepancy between r-squared computed for Model 2 and Model 3. The former is in both cases above 0.7, whereas the latter is below 0.15.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "By using time average of the cases over 9 days, and including the most recent cases, Model 3 is more smooth than Model 2. Apparently, it generally fits data better in the rapid growth phase (as can be seen in Table 1 , but is worse in the transition from the growth phase to the stationary, or quenched phase.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 209,
+                    "end": 216,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "The estimates reflect large differences in testing policies between countries, see Table 3 . In particular, there is a large variance in testing between the European countries. Countries with similar wealth to Germany, such as France, UK, Sweden, Netherlands or Belgium perform significantly less intensive testing relative to the state of the epidemic. Germany conducted nearly 500 tests per recorded death, whereas those countries conducted 25 to 60 tests per recorded death. The is a strong negative correlation equal -0.82 between correction factor computed for the country and a logarithm of the number of tests performed per recorded death, confirms the initial assumption that inadequate testing leads to under-reporting of infections. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 83,
+                    "end": 90,
+                    "text": "Table 3",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "The model has been implemented as a web service that is available at covidmodel.net. The main window of the service displays the summary of model results for the COVID-19 epidemics in the previous day. The view can be switched between basic mode, with summarised information, or a detailed presentation of all models. For all countries for which results of the model are available, the detailed presentation of the epidemics history is available.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Web Service"
+        },
+        {
+            "text": "Basic mode of the world table and wide mode of the country data are dis-9 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Web Service"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . played in Figure 2 . As of April 11, the estimate from at least one model was obtained for 56 countries -one model for 19, two for 37 and three for 19 countries, respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 81,
+                    "end": 89,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Web Service"
+        },
+        {
+            "text": "The trajectory of officially recorded total cases, along with the estimate, is also available, see Figure 3 . All data generated from the models is available for download from the service. The source code for the modelling is available from the authors upon request.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 99,
+                    "end": 107,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Web Service"
+        },
+        {
+            "text": "The models proposed in the current study, while imperfect, provide a better estimate of the true extent of epidemics than the official data. The scale of discrepancy between the model and the official record is strongly correlated with the extent of testing, measured by relation of number of tests to the number of deaths attributed to COVID-19. Therefore, we suggest that the results of our model should be used as supplementary source of information about the state of epidemics for general public, researchers and public authorities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20064840 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A new coronavirus associated with human respiratory disease in china",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Pei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "7798",
+            "pages": "265--269",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Who director-general's opening remarks at the media briefing on covid-19 -11",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Case-fatality rate and characteristics of patients dying in relation to covid-19 in italy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Onder",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rezza",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Brusaferro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Jama",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Estimates of the severity of coronavirus disease 2019: a model-based analysis. The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verity",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Okell",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Winskill",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Whittaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Real-time estimation of the risk of death from novel coronavirus (covid-19) infection: inference using exported cases",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kobayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of clinical medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Real estimates of mortality following covid-19 infection",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Baud",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nielsen-Saines",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Musso",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Pomar",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Favre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet infectious diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Characteristics of and important lessons from the coronavirus disease 2019 (covid-19) outbreak in china: summary of a report of 72 314 cases from the chinese center for disease control and prevention",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgoogan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Jama",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Estimating the asymptomatic proportion of coronavirus disease 2019 (covid-19) cases on board the diamond princess cruise ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Estimating the number of infections and the impact of non-pharmaceutical interventions on covid-19 in 11 european countries. COVID-19 Response Team 13",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flaxman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mishra",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gandy",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Unwin",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Coupland",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Mellan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Berah",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Eaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Perez Guzman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Clinical characteristics of coronavirus disease 2019 in china",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Ou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lei",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "What other countries can learn from italy during the covid-19 pandemic",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Boccia",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ricciardi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Ioannidis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Internal Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "An interactive web-based dashboard to track covid-19 in real time",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet infectious diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Data read from https://www.worldometers.info/coronavirus/#countries on April 13, 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "M 2 f and M 3 f are final estimates of mortality obtained in Models 1, 2 and 3, respectively; M 2 and M 3 are estimates of mortality obtained from the linear regression fit in Models 2 and 3; r 2 (M 2 ) and r 2 (M 3 ) are r-squared computed for the linear regression fit in Models 2 and 3.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The main view of the service in the basic mode (left) and country view in wide mode (right).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The trajectory of COVID-19 epidemics in the USA. The official data in black, the estimate in red.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Summary of the state of COVID-19 epidemics in selected countries in comparison with number of tests per 1 recorded death. Data sorted by the last column. The following abbreviations are used in columns heads: Est -Estimate of number of cases obtained from the models, CF -average correction factor, DpM -deaths per 1 million population, EpM -estimated cases per 1M population, TpD -number of tests per one recorded death. Number of tests based on data collected from Worldometers.info Coronavirus service on April 12 2020.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

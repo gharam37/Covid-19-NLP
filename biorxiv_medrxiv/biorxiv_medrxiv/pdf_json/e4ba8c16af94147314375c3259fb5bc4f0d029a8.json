@@ -1,0 +1,1252 @@
+{
+    "paper_id": "e4ba8c16af94147314375c3259fb5bc4f0d029a8",
+    "metadata": {
+        "title": "Analysis and Applications of Adaptive Group Testing Methods for COVID-19",
+        "authors": [
+            {
+                "first": "Cassidy",
+                "middle": [],
+                "last": "Mentus",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Martin",
+                "middle": [],
+                "last": "Romeo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Christian",
+                "middle": [],
+                "last": "Dipaola",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Testing strategies for to maximize number of people tested are urgently needed. Recently, it has been demonstrated that RT-PCR has the sensitivity to detect one positive case in a mixed sample of 32 cases [12] , In this paper we propose adaptive group testing strategies based on generalized binary splitting (GBS) [5], where we restrict the group test to the largest group that can be used. The method starts by choosing a group from the population to be tested, performing a test on the combined sample from the entire group, and progressively splitting the group further into subgroups. Compared to individual testing at 4% prevalence, we save 74%; at 1% we save 91%; and at .1% we save 98% of tests. We analyze the number of times each sample is used and show that the method is still ecient if we resort to testing a case individually if the sample is running low.",
+            "cite_spans": [
+                {
+                    "start": 205,
+                    "end": 209,
+                    "text": "[12]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "In addition we recommend clinical screening to lter out individuals with symptoms and show this leaves us with a population with lower prevalence. Our approach is particularly applicable to vulnerable conned populations such as nursing homes, prisons, military ships and cruise ships.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Testing capacity for COVID-19 is still too scarce to meet the needs to meet global health needs. Conned populations are at particular risk for rapid contagion. They may include those who reside in facilities such as prisons, ships, military units and nursing homes. The goal of this paper is to increase the capacity to identify asymptomatic carriers of COVID-19 by applying group testing methods. Current practice typically involves a one-patient-one-test strategy. Recently the potential to detect COVID-19 RNA in a mixture of samples from individuals has been validated [12] using RT-PCR. Group testing was rst studied mathematically in 1943 during World War II to test large groups of US servicemen for syphillis prior to deployment [3] . Now, just as in the WWII era, large scale testing is necessary.",
+            "cite_spans": [
+                {
+                    "start": 573,
+                    "end": 577,
+                    "text": "[12]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 737,
+                    "end": 740,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "COVID-19 is a highly contagious disease that can lead to pneumonia, acute respiratory distress syndrome (ARDS) and death. Clinical symptoms and phyiscal exam features may include fever, cough, shortness of breath, malaise, lethargy, ageusia, anosmia and gastrointestinal (GI) symptoms. Besides this disease's potential lethality, it is highly contagious.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Recently the potential of group testing using RT-PCR for nding SARS-CoV-2 RNA has been demonstrated [12] . In Europe, group-testing is currently being considered as a possible important step to totally cut-o the possibility of a resurgence as our other methods succeed in driving the rate of infection down [4] .",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 104,
+                    "text": "[12]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 307,
+                    "end": 310,
+                    "text": "[4]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In Luxembourg, massive testing to nd asymptomatic carriers is underway and group testing can ll in the gaps in testing asymptomatic positive cases. In Hungary, there are plans to potentially test every person in the entire country using group-tests [6] .",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 252,
+                    "text": "[6]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There is renewed interest in the practical applications of group testing algorithms. In [8] a non-adaptive group testing method and practical applications are explored. We describe adaptive group testing methods based on generalized binary splitting (GBS) [5] . We provide an algorithmic specication for subdividing groups and account for the limited test accuracy and the possibility that the an individual's sample size constrains the number of tests. We explain how prescreening symptomatic cases and separately testing them can dramatically improve performance. Pre-screening reduces the prevalence in the test groups. This approach is relevant for large scale populations and particularly for conned groups.",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 91,
+                    "text": "[8]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 256,
+                    "end": 259,
+                    "text": "[5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "1 Figure 1 .1: (Image credit: Matthew Heidemann) Our group testing method consists of rst clinically screening out symptomatic individuals. This will lower the prevalence in the test population. Our group testing is especially eective when we can assume the prevalence is uniform over the whole population. Therefore, it is especially applicable to conned or cohesive populations. We split the asymptomatic individuals up into groups for which we mix the samples from each individual and test them. A negative result will conrm many negative cases. We subsequently divide groups and test the mixtures of samples for positive results.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 2,
+                    "end": 10,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "This, we show, conserves the number of tests and, as a result, the time spent testing. Using numerical experiments, we also show that our methods can be performed without running out of samples from passing through too many rounds.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This application utilizes a primary clinical screening step to ensure that the tested population is composed of asymptomatic COVID-19 (-) and (+) patients. This ensures the lowest prevalence of disease in the population and enhances the ecacy of the method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Application of group tests to conned populations"
+        },
+        {
+            "text": "Clinical screening should rst take place in the selected population to screen out as many potential positive patients as possible before administering the test. All patients with a history of cough, shortness of breath, nausea, gastrointestinal symptoms, fever, malaise, lethargy, recent contact with positive COVID-19 patients, or having a physical exam consistent with those ndings should be segregated out of the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Application of group tests to conned populations"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint Clinical screening will decrease the prevalence of COVID-19 carriers in the test population if the probability of being asymptomatic given COVID-19 (+) is less than the proportion of the population that is asymptomatic (regardless of COVID-19 (+) or (-)). We demonstrate this by proving the following claim.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "Claim. The sub-population not showing any symptoms will have a lower proportion of asymptomatic carriers when the proportion of people not showing any symptoms in our group is less than the estimated proportion of COVID-19 carriers who are asymptomatic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "We can prove this through a couple of applications of Bayes' theorem. We refer to the event that an individual does not show symptoms as no symptoms. The event that an individual has symptoms that are signs of COVID-19 is referred to as symptoms regardless of whether they carry the disease. We denote the event of carrying the COVID-19 virus as COVID-19. Then an asymptomatic carrier is referred to as no symptoms and COVID-19. Let P (A) denote the probability of an event A occuring. Written in terms of probabilities, screening will help when P (COVID-19|no symptoms) < P (COVID-19).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "Re-writing the left side of the inequality, we get P (COVID-19|no symptoms) = P (COVID-19 and no symptoms) P (no symptoms) = P (no symptoms|COVID-19) P (no symptoms) P (COVID-19).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "3 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint Therefore it is necessary and sucient for P (no P (no symptoms) < 1, which is the same as P (no symptoms|COVID-19) < P (no symptoms). This is the probability of being asymptomatic given that they have COVID-19 for the population we are testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2"
+        },
+        {
+            "text": "If a population has a low prevalence of COVID-19 then it is likely for groups of individuals to not have any positive cases. Therefore it is often the case that one test of the mixture of their samples is all that is needed to determine that they are all negative. testing a mixture of samples from the individuals in the group. The maximum group size in this example is 8. A blue frame represents testing (-) for COVID-19 and a red frame represents testing (+). Two of the group tests of 8 are positive. When this happens, a type of binary search is used to nd one positive case.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "In this example 32 cases are conrmed either (+) or (-) using 11 tests. Some cases are left un-determined for future rounds of testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "Otherwise, a positive result on the combined samples indicates that there are some positive cases. We are therefore able to design a strategy to use less tests to determine whether each individual is positive or negative for the disease by testing mixtures of samples from groups.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "To suciently identify negative cases and positve cases the groups must be large enough to balance nding many negative cases with one test, and locating some positive cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "Step one of the group test method is: 1. A group size is chosen so that the frequency that a group has only (-) cases (gure 3.1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "is roughly equal to the probability we nd at least one (+) case in the group. 4 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 78,
+                    "end": 79,
+                    "text": "4",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint Table 3 .1: Group size specied for the divide and test method. By DTg we mean to apply divide and test, using the minimum of g and the group size for divide and test (e.g. DT32 will use a group of size 32 if DT uses a group of size 64). We study limited group sizes to explore how many tests can be saved depending on the limitations of the instruments.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 76,
+                    "end": 83,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "If the test of the group's combined samples is positive, indicating that one of the individuals in the group is positive, apply a routine of repeatedly dividing the group into subgroups applying tests to the subgroups until a positive individual is identied. This is step two of the group test method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "2. If the rst test is (+), divide the group into two subgroups of equal size. Test the combined sample from individuals in one subgroup to determine which halve contains some positive individuals. Repeat this step on the subgroup that contains the positive cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "This routine is referred to as binary search.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "3.1 Binary search details 5 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint not be tested in this round of binary search, so we return the cases to the test population. Finally split the remaining subgroup into two individual cases. Testing the rst case reveals that they are (-). The second case is then (+). In total: 5 (-) cases and 1 (+) case are revealed using 4 tests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "When the test result of the group's samples is (+) we split the group into two equally sized subgroups testing one of them to decide if it contains some positive cases or if it consists entirely of negative cases. In the second situation, the second half must contain positive cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "Continue the search on the subgroup with positive cases in the same way dividing it into two halves testing the mixed samples from one of the half-subgroups. Repeating this step we are able to nd one positive case. Along the way many groups of several individual are likely to be conrmed negative with a relatively 6 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint small number of tests. Any subgroup that was not tested retains its undetermined status and is returned to the general set of samples to be conrmed positive or negative.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "3. Repeat the procedure starting with 1. on the individuals in the population for which whether they carry the disease has yet to be determined.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "In this paper we consider group testing methods that follow two dierent interpretations of step 1 in the procedure above: methods with a xed group size and methods where the group size changes based on the results of previous tests. Each type of method uses a slightly dierent denition of prevalence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of group test methods"
+        },
+        {
+            "text": "Prevalence is dened as the probability p an individual in the population has COVID-19. For each level of prevalence we specify a xed number of individuals to test their combined samples, performing binary search if it is positive. The xed group size method we analyze in this paper is divide and test (DT). We also consider Dorfman's method as a method to compare the methods against, as well as a simpler alternative that only ever uses an individual's samples for a maximum of two tets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size"
+        },
+        {
+            "text": "Prevalence is dened as the absolute number of positive cases in the test population. As testing is carried out, the conrmed positive and negative cases are set aside are both removed from the undetermined test population. Therefore, the population and the prevalence changes during the testing process. The group size depends on both the population and the prevalence. The adaptive group testing method presented in this paper is generalized binary splitting (GBS).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dynamic group size"
+        },
+        {
+            "text": "In addition to studying these two classes of methods, we make modications to the methods to take into account limitations of the devices and techniques used to test samples for COVID-19 RNA. Specically, we study methods with limited group sizes. These are DT and GBS with maximum group g (DTg and GBSg). They are dened so that any time either DT or GBS species a group size over the capped limit g we take the group size to be g. To cover a wide range of limits of detection we consider groups of sizes 4,8,16,32 and 64.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dynamic group size"
+        },
+        {
+            "text": "This method is can be thought of as a xed group size version of the generalized binary splitting method [5].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "1. If p > .5 then test each member of the population individually. Otherwise, let \u03b1 = log 2 1 p \u2212 1 . Select a group of individuals G with |G| = 2 \u03b1 and apply one test to G. If it is negative, then we conclude that the result of each case in G is negative.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "2. If G is positive we use binary search to nd exactly one case that we can deduce is positive.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "3. Repeat the method starting with step 1. on the yet to be conrmed portion of the population. CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "5 Dynamic group-size method: Hwang's generalized binary splitting (GBS)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "The group testing methods suggested in this paper are based on Hwang's generalized binary splitting method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "In [5] GBS is designed to nd up to D (+) cases in a population containing N individuals. It is described as follows:",
+            "cite_spans": [
+                {
+                    "start": 3,
+                    "end": 6,
+                    "text": "[5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "Take G a group of cases such that |G| = 2 \u03b1 and apply one test to G. If it is negative, then we conclude that the result of each case in G is negative.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "2. If G is positive we use binary search to nd exactly one case that we can deduce is positive.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "3. Set the population to the set of individuals not determined (+) or (-). We set N to be the new population size. If we have found a positive case in the last two steps, we take D \u2212 1 to be the new number of positives in the un-tested population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "This method is extended to populations with a random number of (+) cases by setting the upper limit on positive cases according a chosen condence level (i.e. the probability that the number of (+) exceeds this is very small). In probability terms, if the number of positive cases D is generated acccording to a probability distribution, and we assume probability c that will identify every positive case, then let D c be such that P (D \u2264 D c ) < c. Generalized binary splitting is then applied to nd at most D c positive cases in the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "The setting of Hwang's paper is group testing for general purposes, including identifying defective parts or products in addition to determining individuals with a disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "It is an ethical requirement to determine if each person is (+) or (-) if they are tested for COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "Therefore GBS is appplied for an upper bound D c of positive cases at a xed level of condence c. If exactly D c positive cases are found, then there with non-zero probability there are some cases that have not been determined. Otherwise if < D c positives are identied, then we are certain we have found them all and it will also happen that a positive or negative conrmation was given to each individual by the end of the testing process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "In the case where there could be more positive cases, we repeat GBS with the same level of condence c on the remaining population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "Rather than considering the application of a level of condence as an idiosyncracy of the method, it is actually a fundamental property of identifying asymptomatic COVID-19 carriers. Asymptomatic positives cannot be identied without testing them, we can only pick an upper bound on the cases with a high level of certainty. It might seem preferable to then choose a method that instead prescribes a group-size for each level of prevalence, such as Dorfman's method or divide and test, but for those methods the possibility that we have misjudged the prevalence still needs to be factored in! 6 Condence bounds on group testing methods We will apply DT and GBS with groups capped at 4, 8, 16, 32 and 64 samples using two dierent levels of condence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 GBSg with D .5 (i.e. P (D \u2264 D .5 ) = .5). We repeat GBSg at this level of condence if there are undetermined cases remaining.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 We apply DTg with the group size 2 log( 1 p \u22121) .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 GBSg with D .99 . For a population generated by a prevalence level p, this will perform worse on average than the application with D .5 , but level of eciency theoretically guarenteed for GBS [5] will hold with 99% condence. Therefore, we can be more condent of the algorithm;s performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 For populations of size N generated with prevalence p, we apply DTg at the actual prevalence level of the population with 99% condence. That is, we apply DTg with the group size (with ceiling g) corresponding to p .99 = D.99 N .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "8 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint For small to medium sized populations, the 99% condence upper bound is very dierent from the mean.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "The dierent condence levels are very close for large N for a constant probability of having COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "How condent we are needs to be taken into account in this scenario as well because assuming a uniform probability of having the disease is likely to be too broad of an assumption. There are many dierent factors that lead to sub-populations having distinct frequencies of carrying COVID-19 and the certainty about the prevalence varies as well. 7 Dorfman's method [3] We compare the results from the DT and GBS methods to Dorfman's method. Dorfman's method is as follows:",
+            "cite_spans": [
+                {
+                    "start": 363,
+                    "end": 366,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "1. For a the optimal group size b (dened below), apply one test to a group of b cases. If the result is negative, then conclude that every case in the group is negative.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "2. If the result is positive, test each case individually.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "If the test result is negative then one test was used for b cases. If it is positive, then b+1 tests were used. The quantity b is chosen to minimize the expected number of tests used to determine the result of one individual case,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "We will use this formula to compute the expected proportion of tests saved for several dierent levels of prevalence to compare to the successor binary search based methods we choose study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "8 Analysis of group testing methods methods 1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "To evaluate and analyze the performance we assume that the populations are sequences of randomly generated i.i.d. variables representing cases with the probability of having the disease p. The population is then modeled by a probability distribution with the following parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 N -the size of the population/number of cases \u2022 pthe probability that a case is positive. We refer to this as the prevalence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 A case is then a Bernoulli random variable that is positive with probability p and negative with probability 1 \u2212 p.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 The number of positive cases is then a binomial random variable with N samples and probability p of a success, we write this as binomial(N, p).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "\u2022 T \u2212the number of tests needed to determine the status of every case for a population of size N . . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "We compute the average number of bits per test by sampling populations many times and taking the mean of this quantity computed for each sample.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "In section 9 we analyze the performance of the group testing methods at a selection of prevalences for populations of size 100 and 1000. In section 10 we analyze the performance at the .99 condence upper bound. This can be thought of as overestimating the prevalence by a large enough amount so that we are 99% sure that the actual number of positive cases falls at or below this level.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "In section 11 we analyze the number of rounds of testing each sample goes through. Our results suggest that not only do group testing methods save tests and time, but they can be done within the realistically expected amount of usage for each test.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": "An analysis of the histograms of the number of tests per case from which we compute the average performances is in the numerical results section after the bibliography (section 14). 9 Performance of group testing methods at dierent prevalences Interestingly, although GBS has theoretical guarentees on the number of tests, DT has better performance on average.",
+            "cite_spans": [
+                {
+                    "start": 182,
+                    "end": 183,
+                    "text": "9",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixed group size method: divide and test (DT)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "We analyze the eect of picking the prescribed method for a conservatively large estimate on the prevalence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GBS and DT at 99% condence"
+        },
+        {
+            "text": "A larger estimate on the prevalence will still take advantage of the frequent occurence of many consecutive negative cases. The overestimate we use corresponds to a probability of having less positive cases of .99. We sample the populations at least 100 times and take the mean of the proportion of tests saved over all samples.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GBS and DT at 99% condence"
+        },
+        {
+            "text": "Specically for DTg applied to populations of 100 and 1000 we generated 100 samples. For GBSg applied to populations of size 100 we sampled 1000 times except for GBS16. For GBSg applied to populations of size 12 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GBS and DT at 99% condence"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint 1000 we sampled 100 times except for GBS64 we sampled 1000 times. The dierences in number of samples are due to the overall computational expense of simulating GBS and DT.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GBS and DT at 99% condence"
+        },
+        {
+            "text": "The mean savings of each numerical experiment are presented in the following ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GBS and DT at 99% condence"
+        },
+        {
+            "text": "Although demonstrated to be more ecient in test usage, generalized binary splitting requires some samples to be used at least as many times as the logarithm of initial group size. For maximum group sizes of 32 and 64 this implies that positive cases will be tested at least 6 or 7 times. As is demonstrated by gures 11.1 and 11.2 it is possible for tests to be used more than twice as many times.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Number of uses for each sample"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "13"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint Figure 11 .1: For GBS32 we sample a population of size 10,000 and record the number of times each case is tested. Note that for prevalence of p = .1% a sample is used at most 5 times in the population. In gure 11.2 where we perform the same experiment we nd cases that are tested up to 9 times. We apply GBS32 to nd at most D .99 . We see in gure 11.3 that the proportion of cases that are tested many times (more than 6) is very low. This is evidence that testing the cases indivually when we are running low (if we are limited to 6 uses) adds up to less than 1% extra tests. If we are able to test a sample more than this many times, individually testing when we are about to run out eects the eciency negligibly.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 153,
+                    "text": "Figure 11",
+                    "ref_id": null
+                }
+            ],
+            "section": "13"
+        },
+        {
+            "text": "14 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "13"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint Figure 11 .3: We sample a population of size 10000 at various prevalence levels and use GBS32 at the 99% condence upper bound. We plot the histograms of the number of times postive results and negative results are tested given that they are tested more than once. Interestingly, sometimes the number of times negative cases are tested seems to have a larger maximum.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 153,
+                    "text": "Figure 11",
+                    "ref_id": null
+                }
+            ],
+            "section": "13"
+        },
+        {
+            "text": "Gaining knowledge of COVID positive status in asymptomatic carriers is of prime importance in the ght to contain and eliminate the disease. The group testing strategy will generate certainty and a margin of safety in conned populations and may be useful in detection of disease burden in geographically dispersed 15 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint populations as a mode of surveillance. A key factor in our strategy is the two phase approach that we propose. Clinical screening of symptomatic patients cuts down the prevalence of Covid-19 in the chosen asymptomatic test populations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Rapid, large scale testing is urgently needed for naval ships and military bases. A recent outbreak upon the USS Roosevelt has brought this concern to the forefront of military proporities [7] . Recently Italian prisoners have rioted rioting due to lack of testing [9] . 300 prisoners have been released from NYC prisons due to concern for spread of coronavirus [10] . Nursing homes have been sites of extensive outbreaks [11] .",
+            "cite_spans": [
+                {
+                    "start": 189,
+                    "end": 192,
+                    "text": "[7]",
+                    "ref_id": null
+                },
+                {
+                    "start": 265,
+                    "end": 268,
+                    "text": "[9]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 362,
+                    "end": 366,
+                    "text": "[10]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 422,
+                    "end": 426,
+                    "text": "[11]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In the current phase of the pandemic, testing for the presence of COVID-19 targeted antibodies using viral antigens such as the ELISA assay are being used to test for both exposure and immunity. It is an important topic to explore how antibody tests can be most eectively used in tandem with PCR tests leading to the largest possible testing capacity. Antibody tests are important especially to discover whether rst responders are potentially exposed and immune to the disease. As antibody tests are not yet produced enabling point of care usage, there is a scarcity of antibody testing capacity just as there is PCR testing capacity. Is it feasible to apply group testing methods to antibody assays?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Screening an asymptomatic population is challenging but important. Sensitivity of tests is paramount but also utilization of resources must be ecient. This study proposes a statistically valid mathematical model to optimize number of tests performed On chosen populations. The future direction of our work will require clinical validation with real world application of this group testing strategy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The clinical screening of symptomatic patients out of our population is helpful but it will also make detecting virus in asymptomatic people potentially tougher because of the chosen viral load. Current RT-PCR methods are standard but have a concerning false negative rate in symptomatic patients [1] . This may be further exacerbated in asymptomatic patients. Future studies may explore or consider the use of more sensitive techniques including DDPCR and addition of other sampling techniques such as fecal specimens and perhaps advanced imaging such as chest CT scan.",
+            "cite_spans": [
+                {
+                    "start": 297,
+                    "end": 300,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Based on the above evidence it is clear that a comprehensive strategy is necessary to test all asymptomatic people. This strategy will uncover the hidden silent carriers of disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Group testing has the chance for saving tests, while giving an exit to revert to individual testing if there are more cases than estimated. These strategies are not necessarily the theoretical optimums. Nevertheless, by our calculation and numerical simulations they have the power to cut down the number of tests used.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The group testing method is applicable to conned populations from both a clinical and mathematical stand point. We can clinically screen conned groups to decrease the prevalence in a predictable way. This method allows each patient in the population to get a test result. We explore adaptive and non-adaptive strategies for group testing for COVID-19, therefore we add adaptive and binary search based non-adaptive strategies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Both perform well even when we restrict the size of the group based on the sensitivity of RT-PCR.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We test the performance of two algorithms: divide and test and generalized binary splitting. For populations of size 100 and 1000 with each case being positive independent of one another with probability p, we nd that both methods save many tests. In fact, even when we restrict the size of the groups they make substantial savings. For example at prevalence .001 and group sizes capped at 16, both DT16 and GBS16 are capable of outperforming Dorfman's method, that requires a group size of 33 for optimal performance. For a population of 1000 and condence level .99, the DT16 and GBS16 also have a similar performance to Dorfman's method at .001 where Dorfman's method is chosen as if we knew the exact prevalence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We nd that DT outperforms GBS on average even though GBS in theory uses close to optimal number of tests for a known xed number of (+) cases (bounded above by #tests \u2212 1 + information lower bound). This indicates that methods based on DT have the potential to save many tests. We found that DT when applied without a capped recovers close to the optimal 1 bit of information with each group-test. If the measurement is sensitive to detect one positive in groups of size twice up to 16 as large as the current maximum, then optimally ecient testing can be carried out. It might be the case that a full binary search of the group puts too much strain on the laboratory work ow. The bit of information that gained from negative test results on large pools can be leveraged while choosing smaller sample sub-groups to carry out the process of nding positive cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint Since samples can be divided, frozen and stored for continuous use we mathematically analyze how many divisions we have to use for each sample. We nd that testing individually when the sample is about to run out does not subtract substantially from the savings. We demonstrate that for a group size of 32 the generalized binary search on 10000 cases uses the same sample more than 6 times for < 1% of all cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "Therefore, applying a test individually to samples when they are running low is a viable way to save many tests while not depleting material from one person's sample.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "[4] John Follain. Spain, italy to extend lockdowns amid renewed rise in cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "https://www.bloombergquint.com/politics/spain-italy-to-extend-lockdowns-amid-persistent-rise-incases. Accessed: 2020-04-10.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "[5] FK Hwang. A method for detecting all defective members in a population by group testing. Journal of the American Statistical Association, 67(339):605608, 1972.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "[6] Fanni Kasz\u00c3\u00bds. Coronavirus: Whole country could be tested in a matter of days with new process? https://hungarytoday.hu/coronavirus-whole-country-could-be-tested-in-a-matter-of-days-withnew-process/. Accessed: 2020-04-02.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "[ . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint .05. Again, the performance of GBS is tightly concentrated at its mean.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "16"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "19"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "19"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint for both GBS and DT. The maximum group size is 64. For GBS we sampled 1000 populations, for DT we sampled 100 populations. Note that the spread of the DT algorithm is much wider and has many cases that need a much lower number of tests than GBS. The small bars in GBS are caused by the 1% chance of not identifying all of the cases in one run and so repeating the process on the rest of the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "19"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "21"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20050245 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "21"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Correlation of chest ct and rt-pcr testing in coronavirus disease 2019 (covid-19) in china: a report of 1014 cases",
+            "authors": [
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Ai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhenlu",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hongyan",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chenao",
+                    "middle": [],
+                    "last": "Zhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenzhi",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qian",
+                    "middle": [],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ziyong",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Liming",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Group testing: an information theory perspective",
+            "authors": [
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Aldridge",
+                    "suffix": ""
+                },
+                {
+                    "first": "Oliver",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Scarlett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Foundations and Trends R in Communications and Information Theory",
+            "volume": "15",
+            "issn": "3-4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The detection of defective members of large populations",
+            "authors": [
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Dorfman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1943,
+            "venue": "The Annals of Mathematical Statistics",
+            "volume": "14",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Evaluation of group testing for sars-cov-2 rna. medRxiv",
+            "authors": [
+                {
+                    "first": "Nasa",
+                    "middle": [],
+                    "last": "Sinnott-Armstrong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brendan",
+                    "middle": [],
+                    "last": "Hickey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Italian coronavirus prison riot six dead",
+            "authors": [
+                {
+                    "first": "Elizabeth",
+                    "middle": [],
+                    "last": "Sundlof",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Coronavirus new york update: Mayor announces immediate release of 300 prisoners convicted for non-violent oenses",
+            "authors": [
+                {
+                    "first": "Rohan",
+                    "middle": [],
+                    "last": "Unnikrishnan",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "2020--2023",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "All 94 residents of new jersey nursing home presumed positive for coronavirus",
+            "authors": [
+                {
+                    "first": "William",
+                    "middle": [],
+                    "last": "Westhoven",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "2020--2023",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Evaluation of covid-19 rt-qpcr test in multi-sample pools. medRxiv",
+            "authors": [
+                {
+                    "first": "Noga",
+                    "middle": [],
+                    "last": "Idan Yelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Einat",
+                    "middle": [],
+                    "last": "Aharony",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amir",
+                    "middle": [],
+                    "last": "Shaer-Tamar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Esther",
+                    "middle": [],
+                    "last": "Argoetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dina",
+                    "middle": [],
+                    "last": "Messer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Einat",
+                    "middle": [],
+                    "last": "Berenbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "Areen",
+                    "middle": [],
+                    "last": "Shafran",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nagam",
+                    "middle": [],
+                    "last": "Kuzli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tamar",
+                    "middle": [],
+                    "last": "Gandali",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hashimshony",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Figure 14.1: Histograms for GBS with group size capped at 8 for N = 100 at prevalence levels p = .1 and p = .5 sampled 1000 times",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Diagram depicting the application of screening.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "An example of a population with low prevalence. For this example only, a red circle represents a case (+) for COVID-19 and a blue circle represents a case (-) for COVID-19. The rectangles represent",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "The result of testing the combined samples in the group is positive. Therefore split the group into two subgroups of equal size. Test subgroup 1. The result is (-). Therefore every case in subgroup 1 is negative. The (+) cases have to be in subgroup 2. We divide subgroup 2 into two subgroups and pass down the labels subgroup 1 and 2. The combined samples from subgroup 1 test positive. Subgroup 2 will",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": ". The median number of positive cases in a group 2 \u03b1 is then roughly p \u00d7 1 p = 1,therefore the group contains only negative individuals with about the same frequency as it contains at least one positive individual. Divide and test, although having xed group size, can be thought of as a version of Hwang's generalized binary splitting for large N . For N large and D positive cases, the status of each case is approximately independent of the other with a probability of being positive p = D N . This is approximate because the generalized binary splitting algorithm assumes a xed amount of positive cases in a xed population and drawing cases without replacement can be approximately modeled by a sequence of independent Bernoulli random variables. 7 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "For our performance analysis, we sample populations of sizes N = 100, 1000 at prevelance levels p = .001, .01, .02, .03, .04, .05, .1, .15, .2, and .25. We present the mean of 1000 samples and present them in the",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Dorfman's method with group size b takes either 1 b tests per case to conrm a negative case when it is in a group of comprised of b negatives, or b+1 b tests per case if the result is positve. If there are some positive cases in the group, in addition to the test on the mixture of samples from the whole group, a test is applied to each individual in the group. This leads the average number of tests per individual to be b+1 b .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "For GBS64 we sample a population of size 10000 and apply GBS64 with the .99 condence level. The histogram shows the number of times we use each sample.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Distribution of tests per case for DT32 and GBS32 on populations of size 100 with prevalence of .5. The distribution of GBS32 is much more concentrated at .5 tests per case.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Distribution of tests per case for DT32 and GBS32 on populations of size 1000 with prevalence",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Tests per case. Left : DT32 on a population of size 1000. Right: GBS32 on a population of 1000. The prevalence of both populations is p = .01. The results are for DT32 and GBS32 performed assuming the .5 condence upper bound. 14.2 GBS and DT at dierent levels of prevalence with .99 condence Figure 14.5: Histograms of the number of tests per case for GBS32 with population of size",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Histograms of the number of tests per case for populations of size 1000 at condence level .99",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF2": {
+            "text": "Please visit https://github.com/cmentus/group-testing/ to nd the Jupyter Notebook for all numerical experiments.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "For DTg results, some of the entries are left empty. This is because the xed group size is less than the capped group size so it would be redundant to list it; for the performance refer to the nearest entry to the left. We do not do this for GBS because the group size is adaptive and there is nothing restricting it from becoming small.First we assess the performance of DT at its uncapped group size, recording the group-size, the percentage of tests saved and the information rate.prevalence-p group-size-2 log 2 1 we feel this is a good approximation for all prevalence levels. The number of bits per +/-status of a case steeply increases in the beginning and levels o at 1. This expresses the negative relationship between the eectiveness of group-testing and increasing prevalence.The results of 9.1 indicate the near optimality of divide and test. It recovers nearly a bit of information for each test. For low prevalence, the conrmation of each case holds a very low amount of entropy. This is a way to understand the quantitative relation between tests saved and prevalence by group testing. We list the performance of divide and test at dierent levels of prevalence. Divide and test has a constant group size given the prevalence.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "table.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "https://www.upi.com/Defense-News/2020/03/26/Navy-docks-USS-Theodore-Roosevelt-to-test-crewfor-COVID-19/5391585250944/. Accessed: 2020-03-26.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank Martin Douglas for interesting and useful discussions about group testing methods using binary search. We are also grateful to Matthew Heidemann, Blake Elias, Gary Chizever, Michael Wells, Olga Buchel and Patrick O'Neill for contributing ideas and useful feedback. We thank Matthew Heidemann for the diagram at the beginning of the paper that skillfully explains our process. We are very thankful to Yaneer Bar-Yam for important recommendations that greatly improved the ideas, clarity and organization of the paper. We are very thankful to Oliver Johnson for discussing information theoretic aspects of our problem and recommending the information rate as a measure of performance.We thank EndCoronavirus.org and the New England Complexity Institute for giving us the platform to meet and collaborate as a team and meet great people with diverse backgrounds and skillsets united in the cause to ght the current pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

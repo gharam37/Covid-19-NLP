@@ -1,0 +1,2287 @@
+{
+    "paper_id": "33d122f099d6f6ab03b9ac2d756910607451fca7",
+    "metadata": {
+        "title": "Real-time forecasts and risk assessment of novel coronavirus (COVID-19) cases: A data-driven analysis",
+        "authors": [
+            {
+                "first": "Tanujit",
+                "middle": [],
+                "last": "Chakraborty",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "SQC and OR Unit",
+                    "institution": "Indian Statistical Institute",
+                    "location": {
+                        "addrLine": "203, B. T. Road",
+                        "postCode": "700108",
+                        "settlement": "Kolkata",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Indrajit",
+                "middle": [],
+                "last": "Ghosh",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "AERU",
+                    "institution": "Indian Statistical Institute",
+                    "location": {
+                        "addrLine": "203, B. T. Road",
+                        "postCode": "700108",
+                        "settlement": "Kolkata",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The coronavirus disease 2019 has become a public health emergency of international concern affecting 201 countries and territories around the globe. As of April 4, 2020, it has caused a pandemic outbreak with more than 11,16,643 confirmed infections and more than 59,170 reported deaths worldwide. The main focus of this paper is two-fold: (a) generating short term (real-time) forecasts of the future COVID-19 cases for multiple countries; (b) risk assessment (in terms of case fatality rate) of the novel COVID-19 for some profoundly affected countries by finding various important demographic characteristics of the countries along with some disease characteristics. To solve the first problem, we presented a hybrid approach based on autoregressive integrated moving average model and Wavelet-based forecasting model that can generate short-term (ten days ahead) forecasts of the number of daily confirmed cases for Canada, France, India, South Korea, and the UK. The predictions of the future outbreak for different countries will be useful for the effective allocation of health care resources and will act as an early-warning system for government policymakers. In the second problem, we applied an optimal regression tree algorithm to find essential causal variables that significantly affect the case fatality rates for different countries. This data-driven analysis will necessarily provide deep insights into the study of early risk assessments for 50 immensely affected countries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Motivated by the above discussion, we propose a novel hybrid ARIMA-WBF model which is a two-step pipeline approach. In the first step of the proposed hybrid approach, an ARIMA model is built to model the linear components of the epidemic time series, and a set of outof-sample forecasts are generated. In the second phase, the ARIMA residuals (oscillatory residual series) are remodeled using a mathematically-grounded WBF model. Here, WBF 6 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In December 2019, Wuhan city of China became the centre of an outbreak of pneumonia of unknown cause, latter named as coronavirus disease 2019 (COVID- 19) , which raised intense attention not only within China but internationally [13; 32] . The COVID-19 pandemic is the most significant global crisis since the World War-II that affected almost all the Countries of our planet [4] . As of April 4, 2020, an outbreak of COVID-19 has resulted in 11, 16, 643 confirmed cases with reported deaths of 59,170 worldwide [22] . On March 11, WHO publicly characterized COVID-19 as a \"global pandemic\", and shortly after that, the United States declared COVID-19 outbreaks a national emergency. The COVID-19 has caused a great threat to the health and safety of people all over the world due to its widespread and potential harm. Thus, the studies of the novel COVID-19 epidemics and its future development trend has become a cutting-edge research topic at this moment. We are therefore motivated to ask: (a) Can we generate real-time forecasts of daily new COVID-19 cases for countries like Canada, France, India, South Korea, and the UK? (b) What are the probable causal variables that have significant impacts on the case fatality rates for the profoundly affected countries?",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 154,
+                    "text": "19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 230,
+                    "end": 238,
+                    "text": "[13; 32]",
+                    "ref_id": null
+                },
+                {
+                    "start": 377,
+                    "end": 380,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 444,
+                    "end": 447,
+                    "text": "11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 448,
+                    "end": 451,
+                    "text": "16,",
+                    "ref_id": null
+                },
+                {
+                    "start": 452,
+                    "end": 455,
+                    "text": "643",
+                    "ref_id": null
+                },
+                {
+                    "start": 513,
+                    "end": 517,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To answer the first question, we study classical and modern forecasting techniques for which the prediction accuracy largely depend on the availability of data [28] . In outbreaks of COVID-19 epidemics, there are limited data available, making predictions widely uncertain. From previous studies, it was evident that the timing and location of the outbreak facilitated the rapid transmission of the virus within a highly mobile population [29] . In most of the affected countries, the governments implemented a strict lockdown in subsequent days of initial transmission of the virus and within hospitals, patients who fulfill clinical and epidemiological characteristics of COVID-19 are immediately isolated. The constant increase in the global number of COVID-19 cases is putting a substantial burden on the health care system for Canada, France, India, South Korea, and the UK. To anticipate additional resources to combat the epidemic, various mathematical and statistical forecasting tools [21; 34] and outside China [20; 36; 10] were applied to generate short-term and long-term forecasts of reported cases. These model predictions have shown a wide range of variations. Since the time series datasets of COVID-19 contain both nonlinear and nonstationary patterns, therefore, making decisions based on an individual model would be critical. In this study, we propose a hybrid modeling approach to generate short-term forecasts for multiple countries. In traditional time series forecasting, the autoregressive integrated moving average (ARIMA) model is used predominantly for forecasting linear time series [6] . But in recent literature, the wavelet transformation based forecasting model has shown excellent performance in nonstationary time series data modeling [27] . Thus, combining both models may accurately model such complex autocorrelation structures in the COVID-19 time-series datasets and reduce the bias and variances of the prediction error of the component models. In the absence of vaccines or antiviral drugs for COVID-19, these estimates will provide an insight into the resource allocations for the exceedingly affected countries to keep this epidemic under control. Besides shedding light on the dynamics of COVID-19 spreading, the practical intent of this data-driven analysis is to provide government officials with realistic estimates for the magnitude of the epidemic for policy-making.",
+            "cite_spans": [
+                {
+                    "start": 160,
+                    "end": 164,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 439,
+                    "end": 443,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 994,
+                    "end": 1002,
+                    "text": "[21; 34]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1021,
+                    "end": 1033,
+                    "text": "[20; 36; 10]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1612,
+                    "end": 1615,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1770,
+                    "end": 1774,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The second problem is connected with the global concern of health and mortality due to the significant COVID-19 outbreaks. Mortality is crudely estimated using a statistic, the case fatality rate (CFR), which divides the number of known deaths by the total number of identified cases [18; 5; 30] . During the current phase of this global pandemic, it is criti-cally important to obtain reliable estimates of the overall CFR. The estimates of CFR are highly dependent on several country-specific demographic parameters and various disease characteristics. A key differentiation among the CFR of different countries can be found by determining an exhaustive list of causal variables that significantly affect CFR. In this work, we put an effort to identify critical parameters that may help to assess the risk (in terms of CFR) using an optimal regression tree model [7] . The regression tree has a built-in variable selection mechanism from high dimensional variable space and can model arbitrary decision boundaries. The regression tree combines case estimates, epidemiological characteristics of the disease, and heath-care facilities to assess the risks of major outbreaks for profoundly affected countries. Such assessments will help to anticipate the expected morbidity and mortality due to COVID-19 and provide some critical information for the planning of health care systems in various countries facing this epidemic.",
+            "cite_spans": [
+                {
+                    "start": 284,
+                    "end": 295,
+                    "text": "[18; 5; 30]",
+                    "ref_id": null
+                },
+                {
+                    "start": 865,
+                    "end": 868,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The rest of the paper is organized as follows. In Section 2, we discuss the data, development of the hybrid model, and experimental results for short-term forecasts of COVID-19 for Canada, France, India, South Korea, and the UK. In Section 3, country-wise CFR datasets, method, and results for finding critical parameters are presented. We discuss the assumptions and limitations of our findings in Section 4. Finally, the discussions about the results and policy recommendations are given in Section 5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We focus on the daily figures of confirmed cases for five different countries, namely Canada, France, India, South Korea, and the UK. The datasets are retrieved by the Global Change Data Lab 1 ). All these datasets are collected from the starting date of the disease for the respective countries to April 4, 2020. In this section, we first briefly discuss these datasets, followed by the development of the proposed hybrid model, and finally, the application of the proposed model to generate short-term forecasts of the future COVID-19 cases for five different countries. All these datasets and codes to be used in this section are made publicly available at https://github.com/indrajitg-r/COVID for the reproducibility of this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Real-time forecasting of COVID-19 cases"
+        },
+        {
+            "text": "Five univariate time-series datasets are collected for the real-time prediction purpose of COVID-19 cases for India, Canada, France, South Korea, and the UK. Several previous studies have forecasted future COVID cases for China and a few other countries using mathematical and traditional time series forecasting models, for details see [29; 21; 34; 20; 36] . We try to nowcast the COVID-19 cases of five different countries based on their past cases. For India and UK, we consider the daily laboratory-confirmed cases from January 30, 2020, through April 4, 2020 and from January 31, 2020 through April 4, 2020, respectively, for model building. Daily COVID-19 cases data for Canada, France, and South Korea are taken for the time period January 20, 2020 through April 4, 2020, January 25, 2020 through April 4 2020, and January 26 through April 4 2020, respectively.",
+            "cite_spans": [
+                {
+                    "start": 337,
+                    "end": 357,
+                    "text": "[29; 21; 34; 20; 36]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "The dataset for India contains a total of 64 observations, 65 observations for the UK, 70 observations for Canada, 71 observations for France, and 76 for South Korea. For these five countries the outbreaks of COVID-19 started almost from the same timeline and the epidemic curves still not showing the sharp diminishing nature, just like China. We limit our attention to trended and non-seasonal models, given the patterns, observed in Table 1 . Note that we follow a pragmatic approach in that we assume that the trend will continue indefinitely in the future in contradiction with other S-curve or deterministic SIR modeling approaches which assume convergence.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 436,
+                    "end": 443,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Datasets"
+        },
+        {
+            "text": "Training data ACF plot PACF plot ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country"
+        },
+        {
+            "text": "To forecast confirmed cases of COVID-19, we adopt hybrid time series forecasting approaches combining ARIMA and wavelet-based forecasting techniques. The proposed hybrid model overcome the deficiencies of the single time series models. Before describing the proposed methodology, we give a brief description of the individual models to be used in the hybridization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed Model"
+        },
+        {
+            "text": "ARIMA is a classical time series model, used for tracking linear tendencies in stationary time series data. ARIMA model is denoted by ARIMA(p, d, q). The parameters p and q are the order of the AR model and the MA model respectively, and d is the level of differencing [9] . ARIMA model can be mathematically expressed as follows:",
+            "cite_spans": [
+                {
+                    "start": 269,
+                    "end": 272,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "ARIMA Model"
+        },
+        {
+            "text": "where y t denotes the actual value of the variable under consideration at time t, \u03b5 t is the random error at time t. The \u03c6 i and \u03b8 j are the coefficients of the ARIMA model. The basic assumption made by the ARIMA model is that the error series follows zero mean with constant variance, and satisfies the i.i.d condition. Building an ARIMA model for any given time series dataset can be described in three iterative steps: model identification (achieving stationarity), parameter estimation (the autocorrelation function (ACF) and the partial autocorrelation function (PACF) plots are used to select the values of parameters p and q), and model diagnostics checking (finding the 'best' fitted forecasting model using Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC)) [15] .",
+            "cite_spans": [
+                {
+                    "start": 797,
+                    "end": 801,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "ARIMA Model"
+        },
+        {
+            "text": "Wavelet analysis is a mathematical tool that can reveal information within the signals in both the time and scale (frequency) domains [27] . This property overcomes the basic drawback of Fourier analysis and wavelet transforms the original signal data (especially in the time domain) into a different domain for data analysis and processing. Wavelet-based models are most suitable for nonstationary data, unlike ARIMA [23] . Most epidemic and climatic time-series datasets are nonstationary; therefore, wavelet transforms are used as a forecasting model for these datasets [11; 2] . When conducting wavelet analysis in the context of time series analysis, the selection of the optimal number of decomposition levels is vital to determine the performance of the model in the wavelet domain. The following formula for the number of decomposition levels, W L = int[log(n)] is used to select the number of decomposition levels, where n is the time-series length. The wavelet-based forecasting (WBF) model transforms the time series data by using a hybrid maximal overlap discrete wavelet transform (MODWT) algorithm with a 'haar' filter. Daubechies wavelets can produce identical events across the observed time series in so many fashions that most other time series prediction models cannot recognize [3] . The necessary steps of a wavelet-based forecasting model, defined by [2] , are as follows. Firstly, the Daubechies wavelet transformation and a 5 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 134,
+                    "end": 138,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 418,
+                    "end": 422,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 573,
+                    "end": 580,
+                    "text": "[11; 2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1298,
+                    "end": 1301,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1373,
+                    "end": 1376,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Wavelet-based Forecasting (WBF) Model"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059311 doi: medRxiv preprint decomposition level are applied to the nonstationary time series data. Secondly, the series is reconstructed by removing the high-frequency component, using the wavelet denoising method. And, lastly, an appropriate ARIMA model is applied to the reconstructed series to generate out-of-sample forecasts of the given time series data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For the COVID-19 datasets, we propose a hybridization of stationary ARIMA and nonstationary WBF model to reduce the individual biases of the component models [24] . The COVID-19 cases datasets for five different countries are complex in nature. Thus, the ARIMA model fails to produce random errors or even nonstationary residual series, evident from Figure 1 . The behavior of the residual series generated by ARIMA is mostly oscillatory and periodic; thus, we choose the wavelet function to model the remaining series. Several hybrid models based on ARIMA and neural networks are available in the field of time series forecasting; see for example [35; 1; 12; 19; 8; 25] .",
+            "cite_spans": [
+                {
+                    "start": 158,
+                    "end": 162,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 648,
+                    "end": 670,
+                    "text": "[35; 1; 12; 19; 8; 25]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 350,
+                    "end": 358,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "Algorithm 1 Proposed Hybrid ARIMA-WBF Model 1 Given a time series of length n, input the in-sample (training) COVID-19 daily cases data. 2 Determine the best ARIMA(p, d, q) model using the in-sample (training) data.",
+            "cite_spans": [
+                {
+                    "start": 137,
+                    "end": 138,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "\u2022 ARIMA parameters p, d, and q values are selected using the procedures described in Section 2.2.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "\u2022 Obtain the predictions using the selected ARIMA(p, d, q) model for the in-sample data and generate required number of out-of-sample forecasts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "\u2022 Obtain the residual series (\u03b5 t ) by subtracting ARIMA predicted values from the original training series. 3 Train the residual series (\u03b5 t ) generated by ARIMA by the WBF model, as described in Section 2.2.2.",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 110,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "\u2022 Select the number of decomposition level using the formulae W L = int[log(n)] and boundary is chosen to be 'periodic'.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "\u2022 Obtain in-sample predictions (\u03b5 t ) using the WBF model and generate required number of out-of-sample forecasts.. models the left-over autocorrelations (in this case, the oscillatory series in Figure 1 ) in the residuals which ARIMA could not model. The algorithmic presentation of the proposed hybrid model is given in Algorithm 1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 195,
+                    "end": 203,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "The proposed model can be looked upon as an error remodeling approach in which we use ARIMA as the base model and remodel its error series by wavelet-based time series forecasting technique to generate more accurate forecasts. This is in relevance to model misspecification in which disturbances in the nonlinear time series of COVID-19 cases cannot be correctly modeled with the ARIMA model. Therefore, if the error series generated by ARIMA is adequately modeled and incorporated with the forecasts, the performance of the out-of-sample estimates can be improved, even though marginally at times.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "Remark. The proposed hybrid approach contradicts other mathematical and traditional forecasting modeling approaches applied to COVID-19 data. We choose two completely diverse models for hybridization, one from classical forecasting literature and another from modern forecasting approaches.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hybrid ARIMA-WBF Model"
+        },
+        {
+            "text": "Five time series COVID-19 datasets for Canada, France, India, South Korea, and the UK are considered for training the proposed model and the component models. The datasets are nonlinear, nonstationary, and non-gaussian in nature. We have used root mean square error (RMSE), mean absolute error (MAE), to evaluate the predictive performance of the models used in this study [17] . Since the number of data points in both the datasets is limited thus going for advanced deep learning techniques will simply over-fit the datasets [14] . We start the experimental evaluation for all the five datasets with the classical ARIMA(p,d,q) using 'forecast' [16] statistical package in R software. To fit an ARIMA model, we first specify the parameters of the model. Using ACF plot and PACF plot (See Table 1 ), we can decide the value of the parameters of the model. We have also performed unit root tests for stationarity check and all the datasets were found nonstationary. The 'best' fitted ARIMA model is chosen using AIC and BIC values for each training dataset. The fitted ARIMA models for five datasets are as follows: ARIMA(1,2,1) for India, ARIMA(1,1,2) for Canada, ARIMA(0,1,1) for France, ARIMA(2,1,0) for South Korea, and ARIMA(2,2,2) for the UK. We employ a pre-defined Box-Cox transformation set to \u03bb = 0 to ensure the forecast values stay positive. As the ARIMA model is fitted, forecasts are generated for 10-time steps (5 April 2020 to 14 April 2020) for all the five datasets. We also compute training data predicted values and calculate the residual errors. Plots for the residual series are given in Figure 1 .",
+            "cite_spans": [
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 527,
+                    "end": 531,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 646,
+                    "end": 650,
+                    "text": "[16]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 789,
+                    "end": 796,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1609,
+                    "end": 1617,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "It is interesting to see that the error series (residuals) generated by ARIMA are oscillating and nonstationary for all the datasets. These seasonal oscillations can be captured through the wavelet transform, which can decompose a time series into a linear combination of different frequencies. These residual series as in Figure 1 ) satisfy the admissibility condition (zero mean) that forces wavelet functions to wiggle (oscillate between positive and negative), a typical property of wavelets. Thus, we remodel the residuals obtained using the ARIMA model with that of the WBF model. The value of Wavelet levels is obtained by using the formula, as mentioned in Algorithm 1. WBF model was implemented using 'WaveletArima' [26] package in R software with 'periodic' boundary and all the other parameters were kept as default. As the WBF model is fitted on the residual time series, predictions are generated for the next ten time steps (5 April 2020 to 14 April 2020). Further, both the ARIMA forecasts and WBF residual forecasts are added together to get the final out-of-sample forecasts for the next ten days (5 April 2020 to 14 April 2020). The hybrid model fittings (training data) for five countries, namely Canada, France, India, South Korea and the UK are displayed in Figures 2(a) , 3(a), 4(a), 5(a) and 6(a) respectively. The real-time (short-term) forecasts using ARIMA, WBF, and hybrid ARIMA-WBF model for Canada, France, India, South Korea, and the UK are displayed in Figures 2(b) , 3(b), 4(b), 5(b) and 6(b) respectively.",
+            "cite_spans": [
+                {
+                    "start": 725,
+                    "end": 729,
+                    "text": "[26]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 323,
+                    "end": 331,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1279,
+                    "end": 1291,
+                    "text": "Figures 2(a)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1484,
+                    "end": 1496,
+                    "text": "Figures 2(b)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The predicted values for the training COVID-19 cases datasets of the proposed hybrid model for five countries are further used for model adequacy checking and based on actual and predicted test outputs, we computed RMSE and MAE for all the datasets and reported them in Table 2 . The performances of the proposed hybrid ARIMA-WBF model are superior as compared to the individual models for Canada, France, and the UK, whereas, for India and South Korea, our results are competitive with ARIMA. It is often true that no model can be universally employed in all circumstances, and this is in relevance with \"no free lunch theorem\" [33] . Even if in a very few cases hybrid ARIMA-WBF model gave lower information criteria values (in terms of RMSE and MAE for training data), we still can opt for the hybrid model given the asymmetric risks involved as we believe that it is better to take decisions based on a hybrid model rather than depending on a single one at least for 8 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 629,
+                    "end": 633,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 270,
+                    "end": 277,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this preprint . this pandemic. We produced ten-days-ahead point forecasts based on all the three model models discussed in this chapter and reported then in Figures 2-6 . Our model can easily be updated on a daily or periodic basis once the actual values are received for the country-wise COVID-19 cases. CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 182,
+                    "end": 193,
+                    "text": "Figures 2-6",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059311 doi: medRxiv preprint Remark. Please note that this is not an ex-post analysis, but a real, live forecasting exercise. Thus, these real-time short-term forecasts based on the proposed hybrid ARIMA-WBF model for Canada, France, India, South Korea, and the UK will be helpful for government officials and policymakers to allocate adequate health care resources for the coming days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "At the outset of the COVID-19 outbreak, data on country-wise case fatality rates due to COVID-19 were obtained for 50 affected countries. The case fatality rate can be crudely defined as the number of deaths in persons who tested positive for divided by the number of COVID-19 cases. In this section, we are going to find out a list of essential causal variables that have strong influences on the CFR. The datasets and codes of this section are made publicly available at https://github.com/indrajitg-r/COVID for the reproducibility of this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Risk Assessment of COVID-19 cases"
+        },
+        {
+            "text": "In the face of rapidly changing data for COVID-19, we calculated the case fatality ratio estimates for 50 countries from the day of starting the outbreak to 4 April 2020 from the following website 2 . A lot of preliminary analysis is done to determine a set of possible variables, some of which are expected to be critical causal variables for risk assessments of COVID-19 in these affected countries. Previous studies [22; 30; 18; 5] have suggested that the total number of cases, age distributions, and shutdown period have high impacts on the CFR values for some of the countries. Along with these three variables, we also considered seven more demographic structures and disease characteristics for these countries as input variables that are likely to have a potential impact on the CFR estimates. Therefore, the CFR modeling dataset consists of 50 observations having ten possible causal variables and one numerical output variable (viz. CFR), as reported in Table 3 . The possible causal variables considered in this study are the followings: the total number of COVID-19 cases (in thousands) in the country till 4 April, 2020, population density per km 2 for the country, total population (in millions) of the country (approx.), percentage of people in the age group of greater than 65 years, lockdown days count (from the starting day of lockdown till April 4, 2020), time-period (in days) of COVID-19 cases for the country (starting date to April 4, 2020), doctors per 1000 people in the country, hospital beds per 1000 people in the country, income standard (e.g., high or lower) of the country and climate zones (e.g., tropical, subtropical or moderate) of the country. The dataset contains a total of 8 numerical input variables and two categorical input variables.",
+            "cite_spans": [
+                {
+                    "start": 419,
+                    "end": 434,
+                    "text": "[22; 30; 18; 5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 965,
+                    "end": 972,
+                    "text": "Table 3",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Data"
+        },
+        {
+            "text": "For the risk assessment with the CFR dataset for 50 countries, we apply the regression tree (RT) [7] that has built-in feature selection mechanism, easy interpretability, and provides better visualization. Rt, as a widely used simple machine learning algorithm, can model arbitrary decision boundaries. The methodology outlined in [7] can be summarized into three stages. The first stage involves growing the tree using a recursive partitioning technique to select essential variables from a set of possible causal variables and split points using a splitting criterion. The standard splitting criteria for RT is the mean squared error (MSE). After a large tree is identified, the second stage of RT methodology uses a pruning procedure that gives a nested subset of trees starting from the largest tree grown and continuing the process until only one node of the tree remains. The cross-validation technique is popularly used to provide estimates of future prediction errors for each subtree. The last stage of the RT methodology selects the optimal tree that corresponds to a tree yielding the lowest cross-validated or testing set error rate. To avoid instability of trees in this stage, trees with smaller sizes, but comparable in terms of accuracy, are chosen as an alternative. This process can be tuned to obtain trees of varying sizes and complexity. A measure of variable importance can be achieved by observing the drop in the error rate when another variable is used instead of the primary split. In general, the more frequent a variable appears as a primary split, the higher the importance score assigned. A detailed description of the tree building process is available at [17] .",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 100,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 331,
+                    "end": 334,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1687,
+                    "end": 1691,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Method: Regression Tree"
+        },
+        {
+            "text": "The rationale behind the choice of RT as a potential model to find the important casual variables out of 10 input variables for the CFR estimates is the simplicity, easy interpretability, and high accuracy of the RT algorithm. We apply an optimal RT model to the dataset consisting of 50 different country samples and try to find out potential casual variables from the set of available variables that are related to the case-fatality rates. RT is implemented using 'rpart' [31] package in R with \"minsplit\" equals to 10% of the data as a control parameter. We have used RMSE, co-efficient of multiple determination (R 2 ), and adjusted R 2 (AdjR 2 ) to evaluate the predictive performance of the tree model used in this study [17] . An optimal regression tree is built with 7 variables with 'minsplit' = 5 with equal costs for each variable. The estimates of the performance metrics for the fitted tree are as follows: RMSE = 0.013, R 2 = 0.896, and AdjR 2 = 0.769. A variable importance list from the RT is given in Figure 7 and the fitted tree is provided in Figure 8 .",
+            "cite_spans": [
+                {
+                    "start": 474,
+                    "end": 478,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 727,
+                    "end": 731,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1018,
+                    "end": 1026,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 1062,
+                    "end": 1070,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "From the variable importance plot based on the complexity parameter of the RT model (also see Figure 7 ), seven causal variables are obtained out of 10 potential input variables having higher importance. These seven causal variables that significantly affect the CFR for 50 most affected countries are the followings: total number of COVID-19 cases in the country (in thousands), percentage of people in the age group of greater than 65 years, total population (in millions) of the country, doctors per 1000 people in the country, lockdown period (in days) for the country, time-period (in days) of COVID-19 cases for the country, and hospital beds per 1000 people in the country. Our results are consistent with previous results obtained by [30; 18; 5] , where the authors suggested that the total number of cases, age distributions, and shutdown period have high impacts on the CFR estimates. But interestingly, we obtained four more essential causal variables that will provide some new insights into the study of risk assessments for COVID-19 affected countries. Out of these 7 numerical input variables, there are four control variables (number of cases, people of age group > 65 years, lockdown period, and hospital beds per 1000 people) present that can be managed to fight against this deadly disease. Once these variables are taken care of, the respective country may reduce their case fatality rate at a significant rate. x.x3",
+            "cite_spans": [
+                {
+                    "start": 742,
+                    "end": 753,
+                    "text": "[30; 18; 5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 94,
+                    "end": 102,
+                    "text": "Figure 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "x.x9",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x8",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x5",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x6",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x7",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x1 Figure 7 : Variable Importance Percentages affecting the CFR based on a complexity parameter in RT Figure 8 shows the relationship between the important causal variables and CFR. In Figure 8 , the tree starts with the total number of COVID-19 cases as the most crucial causal variable in the parent node. In each box, the top most numerical values suggest the average CFR estimates based on the tree. One of the key findings of the tree is the following rule:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 5,
+                    "end": 13,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 104,
+                    "end": 112,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 187,
+                    "end": 195,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "When the number of cases of a country is greater than 14,000 having a population between 14 to 75 million are having second highest case fatality rate, viz., 10%. Similarly, one can see all the rules generated by RT to get additional information about the relationships between control parameters and the response CFR variable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x1 >= 0.99",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x1 < 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 >= 7.4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 < 19",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x7 >= 3.4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 >= 21",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x5 < 21",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 < 6.6",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x2 >= 75",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x6 < 76 x.x2 < 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x8 < 1.5 yes no x.x1 >= 0.99",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x1 < 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 >= 7.4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 < 19",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x7 >= 3.4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 >= 21",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x5 < 21",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x4 < 6.6",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x2 >= 75",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x.x6 < 76 x.x2 < 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "x ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "We made some simplifying assumptions to carry out the analysis of COVID-19 datasets. The assumptions are listed as follows: (a) the virus mutation rate are comparable for different countries; (b) the recovered persons will achieve permanent immunity against COVID-19; (c) we ignore the effect of climate change (also spatial data structures) during the shortterm predictions. Along in this line, we presented two different approaches to deal with two inter-connected problems on COVID-19. In the first problem of short-term predictions for COVID-19 outbreak in five countries, we proposed a hybrid methodology combining ARIMA and WBF models. In the second problem of risk assessment, we found some important factors affecting case fatality rates of COVID for 50 highly affected nations. However, there may exist a few more controllable factor(s), and some disease-based characteristics that can also have an impact on the value of CFR for different countries, can be regarded as future scope of the study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations of our findings"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations of our findings"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059311 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations of our findings"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Forecasting nonlinear time series with a hybrid methodology",
+            "authors": [
+                {
+                    "first": "Erol",
+                    "middle": [],
+                    "last": "Cagdas Hakan Aladag",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cem",
+                    "middle": [],
+                    "last": "Egrioglu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kadilar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Applied Mathematics Letters",
+            "volume": "22",
+            "issn": "9",
+            "pages": "1467--1470",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Forecasting time series using wavelets",
+            "authors": [
+                {
+                    "first": "Mina",
+                    "middle": [],
+                    "last": "Aminghafari",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jean-Michel",
+                    "middle": [],
+                    "last": "Poggi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "International Journal of Wavelets, Multiresolution and Information Processing",
+            "volume": "5",
+            "issn": "05",
+            "pages": "709--724",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Wavelet-based nonlinear multiscale decomposition model for electricity load forecasting",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Benaouda",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fionn",
+                    "middle": [],
+                    "last": "Murtagh",
+                    "suffix": ""
+                },
+                {
+                    "first": "J-L",
+                    "middle": [],
+                    "last": "Starck",
+                    "suffix": ""
+                },
+                {
+                    "first": "Olivier",
+                    "middle": [],
+                    "last": "Renaud",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Neurocomputing",
+            "volume": "70",
+            "issn": "1-3",
+            "pages": "139--154",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Modeling and forecasting of epidemic spreading: The case of covid-19 and beyond",
+            "authors": [
+                {
+                    "first": "Stefano",
+                    "middle": [],
+                    "last": "Boccaletti",
+                    "suffix": ""
+                },
+                {
+                    "first": "William",
+                    "middle": [],
+                    "last": "Ditto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gabriel",
+                    "middle": [],
+                    "last": "Mindlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Abdon",
+                    "middle": [],
+                    "last": "Atangana",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Risk assessment of novel coronavirus covid-19 outbreaks outside china",
+            "authors": [
+                {
+                    "first": "P\u00e9ter",
+                    "middle": [],
+                    "last": "Boldog",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tam\u00e1s",
+                    "middle": [],
+                    "last": "Tekeli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zsolt",
+                    "middle": [],
+                    "last": "Vizi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Attila",
+                    "middle": [],
+                    "last": "D\u00e9nes",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ferenc",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gergely",
+                    "middle": [],
+                    "last": "Bartha",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "R\u00f6st",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of clinical medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Time series analysis: forecasting and control",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "George",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Box",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gwilym",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jenkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gregory",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greta",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Reinsel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ljung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Classification and regression trees",
+            "authors": [
+                {
+                    "first": "Leo",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jerome",
+                    "middle": [],
+                    "last": "Friedman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Charles",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Stone",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Olshen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Forecasting dengue epidemics using a hybrid methodology",
+            "authors": [
+                {
+                    "first": "Tanujit",
+                    "middle": [],
+                    "last": "Chakraborty",
+                    "suffix": ""
+                },
+                {
+                    "first": "Swarup",
+                    "middle": [],
+                    "last": "Chattopadhyay",
+                    "suffix": ""
+                },
+                {
+                    "first": "Indrajit",
+                    "middle": [],
+                    "last": "Ghosh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Physica A: Statistical Mechanics and its Applications",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The analysis of time series: an introduction",
+            "authors": [
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Chatfield",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Analysis and forecast of covid-19 spreading in china, italy and france",
+            "authors": [
+                {
+                    "first": "Duccio",
+                    "middle": [],
+                    "last": "Fanelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Piazza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Chaos, Solitons & Fractals",
+            "volume": "134",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A wavelet transfer model for time series forecasting",
+            "authors": [
+                {
+                    "first": "Damien",
+                    "middle": [],
+                    "last": "Fay",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Ringwood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "International Journal of Bifurcation and Chaos",
+            "volume": "17",
+            "issn": "10",
+            "pages": "3691--3696",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Correcting and combining time series forecasters",
+            "authors": [
+                {
+                    "first": "Paulo",
+                    "middle": [],
+                    "last": "Renato",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Firmino",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paulo",
+                    "middle": [],
+                    "last": "Sg De Mattos Neto",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Tiago",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ferreira",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Neural Networks",
+            "volume": "50",
+            "issn": "",
+            "pages": "1--11",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Clinical characteristics of coronavirus disease 2019 in china",
+            "authors": [
+                {
+                    "first": "Zheng-Yi",
+                    "middle": [],
+                    "last": "Wei-Jie Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wen-Hua",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chun-Quan",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jian-Xing",
+                    "middle": [],
+                    "last": "Ou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hong",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chun-Liang",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lei",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The elements of statistical learning: data mining, inference, and prediction",
+            "authors": [
+                {
+                    "first": "Trevor",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jerome",
+                    "middle": [],
+                    "last": "Friedman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Forecasting: principles and practice. OTexts",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rob",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Hyndman",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Athanasopoulos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "An introduction to statistical learning",
+            "authors": [
+                {
+                    "first": "Gareth",
+                    "middle": [],
+                    "last": "James",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniela",
+                    "middle": [],
+                    "last": "Witten",
+                    "suffix": ""
+                },
+                {
+                    "first": "Trevor",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "112",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Real-time estimation of the risk of death from novel coronavirus (covid-19) infection: Inference using exported cases",
+            "authors": [
+                {
+                    "first": "Sung-Mok",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrei",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katsuma",
+                    "middle": [],
+                    "last": "Hayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natalie",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yichi",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Baoyin",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tetsuro",
+                    "middle": [],
+                    "last": "Kobayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ryo",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hiroshi",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of clinical medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A comparative study of series arima/mlp hybrid models for stock price forecasting",
+            "authors": [
+                {
+                    "first": "Mehdi",
+                    "middle": [],
+                    "last": "Khashei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zahra",
+                    "middle": [],
+                    "last": "Hajirahimi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Communications in Statistics-Simulation and Computation",
+            "volume": "",
+            "issn": "",
+            "pages": "1--16",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Early dynamics of transmission and control of covid-19: a mathematical modelling study. The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Adam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Timothy",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charlie",
+                    "middle": [],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yang",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sebastian",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rosalind",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fiona",
+                    "middle": [],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "James",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Jit",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Munday",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Qun",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuhua",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peng",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoye",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yeqing",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruiqi",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kathy",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Eric",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jessica",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Serial interval of novel coronavirus (covid-19) infections. International journal of infectious diseases",
+            "authors": [
+                {
+                    "first": "Hiroshi",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natalie",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrei",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Comparative study of wavelet-arima and wavelet-ann models for temperature time series data in northeastern bangladesh",
+            "authors": [
+                {
+                    "first": "Ahmad",
+                    "middle": [],
+                    "last": "Hasan Nury",
+                    "suffix": ""
+                },
+                {
+                    "first": "Khairul",
+                    "middle": [],
+                    "last": "Hasan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Md Jahir Bin",
+                    "middle": [],
+                    "last": "Alam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of King Saud University-Science",
+            "volume": "29",
+            "issn": "1",
+            "pages": "47--61",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Ensembles for time series forecasting",
+            "authors": [
+                {
+                    "first": "Mariana",
+                    "middle": [
+                        "Rafaela"
+                    ],
+                    "last": "Oliveira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Luis",
+                    "middle": [],
+                    "last": "Torgo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J. Mach. Learn. Res",
+            "volume": "39",
+            "issn": "",
+            "pages": "360--370",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A hybrid arima-svm model for the study of the remaining useful life of aircraft engines",
+            "authors": [
+                {
+                    "first": "Celestino",
+                    "middle": [],
+                    "last": "Ord\u00f3\u00f1ez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fernando",
+                    "middle": [],
+                    "last": "S\u00e1nchez Lasheras",
+                    "suffix": ""
+                },
+                {
+                    "first": "Javier",
+                    "middle": [],
+                    "last": "Roca-Pardi\u00f1as",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francisco Javier De Cos",
+                    "middle": [],
+                    "last": "Juez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Computational and Applied Mathematics",
+            "volume": "346",
+            "issn": "",
+            "pages": "184--191",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Wavelet methods for time series analysis",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Donald",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew T",
+                    "middle": [],
+                    "last": "Percival",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Walden",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Forecasting the novel coronavirus covid-19",
+            "authors": [
+                {
+                    "first": "Fotios",
+                    "middle": [],
+                    "last": "Petropoulos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Spyros",
+                    "middle": [],
+                    "last": "Makridakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "PloS one",
+            "volume": "15",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Real-time forecasts of the covid-19 epidemic in china from february 5th to february 24th",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Roosa",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kirpich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rothenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hyman",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infectious Disease Modelling",
+            "volume": "5",
+            "issn": "",
+            "pages": "256--263",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "CM-MID nCov working group, et al. Estimating the infection and case fatality ratio for covid-19 using age-adjusted data from the outbreak on the diamond princess cruise ship. medRxiv",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Timothy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joel",
+                    "middle": [],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hellewell",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Jarvis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sam",
+                    "middle": [],
+                    "last": "Van Zandvoort",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruwan",
+                    "middle": [],
+                    "last": "Abbott",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stefan",
+                    "middle": [],
+                    "last": "Ratnayake",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rosalind",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Flasche",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adam",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Package 'rpart'. Available online: cran",
+            "authors": [
+                {
+                    "first": "Terry",
+                    "middle": [],
+                    "last": "Therneau",
+                    "suffix": ""
+                },
+                {
+                    "first": "Beth",
+                    "middle": [],
+                    "last": "Atkinson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Ripley",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maintainer Brian",
+                    "middle": [],
+                    "last": "Ripley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "Chen",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Frederick",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "470--473",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "No free lunch theorems for optimization",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "William",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wolpert",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Macready",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "IEEE transactions on evolutionary computation",
+            "volume": "1",
+            "issn": "1",
+            "pages": "67--82",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-ncov outbreak originating in wuhan, china: a modelling study",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Joseph",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kathy",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gabriel M",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Time series forecasting using a hybrid arima and neural network model",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Peter Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Neurocomputing",
+            "volume": "50",
+            "issn": "",
+            "pages": "159--175",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Preliminary estimation of the novel coronavirus disease (covid-19) cases in iran: a modelling analysis based on overseas cases and air travel data",
+            "authors": [
+                {
+                    "first": "Zian",
+                    "middle": [],
+                    "last": "Zhuang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shi",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qianying",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peihua",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yijun",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daihai",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Plots of ARIMA residuals for different countries: (a) Canada; (b) France; (c) India; (d) South Korea; and (e) the UK.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Figures of (a) Actual Vs. predicted (Hybrid ARIMA-WBF Model) values for Canada COVID-19 data; (b) Real-time forecasts (10 days) of the number of cases for Canada",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Figures of (a) Actual Vs. predicted (Hybrid ARIMA-WBF Model) values for France COVID-19 data; (b) Real-time forecasts (10 days) of the number of cases for France",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Figures of (a) Actual Vs. predicted (Hybrid ARIMA-WBF Model) values for India COVID-19 data; (b) Real-time forecasts (10 days) of the number of cases for India 9 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Figures of (a) Actual Vs. predicted (Hybrid ARIMA-WBF Model) values for South Korea COVID-19 data; (b) Real-time forecasts (10 days) of the number of cases for",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Figures of (a) Actual Vs. predicted (Hybrid ARIMA-WBF Model) values for the UK COVID-19 data; (b) Real-time forecasts (10 days) of the number of cases for the UK",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Optimal tree representing the relationships between the causal variables and CFR",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Training datasests and corresponding ACF, PACF plots for Canada, France, India, South Korea, and the UK",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "RMSE and MAE values for different forecasting models on five time series (training data only) data sets",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Descriptive statistics of possible causal variables and the response variable of CFR dataset for 50 countries.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": ".x8 < 1.5",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The COVID-19 outbreaks globally present a significant challenge for modelers, as there are limited data available on the early growth trajectory, and epidemiological characteristics of the novel coronavirus have not been fully elucidated. In this study, we considered two alarmingly important problems relevant to ongoing COVID-19 pandemic. The first problem deals with the real-time forecasts of the daily COVID-19 cases in five different countries. We proposed a hybrid ARIMA-WBF model that can explain the nonlinear and nonstationary behavior present in the univariate time series datasets of COVID-19 cases. Ten days-ahead forecasts are provided for Canada, France, India, South Korea, and the UK. The proposed model can be used as an early warning system to fight against the COVID-19 pandemic. Below we present a list of suggestions based on the results of the real-time forecasts.1. Since we presented a real-time forecast system unlike an ex-post analysis, thus one can regularly update the actual confirmed cases and update the predictions, just like it happens in weather forecasting. 2. The forecasts mostly show oscillating behavior for the next 10 days and reflect the impact of the broad spectrum of social distancing measures implemented by the governments, which likely helped stabilize the epidemic. 3. The short-term forecasts don't necessarily show any stiff decay sooner; also, these five countries are not going to face any unlike uplifts in the number of cases too. 4. Guided by the short-term forecasts reported in this paper, the lockdown period can be adjusted accordingly.Secondly, we assessed the risk of COVID-19 by finding seven key parameters that are expected to have powerful associations with that of case fatality rates. This is done by designing an optimal regression tree model, a simplified machine learning approach. The model is very flexible, easily interpretable, and the more data will come, one can just incorporate the new data sets and rebuild the trees to get the updated estimates. RT provides a better visual representation and is easily interpretable to be understood by a broader audience. Quantification of the outbreak risks and their dependencies on the key parameters will support the governments and policymakers for the planning of health care systems in different countries that faced this epidemic. Experimental results suggest four control variables out of seven highly influential variables that will have a significant impact on controlling CFR. Below we present a point by point discussion of the control variables affecting CFR and preventive actions to be taken by the governments.1. The number of covid cases of the country can be reduced by enforcing social distancing strategies. 2. Number of people of age group > 65 years should be specially taken care of and isolated. 3. Lockdown time period can be extended if the country faces a sharp increase in the number of cases and or deaths. 4. The number of hospital beds should be increased by making special health care arrangements in other places to deal with this emergency due to COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussions"
+        }
+    ]
+}

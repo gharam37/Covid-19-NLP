@@ -1,0 +1,764 @@
+{
+    "paper_id": "f020529fb6897bb2c33ea854bac414d18c7c8afa",
+    "metadata": {
+        "title": "MARKOVIAN RANDOM WALK MODELING AND VISUALIZATION OF THE EPIDEMIC SPREAD OF COVID-19 A PREPRINT",
+        "authors": [
+            {
+                "first": "Haluk",
+                "middle": [],
+                "last": "Akay",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Massachusetts Institute of Technology",
+                    "location": {
+                        "addrLine": "77 Massachusetts Avenue, 77 Massachusetts Avenue",
+                        "postCode": "02139, 02139",
+                        "settlement": "Cambridge, Cambridge",
+                        "region": "Massachusetts, Massachusetts"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "George",
+                "middle": [],
+                "last": "Barbastathis",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Massachusetts Institute of Technology",
+                    "location": {
+                        "addrLine": "77 Massachusetts Avenue, 77 Massachusetts Avenue",
+                        "postCode": "02139, 02139",
+                        "settlement": "Cambridge, Cambridge",
+                        "region": "Massachusetts, Massachusetts"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The epidemic spread of CoVID-19 has resulted in confirmed cases of viral respiratory illness in more than 1.4 million people around the world as of April 7 th , 2020 [1]. However, different regions have experienced the spread of this disease differently. Here, we develop a Markovian random-walk spatial extension of a quarantine-enhanced SIR model to measure, visualize and forecast the effect of susceptible population density, testing rate, and social distancing and quarantine policies on epidemic spreading. The model is used to simulate the spread of CoVID-19 in the regions of Hubei, China; South Korea; Iran; and Spain. The model allows for evaluating the results of different policies both quantitatively and visually as means of better understanding and controlling the spread of the disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In late 2019, the infectious disease CoVID-19 began spreading globally, from its origin in Wuhan, China, to every populated continent on earth [2] resulting in a pandemic declared officially by the World Health Organization by March 2020 [3] . By April 7 th , 2020, the death toll stood at 81,865, with 1,426,096 cases confirmed globally [1] . Due to the long time delay between exposure and experience of characteristic symptoms, the apparently common occurrence of asymptomatic yet infectious individuals, and lack of any antiviral treatment during spreading [4] , the disease spread rapidly before most regional governments had the time to implement appropriate containment policies.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 238,
+                    "end": 241,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 338,
+                    "end": 341,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 561,
+                    "end": 564,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Even though the viruses exhibit substantial genetic similarity across regions, the nature of its epidemic spread is unique to each region. Of particular economic importance, and its indirect effects on human welfare during the pandemic, is the surge of demand [5] for staple goods at the peak of active confirmed infected cases in a population. This work seeks to understand why different countries experience this peak at different magnitudes and different speeds. Given the contemporary nature of this pandemic, in addition to the aim of purely modeling the epidemic spread of CoVID-19, this work seeks to graphically visualize this spread for the benefit of all concurrent research continuing on this topic. The key information the visualization presented seeks to provide is the temporal and spatial quality of epidemic spreading, given a set of initial conditions and disease spread and containment specifics in the region under study.",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 263,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The model presented is inspired by temporal visualizations of the spread of forest fires, where a single flaming tree among a lattice of trees can \"infect\" other \"susceptible\" green trees with the fire, until every tree has \"recovered\" by burning down [6] . Each of these actions occur with fixed probabilities that govern the Markovian system; by associating colors with each state, spreading of the disease or \"forest fire\" may be visualized. Our model adds a spatial component where agents make random walks to mimic how the disease spreads dynamically through human movement.",
+            "cite_spans": [
+                {
+                    "start": 252,
+                    "end": 255,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In order to simulate epidemic spreading, the possible states an agent can assume are based on the Susceptible -Infected -Removed (SIR) model, a set of nonlinear ordinary differential equations which can be used to track the magnitude of each population, assuming a closed system where S(t) + I(t) + R(t) = N is constant. In this system, the coefficient \u03b2 represents the rate of transmission of the disease from the infected to the susceptible population, and \u03b3 represents the rate of removal, corresponding to recovery or death. It is justifiable to lump the latter two populations into one for the purpose of modeling, as long as both cease to be capable of further infecting others. The coupled ordinary differential equations describing the SIR model are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The SIR model has been applied to model the previous SARS coronavirus epidemic [7] [8] . Variations of the SIR model include the SEIR model where a new state E (exposed) is introduced, or SIS, where recovered agents are susceptible to reinfection. While these models have been shown to act as accurate approximations for the spread of notable infectious diseases [9] , the pandemic nature of CoVID-19 has resulted in policy-driven responses from communities to actively curb spread of the disease, namely quarantining large numbers of individuals testing positive for the virus [10] . This work accounts for this population by extending the model to add a Quarantined state Q that captures the effect of isolating agents who test positive for the virus. By applying the SIR-Q states to a spatio-temporal random walk model, the spread of CoVID-19 can be visualized and the effect of critical demographic and policy variables upon epidemic spreading are evaluated.",
+            "cite_spans": [
+                {
+                    "start": 79,
+                    "end": 82,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 83,
+                    "end": 86,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 363,
+                    "end": 366,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 578,
+                    "end": 582,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In order to estimate the spread of CoVID-19 in a human population, a Random Walk framework is used to model transmission of and recovery from the virus in the temporal and spatial domains and provide a visualization of this process. This stochastic process is Markovian in that each subsequent state of the system depends only on the previous state.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Markov Random Walk Model"
+        },
+        {
+            "text": "The spatial domain is defined as a square 2-dimensional lattice, where agents can exist at discrete nodes. The agents have the ability to make a random walk in one direction at each time-step. The distance of walk is drawn randomly from a Gaussian distribution N (\u00b5, \u03c3 2 ) where the mean \u00b5 is the distance between the starting node and the center of the lattice, and the standard deviation \u03c3 is one fifth the length of one dimension of the square lattice. At any given time-step, this creates an expectation of a denser population nearer to the center of the lattice.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "The model is built on a recursive, Markovian algorithm, where a population of agents distributed over the lattice is initialized, each agent takes a random walk along a single dimension (selected randomly), and finally each agent has the opportunity to change states. A census of the new populations and locations of each agent is taken, and the cycle continues recursively. The simulation terminates when a predefined maximum number of iterations is reached.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "Agents are designated as susceptible (S), infected (I), quarantined (Q), or removed (R). The transition of an agent's status from one state to another is entirely probabilistic and Markovian. The probabilities which govern the model are based on the rates of transmission and recovery defined by the SIR-Q model previously introduced. These rules are listed below and are applied at every time-step.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "\u2022 If susceptible agents occupy the same node as at least one infected agent, then each susceptible agent may transition to becoming an infected agent with probability \u03b2. If there are multiple infected agents, then the probability of not becoming infected halves with each additional agent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "2 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.12.20062927 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "\u2022 Any agent may be tested with a probability P t . If an infected agent is tested, then they transition to being quarantined, meaning they cannot make movements nor infect other susceptible agents until they recover. \u2022 Any quarantined or infected agent may recover or pass away with probability \u03b3, effectively becoming removed from the system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "The spread of disease through the population is visualized by assigning different colors to represent agents of each status occupying each node in the lattice. A frame is taken as a record of the systems state at every time-step. The frames can be compiled into an animation to graphically visualize the spreading, and compare visually how different parameters affect the system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Framework"
+        },
+        {
+            "text": "The lattice is defined as a 2-dimensional structure, of length 100 nodes in each direction. At initialization, S 0 initial number of susceptible agents and I 0 initial number of infected agents are randomly distributed throughout the lattice. For all the simulations shown in this work, I 0 is initialized as 10 agents. The population density D is linearly proportional to S 0 , and for simplification purposes, a density index D of 1.0 indicates S 0 initialized as 10,000 agents in the following simulations. The testing rate T directly corresponds to the probability of an agent being tested P t .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Selection and Initial Conditions"
+        },
+        {
+            "text": "The most critical metric for measuring the spread of a disease is its reproduction number, which is a ratio of the transmission to recovery rate, and a strong indicator of rate of spreading, shown in equation 4.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Selection and Initial Conditions"
+        },
+        {
+            "text": "There is no consensus currently on the exact reproduction number of CoVID-19 yet [11] , but a study using the SEIR model to estimate R 0 using data from Wuhan, China concluded it fell within a 95% confidence interval of between 5.7 -7.2, estimated to be 6.5 [12] . Neural-network based models have suggested how effective reproductive number can even be a dynamic variable [13] . For this work, R 0 was taken to be 7.0.",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 85,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 258,
+                    "end": 262,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Selection and Initial Conditions"
+        },
+        {
+            "text": "Each calendar day is approximated by one time-step, and a linear population scaling factor was used to fit the model to available data [14] through April 6th 2020 for the Hubei province of China where the city of Wuhan is located, South Korea, Iran, and Spain. The population density indexes D and testing rates T for each country or region were learned from the data.",
+            "cite_spans": [
+                {
+                    "start": 135,
+                    "end": 139,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Selection and Initial Conditions"
+        },
+        {
+            "text": "First, a theoretical environment is considered to measure the effect that changes in susceptible population density and testing rates have on the spread of CoVID-19 in a closed system. While holding the population density index D constant at 1.0, the testing rate T was altered, and the changes in population of susceptible, infected and quarantined, and removed agents over time were simulated, shown in figure 1. Frames from the visualization of simulation taken at timesteps of 5, 25, 45, and 65, for the system with no testing policy and the system with a testing rate T of 0.2 are displayed in figure 3 . The theoretical environment was also used to demonstrate the effect changes in population density had on the changes in makeup of population with respect to state of all agents in the system. The results of these simulations are shown in figure 2 . In both figures 1 and 2, the vertical axes denotes the percentage of total agent population in each closed system.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 599,
+                    "end": 607,
+                    "text": "figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 848,
+                    "end": 856,
+                    "text": "figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Effect of Susceptible Population Density and Testing"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.12.20062927 doi: medRxiv preprint The effect of both differing testing rates T and population density indexes D on the system can be estimated by using the metric of peak infected percentage of the population as a measure of the disease's maximum impact to the system. The results of these simulations are shown in figure 4.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3"
+        },
+        {
+            "text": "The random walk model was used to simulate and visualize the epidemic spread of CoVID-19 in four different regions and countries. Hubei province (China) and South Korea both have experienced a decline in active confirmed cases, while the rate of new active confirmed cases in Spain appears to be decreasing. Cases in Iran continue to increase. Active confirmed cases are calculated by subtracting recovered and dead counts from the number of total confirmed cases. Active confirmed cases are analogous to the combined populations of Infected and Quarantined agents in the model. The simulations are scaled with a linear population scaling factor, and the population density index D and testing rate T are manually fitted from the rate of active confirmed and removed cases in the real data. The results of these simulations are shown in figures 5 and 6. The parameters used in the simulations are included in table 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling CoVID-19 in Real Regions"
+        },
+        {
+            "text": "An interactive webpage with epidemic spreading visualizations powered by the model described in this paper can be found at the following address, below.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling CoVID-19 in Real Regions"
+        },
+        {
+            "text": "pandemic-simulator.mit.edu 4 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling CoVID-19 in Real Regions"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.12.20062927 doi: medRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling CoVID-19 in Real Regions"
+        },
+        {
+            "text": "The primary aim of this work was to understand why different regions of the world experience the pandemic spread of CoVID-19 in different ways. By recurrent testing of the population, infected individuals can be identified and quarantined, effectively preventing them from spreading the disease any further. It was observed that through increased rates of testing, an increasing percentage of the population could be saved from experiencing CoVID-19 altogether, to a point where if 40% of the population could be tested daily, any disease having a similar reproduction number would not be able to spread at all. This suggests an opportunity for preventing future viral outbreaks if testing can become a routine procedure that responsible members of the population carry out on themselves and self-report. It was also observed that through increased rates of testing, the peak of confirmed cases could be lowered, relieving the toll of an epidemic on the supply chain, and indirectly human wellbeing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It was observed that by de-densification of the susceptible population, the peak count of active confirmed infected cases could be reduced and also delayed, to where the rate of infection of the population was decreased, potentially allowing . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.12.20062927 doi: medRxiv preprint Figure 6 : Random Walk Simulation fitted to data [14] from Spain and Iran for societal adjustment preceding the time of peak infection. This observation can be an opportunity for actionable advice for urban areas with flexible population densities, such as those with large student populations.",
+            "cite_spans": [
+                {
+                    "start": 193,
+                    "end": 197,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "By analyzing how Hubei, China, South Korea, Spain, and Iran have experienced the pandemic spread of CoVID-19, it was observed that countries like South Korea, despite having highly dense susceptible populations, can curb the transmission of the disease in the population by high rates of testing. Along similar lines, it was observed that despite having a less dense population, if recurrent testing rates are low, the potential for an unmitigated outbreak is high as is the case in Iran.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Rather than seek to prescribe a confident policy recommendation or forecast future spreading of the pandemic based on the limited amount of data available currently, this work aims to offer a model for estimating the current spread of CoVID-19 based on demographic information and chosen policies, and present a tool for visualizing the effect that adjusting the variables of population density and testing rate has on a simulated population in a theoretical system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "An interactive web-based dashboard to track covid-19 in real time. The Lancet infectious diseases",
+            "authors": [
+                {
+                    "first": "Ensheng",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hongru",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lauren",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Outbreak of 2019 novel coronavirus (2019-ncov) in wuhan, china",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Who director-general's opening remarks at the media briefing on covid",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "World Health Organization et al. Coronavirus disease 2019 (covid-19): situation report",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "46",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Dynamic modelling of surge effect and capacity limitation in supply chains",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pt Helo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "International Journal of Production Research",
+            "volume": "38",
+            "issn": "17",
+            "pages": "4521--4533",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A forest-fire model and some thoughts on turbulence",
+            "authors": [
+                {
+                    "first": "Per",
+                    "middle": [],
+                    "last": "Bak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kan",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chao",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Physics letters A",
+            "volume": "147",
+            "issn": "5-6",
+            "pages": "297--300",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A double epidemic model for the sars propagation",
+            "authors": [
+                {
+                    "first": "Wai",
+                    "middle": [],
+                    "last": "Tuen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gabriel",
+                    "middle": [],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Antoine",
+                    "middle": [],
+                    "last": "Turinici",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Danchin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "BMC Infectious Diseases",
+            "volume": "3",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Plausible models for propagation of the sars virus",
+            "authors": [
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Small",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pengliang",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chi",
+                    "middle": [
+                        "Kong"
+                    ],
+                    "last": "Tse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "IEICE transactions on fundamentals of electronics, communications and computer sciences",
+            "volume": "87",
+            "issn": "9",
+            "pages": "2379--2386",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Pulse vaccination strategy in the sir epidemic model",
+            "authors": [
+                {
+                    "first": "Boris",
+                    "middle": [],
+                    "last": "Shulgin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lewi",
+                    "middle": [],
+                    "last": "Stone",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zvia",
+                    "middle": [],
+                    "last": "Agur",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "Bulletin of mathematical biology",
+            "volume": "60",
+            "issn": "6",
+            "pages": "1123--1148",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Covid-19 outbreak on the diamond princess cruise ship: estimating the epidemic potential and effectiveness of public health countermeasures",
+            "authors": [
+                {
+                    "first": "Joacim",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                },
+                {
+                    "first": "Henrik",
+                    "middle": [],
+                    "last": "Sj\u00f6din",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annelies",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The reproductive number of covid-19 is higher compared to sars coronavirus",
+            "authors": [
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Albert",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annelies",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joacim",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of travel medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "An updated estimation of the risk of transmission of the novel coronavirus (2019-ncov)",
+            "authors": [
+                {
+                    "first": "Biao",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nicola",
+                    "middle": [
+                        "Luigi"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qian",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanyi",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yanni",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jianhong",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infectious disease modelling",
+            "volume": "5",
+            "issn": "",
+            "pages": "248--255",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Quantifying the effect of quarantine control in covid-19 infectious spread using machine learning. medRxiv",
+            "authors": [
+                {
+                    "first": "Raj",
+                    "middle": [],
+                    "last": "Dandekar",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Barbastathis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Coronavirus disease (covid-19) -statistics and research. Our World in Data",
+            "authors": [
+                {
+                    "first": "Hannah",
+                    "middle": [
+                        "Ritchie"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Max",
+                    "middle": [],
+                    "last": "Roser",
+                    "suffix": ""
+                },
+                {
+                    "first": "Esteban",
+                    "middle": [],
+                    "last": "Ortiz-Ospina",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Effect of Testing Rate T on S (left), I (middle), R (right) populations",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Effect of Population Density on S (left), I (middle), R (right) populations Visualization of effect of instituting Testing Rate T of 0.2 (bottom row), compared to no testing (top row). S denoted as yellow, I as red, R as black, Q as white. Time progression from left to right, frames taken at timesteps of[5, 25, 45, 65]",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Peak Infection Percentage as a function of D and T Random Walk Simulation fitted to data[14] from Hubei Province China and South Korea",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Parameters used in SimulationsCountry/Region D T P.S.F.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This research was partially funded by the Intelligence Advanced Research Projects Activity (IARPA.) We are grateful to Raj Dandekar, Hyungseok Kim and Wujie Wang for helpful discussions and suggestions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

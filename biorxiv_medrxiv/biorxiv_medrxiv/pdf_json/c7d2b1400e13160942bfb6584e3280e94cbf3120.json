@@ -1,0 +1,749 @@
+{
+    "paper_id": "c7d2b1400e13160942bfb6584e3280e94cbf3120",
+    "metadata": {
+        "title": "A novel cohort analysis approach to determining the case fatality rate of COVID-19 and other infectious diseases",
+        "authors": [
+            {
+                "first": "Samyak",
+                "middle": [],
+                "last": "Charit",
+                "suffix": "",
+                "affiliation": {},
+                "email": "charitsn28@gmail.com"
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Narayanan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "As the Coronavirus contagion develops, it is increasingly important to understand the dynamics of the disease. Its severity is best described by two parameters: its ability to spread and its lethality. Here, we combine a mathematical model with a cohort analysis approach to determine the range of case fatality rates (CFR). We use a logistical function to describe the exponential growth and subsequent flattening of COVID-19 CFR that depends on three parameters: the final CFR (L), the CFR growth rate (k), and the onset-to-death interval (t 0 ). Using the logistic model with specific parameters (L, k and t 0 ), we calculate the number of deaths each day for each cohort. We build an objective function that minimizes the root mean square error between the actual and predicted values of cumulative deaths and run multiple simulations by altering the three parameters. Using all of these values, we find out which set of parameters returns the lowest error when compared to the number of actual deaths. We were able to predict the CFR much closer to reality at all stages of the viral outbreak compared to traditional methods. This model can be used far more effectively than current models to estimate the CFR during an outbreak, allowing for better planning. The model can also help us better understand the impact of individual interventions on the CFR. With much better data collection and labeling, we should be able to improve our predictive power even further. 12 lethality. Its transmissibility is best measured by R0 (the basic reproduction number),",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The Coronavirus Disease 2019, or COVID-19, is a new virus that causes respiratory 2 ailments [1] . Its origins can most likely be traced back to Wuhan, China, where it was 3 first reported in December of 2019. It is comparable to other zoonotic coronaviruses 4 such as SARS-CoV and MERS-CoV [2] . Although most earlier cases had been confined 5 to mainland China, notably Hubei Province, a considerable number of people have been 6 infected all over the world since, and the WHO characterized the outbreak as a 7 pandemic on March 11 [1] . As of March 17, over 179,000 have been confirmed to be 8 infected, with almost 7400 deaths [3] . 9 As the Coronavirus contagion develops, with its rapid spread inciting concerns over 10 the epidemic's global impact, it is increasingly important to understand the dynamics of 11 the disease. Its severity is best described by two concepts: its ability to spread and its the average number of people to whom an infected person spreads the disease to [4] . Its 14 Case Fatality Rate (CFR) reveals the proportion of people who die from disease among 15 all individuals who contract the disease [5] . 16 Knowing the CFR is essential because it is the single most accurate metric to 17 appraise the threat posed by infectious diseases such as COVID-19 and predict its 18 prognosis. Although R0 is important to understand the rate of spread and 19 contagiousness, it does not describe the lethality of a disease. The case incidence would 20 describe the prevalence of the disease, but if it has a negligible CFR, the severity of the 21 disease is likely low. During the 2015 MERS outbreak in South Korea, there were only 22 186 cases, but the number of fatalities that resulted (38) was an adequate cause for 23 alarm [6] . Thus, the CFR, if calculated correctly, can help inform the appropriate 24 measures to control the epidemic.",
+            "cite_spans": [
+                {
+                    "start": 93,
+                    "end": 96,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 291,
+                    "end": 294,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 534,
+                    "end": 537,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 595,
+                    "end": 596,
+                    "text": "8",
+                    "ref_id": null
+                },
+                {
+                    "start": 631,
+                    "end": 634,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 988,
+                    "end": 991,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1130,
+                    "end": 1133,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1136,
+                    "end": 1138,
+                    "text": "16",
+                    "ref_id": null
+                },
+                {
+                    "start": 1378,
+                    "end": 1380,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 1751,
+                    "end": 1754,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The inaccuracies related to calculating the CFR during an ongoing disease outbreak 26 are a known problem. There are primarily three methods that have been discussed in 27 literature pertaining to the evaluation of the CFR. A simple statistical estimate is 28 evaluated by dividing the aggregate number of deaths over the aggregate confirmed 29 cases. This is problematic because it ignores the lag effect; people become infected on 30 different days and the mix of their onset-to-death intervals is not taken into account.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "25"
+        },
+        {
+            "text": "The second method calculates the CFR as the ratio of aggregate deaths to closed cases. 32 This ignores those who are still sick and only includes those who have had a definite 33 outcome (death or recovery). The third procedure [5] uses the Kaplan-Meier survival 34 procedure, jointly considering two the probability of two outcomes (death and recovery), 35 which is violated if mean duration from hospital admission to death is substantially 36 shorter than the mean duration from hospital admission to discharge. Here, we develop 37 a novel procedure that evaluates the risk of death among confirmed cases, explicitly 38 accounting for the time of the onset-to-death interval. This method, in principle, should 39 yield the best results. All these methods except the Kaplan-Meier survival procedure 40 will without converge in the future when the outbreak is no longer in-progress but 41 diverge during the outbreak.",
+            "cite_spans": [
+                {
+                    "start": 228,
+                    "end": 231,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "31"
+        },
+        {
+            "text": "To execute our proposed cohort-based method for calculating the CFR during an 43 ongoing outbreak, we explicitly model the death rates using a growth function to 44 simulate multiple conditions. This is done by specifically altering time from illness to 45 death and the slope of the growth of deaths. Our approach has multiple advantages over 46 the other methods. We can identify and compare the CFR of each cohort as well as its 47 evolution over time. Also, we can calculate the CFR earlier in the stage of disease 48 development, especially if we know the time from infection to time of death. Our 49 method can help increase the accuracy of calculated CFR for both COVID-19 and 50 future viral diseases. This analysis will assist in furthering efforts to halt the spread of 51 COVID-19 and drive an informed, comprehensive approach towards counteracting its 52 spread. The range of CFR possibilities and onset-to-death intervals will also raise 53 awareness among the public so that the correct measures are taken.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "42"
+        },
+        {
+            "text": "Data sources 56 We used publicly available datasets [7] on cases in Hubei province, China. Specifically, 57 we used the number of confirmed cases, new cases, recovery cases, and deaths from 58 January 22, 2020 to March 11, 2020. 59 March 29, 2020 2/7 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 15,
+                    "text": "56",
+                    "ref_id": null
+                },
+                {
+                    "start": 52,
+                    "end": 55,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 213,
+                    "end": 231,
+                    "text": "March 11, 2020. 59",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "55"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20051482 doi: medRxiv preprint Cohort-based Method 60 Cohort analysis has been used in improving product retention [8] for many years. In 61 this piece, we apply this approach to describe the CFR over time for individual cohorts. 62 This would assist in keeping track of the CFR's evolution and the impact of Simulated triangle chart that illustrates the cohort method. Each cell contains the CFR for a given cohort on a given day. Each row represents a cohort who experienced the onset of disease on the same day.",
+            "cite_spans": [
+                {
+                    "start": 228,
+                    "end": 231,
+                    "text": "[8]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "55"
+        },
+        {
+            "text": "If the groups are homogenous and identical to each other in every way (have the 78 same mix), the cohorts would have the same CFR. This is because each cohort CFR 79 would change at the same rate, assuming they are the same age, have the similar 80 comorbidities (if any), etc. However, in reality this will likely not be the case since 81 groups will naturally have people with differing characteristics and their mix will affect 82 the CFR. In an idealistic sense, we would be able to have homogenous cohorts, filtered 83 by certain conditions (age group, smoking habits, etc.) and looking at the cohorts over 84 time, we would be able to establish a pattern, and obtain a reliable CFR [ [9] , [10] ]. 85 We would need to construct these triangle charts for groups that are as homogeneous 86 as possible to ensure that certain members do not skew the death rates. Age, high-risk 87 medical groups, and countries are the right granular segments to look at. Using these, 88 we can most accurately gauge the case fatality rate for each group. The case fatality rate as a function of time since infection can be modeled in multiple 91 different ways [11] . We use a logistical function to describe the exponential growth, and 92 subsequent flattening, of COVID-19 case fatality rate; it is the simplest form that 93 satisfies the S-shaped growth [12] . This can be expressed as: . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 690,
+                    "end": 693,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 696,
+                    "end": 700,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 704,
+                    "end": 706,
+                    "text": "85",
+                    "ref_id": null
+                },
+                {
+                    "start": 971,
+                    "end": 973,
+                    "text": "88",
+                    "ref_id": null
+                },
+                {
+                    "start": 1148,
+                    "end": 1152,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1344,
+                    "end": 1348,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "77"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20051482 doi: medRxiv preprint reveals a quicker progression to death. t 0 is the inflection point and indicative of the 100 onset-to-death interval; a greater t 0 reveals a longer progression to death.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "77"
+        },
+        {
+            "text": "Using the logistic model with specific parameters, we calculate the number of deaths 102 each day for each cohort by multiplying the case fatality rate by the number of cases (or 103 cohort size). We then create a triangle chart of the number of deaths for each cohort.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "101"
+        },
+        {
+            "text": "By adding along the diagonal, we are able to estimate the number of deaths from all 105 cohorts on any given day. Thus, given a set of values from L, K and t 0 we are able to 106 estimate the aggregate number of deaths from all cohorts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "104"
+        },
+        {
+            "text": "Finally, we build an objective function that minimizes the root mean square error 108 between the actual and predicted values of cumulative deaths and run multiple 109 simulations by altering the three parameters. Using all of these values, we find out 110 which set of parameters returns the lowest error when compared to the number of actual 111 deaths. Using this methodology, we determine the probable range of case fatality rates. 112",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "107"
+        },
+        {
+            "text": "Best fit 114 We ran 125,000 simulations, modifying the onset-to-death interval, the CFR, and the 115 CFR growth rate. The CFR was kept in the range of 0.5% to 20.0%; the slope was held 116 between 0\u00b7005 and 0\u00b720; and the onset-to-death interval was simulated between 0.1 and 117 20\u00b70. We picked these ranges after some modeling exploration that convinced us that 118 the solution would certainly be within these parameters. We calculated the coefficient 119 of determination (R 2 ) for all of these simulations and identified the value for which the 120 fit was the best. We show results from two cases: one where we are relatively early in 121 the disease phase and another that is later. We studied these two cases to understand 122 how the progression of the outbreak affected the results. The difference in decrease in case fatality rates could be due to a number of factors 135 including the tactics employed by the Chinese government. These two cases 136 demonstrate the strong predictive power of the cohort-based methodology. Thus, using 137 a combination of known cohort sizes and the number of deaths on each day, we are able 138 to predict mortality very well.",
+            "cite_spans": [
+                {
+                    "start": 9,
+                    "end": 12,
+                    "text": "114",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "113"
+        },
+        {
+            "text": "Simulations 140 Fig 4 shows combinations of onset-to-death interval and case fatality rate under which 141 the R 2 between the model and reality is \u00bf= 0\u00b798 for the shorter time frame (up to Feb 142 8). This demonstrates that the range of possibilities for the case fatality rate is from 143 4\u00b78% to 6\u00b71%. Furthermore, the case fatality rate is most likely between 5\u00b75% and 6% 144 due to its higher frequency. There is a wide range of values of onset to death that are 145 theoretically possible. However, if we know the onset to death to be 10%, then the only 146 possible case fatality rate that satisfies this is a case fatality rate of 5\u00b77%. Therefore, a 147 very important implication of this work is that we can accurately ascertain the case 148 fatality rate given the onset-to-death interval. The practical implication is to calculate 149 this value accurately and evaluate then ascertain case fatality rate.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 16,
+                    "end": 27,
+                    "text": "Fig 4 shows",
+                    "ref_id": null
+                }
+            ],
+            "section": "113"
+        },
+        {
+            "text": "150 Fig 4. Onset-to-death interval and case fatality rate that yield the best fit. The parameters where R 2 \u00bf= 0\u00b798 for the early stage case. Demonstrates that the range of possibilities for the case fatality rate is from 4\u00b78% to 6\u00b71%.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 4,
+                    "end": 10,
+                    "text": "Fig 4.",
+                    "ref_id": null
+                }
+            ],
+            "section": "113"
+        },
+        {
+            "text": "We compare three methods (Fig 5) : the completed case fatality rate (deaths/ (deaths + 152 recovered)), the simple case fatality rate (deaths/confirmed), and the cohort-based Comparison of CFR calculated with 3 methods. The three methods: completed CFR (deaths/ (deaths + recovered)); the simple CFR (deaths/confirmed); the cohort-based CFR defined in this work. Onset-to-death interval and case fatality rate that yield the best fit.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 25,
+                    "end": 32,
+                    "text": "(Fig 5)",
+                    "ref_id": null
+                }
+            ],
+            "section": "151"
+        },
+        {
+            "text": "The simple case fatality rate begins low primarily because there are likely many 161 more confirmed cases than deaths. Over time, as the deaths begin to increase, this ratio 162 increases as well. As the number of new cases start to diminish, this ratio begins to 163 converge to the true case fatality rate.",
+            "cite_spans": [
+                {
+                    "start": 264,
+                    "end": 267,
+                    "text": "163",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "151"
+        },
+        {
+            "text": "Although they are both erroneous in the midst of an outbreak, they are accurate 165 when the outbreak is over: when everyone who has ever contracted it either recovers or 166 dies, and no one new contracts it. In this situation, the CFR calculated with the simple 167 method would equal the CFR calculated with the completed method. This is because 168 the only difference between the two is that the second method includes ongoing cases. 169 So, when the epidemic is over, there will be no ongoing cases and they will yield the 170 same CFR.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "164"
+        },
+        {
+            "text": "The best-fit cohort-based method produces a case fatality rate that lies between the 172 simple and completed methods. It produces far more realistic estimates at the earlier 173 stages than the other two methods. Additionally, towards the later stages, it begins to 174 converge much more quickly. Moreover, it appears that the other two methods are 175 beginning to converge towards the cohort-based method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "171"
+        },
+        {
+            "text": "March 29, 2020 5/7",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "176"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "176"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint We combined a mathematical model with a cohort analysis approach to determine the 178 range of CFR. We were able to predict the CFR much closer to reality at all stages of 179 the viral outbreak compared to traditional methods such as dividing deaths by all 180 closed cases and dividing deaths by the total number of cases. We also estimated that 181 the mortality in Hubei province declined with the passage of time very likely due to 182 government interventions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "176"
+        },
+        {
+            "text": "Our analyses highlight the importance of collecting data such as the onset-to-death 184 interval which will help us narrow the range of possibilities of the CFR early in the 185 outbreak. Furthermore, using the triangle chart methodology and obtaining additional 186 granular data, we are able to understand the evolution of the outbreak and the effect of 187 interventions on the CFR. Moreover, even without the granular information of the 188 progression of the disease (such as cough or fever) at the individual level, we are able to 189 predict the CFR quite well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "183"
+        },
+        {
+            "text": "However, numerous factors pose challenges to calculating the CFR using the cohort 191 method. Firstly, the date of infection is difficult to determine since the onset-to-death 192 interval is still uncertain. This is because there are numerous stages to contracting a Additionally, the CFR varies significantly with factors such as age, smoking habits, 199 etc. If the proportions of differing-risk groups in each infected cohort varies, the CFR 200 will be mis-representative [ [9] , [10] ] 201 Finally, the risk of mortality varies by place. With any rapidly spreading contagion, 202 the samples chosen for determining the CFR are biased since the virus propagates so 203 quickly, affecting different people in different places. So far, the CFR is heavily skewed 204 by the numbers from Hubei Province, where the majority of cases originate. As the 205 virus moves to different places, the mortality will inherently be different, and must, 206 therefore, be representative of the threat posed so adequate precautions can be taken.",
+            "cite_spans": [
+                {
+                    "start": 479,
+                    "end": 482,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 485,
+                    "end": 489,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 492,
+                    "end": 495,
+                    "text": "201",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "190"
+        },
+        {
+            "text": "For example, the danger it poses to people in developing countries would be significantly 208 higher than the danger to people in developed countries, due to factors such as the 209 people's immunity/health, sanitation, access to medical services, etc. Thus, to give an 210 accurate appraisal of the threat, there should be cohorts organized by place as well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "207"
+        },
+        {
+            "text": "Even with all the above limitations, the cohort-based methodology is much better in 212 estimating the case fatality rates and should be used for the current outbreak of ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "211"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in Wuhan, China",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30183-5"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Travel Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Situation Report-68",
+            "authors": [],
+            "year": 2020,
+            "venue": "WHO Coronavirus disease 2019 (COVID-19)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Complexity of the basic reproduction number (R0)",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Delamater",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Street",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Leslie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Emerg. Infect. Dis",
+            "volume": "25",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Methods for estimating the case fatality ratio for a novel, emerging infectious disease",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ghani",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cox",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Am J Epidemiol",
+            "volume": "162",
+            "issn": "",
+            "pages": "479--86",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Middle East respiratory syndrome: what we learned from the 2015 outbreak in the Republic of Korea",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Korean J Intern Med",
+            "volume": "33",
+            "issn": "",
+            "pages": "233--279",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "JHU 2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Clinical characteristics of coronavirus disease 2019 in China",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2002032"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Impacts of cigarette smoking on immune responses: up and down or upside down?",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Qui",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Oncotarget",
+            "volume": "8",
+            "issn": "",
+            "pages": "268--284",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Applications to foliage dynamics of sugar beet (Beta vulgaris L)",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Werker",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Jaggard",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Ann. Bot",
+            "volume": "79",
+            "issn": "6",
+            "pages": "657--665",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Modeling of the bacterial growth curve",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Zwietering",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Jongenburger",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Rombouts",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Appl Environ Microbiol",
+            "volume": "56",
+            "issn": "",
+            "pages": "1875--81",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "older cohorts, and newer cohorts are represented by the lower rows. Each 66 column represents an additional day after they were infected (moving from left to right), 67 with the number in the box representing the cumulative CFR (cumulative deaths over 68 the number of people infected) within the cohort up to the day. Scanning each row from 69 left to right gives each individual cohort's most recent CFR. Scanning down each 70 column yields the CFR for each cohort for exactly the same number of days of the 71 development of the infection. This can tell us about the effects of interventions if the 72 CFR abruptly rises or drops. For example, when Wuhan, China was placed under 73 lockdown, the CFR would have decreased in the following days. Scanning diagonally 74 reveals each cohort's CFR on the same day. The intervention's effects should also 75 manifest on the diagonal. Thus, with the right level of information, we would be able to 76 identify if the intervention measures are effective.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Fig 1. Simulated triangle chart that illustrates the cohort method. Each cell contains the CFR for a given cohort on a given day. Each row represents a cohort who experienced the onset of disease on the same day.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "compares the modeled and actual number of cumulative deaths for the best fit 124 for the late stage case. For this simulation, we used data from Jan 22 throughMarch 11. 125   The model is able to fit the actual data extremely well with a very high R 2 of 0\u00b7998, 126 indicating that the model and parameters chosen are strongly representative of the 127 reality. Specifically, the model closely matches the actual data where the CFR is 4\u00b788%, 128 the number of days to the point of inflection is 3\u00b735, and the slope is 0\u00b7088. Comparison of modeled and actual number of deaths for the late stage case. Used data from January 22 through March 11.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "compares the modeled and actual number of cumulative deaths for the best fit 130 for the early stage case. For this simulation, we used data from January 22 through 131 February 8. Again, the model is able to fit the actual data extremely well with a very 132 high R 2 of 0\u00b7986. In this case, CFR is 5\u00b767 %, the number of days to the point of 133 inflection is 10\u00b73, and the slope is 0\u00b701. Comparison of modeled and actual number of deaths for the early stage case. Used data from January 22 through February 8.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "153 mortality defined in this work. The completed case fatality rate ignores people in the 154 midst of the infection and the simple method ignores the lag effect. The completed case 155 fatality rate is very high at the start of an outbreak as very few have recovered 156 compared to the amount of people who died. However, as the outbreak spreads, the 157 number of recoveries begins to outpace the number of deaths. As the number of 158 outstanding cases begin to reduce toward the end of an outbreak, this method converges 159 to the true case fatality rate.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Fig 5. Comparison of CFR calculated with 3 methods. The three methods: completed CFR (deaths/ (deaths + recovered)); the simple CFR (deaths/confirmed); the cohort-based CFR defined in this work. Onset-to-death interval and case fatality rate that yield the best fit.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "193 disease: initially contracting the disease, showing symptoms, reporting the symptoms, 194 being tested, getting results, going to a hospital and reaching an outcome. If different 195 agencies measure the onset differently, there can be high degrees of bias. Defining a 196 common terminology and language and measuring at all the stages is very important for 197 future progress in estimating mortality.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "213COVID-19 in other regions as well as for future outbreaks. We should additionally 214 modify the cohort-based methodology to model recovered patients in addition to the 215 dead which would help us reach higher degrees of accuracy in calculating CFR.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "In this case, c(t) represents the CFR as a function of days since infection and",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

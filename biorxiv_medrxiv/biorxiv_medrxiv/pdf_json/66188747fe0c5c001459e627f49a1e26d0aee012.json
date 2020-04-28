@@ -1,0 +1,3344 @@
+{
+    "paper_id": "66188747fe0c5c001459e627f49a1e26d0aee012",
+    "metadata": {
+        "title": "Deep learning model can predict water binding sites on the surface of proteins using limited-resolution data",
+        "authors": [
+            {
+                "first": "Jan",
+                "middle": [],
+                "last": "Zaucha",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Technische Universit\u00e4t M\u00fcnchen",
+                    "location": {
+                        "addrLine": "Wissenschaftszentrum Weihenstephan, Maximus-von-Imhof-Forum 3",
+                        "postCode": "85354",
+                        "settlement": "Freising",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Charlotte",
+                "middle": [
+                    "A"
+                ],
+                "last": "Softley",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Technical University of Munich",
+                    "location": {
+                        "addrLine": "Lichtenbergstra\u00dfe 4",
+                        "postCode": "85747",
+                        "settlement": "Garching",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Michael",
+                "middle": [],
+                "last": "Sattler",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Technical University of Munich",
+                    "location": {
+                        "addrLine": "Lichtenbergstra\u00dfe 4",
+                        "postCode": "85747",
+                        "settlement": "Garching",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Grzegorz",
+                "middle": [
+                    "M"
+                ],
+                "last": "Popowicz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Technical University of Munich",
+                    "location": {
+                        "addrLine": "Lichtenbergstra\u00dfe 4",
+                        "postCode": "85747",
+                        "settlement": "Garching",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The surfaces of proteins are generally hydrophilic but there have been reports of sites that exhibit an exceptionally high affinity for individual water molecules. Not only do such molecules often fulfil critical biological functions, but also, they may alter the binding of newly designed drugs. In crystal structures, sites consistently occupied in each unit cell yield electron density clouds that represent water molecule presence. These are recorded in virtually all high-resolution structures obtained through X-ray diffraction. In this work, we utilized the wealth of data from the RCSB Protein Data Bank to train a residual deep learning model named 'hotWater' to identify sites on the surface of proteins that are most likely to bind water, the so-called water hot spots. The model can be used to score existing water molecules from a PDB file to provide their ranking according to the predicted binding strength or to scan the surface of a protein to determine the most likely water hot-spots de novo. This is computationally much more efficient than currently used molecular dynamics simulations. Based on testing the model on three example proteins, which have been resolved using both highresolution X-ray crystallography (providing accurate positions of trapped waters) as well as low-resolution X-ray diffraction, NMR or CryoEM (where structure refinement does not yield water positions), we were able to show that the hotWater method is able to recover in the \"water-free\" structures many water binding sites known from the highresolution structures. A blind test on a newly solved protein structure with waters removed from the PDB also showed good prediction of the crystal water positions. This was compared to two known algorithms that use electron density and was shown to have higher recall at resolutions >2.6 \u00c5. We also show that the algorithm can be applied to novel proteins such as the RNA polymerase complex from SARS-CoV-2, which could be of use in drug discovery. The hotWater model is freely available at (https://pypi.org/project/hotWater/).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": ": Schematic diagram of mesh layers covering the area around a protein surface. Water molecules present within the grid are encoded in terms of an array of vectors pointing towards all proximal (<=7.5\u00c5) atoms of the protein.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In this work, we have made an arbitrary, but intuitive, decision to encode the queried potential water binding site on the surface of the protein in terms of a linear array of vectors representing the full atomic neighborhood of the site (providing information on the distance to each atom as well as the corresponding atom type and temperature factor). Each positive and negative class sample was annotated with vectors pointing towards all proximal (<=7.5\u00c5) atoms of the protein. The target atom types were recorded according to their chemical properties, distinguishing between: hydrogens, aliphatic carbons, alpha carbons, aromatic carbons, carbonyl carbons of the main chain, amide carbons of the side chain, amide carbons of the main chain, carboxyl carbons, guanidinium carbons, hydroxyl oxygens, carboxyl oxygens, carbonyl oxygens of the main chain, hydroxyl aromatic oxygens, amide nitrogens of the main chain, aromatic nitrogens of tryptophan, aromatic nitrogens of histidine, primary amine nitrogens, secondary amine nitrogens, sulfurs of methionine and sulfurs of cysteine. These 21 atom types are represented in the model using the \"one hot encoding\". Since temperature factors (B-values) have been shown to affect the probability of resolving water molecules within the crystal [17] , their normalized values were added as additional inputs into the model.",
+            "cite_spans": [
+                {
+                    "start": 1292,
+                    "end": 1296,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "The model was designed to consist of two input channels: the first layer provides vectors pointing from the (non-)water molecule position to the nearest fifty interacting atoms of the protein (shape: 50x3), while the second layer provides B-values and atom-type information corresponding to each of the fifty vectors (shape: 50x30, one hot encoding).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "In order to facilitate model convergence and prediction performance, the landscape of input feature patterns that can appear should be condensed; in particular, author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint rotational transformations of the input feature space introduce redundancies which greatly hinder the ability of the model to learn [44] . One way of mitigating the problem is training-data augmentation including random rotations of the each input feature sample [34] or data-preprocessing to ensure rotational invariance of the inputs. In this work, we opted for the latter solution; the vectors were rotated to a common system of coordinates in Euclidean space by Gram-Schmidt orthonormalization using the vector pointing to the closest atom of the protein ( ) and the orthogonal part of the vector at the highest angle against it ( ) as the first and second basis vectors for the orientation (the third vector forming the new orthonormal basis is their cross product):",
+            "cite_spans": [
+                {
+                    "start": 274,
+                    "end": 278,
+                    "text": "[44]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 405,
+                    "end": 409,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "Each vector was rotated into the standardized system of coordinates by left-multiplying it by the matrix .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "In order to allow for effective learning of patterns indicative of strong interactions with the water molecules, the vectors were sorted into ordered pairs such that the first vector is the vector with the lowest norm, the second vector is the vector at the highest angle against it, the next vector pair is again the vector with the lowest norm and the vector at the highest angle against it (drawn from the set of remaining vectors). All data were normalized to fall between [0,1] (B-values were log10-transformed beforehand). If the number of interacting atoms with the water molecule was less than fifty, the unoccupied positions were filled with empty values.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input features and data preprocessing"
+        },
+        {
+            "text": "Due to the vastness of possibilities, the selection of the neural network architecture was inspired by the previous successes in applying similar models to a different application domain [20, 27] . The training set was split into six cross-validation folds (excluding the holdout test set) and various network depths (numbers of hidden layers and numbers of residual blocks, see below), as well as combinations of hyper-parameters, were evaluated to establish the choice that yields the highest classification accuracy on the validation set (corresponding to the lowest loss, measured in terms of binary crossentropy). The best performing network found has the following architecture: the two input layers (positional vectors and atom-types/B-values) are separately passed through a 1D convolution of thirty filters with linear activation functions (window size was set to 4) and subsequently concatenated to mix atom type and B-value-based patterns with the patterns learnt from the array of input vectors describing the ordered positional vectors; the data is then duplicated and passed into two collateral paths, the first one being a series of two residual blocks, each containing a series of two batch normalization layers with rectified linear unit activation functions followed by 1D convolutional layers, and the second being skip connections that join each residual block after passing its respective output data through a 1D convolutional layer. The paths are then joined together in a final residual block followed by a 1D convolution with a single sigmoid activation kernel and, lastly, the dimensionality of the model is collapsed in the final max pooling layer serving as the output for predicting whether or not a position is likely to correspond to a water molecule \"hot-spot\". Altogether, the model comprises 34 141",
+            "cite_spans": [
+                {
+                    "start": 187,
+                    "end": 191,
+                    "text": "[20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 192,
+                    "end": 195,
+                    "text": "27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Neural network architecture and hyper-parameter tuning"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural network architecture and hyper-parameter tuning"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural network architecture and hyper-parameter tuning"
+        },
+        {
+            "text": "trainable parameters (the model architecture is available for visual inspection in Supplementary figure 1, and the model summary is available in Supplementary file 2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural network architecture and hyper-parameter tuning"
+        },
+        {
+            "text": "In order to minimize over-fitting, L2 regularization was applied (at the regularization rate \u03bb=0.005) to the kernel parameter weights of the convolutional layers. Dropout was not found to improve the prediction accuracy and was not used. Additionally, in order to make the model more robust in the event of adversarial perturbations (or other non-standard inputs), the adversarial regularization wrapper from the TensorFlow Neural Structured Learning Framework was applied on top of the developed model (using the multiplier of the adversarial loss set to 0.2 & step size of 0.05) [45, 46] . Lastly, in agreement with previous reports [47] , we observed that the 'adam' optimizer did not guarantee a stable convergence of the loss function and it had to be replaced with the classic stochastic gradient descent (with a learning rate of 0.01).",
+            "cite_spans": [
+                {
+                    "start": 581,
+                    "end": 585,
+                    "text": "[45,",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 586,
+                    "end": 589,
+                    "text": "46]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 635,
+                    "end": 639,
+                    "text": "[47]",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Neural network architecture and hyper-parameter tuning"
+        },
+        {
+            "text": "In order to evaluate the performance of the model in a realistic setting, we sought examples of structures resolved using both high-resolution X-ray crystallography as compared to: 1) low-resolution X-ray crystallography; 2) NMR; and 3) Cryo-EM. Structures resolved using the latter techniques do not contain water molecules -they serve as the target structures for running predictions. The high-resolution structures, on the other hand, contain water molecule positions, which serve as a validation set for the predictions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case examples for performance evaluation"
+        },
+        {
+            "text": "To this end, we arbitrarily selected \"popular\" proteins, for which many structures were available in PDB. We selected three high resolution (<1.8\u00c5) structures resolved using X-ray crystallography: a carbonic anhydrase (resolved to 1.35\u00c5; PDB accession 3M1K [48] ), cyclophilin A (resolved to 1.63\u00c5; PDB accession 2CPL [49] ) and lysozyme (resolved to 1.4\u00c5; PDB accession 2Q9D [50] ). We used TopSearch [51] to search for the most structurally homologous (in terms of low root mean square deviation -RMSD) counterparts resolved to a lower resolution or not relying on X-ray diffraction. The resultant homologues found included: a crystal structure of a carbonic anhydrase resolved to 3.5\u00c5 (PDB accession 1G6V [52] ; RMSD against 3M1K =0.73\u00c5), an NMR structure of cyclophilin A (PDB accession 1oca [53] ; RMSD against 2CPL=0.83\u00c5) and a cryo-EM structure of a gamma-secretase assembly, which includes a lysozyme (resolved to 4.4\u00c5; PDB accession 4UIS [54] ; RMSD against 2Q9D =1.09\u00c5). The rigid version of FATCAT [55] was used to superimpose structures on top of each other, so as to localize the binding sites of water molecules from the highresolution structures within their low-resolution counterparts. Proteins exhibiting structural homology to the above listed structures (according to TopSearch) were excluded from the machine learning training set, so as to ensure independence of these test cases and avert the risk of reporting results obtained due to over-fitting.",
+            "cite_spans": [
+                {
+                    "start": 257,
+                    "end": 261,
+                    "text": "[48]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 318,
+                    "end": 322,
+                    "text": "[49]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 376,
+                    "end": 380,
+                    "text": "[50]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 402,
+                    "end": 406,
+                    "text": "[51]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 708,
+                    "end": 712,
+                    "text": "[52]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 796,
+                    "end": 800,
+                    "text": "[53]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 947,
+                    "end": 951,
+                    "text": "[54]",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 1009,
+                    "end": 1013,
+                    "text": "[55]",
+                    "ref_id": "BIBREF54"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Case examples for performance evaluation"
+        },
+        {
+            "text": "The N-terminal domain of T. cruzi PEX14 was expressed and purified as previously described [13] . Protein was crystallised at 40 mg/ml in crystallization buffer containing 0.2 M Na acetate, 0.1 M Tris.HCl at pH 8.5 with 30% (w/v) PEG 4000. Crystals were grown at 20 \u00b0C and cryoprotected in glycerol. The data was indexed using XDS [56] and scaled using XScale. The initial phases were obtained using molecular replacement carried out using Phaser [57] , with T. brucei PEX-14 as the search model. Manual rebuilding using electron density maps was carried out in Coot [58] . Phenix Elbow [59] was used for obtaining restraints for small molecules in the crystallization conditions. Further refinements were carried out using Phenix Refine. 5 % of the reflections were used for cross-validation analysis. The final model will be deposited in the PDB; PDB code to be confirmed.. Figures were produced using Pymol [60] , Coot, Affinity Designer and Inkscape.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 331,
+                    "end": 335,
+                    "text": "[56]",
+                    "ref_id": "BIBREF55"
+                },
+                {
+                    "start": 447,
+                    "end": 451,
+                    "text": "[57]",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 567,
+                    "end": 571,
+                    "text": "[58]",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 587,
+                    "end": 591,
+                    "text": "[59]",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 910,
+                    "end": 914,
+                    "text": "[60]",
+                    "ref_id": "BIBREF59"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Protein crystallization and structure determination"
+        },
+        {
+            "text": "A comparison of water versus \"non-water\" (negative class samples) summary statistics is presented in Figure 2 . The features examined included 'distance to protein's closest atom' -the distance of the oxygen of the water molecule to the closest atom of the protein; 'Mean temperature factor' -mean temperature factor of all protein atoms in the neighborhood of the water molecule (<7.5\u00c5 away from the water molecule); 'Maximum angle between protein's atoms' -the maximum angle between any pair of vectors pointing to the protein atoms interacting with the water molecule, serving as a measure of how deeply buried the position is within the protein's solvation surface, and \"number of interacting atoms\" with the water molecule (number of atoms <7.5\u00c5 of the oxygen of the water molecule).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 101,
+                    "end": 109,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Characteristics of the generated negative class dataset"
+        },
+        {
+            "text": "The majority of water molecules encoded within PDB files are between 2.6 and 3.2\u00c5 from the closest interacting atom of the protein. This range (1.8-3.3\u00c5) is much broader for the points used as the negative class dataset but it extends in both directions (points closer and further away from the protein's atoms) and at least 10% of negative samples lie exactly in the range most frequently occupied by water molecules. The mean temperature factor of protein's atoms in the positions near water molecules is clearly lower than that of the negative class dataset but the overlap in the ranges of values measured for the two sets is over 75%. The maximum angle between any pair of vectors pointing to the protein's atoms is generally higher (>2.7 rad) for water hotspots but over 50% of positions used as the negative class samples are buried equally deep within the protein's surface. Finally, we observed that water molecules typically interact (reside within 7.5\u00c5 of) with 35-60 protein atoms; roughly 40% of samples in the negative class dataset exhibit the same range.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Characteristics of the generated negative class dataset"
+        },
+        {
+            "text": "Overall, while the negative class dataset contains many samples that appear to be trivially easy to predict as unlikely to be occupied by water molecules, a significant fraction still offers room for learning the non-obvious water hot-spot characteristics. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Characteristics of the generated negative class dataset"
+        },
+        {
+            "text": "The network described in section 2.3 was trained for 100 epochs and achieved an accuracy of 94% on the test set ( Figure 3A ) and the area under the receiver operating characteristic curve of over 0.98 ( Figure 3B ). It is important to note that the model performance determined here applies only to the training dataset used in this study. The accuracy is expected to be highly sensitive to the number of \"trivial\" non-interacting sites the model was presented with during training. Likewise, filtering out the positive dataset to exclude water molecules for which there is insufficient evidence in the form of electron density clouds could further improve the classification accuracy. We have not performed this step since Nittinger et al. have shown that roughly 90% of water molecules encoded on the surfaces of proteins within PDB files were real [14] . While this fraction is already high, we have further increased it by excluding all water molecules not featuring interactions with at least two atoms of the protein structure (this was generally between 0-15% of water molecules encoded in each PDB file) or further away than 4.5\u00c5 of any atom of the protein. The main reason behind not using the dataset provided by Nittinger et al. is that it does not guarantee that the protein structures available are non-redundant -this could potentially lead to information leakage author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 852,
+                    "end": 856,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 114,
+                    "end": 123,
+                    "text": "Figure 3A",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 204,
+                    "end": 213,
+                    "text": "Figure 3B",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Performance of the final model"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint between folds of the cross validation and also the test set. Secondly, their dataset comprises only 2.3 million water molecules which is significantly smaller than the dataset we used. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance of the final model"
+        },
+        {
+            "text": "Using the prediction scores from the developed model, we examined the characteristics of the positions: unlikely to be interacting with waters (prediction score <0.5) or ever more likely to be water hot-spots (prediction scores 0.5-0.9, 0.9-0.99, 0.99-0.999, and >0.999). Unsurprisingly, we found that the high-scoring water hot-spots are buried within the protein's surface (figure 4C) and surrounded densely by atoms of the protein (figure 4B); this increases the likelihood of creating multiple hydrogen bonds precisely at the configuration, which confers the most stable interaction. The normalized temperature factors also show a clear anti-correlation with prediction scores ( figure  4D) , however, based on the breadth of the distributions, this is not a major factor affecting the predictions. Interestingly, the highest scoring water hot-spots feature precisely the same distance to closest atoms as the average water molecule used in the training set (2.8\u00c5; figure 4A ). At this point, we think it is important to underline the fact that the features extracted here were not explicitly input into the model -they have been learnt from the raw data encoded as described in section 2.2.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 683,
+                    "end": 694,
+                    "text": "figure  4D)",
+                    "ref_id": null
+                },
+                {
+                    "start": 969,
+                    "end": 978,
+                    "text": "figure 4A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Characteristics of high-scoring water molecule positions"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Characteristics of high-scoring water molecule positions"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint Figure 4 : Features describing characteristics of water molecules according to the assigned hot spot prediction scores: A) distance to closest atom of the protein; B) Number of interacting protein atoms (<7.5\u00c5); C) maximum angle between vectors pointing to any pair of protein atoms -as a measure of how deeply buried the position is; D) mean normalized temperature factor of protein atoms in the neighborhood of the position (<7.5\u00c5).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 150,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Characteristics of high-scoring water molecule positions"
+        },
+        {
+            "text": "In order to empirically validate the final model, we evaluated its performance by comparing the predicted water hot-spots within low-resolution X-ray, NMR and Cryo-EM structures against water molecules identified within structurally homologous highresolution X-ray structures (table 1). Figure 5 depicts an example of one of the lowresolution structures, which was scanned for water hot-spots. author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 287,
+                    "end": 295,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scanning structures without information on water to detect water hot-spots"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint Figure 5 : Solvation surface of low-resolution X-ray structure 1G6V scanned for water hot-spots (shaded blue); magenta points indicate positions of water molecules superimposed from the high-resolution structure 3M1K. Scanning the solvation surface of an entire protein at sub-Angstrom resolution involves generating predictions for over 10 million points. This inevitably leads to overpredicting the number of hot-spot positions, however, selecting a strict prediction threshold for defining positive predictions can alleviate this problem. For example, when choosing the threshold to be 0.9, in the tested examples, the model predicts 17-20% of the protein's surface to interact with water; this allows retrieving at least 75% of real water molecules encoded within the high-resolution X-ray structures, which already offers at least 4-fold enrichment over naive guessing (selecting positions on the protein surface at random). Increasing the threshold for positive predictions further (up author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 150,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scanning structures without information on water to detect water hot-spots"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint to 0.99) reduces the number of false-positive predictions (2-3% of protein's surface predicted to interact with waters) at the expense of a slightly reduced recall (this allowed retrieving 36-59% of water molecules encoded in the corresponding highresolution X-ray structures); this offers an 18-20 -fold enrichment over naive guessing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scanning structures without information on water to detect water hot-spots"
+        },
+        {
+            "text": "One explanation for some of the differences seen could be the intrinsic differences between the methods themselves. X-ray crystal structures are affected by many additional parameters, such as crystal packing, pH, temperature, and the presence of ions or other additives that may affect the presence of water molecules in the system. The presence of such additional molecules and molecular ions is currently not an input into our computational process, which analyzes the protein molecules present in a single unit cell of a solved structure; thus, the system could predict a water molecule in place of an ion or crystal contact, leading to a deviation from the expected results. The same is true for NMR structures, which are measured in aqueous solution; the conditions are very different to those in silico as well as to those in high-resolution Xray structures, as used for the training set, due to different environments and higher intrinsic flexibility in solution. The flexibility seen in solution, along with the variety of conformations measurable in both NMR and Cryo-EM are not represented in the training set, which prevents the machine learning model from \"seeing\" and learning from alternative biologically relevant protein conformations. This inherent bias in protein conformations attributed to crystal structures is also likely to contribute to the disagreements between computational predictions obtained for non-crystallized proteins and the water positions identified in X-ray-based structures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scanning structures without information on water to detect water hot-spots"
+        },
+        {
+            "text": "Further increasing the threshold for positive predictions to 0.999 yields in the order of several hundred positively predicted spots. These, according to the model, are the precise locations that feature the most stable interactions with water. Although many of these predicted sites are not corroborated by water molecules present in the corresponding high-resolution X-ray structures, in the following example we demonstrate that many of these are theoretically good binding sites for water and in fact, in some cases corroborated by electron density clouds.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scanning structures without information on water to detect water hot-spots"
+        },
+        {
+            "text": "A further, previously unpublished, drug discovery target structure of the Nterminal domain of T. cruzi PEX14 was also critically compared to the results as determined using the final model. Taking the highest scoring predictions (score >0.999), out of the 222 water molecules considered, 60 were considered to have been predicted correctly meaning that 27% of real water molecules present within the defined grid were captured, giving a 150-fold enrichment over naive guessing. With a score threshold of >0.99, 70% of the water molecules are captured at the cost, as before, of a higher false-positive rate: 2.6% of the surface is covered by positive predictions, giving a 27-fold enrichment over naive guessing. These results are consistent with what we would expect from the model, giving better results than those above, where water positions in different, albeit similar, structures were compared. Manual inspection of the results, however, highlighted some differences between calculated and experimental as could be expected, and one further, as yet unaccounted for, difference, that could affect the apparent statistics of the model. Figure 6 A and B show example comparisons of the experimentally determined waters and the predicted water positions according to the hotWater model. In A, the calculated and experimental match very well, whilst in B, both false negatives and false positives are illustrated. It is worth pointing out that the false negative positions did not author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1141,
+                    "end": 1149,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Application of the method to a newly crystal resolved structure"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . meet the stringent >0.999 score threshold, which suggests that these sites feature a relatively lower affinity towards water than the other positively captured sites. As previously mentioned, crystallography often includes the addition of additives and cryo-protectants which could affect the apparent accuracy of the model presented. Figure 6 C illustrates this case; the algorithm indicates a high probability of water being present, as shown by many water positions being modelled. However, a glycerol OH is present in the crystal structure instead, leading these water positions to be considered as false positives. Were there to be no glycerol present in the condition, it is plausible that a water molecule would indeed take the place of the -OH group.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 413,
+                    "end": 421,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Application of the method to a newly crystal resolved structure"
+        },
+        {
+            "text": "The other factor that would affect the statistics of the model is illustrated in Figure 6 D-F. In crystallography, the structure of a unit cell is calculated within the electron density map, which is then iteratively used in the refinement calculations and further manually refined to repeatedly improve the structure. The unit cell motif repeats periodically throughout the crystal lattice, with the edge of one unit cell touching the edge of the next unit cell in a tessellating pattern. When only one unit cell is inspected, the molecules at the edge of the neighboring unit cell are therefore disregarded. In Figure 6 D-F, three cases of this are shown pictorially. The unit cell water molecules provided are shown in bright red, whilst those of the neighboring unit cell are shown in a deeper purple. All three cases show purported false positives; that is, a water molecule is predicted but none is seen in the PDB of the unit cell. However, when we manually inspect the crystal structure, so that neighboring unit cells' electron densities can also be inspected carefully, we see that in the cases of D and E, there is indeed a water molecule where the model predicted. In F, there is instead an alternative molecule seen in the unit cell, the aromatic group of a tryptophan sidechain that would clash with the predicted water. This means that whilst it is possible that a water could sit there, it would never be seen in the crystal structure due to the crystal packing. As 'false false positives' like these ( Figure 6 C-F) are included in the calculation of the statistics as false positives, the model's apparent statistics indicate a higher false positive rate than is truly the case. author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 81,
+                    "end": 89,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 613,
+                    "end": 621,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1519,
+                    "end": 1527,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Application of the method to a newly crystal resolved structure"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . Another use in the case of a new structure is as a tool during refinement. We input the backbone manual refinement with no waters present into the deep learning algorithm and used the output in a refinement calculation using Phenix. This gave an Rfree value (used to measure the fit of a model to the electron density, where a lower Rfree value represents a better fit) of 0.2318. In comparison, a manual refinement before the addition of waters had an Rfree of 0.2416, larger by around 1 %. This is at a resolution of 1.6 \u00c5. We then compared the algorithm with the Coot Find Waters tool and the Phenix Update Waters option in the refinement process at a variety of resolution cut-offs (Figure 7) . It was found that at cut-offs at lower resolution (>2.6\u00c5), no waters were found using Phenix and a maximum of 6 water molecules using Coot. The HotWater algorithm has a recall of 0.27 at all resolutions where the protein structure can be fitted as it relies purely on the PDB. This recall is only matched by Phenix at a resolution of 2.5\u00c5 and was not matched by the Coot Find Waters (with default settings) at any resolutions tested. The precision of the hotWater algorithm is, however, lower than that for the two algorithms that use electron density. This is of course understandable given that electron density is fixed evidence, whilst our algorithm is extrapolating from other datasets. It is conceivable however, that with implementation of electron density data into the training set, our algorithm would have reduced false positives due to the unit cell boundary and have even better recall and precision statistics. This would be a valid approach for further improvement of the software for the crystallography community. Figure 7 : Depiction of waters predicted by different algorithms at a variety of resolution cut-offs. The hotWater algorithm is not affected by resolution of the electron density map, provided that the protein backbone can be fitted and, as such, is shown as a dashed blue line.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 764,
+                    "end": 774,
+                    "text": "(Figure 7)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1808,
+                    "end": 1816,
+                    "text": "Figure 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "Application of the method to a newly crystal resolved structure"
+        },
+        {
+            "text": "For use in drug discovery, waters that are particularly favorable are sometimes deemed to be 'water hot-spots' or 'magic water' molecules. This means that they are so fundamental in terms of energetic considerations that drug discovery attempts would be ill-advised to consider displacing them. They are often found in or at the edge of active site regions and, instead of being displaced, are normally considered by drug discovery teams as part of the protein surface, meaning that ligands are designed to maintain the position of that water and maximize interactions with it. Our algorithm allows the ranking of water molecules considering the strength and types of interactions, based on how consistently similar sites are occupied by water molecules in the training set. By using a particularly high or narrow threshold, only the most dominant waters would be highlighted, allowing scientists to analyze the presence of potential 'water hot-spots' within their structures. Currently the standard way to determine their presence is to solve several crystal structures, thus highlighting their repeated presence, or by synthesizing molecule that should extend into the area of the water to displace it and finding a reduced activity, despite a significant increase being expected. This is costly in both time and financial terms and a computational solution to this would be of great benefit to the drug discovery community.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Direct applications for drug discovery"
+        },
+        {
+            "text": "Another trend that we have seen in the analysis of the structural outputs of the hotWater algorithm was the co-localization of predicted waters with oxygen atoms of small molecules or ligands in the X-ray structures. In comparisons with both of the recently solved structures, this was seen. In the tcPEX14 structure, a water was placed in the position of the oxygen atom of glycerol, whilst in the IMP-13 structure (PDB: 6RZR [61] ), waters were predicted in the locations of the oxygen atoms of the substrate. Based on this, studying the predicted water positions in and near interesting binding sites could really enrich the information possessed by structural biologists and aid in design of molecules that maximize the interactions of the predicted water molecules.",
+            "cite_spans": [
+                {
+                    "start": 427,
+                    "end": 431,
+                    "text": "[61]",
+                    "ref_id": "BIBREF60"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Direct applications for drug discovery"
+        },
+        {
+            "text": "In recent months, the news has been dominated by the novel coronavirus, SARS-CoV-2, and the disease caused by it, COVID-19. The high rate of infection and severe health problems associated have led to vast changes to the way the world functions on a social, cultural and medical level. Scientists have rapidly solved the structure of and RNA polymerase in complex with its cofactors (PDB: 7BTF [62] ) using cryo-EM at 2.9\u00c5 resolution. Application of the hotWater algorithm to this structure highlighted potential sites of key water molecules that could be exploited in drug discovery processes. This solvated structure could give scientists a better understanding of the solvation sphere of the protein and how this could affect its behavior and binding.",
+            "cite_spans": [
+                {
+                    "start": 394,
+                    "end": 398,
+                    "text": "[62]",
+                    "ref_id": "BIBREF61"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application of the method to urgent targets with structures solved by other methods"
+        },
+        {
+            "text": "Water binding site information is of critical importance in understanding the mechanisms of the protein's action and in drug design. Current in silico fragment-based screening relies solely on computationally demanding, whilst still inaccurate physical force field models [63] . We have developed a machine-learning model for determining the water hot spots on a protein's surface, that has been shown to work on previously published and new structures. This will help to determine water hotspots that are often critical to structure-based drug development. We envisage that our approach can also be extended to other small molecules and provide a novel deep learning tool for in silico screening and drug design. Our model can also serve to quickly, ab-initio solvate crystal structures during refinement even before the electron density is searched for water densities. Thus, it allows the elimination of a fraction of model bias typical in crystallographic model building. author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 272,
+                    "end": 276,
+                    "text": "[63]",
+                    "ref_id": "BIBREF62"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050393 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Water is an active matrix of life for cell and molecular biology",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ball",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "114",
+            "issn": "",
+            "pages": "13327--13362",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.1703781114"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Water in protein structure prediction",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Papoian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ulander",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Eastwood",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Luthey-Schulten",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wolynes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proc Natl Acad Sci",
+            "volume": "101",
+            "issn": "",
+            "pages": "3352--3359",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.0307851100"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Water and proteins: A love-hate relationship",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Levy",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Onuchic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proc Natl Acad Sci",
+            "volume": "101",
+            "issn": "",
+            "pages": "3325--3331",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.0400157101"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Simulations of the role of water in the protein-folding mechanism",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Rhee",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sorin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Jayachandran",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lindahl",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pande",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "101",
+            "issn": "",
+            "pages": "6456--61",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.0307898101"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "How Water's Properties Are Encoded in Its Molecular Structure and Energies",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Brini",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Fennell",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fernandez-Serra",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hribar-Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Luk\u0161i\u010d",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Dill",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Chem Rev",
+            "volume": "117",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/ACS.CHEMREV.7B00259"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A single mutation in the active site swaps the substrate specificity of N-acetyl-Lornithine transcarbamylase and N-succinyl-L-ornithine transcarbamylase",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cabrera-Luque",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Roth",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Morizono",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Protein Sci",
+            "volume": "16",
+            "issn": "",
+            "pages": "1689--99",
+            "other_ids": {
+                "DOI": [
+                    "10.1110/ps.072919907"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Contribution of water molecules in the interior of a protein to the conformational stability",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Takano",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Funahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yamagata",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Fujii",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yutani",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "J Mol Biol",
+            "volume": "274",
+            "issn": "",
+            "pages": "132--174",
+            "other_ids": {
+                "DOI": [
+                    "10.1006/jmbi.1997.1365"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Critical Role of Water Molecules in Proton Translocation by the Membrane-Bound Transhydrogenase",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Padayatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mahinthichaichan",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Tajkhorshid",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ishchenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Cherezov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Structure",
+            "volume": "25",
+            "issn": "",
+            "pages": "1111--1119",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.str.2017.05.022"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Bound water molecules and conformational stabilization help mediate an antigen-antibody association",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Bhat",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bentley",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Boulot",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Greene",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Tello",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Dall&apos;acqua",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "91",
+            "issn": "",
+            "pages": "1089--93",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.91.3.1089"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Water Makes the Difference: Rearrangement of Water Solvation Layer Triggers Non-additivity of Functional Group Contributions in Protein-Ligand Binding",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Biela",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Betz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Heine",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Klebe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "ChemMedChem",
+            "volume": "7",
+            "issn": "",
+            "pages": "1423--1457",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/cmdc.201200206"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Dissecting the Hydrophobic Effect on the Molecular Level: The Role of Water, Enthalpy, and Entropy in Ligand Binding to Thermolysin",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Biela",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Nasief",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Betz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Heine",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hangauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Klebe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Angew Chemie Int Ed",
+            "volume": "52",
+            "issn": "",
+            "pages": "1822--1830",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/anie.201208561"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Rational Design of Thermodynamic and Kinetic Binding Profiles by Optimizing Surface Water Networks Coating Protein-Bound Ligands",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Krimmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cramer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Betz",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Fridh",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Karlsson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Heine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J Med Chem",
+            "volume": "59",
+            "issn": "",
+            "pages": "10530--10578",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jmedchem.6b00998"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Inhibitors of PEX14 disrupt protein import into glycosomes and kill Trypanosoma parasites",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dawidowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Emmanouilidis",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kalel",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tripsianes",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schorpp",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hadian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Science",
+            "volume": "355",
+            "issn": "",
+            "pages": "1416--1436",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.aal1807"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Evidence of Water Molecules-A Statistical Evaluation of Water Molecules Based on Electron Density",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Nittinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lange",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rarey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J Chem Inf Model",
+            "volume": "55",
+            "issn": "",
+            "pages": "771--83",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/ci500662d"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "How many water molecules can be detected by protein crystallography?",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Carugo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bordo",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Acta Crystallogr D Biol Crystallogr",
+            "volume": "55",
+            "issn": "",
+            "pages": "479--83",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/s0907444998012086"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "How Cryo-EM Became so Hot",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Glaeser",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Nogales",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Cell",
+            "volume": "171",
+            "issn": "",
+            "pages": "1229--1260",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/J.CELL.2017.11.016"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "How many water molecules are detected in X-ray protein crystal structures?",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gnesi",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Carugo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Iucr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J Appl Crystallogr",
+            "volume": "50",
+            "issn": "",
+            "pages": "96--101",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/S1600576716018719"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Imagenet classification with deep convolutional neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krizhevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gh-A",
+                    "middle": [],
+                    "last": "Neural",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "In",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Adv Neural Inf Process Syst",
+            "volume": "2012",
+            "issn": "",
+            "pages": "1097--105",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Deep learning",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lecun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nature",
+            "volume": "521",
+            "issn": "",
+            "pages": "436--480",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nature14539"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Deep Residual Learning for Image Recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "IEEE Conf. Comput. Vis. Pattern Recognit",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/CVPR.2016.90"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Going deeper with convolutions",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yangqing",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sermanet",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Reed",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Anguelov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "IEEE Conf. Comput. Vis",
+            "volume": "",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/CVPR.2015.7298594"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Convolutional neural networks for speech recognition",
+            "authors": [
+                {
+                    "first": "Abdel-Hamid O",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mohamed",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Penn",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "IEEE/ACM Trans Audio, Speech, Lang Process",
+            "volume": "22",
+            "issn": "",
+            "pages": "1533--1578",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Convolutional neural networks for distant speech recognition",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Swietojanski",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ghoshal",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Renals",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "IEEE Signal Process Lett",
+            "volume": "21",
+            "issn": "",
+            "pages": "1120--1124",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Adieu features? end-to-end speech emotion recognition using a deep convolutional recurrent network",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Trigeorgis",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ringeval",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Brueckner",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Marchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Nicolaou",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Schuller",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "IEEE Int Conf Acoust Speech Signal Process",
+            "volume": "2016",
+            "issn": "",
+            "pages": "5200--5204",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Very deep convolutional networks for end-to-end speech recognition",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Jaitly",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "IEEE Int Conf Acoust Speech Signal Process",
+            "volume": "2017",
+            "issn": "",
+            "pages": "4845--4854",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Modeling aspects of the language of life through transfer-learning protein sequences",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Heinzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Elnaggar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dallago",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Nechaev",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Matthes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "BMC Bioinformatics",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12859-019-3220-8"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Predicting the clinical impact of human mutation with deep neural networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sundaram",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Padigepati",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Mcrae",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kosmicki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat Genet",
+            "volume": "50",
+            "issn": "",
+            "pages": "1161--70",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41588-018-0167-z"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "DanQ: a hybrid convolutional and recurrent deep neural network for quantifying the function of DNA sequences",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Quang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nucleic Acids Res",
+            "volume": "44",
+            "issn": "",
+            "pages": "107--107",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gkw226"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Convolutional neural network architectures for predicting DNA-protein binding",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Edwards",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Gifford",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Bioinformatics",
+            "volume": "32",
+            "issn": "",
+            "pages": "121--128",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btw255"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Chromatin accessibility prediction via convolutional long short-term memory networks with k-mer embedding",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Min",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Bioinformatics",
+            "volume": "33",
+            "issn": "",
+            "pages": "92--101",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btx234"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "DeepPolyA: A Convolutional Neural Network Approach for Polyadenylation Site Prediction",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hakonarson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Access",
+            "volume": "6",
+            "issn": "",
+            "pages": "24340--24349",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/ACCESS.2018.2825996"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "SpliceRover: interpretable convolutional neural networks for improved splice site prediction",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zuallaert",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Godin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Soete",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Saeys",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "De Neve",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "",
+            "pages": "4180--4188",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/bty497"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "NetSurfP-2.0: Improved prediction of protein structural features by integrated deep learning",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Klausen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jespersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nielsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Jurtz",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "S\u00f8nderby",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proteins Struct Funct Bioinforma",
+            "volume": "87",
+            "issn": "",
+            "pages": "520--527",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/prot.25674"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Protein \u2212 Ligand Scoring with Convolutional Neural Networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ragoza",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hochuli",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Idrobo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sunseri",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Koes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jcim.6b00740"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Development and evaluation of a deep learning model for protein-ligand binding affinity prediction",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Stepniewska-Dziubinska",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zielenkiewicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Siedlecki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "",
+            "pages": "3666--74",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/bty374"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Protein-Ligand Absolute Binding Affinity Prediction via 3D-Convolutional Neural Networks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jim\u00e9nez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "\u0160kali\u010d",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mart\u00ednez-Rosell",
+                    "suffix": ""
+                },
+                {
+                    "first": "De",
+                    "middle": [],
+                    "last": "Fabritiis",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Deep",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J Chem Inf Model",
+            "volume": "58",
+            "issn": "",
+            "pages": "287--96",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jcim.7b00650"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "DeepBindRG: A deep learning based method for estimating effective protein-ligand affinity",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Saravanan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PeerJ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj.7362"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "DeepSite: protein-binding site predictor using 3D-convolutional neural networks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jim\u00e9nez",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Doerr",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mart\u00ednez-Rosell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Rose",
+                    "suffix": ""
+                },
+                {
+                    "first": "De",
+                    "middle": [],
+                    "last": "Fabritiis",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Bioinformatics",
+            "volume": "33",
+            "issn": "",
+            "pages": "3036--3078",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btx350"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Gradient Flow in Recurrent Nets: the Difficulty of Learning Long-Term Dependencies",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hochreiter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Frasconi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schmidhuber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "RCSB Protein Data Bank: biological macromolecular structures enabling research and education in fundamental biology, biomedicine, biotechnology and energy",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Burley",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Berman",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bhikadiya",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Di",
+                    "middle": [],
+                    "last": "Costanzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nucleic Acids Res",
+            "volume": "47",
+            "issn": "",
+            "pages": "464--74",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gky1004"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Generating Triangulated Macromolecular Surfaces by Euclidean Distance Transform",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PLoS One",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0008140"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "A set of van der Waals and coulombic radii of protein atoms for molecular and solvent-accessible surface calculation, packing evaluation, and docking",
+            "authors": [
+                {
+                    "first": "A-J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nussinov",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "Proteins Struct Funct Genet",
+            "volume": "32",
+            "issn": "",
+            "pages": "111--138",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/(SICI)1097-0134(19980701)32:1<111::AID-"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "An introduction to hydrogen bonding",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Jeffrey",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Image processing with neural networks-a review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Egmont-Petersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "De Ridder",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Handels",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Pattern Recognit",
+            "volume": "35",
+            "issn": "",
+            "pages": "178--187",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0031-3203(01"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Explaining and Harnessing Adversarial Examples",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Goodfellow",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shlens",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "ArXiv Prepr ArXiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Neural Graph Learning",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Bui",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ravi",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ramavajjala",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proc. Elev. ACM Int. Conf. Web Search Data Min. -WSDM '18",
+            "volume": "",
+            "issn": "",
+            "pages": "64--71",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3159652.3159731"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Improving Generalization Performance by Switching from Adam to SGD",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Keskar",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Socher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ArXiv Prepr ArXiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Bidentate Zinc Chelators for \u03b1-Carbonic Anhydrases that Produce a Trigonal Bipyramidal Coordination Geometry",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schulze Wischeler",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Innocenti",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Vullo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Agrawal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Smm",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Heine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "ChemMedChem",
+            "volume": "5",
+            "issn": "",
+            "pages": "1609--1624",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/cmdc.201000200"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Similarities and differences between human cyclophilin A and other \u03b2barrel structures",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "J Mol Biol",
+            "volume": "228",
+            "issn": "",
+            "pages": "90841--90848",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/0022-2836(92"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Structural determinants of nitroxide motion in spin-labeled proteins: solvent-exposed sites in helix B of T4 lysozyme",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cascio",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hideg",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hubbell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Protein Sci",
+            "volume": "17",
+            "issn": "",
+            "pages": "228--267",
+            "other_ids": {
+                "DOI": [
+                    "10.1110/ps.073174008"
+                ]
+            }
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Structure-Based Characterization of Multiprotein Complexes",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wiederstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gruber",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Melo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sippl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Structure",
+            "volume": "22",
+            "issn": "",
+            "pages": "1063--70",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.str.2014.05.005"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Antigen specificity and high affinity binding provided by one single loop of a camel single-domain antibody",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Desmyter",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Decanniere",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Muyldermans",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wyns",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "J Biol Chem",
+            "volume": "276",
+            "issn": "",
+            "pages": "26285--90",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/jbc.M102107200"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "The NMR solution conformation of unligated human cyclophilin A 1 1Edited by",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ottiger",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Zerbe",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "G\u00fcntert",
+                    "suffix": ""
+                },
+                {
+                    "first": "K ; P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "W\u00fcthrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wright",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "J Mol Biol",
+            "volume": "272",
+            "issn": "",
+            "pages": "64--81",
+            "other_ids": {
+                "DOI": [
+                    "10.1006/jmbi.1997.1220"
+                ]
+            }
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Structural basis of human \u03b3-secretase assembly",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "112",
+            "issn": "",
+            "pages": "6003--6011",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.1506242112"
+                ]
+            }
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Flexible structure alignment by chaining aligned fragment pairs allowing twists",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Godzik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Bioinformatics",
+            "volume": "19",
+            "issn": "",
+            "pages": "246--55",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btg1086"
+                ]
+            }
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "XDSAPP : a graphical user interface for the convenient processing of diffraction data using XDS",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Krug",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Weiss",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Heinemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Mueller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "J Appl Crystallogr",
+            "volume": "45",
+            "issn": "",
+            "pages": "568--72",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/S0021889812011715"
+                ]
+            }
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Phaser crystallographic software",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mccoy",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Grosse-Kunstleve",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Adams",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Winn",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Storoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "J Appl Crystallogr",
+            "volume": "40",
+            "issn": "",
+            "pages": "658--74",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/S0021889807021206"
+                ]
+            }
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Features and development of Coot",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Emsley",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lohkamp",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Scott",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Cowtan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Acta Crystallogr Sect D Biol Crystallogr",
+            "volume": "66",
+            "issn": "",
+            "pages": "486--501",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/S0907444910007493"
+                ]
+            }
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "PHENIX: A comprehensive Python-based system for macromolecular structure solution",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Adams",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Afonine",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bunk\u00f3czi",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Echols",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Acta Crystallogr Sect D Biol Crystallogr",
+            "volume": "66",
+            "issn": "",
+            "pages": "213--234",
+            "other_ids": {
+                "DOI": [
+                    "10.1107/S0907444909052925"
+                ]
+            }
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "The PyMOL Molecular Graphics System",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Delano",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Structure and molecular recognition mechanism of IMP-13 metallo-\u03b2lactamase",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Softley",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Zak",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Bostock",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Fino",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kolonko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Antimicrob Agents Chemother",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/aac.00123-20"
+                ]
+            }
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "Structure of the RNAdependent RNA polymerase from COVID-19 virus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb7498"
+                ]
+            }
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "The FTMap family of web servers for determining and characterizing ligandbinding hot spots of proteins",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kozakov",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Grove",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hall",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bohnuud",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mottarella",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nat Protoc",
+            "volume": "10",
+            "issn": "",
+            "pages": "733--55",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nprot.2015.043"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Features describing characteristics of positive (water molecules within PDB files) and negative (heuristically chosen non-water positions) class samples: A) distance to closest atom of the protein; B) Number of interacting protein's atoms (<7.5\u00c5); C) maximum angle between vectors pointing to any pair of protein's atomsas a measure of how deeply buried the position is; D) mean temperature factor of protein's atoms in the neighborhood of the position (<7.5\u00c5).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Performance of the final model. A) Left axis: model accuracy across training epochs (light blue and dark blue line for train and test set, respectively; Right axis: binary cross-entropy loss across training epochs (light red and dark red line for train and test set, respectively B) Receiver Operating Characteristic curve i.e. false-positive versus true positive rate; area under the curve= 0.985.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "the hotWater model applied to a new crystal structure of N-terminal domain of PEX14. Green arrows indicate true positive predictions, red arrows indicate false negative predictions, purple arrows indicate false positive predictions and the orange arrow indicates a special case: A) area of structure covered primarily by true positive predictions; B) Area of structure with false negative and false positive predictions; C) site predicted to harbor many water molecules which are instead occupied by a glycerol OH in the real crystal structure and thus deemed as false positive; D-E) Water molecules predicted using the hotWater model, that are not present in the unit cell (thus showing as false positives) but are present in the neighboring unit cell. These are therefore 'false false positives'. F) a water is predicted using the algorithm, but in the neighboring unit cell, there is instead the tryptophan present, preventing the presence of a water. In D-F) Unit cell waters shown in red, neighboring unit cell waters in purple and predicted waters are shown in turquoise.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Deep residual neural network model summary.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Model performance evaluation with empirical examples.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

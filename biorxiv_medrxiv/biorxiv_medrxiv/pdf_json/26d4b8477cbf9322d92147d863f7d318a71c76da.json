@@ -1,0 +1,1134 @@
+{
+    "paper_id": "26d4b8477cbf9322d92147d863f7d318a71c76da",
+    "metadata": {
+        "title": "Forecasting Covid-19 Outbreak Progression in Italian Regions: A model based on neural network training from Chinese data",
+        "authors": [
+            {
+                "first": "Cosimo",
+                "middle": [],
+                "last": "Distante",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNR ISASI)",
+                    "location": {
+                        "settlement": "Lecce",
+                        "country": "Italy"
+                    }
+                },
+                "email": "cosimo.distante@cnr.it"
+            },
+            {
+                "first": "Igor",
+                "middle": [
+                    "Gadelha"
+                ],
+                "last": "Pereira",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Universidade Federal do Rio Grande do Norte",
+                    "location": {
+                        "addrLine": "Campus Universitario",
+                        "settlement": "Natal",
+                        "region": "RN",
+                        "country": "Brasil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Luiz",
+                "middle": [
+                    "M"
+                ],
+                "last": "Garcia Gon\u00e7alves",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Universidade Federal do Rio Grande do Norte",
+                    "location": {
+                        "addrLine": "Campus Universitario",
+                        "settlement": "Natal",
+                        "region": "RN",
+                        "country": "Brasil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Prisco",
+                "middle": [],
+                "last": "Piscitelli",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Euro Mediterranean Scientific Biomedical Institute (ISBEM)",
+                    "location": {
+                        "settlement": "Bruxelles",
+                        "country": "Belgium"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Alessandro",
+                "middle": [],
+                "last": "Miani",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Italian Society of Environmental Medicine (SIMA)",
+                    "location": {
+                        "settlement": "Milan",
+                        "country": "Italy"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background. Epidemiological figures of Covid-19 epidemic in Italy are worse than those observed in China. Methods. We modeled the Covid-19 outbreak in Italian Regions vs. Lombardy to assess the epidemics progression and predict peaks of new daily infections and total cases by learning from the entire Chinese epidemiological dynamics. We trained an artificial neural network model, a modified autoencoder with Covid-19 Chinese data, to forecast epidemic curve of the different Italian regions, and use the susceptible-exposed-infected-removed (SEIR) compartment model to predict the spreading and peaks. We have estimated the basic reproduction number (R 0 ) -which represents the average number of people that can be infected by a person who has already acquired the infection -both by fitting the exponential growth rate of the infection across a 1-month period, and also by using a day by day assessment, based on single observations. Results. The expected peak of SEIR model for new daily cases was at the end of March at national level. The peak of overall positive cases is expected by April 11 th in Southern Italian Regions, a couple of days after that of Lombardy and Northern regions. According to our model, total confirmed cases in all Italy regions could reach 160,000 cases by April 30 th and stabilize at a plateau. Conclusions. Training neural networks on Chinese data and use the knowledge to forecast Italian spreading of Covid-19 has resulted in a good fit, measured with the mean average precision between official Italian data and the forecast.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "According to the Italian National Institute of Health (ISS), at the date of April 8 th in Italy there were about 140,000 people positive to the 2019-nCoV (including deceased patients) since the beginning of epidemic (95,262 currently positive and 26,491 healed). [7] About 53% of cases are males (median age: 62 years old). Detailed epidemiological figures are provided by the Italian National Institute of Health (ISS) and tell us that men represent the majority of cases in people aged 0-9 and 50-79 (range 52-63%), while in the younger age groups 0-19, as well as between 80 and 89 years old, males and females are equally represented among people who tested positive for Covid-19. Women accounted for 70% of cases >90 years old and about 55% between 20 and 39 years of age, but men represented also the vast majority of deceased people in all the age groups up to 89 years old (range 57-79%). [7] Regional figures are available up to April 8 th and show that about 30% (n=28,545) of currently positive people still live in Lombardy (56% if considering the overall cases confirmed from the beginning of the epidemic), followed by Emilia Romagna (13.7% of currently positive people), Piedmont (11.5%), Veneto (n=10.7%), Tuscany (5.8%), Marche (3.7%), Lazio (n=3.6%), Liguria and Trentino Alto Adige (3.4%), Campania and Apulia (3%), Sicily (2%), Friuli Venezia Giulia and Abruzzo (1.5%), and less than 1% in Umbria, Sardinia, Calabria, Val d'Aosta, Basilicata, and Molise. [7] A total of 28,485 symptomatic people were hospitalized at the same date of April 8 th With the exception of Lazio (n=196), Campania (n=97) and Apulia (n=90), all the other regions of Central and Southern Italy, at the moment have less than 65 patients admitted to the ICUs of their regional healthcare systems. [7] On April 8 th , total deaths were 17,669 at national level (+65% from March 30 th to April 8 th ), with in Val d'Aosta and less than 50 in the other four regions (Figure 1 ). [7] Lethality rates seems to increase with age and it is higher in males: 0% from 0 to 29 and <1% between 30 and 49 years of age; 2.3% in the age group 50-59 (1% in women and 3.5% in men); 8.4% from 60 to 69 years old ( ",
+            "cite_spans": [
+                {
+                    "start": 263,
+                    "end": 266,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 897,
+                    "end": 900,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1475,
+                    "end": 1478,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1554,
+                    "end": 1564,
+                    "text": "April 8 th",
+                    "ref_id": null
+                },
+                {
+                    "start": 1790,
+                    "end": 1793,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1969,
+                    "end": 1972,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 2187,
+                    "end": 2188,
+                    "text": "(",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1956,
+                    "end": 1965,
+                    "text": "(Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "The correct prediction of new daily cases at this time of Italian COVID-19 outbreak requires the correct estimation of the peak including the unknown remaining part of the epidemiological curve, where this later can be predicted ahead by using a deep convolutional auto-encoder. Therefore, we applied a Modified Auto-Encoder (MAE) for a time-series forecast in order to predict the evolution of daily cases for each of the 21 regions of Italy. [15] The model was trained with the data from the Chinese regions, which provides complete data in the sense that they already went through the peak number of daily cases and managed to suppress the epidemic by social distancing measures. Although such measures implemented by the Chinese government may be impossible to implement in other countries or may not be as effective as it was in China, the data generated by their experience going through the epidemic can be used to derive data-oriented models to predict the epidemic dynamic behavior in other countries. The forecast of new daily cases has been used to correctly estimate the single peaks but also to obtain better spreading predictions from SEIR model. We modeled spreading of Covid-19 using Chinese data and used the model ",
+            "cite_spans": [
+                {
+                    "start": 444,
+                    "end": 448,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "The data provided by the dataset regards the total number of cases confirmed up to date. However, to use the daily cases, we differentiate the data of each region with regards to each day.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "In order to train our model, we used the data from 31 Provinces/Cities of mainland China and the three other regions: Hong Kong, Macau, and Taiwan. In total, data from 34 regions were used and . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "represented on the columns of the matrix D with rows representing each day since the first case report on the region. The Italian regional time series used in this paper for the forecast, has been taken from the Itali [16] models the input/output data by creati a hidden probabilistic representation of the data in its middle layer, also called latent space. The MA model modifies the traditional auto-encoders to employ an extra output branch derived from the late space. While the traditional output of auto-encoder architectures is designed to be trained to match t input, in our case, the extra output is modified to predict also the next sample of the sequencetime seri given to the input. Figure 2 depicts the MAE model architecture. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 218,
+                    "end": 222,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 695,
+                    "end": 703,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059055 doi: medRxiv preprint new daily cases would occur since it indicates the decrease in the number of cases and a possible end the epidemic. Therefore, we use the output of the prediction of step i-th as an input to the prediction of t (i+1)-th. Repeating such a recursive procedure multiple times gives us a multiple-step ahead forecastin",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "In this way, we divided the forecast procedures into two phases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "The first phase regards the time in which the real data is available, for this phase we compute only t one-step-ahead forecasting. The second phase regards the time in which there is no real data availab hence we compute multiple-step-ahead forecasting. In general, the second phase starts on the last day available data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "We have chosen to train the modified auto-encoder by using several data and several latent variable ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "The model trained with data from the provinces of China with z=4 presented optimal results. T",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "following results presented at this section are obtained with the optimal model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "We also evaluate the performance of our model by analyzing how close it predicts the next samp in the first phase of the forecasting procedure, that is when real data is available. Figure 4a depicts the daily cases and Figure 4b depicts the cumulative cases of Covid-19 for t Lombardy region. From Figure 4a , we can verify that the model is following the real data on the one-ste ahead forecasting and Figure 4b indicates a plausible trend in the multiple-step-ahead forecasting. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 181,
+                    "end": 190,
+                    "text": "Figure 4a",
+                    "ref_id": null
+                },
+                {
+                    "start": 219,
+                    "end": 228,
+                    "text": "Figure 4b",
+                    "ref_id": null
+                },
+                {
+                    "start": 298,
+                    "end": 307,
+                    "text": "Figure 4a",
+                    "ref_id": null
+                },
+                {
+                    "start": 403,
+                    "end": 412,
+                    "text": "Figure 4b",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods: Modeling the Covid-19 outbreak progression in Italian Regions"
+        },
+        {
+            "text": "The basic reproduction number (R0) is an indicator that resumes the average number of people that can infected by a person who has already acquired the infection. R 0 is a metric of how contagious is t disease and its correct estimation is extremely important for epidemiologists, especially when facing ne diseases like COVID-19. R 0 can be computed in different ways. In our models, we have estimated t basic reproduction number (R 0 ) both by fitting the exponential growth rate of the infection across a month periodand also by using day by day assessment, based on single observations [1] . This stu makes use of the susceptible-exposed-infected-removed (SEIR) compartment model [4] to predict t spreading of the pandemic in Italy. Our efforts could be helpfulin the adoption of all the possib preventive measures, and to study of the epidemics progression across Southern regions as opposed to t national trend. This metric can be biased by the optimal estimation of the basic reproductive number (pronounced R-nought). It must be said that R 0 is important if correlated with weather conditions and th reproductive index is reduced as the air temperature and relative humidity increase, [5] according to t formula: author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 590,
+                    "end": 593,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 684,
+                    "end": 687,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1194,
+                    "end": 1197,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modeling basic reproductive number R 0"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059055 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling basic reproductive number R 0"
+        },
+        {
+            "text": "R 0 is an average value, but it can be also computed day by day to monitor the transmission of the infection. Being an average value, it can be skewed by super-spreader events. A super-spreader is an infected individual who infects an unexpectedly large number of people. In Italy this event can be also generated not necessarily by an individual, but from the perturbation of a susceptible population, as it happened in Apulia and Sicily with uncontrolled large group of people coming from outbreak areas. For a \"super spreader\" individual, such events are not necessarily a bad sign, because they can indicate that fewer people are perpetuating an epidemic. Super-spreaders may also be easier to identify and contain, since their symptoms are likely to be more severe. In short, R 0 is a moving target. Tracking every case and the transmission of a disease is extremely difficult, so the estimation of R 0 is a complex and challengingissue: estimates often change as new data becomes available. In [10] a review of 12 studies on the reproduction number for a time period covered from 1 January 2020 to 7 February 2020was analysed for Covid-19 from China and overseas. The work found that the R 0 estimates ranges from1.4 to 6.49 [12] [11], passing through [14] of 4.08 in mainland China. The review in [10] pointed out a mean of 3.28, a median of 2.79 and interquartile range (IQR) of 1.16, which is considerably higher than the WHO estimate at 1.95. Also in [18] the R 0 for 2019-nCov is reported in the range [1.4, 5.5] . These estimates of R 0 depend on the estimation method used as well as the validity of the underlying assumptions. In a beginning stage, due to a small amount of data and short time onset, these estimates can be biased, and in a longer period converges to the WHO estimate. The initial estimates result in a reproduction number for Covid-19 higher than SARS coronavirus, where this last it is reported to range between 2 and 5.",
+            "cite_spans": [
+                {
+                    "start": 1000,
+                    "end": 1004,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1231,
+                    "end": 1235,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1258,
+                    "end": 1262,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1304,
+                    "end": 1308,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1461,
+                    "end": 1465,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1513,
+                    "end": 1523,
+                    "text": "[1.4, 5.5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Daily basis estimation of the reproductive number"
+        },
+        {
+            "text": "If we define the Y(t) as the number of infected people with symptom at time t, the exponential growth as reported in [6] .",
+            "cite_spans": [
+                {
+                    "start": 117,
+                    "end": 120,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Daily basis estimation of the reproductive number"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Daily basis estimation of the reproductive number"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Daily basis estimation of the reproductive number"
+        },
+        {
+            "text": "We used the susceptible-exposed-infectious-recovered (SEIR) model [4] to simulate epidemic since it was established on January 2020. This model is used with the predictions from the modified auto-encoder neural network to better estimate the peaks. It is based on a previous model SIR which was based on three compartments, but since the infection has an incubation period, the compartment E (Exposed) is included.",
+            "cite_spans": [
+                {
+                    "start": 66,
+                    "end": 69,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "These compartments are modeled over the time, and capture the changes in the population. Let us say that given N the total population, then N=S+E+I+R, where:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "-\"S\" Susceptible is the portion of population that does not have any vax coverage or immune;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "-\"E\" exposed: is the portion of the population that have been infected, but are in the incubation period that do not infect others;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "-\"I\" Infectious: is the portion of N that is infectious and may infect others, they become dead or may recover; -\"R\" Recovered: number of infectious people who have been healed, and become immune. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint with the mean average precision between official Italian data and the forecast. SEIR model can gain advantage on modeling epidemic since the compartments are based on the complete curve dynamic (the portion of the real data and those forecasted). We showed the validity of the method since the predictive model learns from the dynamics of Covid-19 in China and exploits its learned knowledge to predict future daily cases in Italy. As shown in Figure 9 and in Table 2 , the expected peak of SEIR model was . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 520,
+                    "end": 528,
+                    "text": "Figure 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 536,
+                    "end": 543,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059055 doi: medRxiv preprint confirmed at the end of March at national level. It is expected that Southern Italian Regions could rea the peak of total positive cases later, by April 11 th , as estimated with dynamic SEIR model. T u s c a n y . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.09.20059055 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling transmission in Italy"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Coronavirus Surveillance Bulletin",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Italian Ministry of Health, daily bulletin Covid-19 outbreak in Italy",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Preliminary prediction of the basic reproduction number of the Wuhan novel coronavirus 2019-nCoV",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Evid Based Med",
+            "volume": "13",
+            "issn": "1",
+            "pages": "3--7",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jebm.12376"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Epidemic processes in complex networks",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pastor-Satorras",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castellano",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Mieghem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Review of ModernPhysis",
+            "volume": "87",
+            "issn": "3",
+            "pages": "925--979",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "High Temperature and High Humidity Reduce the Transmission of COVID-19",
+            "authors": [
+                {
+                    "first": "Jingyuan",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Available at SSRN 3551767",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "Joseph",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kathy",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gabriel",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Shi &amp; Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Qianyin &amp; Ran",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Jinjun",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Salihu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Guangpu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Weiming",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Yijun",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Daozhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [
+                        "&amp;"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maggie",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of InfectiousDiseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "92.10.1016/j.ijid.2020.01.050"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Simple framework for real-time forecast in a data-limited situation: the Zika virus (ZIKV) outbreaks in Brazil from 2015 to 2016 as an example",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ParasitesVectors",
+            "volume": "12",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "Adam",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Albert",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annelies",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joacimrockl\u00f6v",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "27",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/jtm/taaa021"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Modelling the epidemic trend of the 2019 novel coronavirus outbreak in China",
+            "authors": [
+                {
+                    "first": "Zhihangpeng",
+                    "middle": [],
+                    "last": "Mingwangshen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leizhang",
+                    "middle": [],
+                    "last": "Yannixiao",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.23.916726"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Estimation of the transmission risk of the 2019-nCoV and its implication for public health interventions",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Qun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001316"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Estimating the effective reproduc-tion number of the 2019-nCoV in China",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Cao Z Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.27.20018952"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Artificial intelligence forecasting of covid-19 in china",
+            "authors": [
+                {
+                    "first": "Zixin",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.07112"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Reducing the dimensionality of data with neural networks",
+            "authors": [
+                {
+                    "first": "Geoffrey",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hinton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruslan",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Salakhutdinov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Science",
+            "volume": "313",
+            "issn": "",
+            "pages": "504--507",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Pathogenicity and transmissibility of 2019-nCoV-a quick overview and comparison with other emerging viruses",
+            "authors": [
+                {
+                    "first": "Jieliang",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Microbes and infection",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "CC-BY-NC-ND 4.0 International license It is made available under a",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "in Italy, with Lombardy accounting for 11,719 hospital admissions (41%), followed by Emilia Romagna (n=3,769), Piedmont (n=3,493) and Veneto (n=1,554). Only Tuscany (n=1,066), Liguria (n=1,109) and Lazio (n=1,241) Marche (n=974), recorded more than 600 hospital admissions at regional level, while other regions remain still lower. At the present, 3,693 patients are assisted in intensive care units (34% only in Lombardy), with a reduction of about 8% in the first week of April. A total of 1,257 ICU patients were in Lombardy (11% of hospitalized people), 423 in Piedmont (12%), 285 in Veneto (18%), 361 in Emilia Romagna (9%), 260 in Tuscany, 163 in Liguria, 140 in Trentino Alto Adige, and 133 in Marche region.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "9,722 in Lombardy (56%), 2,234 in Emilia Romagna (13%), 1,378 in Piedmont (8%), 736 in Veneto (4%), 652 in Marche region (3.6%), 654 in Liguria, 438 in Trentino Alto Adige, 392 in Tuscany, 244 in Lazio, 221 in Campania, 219 in Apulia, 179 in Abruzzo, 169 in Friuli Venezia Giulia, 133 in Sicily, 102",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "to predict epidemic curve in each Italian region, allowing to gain better information on the new daily cases peaks with the forecasted curve. The forecast portion of the curve allows to have a better prediction of active cases with the SEIR model, by computing the position of the peaks of active cases for each Italian region. We present the data sources used to train the model, the architecture of the model and the details about the training and forecasting procedures. In the end, we present the results obtained for the forecasting of daily cases for Lombardy and the biggest Southern Italian regions, as well as for all other regions.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Modified Auto-Encoder Architecture The prediction output has one unit while the number of units in the input-samples, encoder, laten space, decoder, and auto-encoder output is 8, 32, 4, 32, 8, respectively. We randomly select a sequent set of samples of 8 days as a training example and combines 34 examples in one training step, one f each region. Each example is normalized by dividing its values by their mean.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "new daily casesA total of five models are trained with the same dataset and the average of each forecast prediction is taken as the final prediction of new daily cases. Note that each predicted value must denormalized by multiplying its value by the mean of the input segment.The forecasting procedure for a known input segment is generally described as one-st forecasting and intends to evaluate how close the predictions are from the expected values. However,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "using only China data and latent variables z=4,8,16; or using only Lombardy data, or all nations data. A the model has been evaluated with the mean average precision on forecasting, and the Figure 3shows t MAPE computed on all Italian regions:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "We notice a very similar behavior for the forecasting of daily and cumulative cases for the regiof Apulia, depicted by Figure 5a and Figure 5b. In fact, the forecasted daily cases for the region of Apu decrease much faster than on Lombardy, which makes sense given that Apulia does not accumulate a ve high number of cases as Lombardy doesand the social distancing measures were implemented in the ea days of the infection. The last set of Figures, Figure 6a and Figure 6b depict the daily and cumulative cases for regions of Italy. The idea here is to evaluate how the forecasted values for each region would make sen in a broader scenario. Indeed, the predicted values are very close to the real values. The trend al indicates that the sum of confirmed cases from all Italy regions could reach 160,000 cases by the end April and stabilize at a plateau.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "968 \u2212 0.0383 \u2212 0.0224 . This means the transmission of COVID-19 candecrease with the warmer season, and that at least som specific figures of the outbreak in Lombardy and Po Valley can be explained taking into account",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "estimated values, computed on a daily basis for the Italian regions and for the initial outbreak region Lombardy, where about 40 cases were confirmed out of 100 suspects (Figure 4).The two methods provide agreements of values, although the first method based on exponential fit should provide a better estimation, being computed on the entire time series. From",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "5.1% in women and10.3% in men); 22.7% from 70 to 79 (15.6% in females and 26.9% in males); 30.6% from 80 to 89 years old (22.6% and 38.4% in men); 26.8% after 90 years old (21.2%in females and 40.6% in males).[7] InFig.1we report the PCR testing rate and mortality per region. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.Based on these figures, it is clear that the Covid-19 outbreak is now putting overwhelming pressu mainly on Lombardy and Northern regions of the Po Valley (Padana plain), but the peak of the epidemi has not yet been reached. Until now, Southern Regions seem to be less affected by the Covid-19 infecti although a huge number of people -mainly students attending Universities in Northern Italy -came ba from Po Valley to their families in the South just in the middle of the outbreak, thus representing potential factor able to accelerate the spreading of the viral infection. The peaks of the epidemics for ne daily cases have been reached in the majority of regions, but peaks of total positive cases is expected be delayed in Central and Southern Italian regions compared to Lombardy and Northern ones. Here w present an attempt to predict the peak of the outbreak in Italy, which was confirmed at national level the end of March in terms of new daily cases, with an expected subsequent different progression of t epidemics in Southern Italian Regions compared to Lombardy in terms of total cases.author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "We used the dataset provided by the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) that is sourced from the World Health Organization (WHO). The dataset provides the number of confirmed cases for each country since January 22, the day that the WHO was notified of an epidemy caused by a new Coronavirus in China.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Department for Citizens' Protection[17].",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Suspects correspond to the number of individuals screened with test which have been confirmed.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "infected but not yet infectious. The population is well mixed, and the model assumes that latent and infectious times of the pathogen are exponentially distributed. In this letter, contact rate \u07da is changing over time as it happens in COVID-19, which increase in early stage due to public unawareness of the disease, then decrease with government control policy measures. The contact rate follow a logistic function trend by estimating it day by day[9]:With \u202b\u0750\u202c the number of days after first cases found in each region, for example in Lombardy January 31 st (the first found cases in Italy), \u07ea a regularization parameter, and \u073e the bias. A training procedure is performed on the observable data in order to find optimal We have considered as Exposed people, a number of twice infected people, after lockdown which is in line with the predictions and the observed values.We modeled spreading of Covid-19 using Chinese data and used the model to predict epidemic curve in each Italian region, allowing to gain better information on the new daily cases peaks with the forecasted curve. The forecast portion of the curve allows to have a better prediction of active cases with the SEIR model, by computing the position of the peaks of active cases for each Italian region. Training on Chinese data and use the knowledge to forecast Italian spreading of Covid-19 has resulted in a good fit, measured",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Authors Contribution: AD, PP, AM conceived, wrote and revised the manuscript",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        }
+    ]
+}

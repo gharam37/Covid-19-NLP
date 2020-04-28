@@ -1,0 +1,1244 @@
+{
+    "paper_id": "22a27a3a91fab8a660084d44a541a49bc824ca86",
+    "metadata": {
+        "title": "What influences COVID-19 infection rates: A statistical approach to identify promising factors applied to infection data from Germany",
+        "authors": [
+            {
+                "first": "Moritz",
+                "middle": [],
+                "last": "Mercker",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Bionum, Consultants in biological and biomedical statistics",
+                    "location": {
+                        "settlement": "Hamburg",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Uwe",
+                "middle": [],
+                "last": "Betzin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "User Experience Consultant",
+                    "location": {
+                        "settlement": "Schriesheim",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Dennis",
+                "middle": [],
+                "last": "Wilken",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kiel University",
+                    "location": {
+                        "settlement": "Kiel",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The recent COVID-19 pandemic is of big and world-wide concern. There is an intense discussion and uncertainty which factors and sanctions can reduce infection rates. The overall aim is to prevent an overload of the medical system. Even within one country, there is frequently a strong local variability in both -political sanctions as well as other local factors -which may influence infection rates. The main focus of study is analysis and interpretation of recent temporal developments (infection rates). We present a statistical framework designed to identify local factors which reduce infection rates. The approach is robust with respect to the number of undetected infection cases. We apply the framework to spatio-temporal infection data from Germany. In particular, we demonstrate that (1) infection rates are in average significantly decreasing in Germany; (2) there is a high spatial variability of these rates, and (3) both, early emergence of first infections and high local infection densities has led to strong recent decays in infection rates, suggesting that psychological effects (such as awareness of danger) lead to behaviour changes that reduce infection rates. However, the full potential of the presented method cannot yet be exploited, since more precise spatio-temporal data, such as local cell phone-based mobility data, are not yet available. In the nearest future, the presented framework could be applied to data from other countries at any state of infection, even during the exponential phase of the growth of infection rates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "All rights reserved. No reuse allowed without permission. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Since March 2020 the new Disease COVID-19 is declared a pandemic by the World Health Organization (WHO). The disease is caused by a novel virus called severe acute respiratory syndrome (SARS)-CoV-2. Transmission of the virus between humans is known to happen via respiratory droplets and until today, no specific medical treatment for the disease is known. The virus was first reported in Wuhan, Hubei, China, in December 2019. The disease had spread widely over the province of Hubei, but was contained after strict quarantine imposed on January 23, 2020. The peak of daily confirmed cases of about 4000 was reached on February 3, ten days after the quarantine had been imposed; then the number of daily new cases decreased below 100 at the beginning of March [8] . Until today nearly exponential growth has been observed in several countries worldwide including, e.g., Italy, Spain, and the U.S. Despite the exponential increase, several countries have already observed a decrease in the daily number of infections (e.g. South Korea, Italy, Spain, and Germany).",
+            "cite_spans": [
+                {
+                    "start": 761,
+                    "end": 764,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In order to better understand various aspects of the pandemic development, research on COVID-19 exploded during the last months. Besides medical studies, also various statistical and mathematical infection models have been developed and applied to current data, in order to predict possible infection developments under certain conditions/restrictions or to compare infection rates among different countries (see, among others, [1, 4, 10, 11, 13] ). However, models often suffer from the fact that certain mechanistic assumptions are critical for the conclusions and predictions, but can often hardly be validated.",
+            "cite_spans": [
+                {
+                    "start": 428,
+                    "end": 431,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 432,
+                    "end": 434,
+                    "text": "4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 435,
+                    "end": 438,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 439,
+                    "end": 442,
+                    "text": "11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 443,
+                    "end": 446,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this work, we present a statistical framework which is not based on specific mechanistic infection models, but is constructed to analyse current infection numbers, where the latter may show an arbitrary complex behaviour, possibly varying among different sub-regions of the considered area. The framework is optimised to reveal factors that explain differences in recent infection rates among different sub-regions. Thus, in the light of high variability of possible local political, social, environmental or infrastructural factors that may affect the infection rates, the proposed tool provides an opportunity to extract the most important factors responsible for COVID-19 propagation. This is important not only to reduce the exponential rate of infection growth in different countries, but also to decide which sanctions can be eased if the maximum of the confirmed daily new cases has been surpassed, as it is currently the case in Germany and several other countries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "German COVID-19 Infection data have been obtained from the Robert-Koch Institut (RKI) provided via the national platform for geographical data (NPGEO Corona Hub 2020: https://npgeo-corona-npgeo-de. hub.arcgis.com). In particular, data are available in terms of daily reported infections separately for each of the 402 existing administrative districts (ADs), which are nested within 16 federal states (Fig. 1) . As a start of the time series we have set February the 22th (2020), which was just before the beginning of the pandemic in Germany. The time series considered in this work ends at April 13th (2020). ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 401,
+                    "end": 409,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data structure and availability"
+        },
+        {
+            "text": "In order to quantify the AD-related recent change in infection rates, we applied three different partially related methods separately to infection rate time series of each sub-region leading to three different measures (\u03b2 1 , \u03b2 2 , and \u03b2 3 ). Their derivation is detailed in the following.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "First, we fitted the generalised additive mixed model (GAMM) [7, 21] to the entire time series of each AD, where the federal state has been used as a random intercept, and the date as a smooth predictor term. Additive regression models allow to estimate nonlinear dependencies between predictor variables (here e.g. the date) and an outcome variable (here e.g. the number of reported infections) [7, 21] . Consideration of such nonlinearities is fundamental here, since the initial increase and possible later decrease in infection numbers is often strongly nonlinear. In particular (if not stated otherwise) the optimal smoothness has been determined using generalised cross-validation methods [18] . Random intercepts (i.e., the use of mixed modelling [2, 21] ) have been applied if data are not independent, but instead nested within certain units (such as states). Since infection numbers are additionally temporally autocorrelated (infection numbers depend to some degree on the number of the day before), an auto-regression (AR) structure of order 1 has been added to the model. Finally, a negative-binomial probability distribution has been used, to account for the fact that infection numbers do not follow a normal distribution but are (possibly overdispersed) count data [9, 20, 21] . In addition to the date, also the weekday has been introduced as a smooth, in particular as a cyclic smooth [18] in order to partial out the distinct effect of the weekday on reported infection numbers.",
+            "cite_spans": [
+                {
+                    "start": 61,
+                    "end": 64,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 65,
+                    "end": 68,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 396,
+                    "end": 399,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 400,
+                    "end": 403,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 695,
+                    "end": 699,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 754,
+                    "end": 757,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 758,
+                    "end": 761,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1281,
+                    "end": 1284,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1285,
+                    "end": 1288,
+                    "text": "20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1289,
+                    "end": 1292,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1403,
+                    "end": 1407,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "Second, separately for each AD, the above described GAMM has been used to predict the partial effect of the date, i.e., the (possibly nonlinear) date-dependent development of infection rates, where the effect of the weekday has been eliminated. This smooth predicted curve has been subsequently normalised by dividing all predicted values by the mean. The latter step ensures the comparability of the temporal development of infection numbers between the different ADs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "Finally, the normalised smooth curve has been used for each AD to create two different measures representing the strength of the recent decay: (1) we calculated the value \u03b2 1 , which is defined by the curve value of the most current date minus the value 10 days before, and (2) we calculated \u03b2 2 , which is defined by the value of the current data divided by the maximum of the curve. Thus, \u03b2 1 is proportional to the current slope of the infection curve (averaged over the last 10 days), whereas \u03b2 2 rather relates the current infection number to the overall maximum of the smoothed infection curve. Hence, \u03b2 1 is a reasonable measure even if most of the local infection curves are still increasing, whereas \u03b2 2 is only appropriate if most of the infection curves are already decreasing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "To calculate a third type of measure for recent changes in infection rates, a second GAMM was fitted to the infection data of each AD -similar to the above described GAMM approach, however with two differences: first, the time series has been restricted to the last 14 days, and second, the dependency on the date has been assumed to be (log-)linear instead of nonlinear. All other model specifications were as described above for the calculation of \u03b2 1 and \u03b2 2 . The advantage of the non-smooth (log-linear) incorporation of the date variable, here, \u03b2 3 (the slope of the average log-linear development) was represented by a corresponding date-dependent regression coefficient, and thus confidence intervals respectively standard errors could be computed, the latter representing the certainty of each estimate. Furthermore, after slight reformulations, \u03b2 3 can be directly interpreted, namely in terms of average percentage change in infection rates per day. A possible disadvantage of \u03b2 3 compared to \u03b2 1 and \u03b2 2 is that a shorter time series (and thus less data) have been used, which was necessary to select a time frame with nearly log-linear behaviour of infection rates corresponding to the model. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint Thus, in summary, three different (partially related) measures have been constructed to characterise the recent infection rate, namely \u03b2 1 and \u03b2 3 (where a negative value indicates a recent decay) as well as \u03b2 2 (where values smaller than 1 indicate a decay).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "Country-wide, state-specific, and spatial analysis of average infection rates To calculate and plot the overall (smooth) development of infection rates with time (c.f., Fig. 2 h) and depending on the weekday (Fig. 2 i) , an appropriate GAMM (structurally strongly related to the above mentioned approach) has been applied. However, data of all ADs have been analysed simultaneously here, using again the federal state as a random intercept, but also the ADs (which are nested within the federal states). Furthermore, we introduced the date again as a smooth term, and the day of the week as a cyclic smooth (c.f., above). Model validation has been performed based on various residual plots (as e.g. suggested in [9, [19] [20] [21] ).",
+            "cite_spans": [
+                {
+                    "start": 712,
+                    "end": 715,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 716,
+                    "end": 720,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 721,
+                    "end": 725,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 726,
+                    "end": 730,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 169,
+                    "end": 175,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 208,
+                    "end": 218,
+                    "text": "(Fig. 2 i)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "To analyse if the very recent decay of infection in Germany is significant, we used the three \u03b2-values as the outcome variable in three different appropriate GAMMs. In particular, we used a 2D thin spline regression depending on geographical coordinates to reduce spatial autocorrelation [18] , and introduced the federal state as a random intercept. In particular, for \u03b2 1 and \u03b2 3 we used the Gaussian probability distribution, whereas for \u03b2 2 we applied a Beta-distribution since this value is restricted between zero and one [3, 9] . Furthermore, for \u03b2 1 and \u03b2 2 , data from different ADs have been weighted (using a priori regression weights) with respect to the total number of cases in the corresponding AD, whereas for \u03b2 3 the inverse variance of the estimated regression coefficient has been used as a weight ('inverse variance weighting' [6] ). Furthermore, the federal state has been used as a random intercept in all three models.",
+            "cite_spans": [
+                {
+                    "start": 288,
+                    "end": 292,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 528,
+                    "end": 531,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 532,
+                    "end": 534,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 847,
+                    "end": 850,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "To analyse the average \u03b2-values for the different states (Fig. 3 ), in the above mentioned GLMMs (using the normal-respectively the Beta-distribution) the federal state has not been used as a random intercept but as a fixed effect predictor, using the federal state Baden-W\u00fcrttemberg as the baseline level. Furthermore, we neglected the spatial 2D smooth in order to avoid collinearities between the spatial smooth and the federal states. If smooth spatial maps of the \u03b2-values have been generated (Fig. 4) , similar models have been used but now neglecting the federal state variable and using only a spatial 2D smooth as a predictor instead.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 57,
+                    "end": 64,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 498,
+                    "end": 506,
+                    "text": "(Fig. 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Quantifying decrease in infection rates"
+        },
+        {
+            "text": "In order to evaluate possible factors locally driving infection rates, we applied the 'least absolute shrinkage and selection operator' (LASSO) method [14, 15] in combination with cross-validation to the data. LASSO is known to reliably perform model selection even if the total number of possible predictors is high [9, 16] . In particular, we applied LASSO separately to three different types of models (using \u03b2 1 , \u03b2 2 , respectively \u03b2 3 as the outcome variable, where for \u03b2 1 and \u03b2 2 we used the normal probability distribution. Since the used software (the R-package glmnet, c.f. below) is not able to perform Betaregression, we reformulated for the LASSO-step the value \u03b2 2 into a binomial variable instead ('smaller one' vs. 'one'), using a binomial error distribution. We tested the following variables: On the ADlevel we introduced Longitude, Latitude (as well as their interaction term), the date of the first reported COVID-19 infection (first infection), the local percentage of people older than 65 years (Age) (data from https://www-genesis.destatis.de), the population density (Density), and the local infection intensity (percentage of people infected by COVID-19 -infection density). On the coarser level of states, we introduced human mobility data. In particular, we used mobility data from Google collected by the type of activity, where activity (visits and length of stay) has been quantified at different types of places such as retail and recreation, groceries and pharmacies, parks, transit stations, workplaces, and residential -compared to a baseline level before the COVID-19 pandemic (variables have been named All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 155,
+                    "text": "[14,",
+                    "ref_id": null
+                },
+                {
+                    "start": 156,
+                    "end": 159,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 317,
+                    "end": 320,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 321,
+                    "end": 324,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Selecting promising factors locally driving infection rates"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Selecting promising factors locally driving infection rates"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Selecting promising factors locally driving infection rates"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint accordingly). The baseline has been calculated from a five-week period Jan. 3th until Feb. 6th, 2020. For the pandemic period, we averaged the values from Feb. 7th until the date of publication. Data have been obtained from https://github.com/datasciencecampus/google-mobility-reports-data/ blob/master/csvs/international_local_area_trends_G20_20200410.csv.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Selecting promising factors locally driving infection rates"
+        },
+        {
+            "text": "For all statistical analyses we used the open source software R [12] . In particular, for GAMM regression analyses we used the functions gam() and gamm() from the R-package mgcv [18] . For LASSO analyses we used the function glmnet() from the R-package glmnet [5] , and for all visualizstions we used the R-package ggplot2 [17] .",
+            "cite_spans": [
+                {
+                    "start": 64,
+                    "end": 68,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 178,
+                    "end": 182,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 260,
+                    "end": 263,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 323,
+                    "end": 327,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Software"
+        },
+        {
+            "text": "In Fig. 2 This recently decaying behaviour can also be seen when looking at the raw data of total (country-wide) infection numbers (2 (g)). Indeed, when estimating the average country-wide infection rate curve without the effect of the weekday (2 (h)) the rate decays since approximately 10 days, after being rather constant for 10-20 days before the decay. The partial effect of the weekday shows a distinct minimum at the weekend (2 (e)). New infections are first reported to the local health office and then collected by the RKI. During weekends, notifications of new infections are delayed and thus influence the RKI infection dataset, creating the observed decrease at weekends.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 9,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Infection rates significantly decrease in Germany"
+        },
+        {
+            "text": "In order to analyse if the country-averaged decay is significant, we applied three appropriate GAMMs using each \u03b2-value as the outcome variable. Indeed, all three results indicate a recent highly significant country-wide decay: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Infection rates significantly decrease in Germany"
+        },
+        {
+            "text": "Although decay has recently been observed in the country-wide infection rates, Fig. 2 (a)-(f) suggests that there is a strong local variability in that decrease. To analyse the relative differences between different states, we again used appropriate GAMMs; corresponding results are presented in 3 (a)-(c). In a second step, we rescaled each \u03b2-value across all states (i.e., subtracting the mean and dividing by the standard deviation) to make the relative differences between states comparable with respect to \u03b2 1 , \u03b2 2 and \u03b2 3 . Corresponding results are given in 3 (d); the state-specific mean values from the rescaled \u03b2 1 , \u03b2 2 and \u03b2 3 thus represent the relative differences of recent infection rate changes between the different states. In particular, low values represent a strong decrease in infection rates, whereas high values represent a less strong decrease (respectively increase). The absolute values of the Y-axis in 3 (d) cannot be interpreted directly. Furthermore, confidence intervals in 3 (d) refer to the certainty of the mean value from the rescaled \u03b2 1 , \u03b2 2 and \u03b2 3 for each state. All rights reserved. No reuse allowed without permission. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 79,
+                    "end": 85,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint It appears, that the states Sachsen and Bayern show the strongest (and most certain) decays in infection rates, whereas Th\u00fcringen and Hessen show the less-strongest decays. That Th\u00fcringen and Hessen nevertheless most probably show in average a decrease and not an increase, can be seen in 3 (a-c) where all estimated \u03b2 1 and \u03b2 3 values are below zero, and all \u03b2 2 values are below one.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "Spatial distribution of the different \u03b2-values is shown in Fig. 4 . In the first row, the spatial raw data of the estimated \u03b2-values are shown. Sub-figures in the second row are based on spatial GAMM-plots, where the number of knots (= degrees of freedom) for the thin-plate regression spline has been fixed to k = 35 in all three plots. The aim is to obtain optimal comparability among the spatial distributions of \u03b2 1 , \u03b2 2 , and \u03b2 3 . In the third row, we present the optimal number of knots estimated separately for each \u03b2-value based on generalised cross-validation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 59,
+                    "end": 65,
+                    "text": "Fig. 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "Overall, there is a very coherent picture of the spatial distribution of the different \u03b2-values: In all cases, the distribution is spatially inhomogeneous, showing in particular in the centre of Germany (on the boarder of T\u00fcringhen, and Hessen) a lower decay in infection rates compared to the average development. Indeed, both states show distinct larger beta values also in our analysis on the state-level (3). Only the cross-validation based GAMM-plot for \u03b2 3 (4 third row, plot on the right-hand side) shows a much coarser spatial resolution. A possible explanation is that for the calculation of \u03b2 3 much less data (namely infection data from only the last two weeks) have been used, which may lead to a larger unexplained variance, which finally leads to a more conservative estimate of spatial heterogeneity during the cross-validation procedure.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "Thus, in summary, all states show in average a distinct decay in infection rates, where Sachsen and Bayern belong to the states with an especially strong decay, whereas in Th\u00fcringen and Hessen the decaystrength is less pronounced.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recent infection rates show a distinct spatial variability"
+        },
+        {
+            "text": "In order to further investigate the underlying factors causing the observed spatial differences in infection rates based on the proposed method, we tested different possible variables (c.f. Material and Methods section) with the LASSO variable selection method. However, the selection of variables was strongly determined by their public availability in an appropriate format, such that various potentially interesting factors have not yet been tested due to the lack of availability.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "With respect to \u03b2 1 , this approach selected the variables Infection density and Retail recreation. The subsequent GAM-analysis with these predictors reveals a negative regression coefficient for infection density (-74.6, 95 %-CI: [-177.8,17.5] ) suggesting that higher local infection densities lead to stronger current decays of infection rates. The psychological effect of perceived abstractness of the threat might be the reason for this: as long as the total number of infected in an area is low, it is highly probable that an individual does not know anyone infected personally and the threat is perceived to be very abstract. If in contrast an area is affected by a high number of infections, it his more probable that someone knows somebody who is infected (and/or the region is more present in the media) and the threat is suddenly perceived as very real, which may induce a much stronger change to a more preventive behaviour. Furthermore, there is a highly significant positive regression coefficient for Retail recreation (0.061, 95 %-CI: [0.02,0.1]) indicating that a high use of places like restaurants, cafes, shopping centres, theme parks, museums, libraries, and movie theatres prevents the recent decay of infection rates. Even when most of these places are closed now, a previous intense use of these places might still influence current rates due to the delay processes in infections.",
+            "cite_spans": [
+                {
+                    "start": 231,
+                    "end": 244,
+                    "text": "[-177.8,17.5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "With respect to \u03b2 2 , the LASSO analysis selected the variables first infection, Age, infection density, All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint Figure 4 . Spatial distribution of the three \u03b2-values. First row: raw data, second row: GAMM-smooth (where the number k of spatial knots has been forced to be k = 35), third row: GAMM-smooth (where the optimal number k has been estimated via generalised cross-validation).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint and Transit stations. The subsequent GAM-analysis with these predictors reveals highly significant dependencies on infection density and first infection. In particular, the positive regression coefficient for first infection (0.02, 95 %-CI: [0.01,0.03]) indicates that infection rates decay the stronger the earlier the first infection in this region has been detected. At first glance, one might think that an earlier start leads to an earlier decay due to the natural progression of the infection curve. However, the 'natural progression' would be a further increase for a long time, which only saturates or decreases to changes in behaviour. The latter can be caused either by intrinsic (psychological) or extrinsic factors (sanctions). Since sanctions (such as curfews) have been realised approximately at the same time everywhere in Germany (with only differences of some days), the observed decay in connection with early detected infections is also most probably a result of the above mentioned psychological factors. A highly significant negative value for infection density (-97.2, 95 %-CI: [-135.6,-58.9]) suggest again that high local infection densities lead to stronger current decays of infection rates. Thus, both effects are most probably related to the above described awareness of the thread. Furthermore, the positive regression coefficient for Age (0.022, 95 %-CI: [-0.002,0.045]) indicates that in regions with more people older than 65, infection rates decay less. This might be explained by the fact that younger people may show a more mobile behaviour (e.g. due to their work) so that sanctions (such as curfew) might affect them in a stronger way. Other factors might be that older people are possibly less frighten (due to more life experience), and it also could be more difficult for them to substantially change their habits. The negative value for Transit stations (-0.012, 95 %-CI: [-0.027,0.002]) finally indicates that an increased use of public transport leads to a decrease of recent infection rates. This result is counter-intuitive, and we therefore think that here, possibly a random correlation was detected. Indeed, this result is statistically non-significant and movement data have been introduced only at the coarse federal statelevel. For future work, such data with a finer spatial resolution (such as currently available for the UK https://www.gstatic.com/covid19/mobility/2020-04-05_GB_Mobility_Report_en.pdf) would allow for more reliably estimates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "Finally, with respect to \u03b2 3 , LASSO analysis did not select any variables. This observation might be again explained by the fact that for the calculation of \u03b2 3 (compared to \u03b2 1 and \u03b2 2 ) much less data have been used (namely infection data from only the last two weeks instead of the entire period), which may lead to a larger amount of unexplained variance negatively influencing the detection of correlations during LASSO analysis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Which factors drive the local decrease of infection numbers?"
+        },
+        {
+            "text": "In summary, we present a new statistical approach which is specifically designed to identify factors influencing local infection rates. Since only relative changes in detected infections are considered, the approach is robust with respect to the percentage of undetected infections, as long as the latter does not locally change in time. The approach has been applied to spatio-temporal COVID-19 infection data in Germany. Nevertheless, it can be adapted to other countries at any state of infection, provided that both, infection numbers and factors affecting them, are provided in a sufficient spatio-temporal resolution. The analysis of daily COVID-19 infections in Germany reveals that (1) currently, infections are in average significantly decreasing; (2) there is a strong spatial variability in the local recent infection rates, especially varying in the centre of Germany (mostly including the two states Th\u00fcringen and Hessen); (3) there are strong evidences that both, an early emergence of first infections and high local infection densities, lead to strong recent decays in infection rates. The latter may indicate that psychological effects (such as the awareness of danger due to infection cases in the circle of friends and acquaintances) lead to a more cautious behaviour, which again reduces the local risk of additional infections.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary and outlook"
+        },
+        {
+            "text": "The presented approach can be further applied in the nearest future to investigate additional potential All rights reserved. No reuse allowed without permission. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary and outlook"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.20064501 doi: medRxiv preprint variables, such as the impact of local restrictions (due to political decisions) or average movement range (based on cell-phone GPS data) on different spatio-temporal scales. For this study, the availability of such data was a bottleneck, e.g., since movement data are (up to our knowledge) not yet available on the spatial scale of administrative districts in Germany.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary and outlook"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Germany and the USA on the basis of power law scaling. medRxiv",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhattacharya",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Islam",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "De",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Generalized linear mixed models: a practical guide for ecology and evolution",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bolker",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Brooks",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Clark",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Geange",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Poulsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H H"
+                    ],
+                    "last": "Stevens",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "White",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Trends Ecol Evol",
+            "volume": "24",
+            "issn": "3",
+            "pages": "127--135",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Beta regression in R",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Cribari-Neto",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zeileis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Projecting the spread of COVID19 for Germany",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Donsimoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Glawion",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Plachter",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "W\u00e4lde",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Regularization paths for generalized linear models via coordinate descent",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Friedman",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of statistical software",
+            "volume": "33",
+            "issn": "",
+            "pages": "1--22",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Statistical meta-analysis with applications",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hartung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Knapp",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sinha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Generalized Additive Models",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Dynamics of COVID-19 pandemic at constant and time-dependent contact rates. medRxiv",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kochanczyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Grabowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Lipniacki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Bayesian Data Analysis in Ecology Using Linear Models with R, BUGS, and Stan",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Korner-Nievergelt",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Roth",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Von Felten",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guelat",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Almasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Korner-Nievergelt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Effective containment explains sub-exponential growth in confirmed cases of recent COVID-19 outbreak in mainland China. arXiv: Populations and Evolution",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Maier",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Brockmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Epidemic analysis of COVID-19 in China by dynamical modeling. arXiv: Populations and Evolution",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhuge",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "R: A language and environment for statistical computing. R Foundation for Statistical Computing",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "R Core Team",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A Gaussian model for the time development of the SARS-COV-2 corona pandemic disease. Predictions for Germany made on march 30, 2020. medRxiv, 2020. All rights reserved",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Schlickeiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Schlickeiser",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity. The copyright holder for this preprint (which was not peer-reviewed) is the",
+            "authors": [],
+            "year": 1996,
+            "venue": "J Royal Statisti Soci B",
+            "volume": "58",
+            "issn": "",
+            "pages": "267--288",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.14.20064501"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The LASSO method for variable selection in the cox model",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Stat Med",
+            "volume": "16",
+            "issn": "4",
+            "pages": "385--395",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "LASSO with cross-validation for genomic selection",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Usai",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goddard",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hayes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Genet Res (Camb)",
+            "volume": "91",
+            "issn": "6",
+            "pages": "427--463",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "ggplot2: Elegant Graphics for Data Analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Generalized Additive Models: An Introduction with R",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A protocol for conducting and presenting results of regression-type analyses",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zuur",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ieno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "methods ecol evol",
+            "volume": "7",
+            "issn": "",
+            "pages": "636--645",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Analysing Ecological Data",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zuur",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ieno",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Mixed Effect Models and Extensions in Ecology with R",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zuur",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ieno",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Saveliev",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Map of Germany including the frontiers of the federal states (blue lines) and the administrative district (black lines) (data from https://public.opendatasoft.com and https://gdz.bkg.bund.de)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Temporal development of COVID-19 infection rates in Germany.(a)-(c) temporal infection curves separately estimated with a GAMM for each administrative district (AD). (a)-(b) total time series, (c) the last 14 days. The colour represents the corresponding \u03b2-value, where green colour indicates a recent decay and red colour a recent increase in infections. (d)-(f) example plots of reported infection numbers for three AD's with a recent decay (d), saturation (e) and increase (f). (g) country-wide total daily reported infection numbers, (h)-(i) smoothed GAMM plot of total infection numbers, where (h) is the partial effect of the date, and (i) is the partial effect of the weekday. In all sub-figures (except (g)) the y axis cannot be interpreted in absolute values since either curves have been normalised for each AD, or partial effect plots are shown. All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "(a)-(c) the smoothed temporal development of COVID-19 infections separately estimated for each AD are plotted, where the colour represents the corresponding \u03b2-value representing the strength of decay (green) respectively increase (red) of infections. As described within the material and methods section, \u03b2 1 and \u03b2 2 are calculated based on the entire time frame (starting with February 22th), whereas \u03b2 3 represents the percentage change in infection rates per day during the last 20 days. Three examples for differently developing sub-regions (ADs) are shown in (d)-(e) (all from the state Bayern): (d) shows a recent decay, (e) a saturation and (f) a recent increase. However, it is obvious that the majority of curves in (a)-(c) show a recent decay in infection rates.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "\u22121.00 (95 % CI: [\u22121.26, \u22120.74]), \u03b2 2 = 0.50 (95 % CI: [0.45, 0.55]), and \u03b2 3 = \u22126.76 (95 % CI: [\u22127.9, \u22125.7]). Just a reminder: for \u03b2 1 and \u03b2 2 , negative values indicate a recent decay, where for \u03b2 2 , values smaller than one are associated with decreasing infection rates.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The GAMM-based estimated values of \u03b2 1 , \u03b2 2 and \u03b2 3 separately for each state. (a)-(c) separate estimates for each \u03b2. (d) mean values (grey large dots) and single values (coloured dots) of rescaled \u03b2-values for each state. Whiskers depict 95 %-confidence intervals (CIs). In (a)-(c), CIs are related to estimated \u03b2-values, in (d) they refer to the certainty of the average from all three rescaled \u03b2-values. For the state Baden-W\u00fcrtetemberg in (a)-(c) no confidence intervals have been computes, since this state served as the baseline-level during GAMM-analysis. All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors greatly thank Prof. Anna Marciniak-Czochra for revising the manuscript and fruitful discussions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

@@ -1,0 +1,2270 @@
+{
+    "paper_id": "fba59f4cbe7f177f169b8a52fe342bce75666025",
+    "metadata": {
+        "title": "Improving Coronavirus (COVID-19) Diagnosis using Deep Transfer Learning",
+        "authors": [
+            {
+                "first": "Arshia",
+                "middle": [],
+                "last": "Rehman",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Saeeda",
+                "middle": [],
+                "last": "Naz",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ahmed",
+                "middle": [],
+                "last": "Khan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ahmad",
+                "middle": [],
+                "last": "Zaib",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Imran",
+                "middle": [],
+                "last": "Razzak",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background: Coronavirus disease is an infectious disease caused by a new virus. Exponential growth is not only threatening lives, but also impacting businesses and disrupting travel around the world. Aim: The aim of this work is to develop an efficient diagnosis of COVID-19 disease by differentiating it from viral pneumonia, bacterial pneumonia and healthy cases using deep learning techniques. Method: In this work, we have used pre-trained knowledge to improve the diagnostic performance using transfer learning techniques and compared the performance different CNN architectures. Results: Evaluation results using K-fold (10) showed that we have achieved state of the art performance with overall accuracy of 98.75% on the perspective of CT and X-ray cases as a whole. Conclusion: Quantitative evaluation showed high accuracy for automatic diagnosis of COVID-19. Pre-trained deep learning models develop in this study could be used early screening of coronavirus, however it calls for extensive need to CT or X-rays dataset to develop a reliable application.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "attention not only in China but internationally [24] . Later Chinese Center for Disease Control and Prevention (China CDC) determined a non-SARS novel coronavirus in a patient of Wuhan at Jan 7, 2020. As of 3 April, more than 1m people have been infected in 180 countries, according to the Johns Hopkins University Center for Systems Science and Engineering.There have been over 53,000 deaths globally. Just over 3,000 of those deaths have occurred in mainland China.More than 211,000 people are recorded as having recovered from the coronavirus. [1] .",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 52,
+                    "text": "[24]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 547,
+                    "end": 550,
+                    "text": "[1]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Coronaviruses (CoV) are a large family of viruses that cause sickness ranging from the common cold to more severe diseases such as Middle East Respiratory Syndrome (MERS-CoV) and Severe Acute Respiratory Syndrome (SARS-CoV). Coronaviruses caused diseases in mammals and birds, a zoonotic virus that is transmitted between animals and people. Detailed investigations found that SARS-CoV was transmitted from civet cats to humans and MERS-CoV from dromedary camels to humans. When a virus spread circulating animal populations affect human population, this is termed as spillover event. It is speculated that the 2019 novel Coronaviurs was originated in bats and was transmitted in humans, possibly with pangloin as an intermediatory hosts. Coronavirus disease (COVID-19) is a new strain that was discovered in 2019 (not previously recognized in humans). Unfortunately, COVID-19 is now spreading from humans to humans.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "COVID-19 diagnosis relies on clinical symptoms, positive CT images or positive pathogenic testing, and epidemiological history. Common clinical characteristics of COVID-19 include respiratory symptoms, fever, cough, shortness of breath and breathing difficulties. In more severe cases, infection can cause pneumonia, severe acute respiratory syndrome, kidney failure and even death [25, 3, 13, 9] . However, these symptoms may related to isolated cases e.g. infected CT scan of chest indicated pneumonia while pathogenic test came back positive for the virus. If a person is identified under investigation, samples of lower respiratory will be collected for pathogenic test like sputum, tracheal aspirate, and bronchoalveolar lavage etc. The laboratory technology used sequencing of nucleic acid and real time reverse-transcription polymerase chain reaction (RT-PCR) for the detection of COVID-19 [5, 4] . The detection rates of nucleic acid is low estimates (between 30% -50%), due to the factors like availability, quality, quantity, reproducibility and stability of testing and detection kits [5, 4, 28] . Therefore, tests need to be repeated many times after confirmation in many cases.",
+            "cite_spans": [
+                {
+                    "start": 382,
+                    "end": 386,
+                    "text": "[25,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 387,
+                    "end": 389,
+                    "text": "3,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 390,
+                    "end": 393,
+                    "text": "13,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 394,
+                    "end": 396,
+                    "text": "9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 897,
+                    "end": 900,
+                    "text": "[5,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 901,
+                    "end": 903,
+                    "text": "4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1096,
+                    "end": 1099,
+                    "text": "[5,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1100,
+                    "end": 1102,
+                    "text": "4,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1103,
+                    "end": 1106,
+                    "text": "28]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Two well known radiological imaging modalities are used for the detection of COVID-19 i.e. X-rays and Computed Tomography (CT) scans. These two modalities are frequently used by the clinicians to diagnose pneumonia, respiratory tract infection, lung inflammation, enlarged lymph nodes, and abscesses. Since COVID-19 effect the epithelial cells of respiratory tract,thus X-rays are used to analyze the health of a patients lungs. However, most of COVID-19 cases have have similar features on CT images like ground-glass opacity in the early stage and pulmonary consolidation in the late stage. Therefore, CT scans play an important role in the diagnosis of COVID-19 as an advanced imaging modality.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Machine learning researchers and computer scientists play a vital role in the era when COVID-19 spreads all over the World. One of breakthrough of AI is Deep Learning that extracts the detailed features from the images [15] . This will help the doctors and healthcare practitioners in real time assistance, less costly, time effectively, and accurately. In this work, We have used pre-trained knowledge to improve the diagnostic performance using transfer learning techniques and compared the performance different transfer learning methods. Evaluation results using K-fold (10) showed that we have achieved state of the art performance. The contributions of researchers using machine leaning and deep learning based techniques for the detection of COVID-19 are presented in Section 2. The datasets information deployed in our study is detailed in Section 3. Then we present our proposed COVID-19 detection system based on transfer learning technique in Section 4. The evaluated results are discussed in Section 5. Finally we draw conculsion of our study in Section 6.",
+            "cite_spans": [
+                {
+                    "start": 219,
+                    "end": 223,
+                    "text": "[15]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 574,
+                    "end": 578,
+                    "text": "(10)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In last few months, the machine learning based techniques for identification and detection of COVID-19 have been performed. This section details the recent and current literature of COVID-19 disease detection using scan images of lungs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Literature Review"
+        },
+        {
+            "text": "Fang et al. [6] identified the viral nucleic acid for the detection of COVID-19. They compared the sensitivity of RT-PCR and non-contrast chest CT. They examined 51 patients with acute respiratory symptoms of unknown cause. The sensitivity of RT-PCR was 71% while sensitivity of non contrast chest CT was 98% for detection of COVID-19 infection. Gozes et al. [7] proposed the automated AI based system that detect the presence of COVID-19. They conducted experiment on 157 international patients of China and US. They employed 2D and 3D deep learning models to visualizes the virus effects on the lungs and achieved 98.2% sensitivity. In [26] , Wang Song et al. [20] presented another study investigated COVID-19 pneumonia from 51 patients of Wuhan, China. In [21] , they proposed a deep neural network named Details Relation Extraction neural network (DRE-Net) to obtain the image level predictions by extracting the deep details from CT images. They used CT scans of 88 patients of COVID-19, 101 patients of bacteria pneumonia, and 86 healthy persons. They reported 94% accuracy, respectively. ",
+            "cite_spans": [
+                {
+                    "start": 12,
+                    "end": 15,
+                    "text": "[6]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 359,
+                    "end": 362,
+                    "text": "[7]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 638,
+                    "end": 642,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 645,
+                    "end": 649,
+                    "text": "Wang",
+                    "ref_id": null
+                },
+                {
+                    "start": 662,
+                    "end": 666,
+                    "text": "[20]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 760,
+                    "end": 764,
+                    "text": "[21]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Literature Review"
+        },
+        {
+            "text": "Recently several deep learning methods have been proposed for the diagnosis of COVID-19. In order to improve the diagnostic performance, we have used transfer learning for diagnosis of corona virus through the transfer of already learnt knowledge. For this purpose, we used ImageNet as a source domain denoted by D s where the source task T s is to classify 1000 classes of natural images. The target domain denoted by D t is the Covid2019 Chest X-Ray dataset where the target task T t is to classify two classes i.e. Covid2019 and Healthy in binary classification and four classes i.e. Covid2019, healthy, bacterial pneumonia, and viral pneumonia in multi classification. The source domain consist of two components:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "The target domain also consists of two components:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "where X c is the feature space of Covid2019 Chest X-Ray dataset and P (X i ) is the marignal distribution such that X c ={x 1 , ..., x n }, x j \u2208 X c . On the other hand, source task T s is the tuple of two elements defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "where \u03b3 is the label space of source data and \u03b7 is the objective function that learned from the pair of feature vector and label space i.e.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "The target task T t is the tuple of two elements defined as: .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "where \u03b3 is the label space of source data and \u03b7 is the objective function that learned from the pair of feature vector and label space i.e.(x j , y i ) x j \u2208 X j , y j \u2208 \u03b3 j . The objective of transfer learning is to train a base network on large source dataset and then transfer learned features to the small target dataset. For the given source domain D s and target domain D t with their corresponding source . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Proposed COVID-19 Detection System"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint task T s and target task T t , the aim of transfer learning is to learn conditional probability distribution of target domain i.e. (PY T |X T ) with respect to the information gain of source domain D s and source task T s .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The proposed system employs different powerful CNN architectures (AlexNet, SqueezeNet, GoogLeNet, VGG, MobileNet, ResNet18, ResNet50, ResNet101, and DenseNet) coupled with transfer learning techniques. The system consists of three main steps: Image Acquisition, Off the shelf pre-trained models as feature extractors, and classification as illustrate from Figure 1 . In the first step, images are acquired from two well known dataset: Covid2019 Chest X-Ray downloaded from GitHub repository and Chest X-Ray Images (Pneumonia) from Kaggle repository. The next step is to extract the automated features using off the shelf pre-trained architectures of CNN. In the last step, two types of classification is performed: binary classification and classification. In binary classification three scenarios are investigated: COVID-19 and Healthy classification, COVID-19 and bacterial pneumonia classification, and COVID-19 and viral pneumonia classification respectively. In multi-class problem, two scenarios are explored using three classes i.e. COVID-19, healthy, and bacterial pneumonia. Furthermore four classes are also used in the experimentation of multi-class classification i.e. COVID-19, healthy, bacterial pneumonia, and viral pneumonia. The detail of steps are described in the coming sections.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 356,
+                    "end": 364,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Deep learning models have got significant interest in the last few decades due to its capability of extracting automated features [14, 16] . The automated features extracted by CNN models have the capability of parameter sharing and local connectivity, thus, these features are more robust and discriminative than traditional features. The layered architecture of CNN is used to extract the features from different layers. Initial layers contain generic features (lines, edges, blobs etc.) while later layers contain specific features. The purpose of fine-tuning is to extract the features from pre-trained CNN architectures and then train a shallow network on these features. The key idea is to leverage the weighted layers of pre-trained model to extract features of ImageNet but not to update the weights of the model's layers during training with data for the detection of COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 130,
+                    "end": 134,
+                    "text": "[14,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 135,
+                    "end": 138,
+                    "text": "16]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Off the shelf pre-trained models as feature extractors"
+        },
+        {
+            "text": "We used seven powerful pre-trained architectures of CNN (AlexNet, VGG, SqueezeNet, GoogLeNet, MobileNet, ResNet with its variants, and DenseNet) for extracting the robust automatic features. Utilizing these CNN models without its own classification layer enable us to extract features for our target task based on the knowledge of source task.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Off the shelf pre-trained models as feature extractors"
+        },
+        {
+            "text": "AlexNet [12] was proposed by the Supervision group, in which members were Alex Krizhevsky, Geoffrey Hinton, and Ilya Sutskever. The architecture contains 5 convolutional layers (Conv1 with 96 filters of 11\u00d711, Conv2 with 256 filters of 5\u00d75, Conv3 and Cov4 with 384 filters of 3\u00d73, and Conv5 with 256 . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 8,
+                    "end": 12,
+                    "text": "[12]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Off the shelf pre-trained models as feature extractors"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint VGG [19] has a uniform architecture designed by Simonyan and Zisserman. It comprises 16 convolutional layers with 3\u00d73 convolutions (but with lot of filters) and three fully connected layers like AlexNet.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[19]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "One of micro-architecture of CNN was released in 2016 named as SqueezeNet [11] . It contains fire modules with squeezed convolutional layer(with 1\u00d71 filters) fallow with an expanded layer (with a combination of 1\u00d71 and 3\u00d73 filters).",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 78,
+                    "text": "[11]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "GoogLeNet [22] was proposed by Szegedy et al. in 2014. The concept of inception module was introduced in GoogLeNet in which different convolutional and pooling layers are concatenated for improving learning. GoogLeNet contains 9 inception modules, 4 max-pooling layers, 2 convolutional layers, 1 convolutional layer for dimension reduction, 1 average pooling, 2 normalization layers, 1 fully connected layer, and finally a linear layer with softmax activation in the output.",
+            "cite_spans": [
+                {
+                    "start": 10,
+                    "end": 14,
+                    "text": "[22]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "ResNet [8, 23] is short name of residual network in which the idea of skip connection was introduced. Skip connection means stacking the convolution . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 7,
+                    "end": 10,
+                    "text": "[8,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 11,
+                    "end": 14,
+                    "text": "23]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint layers together one after the other to mitigate the problem of vanishing gradient. Three variants of ResNet used in this study are: ResNet18, ResNet50, and ResNet101. ResNet18 contains of 5 convolution blocks, each contain 2 residual blocks. Each residual block contains 2 convolution layers with the same number of 3\u00d73 filters. The ResNet50 contains 5 residual blocks each with a convolution and identity block. The convolution blocks and identity blocks has 3 convolution layers. Similarly, ResNet101 contains 3 residual blocks with 3 convolution and identity blocks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The idea of skip connections has been extended to connect the later blocks of densely connected layers in DenseNet [10] model. The dense blocks contains 1\u00d71 convolutional filters and max-pooling layers in order to reduce the number of tunable parameters. Contrary to the skip connections in the ResNets, the output of the dense block is not added but instead concatenated.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "MobileNetV2 [17] have a new CNN layer, the inverted residual and linear bottleneck layer. The new CNN layer builds on the depth-wise separable convolutions. The detail of pretrained architectures employed in this study are presented in Table 2 . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 12,
+                    "end": 16,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 236,
+                    "end": 243,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "After extracting the automated features, we again employ pretrained CNN architectures for classification and detection of COVID-19. The pre-trained architectures used in our study for classification are: AlexNet, VGG, SqueezeNet, GoogLeNet, MobileNet, ResNet with its variants, and DenseNet. Each of these networks have three fully connected (FC) layers, where the last fully connected is used for the classification purpose. We initialize the number of neurons of last fully connected layer according to the target dataset. We train the network on Caffee library 7 with GPU (NVIDIA CUDA) having the multiple processors of 2.80 GHz, 16GB DDR4-SDRAM, 1TB HDD, 128 GB SSD. The parameters of fine-tuning method are not set by the network itself, and it is essential to set and optimize these parameters according to the results of training the images in improving the performance. In our case, each network is trained with Adam optimizer in maximum 30 epochs. The value of batch size is set to 11 with the initial learn rate of 3e \u22124 . The number of best epochs is varied according to validation criteria with validation frequency.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification and Detection"
+        },
+        {
+            "text": "Two types of classification has been performed in our study: binary classification and multi-class classification. In binary classification, the dataset is split . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification and Detection"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint into two categories: COVID-19 and Healthy, COVID-19 and bacterial pneumonia, and COVID-19 and viral pneumonia. The images of healthy lungs are acquire from Kaggle repository, while images of lungs affected from COVID-19 are taken from GitHub repository. We will not only classify the healthy lungs from COVID-19, but also classify different causes of pneumonia either cause by some bacteria, virus, or COVID-19. Thus in multi-class classification, dataset is split into 3 categories: Healthy, COVID-19, Pneumonia-Bacterial and 4 categories: Healthy, COVID-19, Pneumonia-Bacterial, and Pneumonia-Viral. Like binary classification, images of COVID-19 are taken form GitHub repository, while images of healthy, pneumonia bacterial, and pneumonia viral are acquaint from Kaggle repository. The detail of both scenarios along with results are presented in coming section.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In this section, we analyze the effectiveness of our proposed framework in light of results of experiments conducted. As discussed earlier, the experimental study is conducted using two publicly available repositories. The statistics of datasets are presented in Table 3 . We deploy CNN architectures coupled with fine-tuning strategy by splitting 80% dataset in training set, 20% of training data in validation set, and 20% in testing.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 263,
+                    "end": 270,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Result analysis and Discussions"
+        },
+        {
+            "text": "The effectiveness of proposed system is evaluated by computing four major outcomes of evaluation measures: true positives (tp), false positives (fp), true negatives (tn), and false negatives (fn). We use a well known evaluation measure i.e. accuracy. Accuracy is used to determine the classes of proposed system correctly. To evaluate the accuracy of a test set, we compute the proportion of true positive and true negative in all evaluated cases computed as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Result analysis and Discussions"
+        },
+        {
+            "text": "We first compute the accuracy of the proposed system for all classes either binary-class or multi-class. Then we compute mean classification accuracy using K-fold measure. Mean classification accuracy is calculated by taking average of the accuracy achieved by each of the 10 fold.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Result analysis and Discussions"
+        },
+        {
+            "text": "We have conduct two studies of classification in our proposed system: Binary classification and Multi classification. In binary classification, three scenarios are used: COVID-19 and healthy, COVID-19 and bacterial pneumonia, COVID-19 and viral pneumonia. Series of experiments are conducted in each scenario using nine pre-trained CNN networks i.e. AlexNet, SqueezeNet, GoogLeNet, VGG16, MobileNet, ResNet18, ResNet50, ResNet101, and DenseNet. Our initial claim is to explore the finetuning technique of transfer learning by extracting the features of pretrained CNN networks. We have achieved highest accuracy of 98.75% using VGG16, ResNet18, ResNet50, ResNet101, and DenseNet in Scenario A: COVID-19 and healthy. Similarly, we attained 98.75% using all pretrained models in Scenario B: COVID-19 and bacterial pneumonia.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Result analysis and Discussions"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Result analysis and Discussions"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 11.20054643 doi: medRxiv preprint The accuracy of 98.75% is achieved using SqueezeNet, GoogLeNet, MobileNet, ResNet50, and ResNet101 in Scenario C: COVID-19 and viral pneumonia. For a deeper insight on Table 4 , it is observed that the performance of the automated features extracted from each pre-trained networks used in this study is comparable with one another. This supports our initial claim that fine-tuning the pre-trained CNN networks can be successfully deployed to a limited class dataset even without augmentation.",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 107,
+                    "text": "11.20054643 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 276,
+                    "end": 283,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The study of multi-class classification is further divided into two scenarios. In Scenario D, dataset is split into three classes: COVID-19, healthy, and bacterial pneumonia. We achieve 97.20% in this scenario using MobileNet. In Scenario E, dataset is split into four categories: COVID-19, healthy, bacterial pneumonia, and viral pneumonia. We achieve the highest accuracy of 80.95% using MobileNet architecture of CNN on test set. It can be observed from Table 4 that accuracy on multi-class problem ranging from 63.95 to 80.95. To get deeper insight, class-wise accuracy is reported in Table 4 . It can be noted from Table 4 that some of bacterial and viral pneumonia leads to misclassification. The proposed system is classifying most of the viral pneumonia scans as healthy person.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 457,
+                    "end": 464,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 589,
+                    "end": 596,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 620,
+                    "end": 627,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For more illustration confusion matrix of each scenario with model of highest accuracy is presented in Figure 2 . The scenario A accurately classify Covid19 with 100% classification rate and misclassify one instance of healthy subject with overall test accuracy of 98.75%. The scenario B and C classify Covid19 from bacterial pneumonia and viral pneumonia with 98.75% classification rate using ResNet101. In multiclassification scenarios, it is noted that viral pneumonia and bacterial pneumonia is classify as healthy subject. It is due to reason that COVID-19 is cause by SARS-COV-2 virus and pneumonia is also cause by virus or bacteria thus we need a strong overlap in the feature space between these two classes. The main reason is as the immunity system of human being has got adaptation towards pre-existing viruses. So, the human being when get infected by old viral pneumonia then the they did not have so many in the the chest x-rays or CT scans. Number of viral pneumonia is mis-classified as a bacterial pneumonia. Another reason is the pediatric x-ray images and virus attacked the child for the first time after the birth. Sometimes, the proposed system mis-classified some images of bacterial pneumonia as COVID-19 and vice versa. In case of COVID-19, when a person get pneumonia then it shows alot changes in the x-rays or CT like bacteria pneumonia or worst because human being has not yet developed the immunity against this novel corona virus. The COVID-19 images are classified accurately by number of architectures of CNN. The accuracy will be increase with increased data, more deep mesoscopic model, and long finetuning transfer learning process.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 103,
+                    "end": 111,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In addition with accuracy, we further evaluate our proposed system with four evaluation measures: sensitivity, specificity, precision and F-score. Sensitivity or Recall measure the ability of system to correctly classify the classes and is calculated from the proportion of true positives. It is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 11.20054643 doi: medRxiv preprint Specificity is the ability of the model to accurately classify the actual class and is computed as:",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 107,
+                    "text": "11.20054643 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Precision is the true positive relevant measure and is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "F-score or F 1 score or F-measure is used to measure the accuracy of test set. It is the harmonic mean of precision and recall measured as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "F \u2212 score = 2. P recision.Recall P recision + Recall",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Overall accuracy, sensitivity, specificity, precision and F-score of proposed system achieved by employment of each CNN architecture using fine-tuned features with 20% test set in both scenario is presented in Table 5 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 210,
+                    "end": 217,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For the effectiveness of any proposed system, comparative analysis with the state of the art gives notable insight. We have compared the evaluation of our proposed system with existing technique discussed in Table 1 . A meaningful comparison is possible with Wang et al. [26] and Xu et al. [27] presented in Table 6 . Wang et al. [26] deployed transfer learning techniques using Inception model. They conducted experiment on 453 CT scans of pathogen confirmed COVID-19 cases and attained 89.5% accuracy. Another deep learning based system was proposed by Xu et. al. [27] . They differentiate COVID-19 pneumonia from Influenza-A viral pneumonia. They used ResNet with Locationattention classification on 618 CT samples and attained 86.7 % accuracy. Our proposed system significantly differentiate the COVID-19 from bacterial pneumonia with 98.75% and COVID-19 from viral pneumonia with 98.51% accuracy respectively. We have deployed nine pre-trained CNN networks to investigate the transfer learning techniques and conclude that fine tuning the pretrained CNN networks can be successfully deployed to a limited class dataset even without augmentation. . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 290,
+                    "end": 294,
+                    "text": "[27]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 330,
+                    "end": 334,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 566,
+                    "end": 570,
+                    "text": "[27]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 208,
+                    "end": 215,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 308,
+                    "end": 315,
+                    "text": "Table 6",
+                    "ref_id": "TABREF7"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20054643 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "CT imaging is an efficient tool to diagnose COVID-19 and assess its. In this work, we used pre-trained knowledge to improve the diagnostic performance of COVID-19. In conclusion, our proposed study revealed the feasibility of finetuning transfer learning technique of deep learning to assist doctors to detect the COVID-19. Our system differentiate the COVID-19 from viral pneumonia and bacterial pneumonia. Our system holds great potential to improve the efficiency of diagnosis, isolation and treatment of COVID-19 patients, relieve the pressure of radiologists, and give control of epidemic. The proposed system 100% classify COVID-19 form healthy, COVID-19 from bacterial pneumonia, and COVID-19 from viral pneumonia using ResNet in binary classification. In multi-class classification, 97.20% is achieved on three classes and 80.95% on four classes using MobileNet respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Deep learning-based model for detecting 2019 novel coronavirus pneumonia on high-resolution computed tomography: a prospective study. medRxiv",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Epidemiological and clinical characteristics of 99 cases of 2019 novel coronavirus pneumonia in wuhan, china: a descriptive study",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "507--513",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Molecular diagnosis of a novel coronavirus (2019-ncov) causing an outbreak of pneumonia",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Hui",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Krishnan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinical chemistry",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Detection of 2019 novel coronavirus (2019-ncov) by real-time rt-pcr",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Corman",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Landt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kaiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Molenkamp",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Meijer",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bleicker",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Br\u00fcnink",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schmidt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Sensitivity of chest ct for covid-19: comparison to rt-pcr",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Rapid ai development cycle for the coronavirus (covid-19) pandemic: Initial results for automated detection & patient monitoring using deep learning ct image analysis",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Gozes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frid-Adar",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Greenspan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Browning",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bernheim",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Siegel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.05037"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in wuhan, china",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "497--506",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Densely connected convolutional networks",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Der Maaten",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Weinberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "4700--4708",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Squeezenet: Alexnet-level accuracy with 50x fewer parameters and\u00a1 0.5 mb model size",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Iandola",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Moskewicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ashraf",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dally",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Keutzer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1602.07360"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Imagenet classification with deep convolutional neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krizhevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1097--1105",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirusinfected pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Refining parkinsons neurological disorder identification through deep transfer learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Naseer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rani",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Naz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Razzak",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Imran",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Neural Computing and Applications",
+            "volume": "32",
+            "issn": "3",
+            "pages": "839--854",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Deep learning for medical image processing: Overview, challenges and the future",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Razzak",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Naz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zaib",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Classification in BioApps",
+            "volume": "",
+            "issn": "",
+            "pages": "323--350",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "A deep learning-based framework for automatic brain tumors classification using transfer learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Naz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Razzak",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Akram",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Imran",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Circuits, Systems, and Signal Processing",
+            "volume": "39",
+            "issn": "2",
+            "pages": "757--775",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sandler",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Howard",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhmoginov",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "4510--4520",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Lung infection quantification of covid-19 in ct images with deep learning",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shan+",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao+",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.04655"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Very deep convolutional networks for large-scale image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Simonyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zisserman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1409.1556"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Emerging 2019 novel coronavirus",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ling",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Deep learning enables accurate diagnosis of novel coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jie",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Going deeper with convolutions",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sermanet",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Reed",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Anguelov",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Erhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rabinovich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Resnet in resnet: Generalizing residual architectures",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Targ",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Almeida",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Lyman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1603.08029"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "470--473",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Clinical characteristics of 138 hospitalized patients with 2019 novel coronavirus-infected pneumonia in wuhan, china. Jama",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A deep learning algorithm using ct images to screen for corona virus disease",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Deep learning system to screen coronavirus disease 2019 pneumonia",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.09334"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Recent advances in the detection of respiratory virus infection in humans",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Medical Virology",
+            "volume": "92",
+            "issn": "4",
+            "pages": "408--417",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Proposed system for detection and classification of COVID-19 filters of 3\u00d73), three fully connected layers (FC6 and FC7 with 4096 neurons and FC8 with 1000 classes of ImageNet dataset).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Analysis of highest identification rate of each class using different CNNs architectures: (a), (b), (c) ResNet101 (d), (e) MobileNet",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "et al. conducted experiment on 1,119 CT scans of pathogen confirmed COVID-19 cases. They deployed transfer learning techniques of deep learning using Inception model and attained 89.5% accuracy. Chen et al. [2] collected 46,096 anonymous CT images including 51 patients of confirmed COVID-19 pneumonia. They identified the COVID-19 pneumonia from CT images using UNet++ and achieved 95.24% accuracy. In [27], Xu et al. developed deep learning based system to differentiate COVID-19 pneumonia from Influenza-A viral pneumonia. They used ResNet with Locationattention classification on 618 CT samples and attained 86.7 % accuracy. Shan et al. [18] segmented COVID-19 infection regions from CT scans using deep learning model named as VB-Net. They used 249 images in traning and 300 in validation. Dice similarity coefficient of 91.6% was achieved.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Summarised the employed machine learning based studies for COVID-19 detection",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Summary of Pre-trained CNN Architectures Employed in Proposed System",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Dataset Split Statisitics",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Experimental Results of Binary classification and Multi classification",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Overall accuracy of COVID-19 detection system achieved by employment of each CNN architecture using fine-tuned features (20% Test set)",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Performance comparison of performance with recent works using machine learning techniques for CT and X-ray images",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

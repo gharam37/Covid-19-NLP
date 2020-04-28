@@ -1,0 +1,2424 @@
+{
+    "paper_id": "d8f3eb2d0c5bb4768c2f6f440a11cbeabdde07c5",
+    "metadata": {
+        "title": "Using network science to propose strategies for effectively dealing with pandemics: The COVID-19 example",
+        "authors": [
+            {
+                "first": "Helena",
+                "middle": [
+                    "A"
+                ],
+                "last": "Herrmann",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Manchester",
+                    "location": {
+                        "postCode": "M13 9PT",
+                        "settlement": "Manchester",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jean-Marc",
+                "middle": [],
+                "last": "Schwartz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Manchester",
+                    "location": {
+                        "postCode": "M13 9PT",
+                        "settlement": "Manchester",
+                        "country": "UK"
+                    }
+                },
+                "email": "jean-marc.schwartz@manchester.ac.uk"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The global spread of Coronavirus Disease 2019 (COVID-19) is overwhelming many health-care systems. As a result, epidemiological models are being used to inform policy on how to effectively deal with this pandemic. We note that the majority of existing models do not take into account differences in the amount of interactions between individuals (i.e. the underlying human interaction network). Using network science we demonstrate how this network of interactions can be used to predict the spread of the virus and to inform policy on the most successful mitigation and suppression strategies. Although applicable to disease modelling in general, our results emphasize how network science can improve the predictive power of current COVID-19 epidemiological models. We provide commented source code for all our analyses so that they can easily be integrated into current and future epidemiological models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The Coronavirus Disease 2019 , first identified in Wuhan, China in December 2019, has spread globally (Sun et al. 2020) , overwhelming many national health care systems with an increasing number of serious and potentially life-threatening infections (Anderson et al. 2020) . As a result, the majority of governments have imposed mitigation and suppression strategies, such as social distancing and lock-down measures, to better control the spread of the virus. To ensure the effectiveness of these strategies, various epidemiological models are used to predict the spread of COVID-19 and to inform government policies (Hellewell et al., 2020; Sameni, 2020; Radulescu and Cavanagh, 2020; Simha et al. 2020; Zhao and Chen, 2020) .",
+            "cite_spans": [
+                {
+                    "start": 102,
+                    "end": 119,
+                    "text": "(Sun et al. 2020)",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 250,
+                    "end": 272,
+                    "text": "(Anderson et al. 2020)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 618,
+                    "end": 642,
+                    "text": "(Hellewell et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 643,
+                    "end": 656,
+                    "text": "Sameni, 2020;",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 657,
+                    "end": 686,
+                    "text": "Radulescu and Cavanagh, 2020;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 687,
+                    "end": 705,
+                    "text": "Simha et al. 2020;",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 706,
+                    "end": 726,
+                    "text": "Zhao and Chen, 2020)",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Most commonly, these models follow a general Susceptible-Infected-Removed (SIR) framework (Kermack and McKendrick, 1927; Bailey, 1975; Sameni, 2020) . Infected individuals can only transmit the virus to susceptible individuals. Once infected individuals have recovered (or have passed away) they can no longer infect others and cannot be reinfected. With regards to COVID-19, the SIR model is often expanded to an SEIR model, which considers an additional Exposed (E) stage during which individuals have been infected but are not yet contagious (Radulescu and Cavanagh, 2020; Wu et al. 2020) . Many additional parameters, including clustering (Luo et al., 2020) , age-heterogeneity (Chang et al., 2020; Radulescu and Cavanagh, 2020) , changes in policy and control measures (Sameni, 2020; Zhao and Chen, 2020) , and even meteorology (Jia et al., 2020) have been incorporated into the SIR and SEIR framework in an attempt to increase the predictive power of these models. Furthermore, there are models that consider an inherent randomness or stochasticity in the events that influence the model outcomes (Hellewell et al., 2020; Kucharski et al., 2020; Simha et al. 2020 ).",
+            "cite_spans": [
+                {
+                    "start": 90,
+                    "end": 120,
+                    "text": "(Kermack and McKendrick, 1927;",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 121,
+                    "end": 134,
+                    "text": "Bailey, 1975;",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 135,
+                    "end": 148,
+                    "text": "Sameni, 2020)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 545,
+                    "end": 575,
+                    "text": "(Radulescu and Cavanagh, 2020;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 576,
+                    "end": 591,
+                    "text": "Wu et al. 2020)",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 643,
+                    "end": 661,
+                    "text": "(Luo et al., 2020)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 682,
+                    "end": 702,
+                    "text": "(Chang et al., 2020;",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 703,
+                    "end": 732,
+                    "text": "Radulescu and Cavanagh, 2020)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 774,
+                    "end": 788,
+                    "text": "(Sameni, 2020;",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 789,
+                    "end": 809,
+                    "text": "Zhao and Chen, 2020)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 833,
+                    "end": 851,
+                    "text": "(Jia et al., 2020)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1103,
+                    "end": 1127,
+                    "text": "(Hellewell et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 1128,
+                    "end": 1151,
+                    "text": "Kucharski et al., 2020;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1152,
+                    "end": 1169,
+                    "text": "Simha et al. 2020",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, none of the above models, currently predicting the COVID-19 pandemic, take into consideration the structure underlying the human interaction network. Networks can be used to represent connections between individuals. A network of 10,000 nodes, for example, can be used to describe 10,000 individuals. The nodes in the network are connected by edges, which represent the interaction between those nodes. Two nodes sharing the same edge are considered to directly interact with one another and are referred to as neighbouring nodes. The number of edges of a node is referred to as the degree of that node (e.g. a node with two edges has a degree of 2). Nodes with many edges (and thus many neighbours) are referred to as \"hubs\". It is critical to note that from a network analysis perspective, hubs do not necessarily refer to social gatherings. Hubs refer to individuals with many connections to other individuals; these connections do not necessarily occur at the same time. For example, a doctor who individually meets with 30 patients per day is considered a hub of 30 (i.e. a node of degree 30).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Current COVID-19 models are based on differential equations or random diffusions which assume that human interaction behaviours are generally homogeneous (i.e. alike). It is, however, welldocumented that many biological interactions, including human face-to-face communications, are not homogeneous and not random (Barabasi, 2009; Cattuto et al., 2010; Zhao and Bianconi, 2011; Zhang and Li, 2012) . In fact, the degree distribution of nodes (which captures differences in the number of connections between nodes) in a biological network can often be described by a powerlaw (Barabasi and Albert, 1999) . A power-law describes a relationship whereby one quantity varies as the power of another (e.g. the area of a square quadruples when the size of its sides is doubled). In networks, this property arises when there are few nodes with many edges and many nodes with few edges. Networks with this kind of property are known as scale-free. The rate of infection of COVID-19 has previously been shown to follow a power-law (Ziff and Ziff, 2020; Li et al., 2020 ); yet, so far scale-free networks have not been considered to model the disease.",
+            "cite_spans": [
+                {
+                    "start": 314,
+                    "end": 330,
+                    "text": "(Barabasi, 2009;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 331,
+                    "end": 352,
+                    "text": "Cattuto et al., 2010;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 353,
+                    "end": 377,
+                    "text": "Zhao and Bianconi, 2011;",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 378,
+                    "end": 397,
+                    "text": "Zhang and Li, 2012)",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 575,
+                    "end": 602,
+                    "text": "(Barabasi and Albert, 1999)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1021,
+                    "end": 1042,
+                    "text": "(Ziff and Ziff, 2020;",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1043,
+                    "end": 1058,
+                    "text": "Li et al., 2020",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "When a disease spreads through a network, the infected nodes (I) can spread the disease only to their susceptible neighbours (S), who can then spread the disease to their susceptible neighbours, and so on. Using network science, Dezso and Barabasi (2002) have previously identified that the best possible way to stop a virus from spreading in a scale-free network is to bias policies towards hubs (i.e. heavily connected nodes) in the network. They showed this using a Susceptible-Infected-Susceptible (SIS) model -a model that is arguably more suitable for the spread of computer viruses than infectious diseases. Here we re-assess the predictions of Dezso and Barabasi (2002) using an SIR model, with the model parameters tailored specifically towards COVID-19. Our results demonstrate how mitigation strategies that directly target hubs in the network are far more effective than strategies that randomly decrease the number of connections between individuals. For example, reducing the total number of interactions that each individual in the network can have is potentially more effective than mitigating the number of interactions that an individual can have at the same time.",
+            "cite_spans": [
+                {
+                    "start": 229,
+                    "end": 254,
+                    "text": "Dezso and Barabasi (2002)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 652,
+                    "end": 677,
+                    "text": "Dezso and Barabasi (2002)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Although we have chosen model parameters that are based on the current COVID-19 pandemic, the model results cannot be considered a reliable prediction of the spread of this pandemic. Instead, they illustrate how network topology can improve the predictive power of such models. We propose that network topology should be combined with dynamic approaches in order to strengthen the predictive power of future pandemic models (Piccardi and Casagrandi, 2009 ). We further demonstrate how network topology can be used to suggest mitigation and containment strategies. In this sense, the results are generally applicable to a wide range of contagious infectious diseases.",
+            "cite_spans": [
+                {
+                    "start": 424,
+                    "end": 454,
+                    "text": "(Piccardi and Casagrandi, 2009",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We set up a scale-free network using the Barabasi and Albert (1999) algorithm for a population of 10,000 (see Method and Materials for details).",
+            "cite_spans": [
+                {
+                    "start": 41,
+                    "end": 67,
+                    "text": "Barabasi and Albert (1999)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The network is set up such that the majority of nodes in the network have less than n connections. Due to the scale-free structure of the network, there are some nodes that are heavily connected and have far more than n connections; these nodes are hereafter referred to as \"hubs\". The value of n is an arbitrary cut-off and is dependent on the network structure. Here, we set n=8 so that hubs represent the 5-10% most connected nodes (Fig. S1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 435,
+                    "end": 443,
+                    "text": "(Fig. S1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "All nodes in the network were initially set to be in the susceptible (S) state. Randomly, the state of one node was changed to the infected (I) state, representing patient zero. Thereafter, at each time point, the infected node(s) can infect any of their neighbouring nodes, changing their state from S to I. This transmission can occur from 2-14 days after a node was infected (Lauer et al. 2020 ). The probability of transmission is highest from the 4 th to the 6 th day after being infected . After the 2-14 days of possible transmission, infected nodes (I) change to the removed (R) state. Nodes in the R state cannot become reinfected and can no longer infect others.",
+            "cite_spans": [
+                {
+                    "start": 378,
+                    "end": 396,
+                    "text": "(Lauer et al. 2020",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "We then ran one set of models using the original scale-free network. We ran another set of models for which all hubs in the network had been contained; we randomly selected and retained 8 edges of each hub and removed all others. In this mitigated scenario, all nodes have a degree of 8 or less; we refer to this scenario as \"Mitigation Hub\". To compare mitigation strategies that specifically target hubs to general mitigation strategies, we calculated the average number of edges that were removed in the mitigation strategy. We generated a third set of networks where we removed the same number of edges randomly within the scale-free network; we refer to this scenario as \"Mitigation Random\". We ran the SIR model on all three network types (Scale-free, Mitigation Hub and Mitigation Random). Figure 1 demonstrates how the number of susceptible, infected and removed nodes changes over time. There are two general outcomes in all three models: (i) the infection dies out quickly and does not spread throughout the network, or (ii) the number of removed nodes becomes high enough such that the spread of the infection is contained. In outcome (i) the majority of the population remains susceptible; in (ii) the majority of the population is infected and removed (i.e. has recovered or passed away). In outcome (ii) the population achieves a state known as \"herd immunity\" (Anderson and May, 1986; Kwok et al., 2020) , whereby a high enough percentage of the population is immune to stop the virus from spreading. An illustrative example of the outcomes is provided, from a network point of view, in Figure S2 . The distributions of the final state of the nodes in all model outcomes are shown in Figure 2A . The outcomes of the Mitigated Hub and Mitigated Random networks are similar in that they require a lower number of removed nodes to achieve herd immunity when compared to the outcomes of the scale-free network. However, the outcome of achieving herd immunity is also less likely when running the SIR model on the two mitigated networks, than on the original scale-free network ( . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 1375,
+                    "end": 1399,
+                    "text": "(Anderson and May, 1986;",
+                    "ref_id": null
+                },
+                {
+                    "start": 1400,
+                    "end": 1418,
+                    "text": "Kwok et al., 2020)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 797,
+                    "end": 805,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1602,
+                    "end": 1611,
+                    "text": "Figure S2",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1699,
+                    "end": 1708,
+                    "text": "Figure 2A",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "where edges were removed from the scale-free network such that all nodes have no more than 8 connections, Mitigated Random: where the same number of edges were removed randomly). (B) final states of the two model outcomes (No Herd Immunity -where the infection dies out early, before spreading, and the majority of the population remains susceptible; Herd Immunity -where the infection stops spreading because the majority of the population is immune). 5,000 model simulations were run for 170 days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "When running the SIR model on the scale-free network, over 80% of the population needs to become infected in order for herd immunity to be achieved (Fig. 1A) . In the mitigated scenarios herd immunity can be achieved with around 70-75% of the population becoming infected (Fig.  1B,C) . This is because the number of connections between nodes is limited. When specifically limiting the connections of hubs, the rate at which the virus spreads through the network is slowed down (Fig. 1B & Fig. 3) . When removing hubs from the network, the onset of more than 1% of the population being infected occurs later than with any of the other networks (Fig. 3A) . Also, in the Mitigated Hub scenario, the rate of infection is slower such that, at the peak of infection, a significantly lower percentage of nodes is infected with the virus (p < 0.01) (Fig. 3B ). This means that when the SIR model is run on the Mitigated Hub network, the time for which more than 1% of the population is infected is longer and the peak of infection occurs later in time (Fig. S3) ; thus, the curve is flatter (Fig. 1B) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 148,
+                    "end": 157,
+                    "text": "(Fig. 1A)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 272,
+                    "end": 284,
+                    "text": "(Fig.  1B,C)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 478,
+                    "end": 496,
+                    "text": "(Fig. 1B & Fig. 3)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 644,
+                    "end": 653,
+                    "text": "(Fig. 3A)",
+                    "ref_id": null
+                },
+                {
+                    "start": 842,
+                    "end": 850,
+                    "text": "(Fig. 3B",
+                    "ref_id": null
+                },
+                {
+                    "start": 1045,
+                    "end": 1054,
+                    "text": "(Fig. S3)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1084,
+                    "end": 1093,
+                    "text": "(Fig. 1B)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The onset of more than 1% of the population being infected occurs just after the first hub has been infected (Fig. 3A) . For the Mitigated Hub network (which contains no hubs), the time of onset at which more than 1% of the population becomes infected is more varied, as indicated by the wider distribution shown in orange.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 109,
+                    "end": 118,
+                    "text": "(Fig. 3A)",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Time at which more than 1% of the population is infected in the Herd Immunity outcome. The SIR model was run on the three networks (Scale-free: the original network; Mitigated Hub: where edges were removed from the scale-free network such that all nodes have no more than 8 connections; Mitigated Random: where the same number of edges were removed randomly). (A) frequency distributions of the onset of time after which more than 1% of the population is infected for the three networks (Scale-free -red; Mitigation Hub -orange; Mitigation Random -brown) and of the time at which the first hub (i.e. the first node with more than 8 connections) is infected in the scale-free network (blue) and in the Mitigation Random network (purple). (B) the number of nodes that are infected at the peak of the infection divided by the final total number of removed nodes, shown as a percentage. For both (A & B) , 5,000 model simulations were run for 170 days.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 892,
+                    "end": 899,
+                    "text": "(A & B)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Figure 3:"
+        },
+        {
+            "text": "All our networks consist of a population of 10,000 individuals; thus, representing a small community. Including more individuals into the networks would not change the proportionality of our results. However, previous network analyses have suggested that networks representing human interactions across wider geographical regions should consider transitivity (Serrano and Boguna, 2006; Friemel, 2011) . Transitivity is a measure of the density of connections in a network (Wasserman and Faust, 1994) . The higher the transitivity of a network, the more dense are its connections. We calculated the transitivity for all our generated networks and found that when network transitivity is high, the peak of infection rises and ceases sooner (Fig. 4) . Networks with no hubs (Mitigation Hub) are the least densely connected network and thus the peak of infection is flatter (Fig. 1 & 4) .",
+            "cite_spans": [
+                {
+                    "start": 359,
+                    "end": 385,
+                    "text": "(Serrano and Boguna, 2006;",
+                    "ref_id": null
+                },
+                {
+                    "start": 386,
+                    "end": 400,
+                    "text": "Friemel, 2011)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 472,
+                    "end": 499,
+                    "text": "(Wasserman and Faust, 1994)",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 738,
+                    "end": 746,
+                    "text": "(Fig. 4)",
+                    "ref_id": null
+                },
+                {
+                    "start": 870,
+                    "end": 882,
+                    "text": "(Fig. 1 & 4)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Figure 3:"
+        },
+        {
+            "text": "The effect of network transitivity on the spread of an infection. Transitivity of the generated networks (Scale-free in red -the original network; Mitigated Hub in orange -where hubs with more than 8 connections have been removed; Mitigated Random in brown -where edges have been removed randomly) plotted against (A) the time when more than 1% of the population is first infected in the herd immunity outcome and (B) against the total time for which more than 1% of the population is infected in the herd immunity outcome. 300 model simulations were run for 170 days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 4:"
+        },
+        {
+            "text": "We have shown that incorporating a scale-free network structure of human interactions into an SIR model of COVID-19 can provide novel insights into the potential strategies and policies for mitigating and suppressing the spread of the virus. Our results demonstrate that targeting hubs in a network has the potential to slow down the rate of infection and to \"flatten the curve\". Removing hubs from a scale-free network markedly reduces the number of infected individuals at a time and could therefore reduce the strain on health care systems, if implemented early on. We show that removing edges from hubs rather than from random locations in the network is a more successful strategy for slowing down the spread of the virus. Thus, limiting the total number of interactions that each individual in a network can have, could be an effective policy when trying to reduce the number of infections at a time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We further demonstrate that the onset of the peak of infection occurs shortly after the first hub is infected. If, by chance, no hub is infected early on, then the infection dies out or the peak is noticeably delayed until a hub is infected. These results align with data coming from Italy, which suggest that the COVID-19 epidemic must have entered the region far earlier than when the first case was officially detected (Cereda et al., 2020) . According to their study, the virus could have circulated for several weeks with the number of infected people remaining low, until it started to rise sharply.",
+            "cite_spans": [
+                {
+                    "start": 422,
+                    "end": 443,
+                    "text": "(Cereda et al., 2020)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our results further align with those obtained by Dezso and Barabasi (2002) who modelled the spread of a virus using an SIS model and suggested targeting hubs as a primary mitigation strategy. Their model, however, does not provide the option of a herd immunity outcome as it does not consider a removed state. All of our SIR models present two possible outcomes: either the infection dies out quickly and the majority of the population remains susceptible or the majority of the population gets infected and herd immunity forces the virus to stop spreading. If vaccines are available, herd immunity can be achieved quicker. Vaccines would allow nodes in the network to move from a susceptible straight into a removed (i.e. recovered) state. Unfortunately, no vaccine for COVID-19 is available at the time of writing (Amanat and Krammer, 2020; Pompetchara et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 49,
+                    "end": 74,
+                    "text": "Dezso and Barabasi (2002)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 816,
+                    "end": 842,
+                    "text": "(Amanat and Krammer, 2020;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 843,
+                    "end": 868,
+                    "text": "Pompetchara et al., 2020)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We did not opt for an SEIR model, but instead set the probability of infection very low for the first few days after contracting the virus. This matches the current available data on COVID-19 and has a similar effect as an SEIR model would have. Furthermore, we did not distinguish between recovered and passed away in the models. From a modelling perspective, whether a node recovers or dies has the same implication: it cannot get reinfected nor can it spread the virus. From a human health perspective, the fact that the number of removed nodes is likely to include a number of deaths (depending on the fatality of the virus), paints a potentially sombre picture for the model outcomes in which herd immunity is achieved. For COVID-19, the current case fatality rates of Germany and Italy were calculated to be 0.2% and 7.7%, respectively (Lazzerini and Putoto, 2020) . Evidently, these figures are dependent on the number of cases tested as well as other factors. Anyway, the potential magnitude of fatality rates implied by these numbers does suggest that mitigation strategies that lower the number of infected people required for herd immunity may be necessary to keep high-risk citizens safe from the infection. In this case, a combination of hub specific and equally applied mitigation (i.e. random) strategies should be considered. Hub specific mitigation strategies are more likely to lower the peak of infection, whereas equally applied mitigation strategies are more likely to increase the number of individuals that never contract the disease.",
+            "cite_spans": [
+                {
+                    "start": 842,
+                    "end": 870,
+                    "text": "(Lazzerini and Putoto, 2020)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Evidently, the results of our model come with a set of assumptions that are not necessarily valid under the current and evolving circumstances of the spread of COVID-19. For example, our network analysis considers the number of connections to be constant across time. This however is unlikely, given that even without government enforced policies, individuals are likely to reduce their face-to-face interactions once they fall ill. Workers providing essential services, like healthcare and delivery personnel, on the other hand, may increase their number of interactions with the spread of the virus. This could result in hubs becoming even more connected over time. Furthermore, both our discussed mitigation strategies are applied before the onset of the infection, in order to illustrate a point. A more pragmatic model should consider how network dynamics and policies enforced during the pandemic can alter the degree distribution of the network over time (Piccardi and Casagrandi, 2009; Barrat et al. 2013) .",
+            "cite_spans": [
+                {
+                    "start": 962,
+                    "end": 993,
+                    "text": "(Piccardi and Casagrandi, 2009;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 994,
+                    "end": 1013,
+                    "text": "Barrat et al. 2013)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We showed that the transitivity in a network (i.e. the density of its connections) correlates with the sharpness of the infection peak. The onset of the peak occurs later and is slowed down in networks where hubs have been removed, because these networks have a reduced transitivity. However, our results did not take into account modularity, also known as community structure. Previous research has shown that a community structure in networks can reduce the risk of a pandemic (Eguiluz and Klemm, 2002; Huang and Li, 2007; Stegehuis et al., 2016) . We therefore recommend that, when upscaling our approach to model the spread of an infection across a wider geographical network, community structures are implemented.",
+            "cite_spans": [
+                {
+                    "start": 479,
+                    "end": 504,
+                    "text": "(Eguiluz and Klemm, 2002;",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 505,
+                    "end": 524,
+                    "text": "Huang and Li, 2007;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 525,
+                    "end": 548,
+                    "text": "Stegehuis et al., 2016)",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In conclusion, we here present a fundamental example for why the network structure that underlies human interactions should be taken into consideration when modelling the spread of a virus, such COVID-19. We emphasize that the model results should not be used as predictions of the spread of COVID-19 but as a guide on how current epidemiological models could be improved. Incorporating network science with the current dynamic models of COVID-19 is likely to improve their predictive power. Doing so will allow for better-informed suggestions for disease mitigation and suppression, such as reducing the number of hubs in a network. Strategies that consider the underlying network structure of human interactions will allow the implementation of more tailored policies, attempting to effectively deal with COVID-19 and other pandemics. Barabasi and Albert (1999) graphs of 10,000 nodes were generated using the igraph (Version 0.8.0) package in Python (Version 3.6.9) with a power of 1 and an edge per node connectivity of 2. These are scale-free networks and the node degree distribution follows a power law (e.g. Fig S1) . We then generated a set of networks where we removed all hubs from the original scale-free versions. If a node in the scale-free network contained more than 8 edges, we randomly removed edges from that node, such that it only had 8 edges left in total. We refer to these networks as \"Mitigated Hub\" networks. When generating 5,000 Mitigated Hub networks, we removed, on average, 4613 edges per network. As a control we also generated a set of networks where we removed that same amount of edges randomly (i.e. not targeting hubs). We refer to these networks as \"Mitigated Random\" networks. In total we generated 3 sets of networks (Scale-free, Mitigated Hub, and Mitigated Random). We generated 5,000 networks of each set. Network properties, such as transitivity, were also calculated using the igraph package.",
+            "cite_spans": [
+                {
+                    "start": 837,
+                    "end": 863,
+                    "text": "Barabasi and Albert (1999)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1116,
+                    "end": 1123,
+                    "text": "Fig S1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The nodes of the networks can be either in a susceptible (S), an infected (I) or a removed (R) state. Initially, all nodes were set to be in state S. Then at the first time point, we randomly choose one of the nodes in the network to be in the infected state. This node represents patient zero who first contracts the virus from a non-human source. We then update the model such that at each iterating time point infected nodes can infect their susceptible neighbouring nodes with a given probability p. Infected nodes can remain infected for 2 to 14 days (Lauer et al. 2020) . The length of time that a node is infected is randomly chosen, with equal probability. Once the node is no longer infectious it is set to be in the R state and cannot be infected again. The probability with which each infected node can spread the virus to its susceptible neighbours peaks at around 5 days after contracting the infection. To match the current available data for COVID-19 , we set p = [0.01,0.01,0.1,0.2,0.3,0.3,0.3,0.25,0.2,0.15,0.1,0.05,0.01,0.01], representing the probability of infection on each of the 14 days, respectively. All models are run to completion (i.e. until the infection dies out). Once the infection dies out, all nodes are either in the R or S state. We ran the here described SIR model on each of the generated networks (see Network Generation). We used the Kruskal-Wallis test, as implemented in the scipy package (Version 1.4.1) to test for significant differences between distributions.",
+            "cite_spans": [
+                {
+                    "start": 556,
+                    "end": 575,
+                    "text": "(Lauer et al. 2020)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": "The code used to generate all of the data presented in this study is available on Github (https://github.com/HAHerrmann/NetworkEpidemics) and Zenodo (DOI: 10.5281/zenodo.3736466). Figure S1 : Example of a degree distribution of a Barabasi and Albert (1991) graph generated using the igraph package (Version 0.8.0) in Python (Version 3.6.9) with a power of 1 and an edge per node connectivity of 2. Nodes with a degree greater than 8 (i.e. nodes with a degree to the right of the red cut-off) are considered hubs and make up less than 10% of the total number of nodes. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 230,
+                    "end": 256,
+                    "text": "Barabasi and Albert (1991)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 180,
+                    "end": 189,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data Availability"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20050468 doi: medRxiv preprint Figure S3 : Duration of peak infection and the day at which the greatest number of nodes are infected when running the SIR model on three different networks (Scale-free: the original network; Mitigated Hub: where edges were removed from the scale-free network such that all nodes have no more than 8 connections; Mitigated Random: where the same number of edges were removed randomly). (A) the average total number of days for which more than 1% of the population is infected. (B) the average number of days after onset of the infection when the greatest number of nodes is infected at the same time. Both (A & B) were calculated from 5,000 model runs; error bars show the respective standard deviation. Only outcomes where herd immunity was achieved were considered.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 146,
+                    "text": "Figure S3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Supplementary Materials"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 96,
+                    "end": 101,
+                    "text": "/2020",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Supplementary Materials"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "SARS-CoV-2 vaccines: status report. Immunity",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Amanat",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Krammer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.10116/j.immuni.2020.03.007"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Vaccination and herd immunity to infectious diseases Nature",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "May",
+                    "suffix": ""
+                }
+            ],
+            "year": 1985,
+            "venue": "",
+            "volume": "318",
+            "issn": "",
+            "pages": "323--329",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "How will country-based mitigation measures influence the course of the COVID-19 epidemic?",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Klinkenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hollingsworth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "931--934",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The Mathematical Theory of Infectious Diseases and Its Applications",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "T J"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Emergence of scaling in random networks Science",
+            "authors": [
+                {
+                    "first": "A.-L",
+                    "middle": [],
+                    "last": "Barabasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Albert",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "",
+            "volume": "286",
+            "issn": "",
+            "pages": "509--512",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Scale-free networks: A decade and beyond",
+            "authors": [
+                {
+                    "first": "A.-L",
+                    "middle": [],
+                    "last": "Barabasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Science",
+            "volume": "325",
+            "issn": "",
+            "pages": "412--413",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Empirical temporal networks of face-to-face human interactions. The Euro",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Barrat",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cattuto",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Colizza",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gesualdo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Isella",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Pandolfi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-F",
+                    "middle": [],
+                    "last": "Pinton",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rava",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rizzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Romano",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Stehle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Tozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Van De Broeck",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Phys. J. of Spec. Top",
+            "volume": "222",
+            "issn": "",
+            "pages": "1295--1309",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "The early phases of the COVID-19 outbreak in Lombardy, Italy. DOI",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cereda",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Tirani",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Rovida",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Demicheli",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ajelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Poletti",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Trentini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Guzzetta",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Marziano",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Barone",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Magoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Deandrea",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Diurno",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lombardo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Faccini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bruno",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Pariani",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Grasselli",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Piatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gramegana",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Baldanti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Melegaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Merler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.09320"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Modelling transmission and control of the COVID-19 pandemic in Australia",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Harding",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zachreson",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Cliff",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Prokopenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.10218"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Dynamics of person-to-person interactions from distributed RFID sensor networks",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cattuto",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Van Den Broeck",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Barrat",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Colizza",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-F",
+                    "middle": [],
+                    "last": "Pinton",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "PLoS One",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Halting viruses in scale-free networks",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Dezso",
+                    "suffix": ""
+                },
+                {
+                    "first": "A.-L",
+                    "middle": [],
+                    "last": "Barabasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Phys. Env",
+            "volume": "65",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Epidemic threshold in structured scale-free network",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eguiluz",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Klemm",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Phys. Rev. Lett",
+            "volume": "89",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Dynamics of social networks",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Friemel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Procedia -Soc. Behav. Sc",
+            "volume": "22",
+            "issn": "",
+            "pages": "2--3",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Temporal dynamics in viral shedding and transmissibility of COVID-19",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H.Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "C L"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Mo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.15.20036707"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Feasibility of controlling COVID-19 outbreaks by isolation of cases and contacts",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "8",
+            "issn": "",
+            "pages": "488--496",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Epidemic spreading in scale-free networks with community structure",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "J. Stat. Mech",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Modeling the control of COVID-19: Impact of policy interventions and meteorological factors",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.02985"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "A contribution to the mathematical theory of epidemics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proc. R. Soc. Lond. A",
+            "volume": "115",
+            "issn": "",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Early dynamics of transmission and control of COVID-19: A mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Inf. Dis",
+            "volume": "",
+            "issn": "20",
+            "pages": "30144--30148",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Herd immunity -estimating the level required to halt the COVID-19 epidemics in affected countries",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kwok",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Y S"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. of Infect",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2020.03.027"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "COVID-19 in Italy: Momentous decisions and many uncertainties The Lancet Global Health",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lazzerini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Putoto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2214-109X(20)30110-8"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "The incubation period of Coronavirus disease 2019 (COVID-19) from publicly reported confirmed cases: Estimation and Application",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Meredith",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Azman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Reich",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lessler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Intern Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-0504"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Scaling features in the spreading of",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "COVID-19.DOI:arXiv:2002.09199"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Analysis of potential risk of COVID-19 infections in China",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jin",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Immune responses in COVID-19 and potential vaccines: Lessons learned from SARS and MERS epidemic. Asain Pac",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Pompetchara",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ketloy",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Palaga",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Allergy Immunol",
+            "volume": "38",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "(eds) Modelling, Estimation and Control of Networked Complex Systems",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Piccardi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Casagrandi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chiuso",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fortuna",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frasca",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rizzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Schenato",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Management strategies in a SEIR model of COVID 19 community spread",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Radulescu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Cavanagh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Mathematical modeling of epidemic disease",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sameni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A simple stochastic SIR model for COVID-19 infection dynamics for Karnataka: Learning from Europe",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Simha",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Prasad",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Narayana",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.11920"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "COVID-19: epidemiology, Evolution, and Cross-Disciplinary Perspectives",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "W.-T",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gairu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Suchard",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Veit",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Trends in Molecular Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.molmed.2020.02.008"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Epidemic spreading on complex networks with community structure",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Stegehuis",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Van Der Hofstad",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S H"
+                    ],
+                    "last": "Van Leeuwaarden",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat. Sci. Rep",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Social Network Analysis: Methods and Applications",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wasserman",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Faust",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China; a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Characterizing large-scale population's indoor spatio-temporal interactive behaviors",
+            "authors": [
+                {
+                    "first": "Y.-Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Proc. ACM SIGKDD Int. Work. Urban Comp",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2346496.2346501"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Social interactions model and adaptability of human behaviour",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bianconi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Front. Physiol",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Modeling the epidemic dynamics and control of COVID-19 outbreak in China",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chen",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Quantitative Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s40484-020-0199-0"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Fractal kinetics of COVID-19 pandemic",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Ziff",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ziff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.02.16.20023820"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Population dynamics showing the number of infected (I, red), susceptible (S, blue) and removed (R, green) nodes in the network over time. The SIR model was run using: (A; Scale-free) the original scale-free network, (B; Mitigation Hub) the mitigated network where all nodes have 8 or less connections, and (C; Mitigation Random) the mitigated network where reactions were randomly removed. 100 model simulations were run for 120 days.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Bar charts of the possible model outcomes. (A) final states (R -removed; S -susceptible) of the model solutions of the three networks (Scale-free: the original network; Mitigated Hub:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Illustrative examples of the two possible model outcomes. Removed (i.e. recovered or passed away) nodes are shown in green and susceptible nodes are shown in blue. For clarity we are showing a network with only 100 nodes. (A) No herd immunity is achieved because the spread of the virus ceases after infecting only two nodes. (B) Herd immunity is achieved and the spread of the virus ceases because the majority of nodes are removed and cannot be reinfected.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "HAH is supported by a Biotechnology and Biological Sciences Research Council (BBSRC) Doctoral Training Partnership stipend (BB/M011208/1). We thank Alexander L. Herrmann for valuable discussions on the topic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

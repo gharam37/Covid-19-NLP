@@ -1,0 +1,712 @@
+{
+    "paper_id": "8dee161407ddfebbc03bb5440591604d581ee90a",
+    "metadata": {
+        "title": "Covid-19 clinical data analysis using Ball Mapper",
+        "authors": [
+            {
+                "first": "Pawel",
+                "middle": [],
+                "last": "Dlotko",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Swansea University",
+                    "location": {
+                        "postCode": "SA8 1EN",
+                        "settlement": "Bay Campus, Swansea",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Simon",
+                "middle": [],
+                "last": "Rudkin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Swansea University",
+                    "location": {
+                        "postCode": "SA8 1EN",
+                        "settlement": "Bay Campus, Swansea",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In this note we provide a result of analysis of blood test data from patients with SARS-Cov-2 using Ball Mapper Algorithm. We observe that patients with the virus and in particularly patients who end up in Intensive Care Unit have quite narrow values of those parameters. Please note that this is a preliminary work and it need to be validated on much larger dataset which we are trying to acquire at the moment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "This is a work in progress. We share the results now hoping that they may be useful for people doing similar type of analysis to ours. If you have any questions or comments, please email us. Please note that this paper will be edited, and it is far from its final version Covid-19 rapidly becoming established as the modern global pandemics of the twenty first century. It is currently causing a large number of deaths, serious social distraction and major economical losses in the world especially in the Western Europe and the USA.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To response this major treat word-wide scientific community is mobilising to use scientific methods to fight this pandemic. In this note we will analyse the clinical data made available by Hospital Israelita Albert Einstein in Sao Paulo, Brasil. The anonymyzed dataset is provided at Data4u (2020) .",
+            "cite_spans": [
+                {
+                    "start": 284,
+                    "end": 297,
+                    "text": "Data4u (2020)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the analysis we will use methods of Topological Data Analysis. Starting from pioneering works as in Carlsson (2009) and Nicolau et al. (2011) we will build up on the recent developement presented in D lotko (2019a) to localize clusters of patients that may be important from the perspective of a healthcare provider. We demonstrate that within the measurements of 16 major blood characteristics there is significant information to reliably classify those patients who will require ICU treatment, isolate those spaces where Covid-19 is most active and hence obtain a quick forecast of the likely care requirements of a presenting individual.",
+            "cite_spans": [
+                {
+                    "start": 103,
+                    "end": 118,
+                    "text": "Carlsson (2009)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 123,
+                    "end": 144,
+                    "text": "Nicolau et al. (2011)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The available dataset is composed of the following data collumns: 19. Red blood cell distribution width (RDW), ranging between -1.598094344 and 6.982183933.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dataset"
+        },
+        {
+            "text": "In this work we will use variables from columns 1 as well as 6-20 as a characteristics/descriptor of a patient. Our target will be to locate any clusters of patients with particularly high value of variable 2 (positively of SARS-Cov-2 result), patients that have been admitted to a regular ward, semi intensive or intensive care unit. For the purpose of this study we will use Ball Mapper algorithm D lotko (2019a) and its public domain implementation D lotko (2019b) available through CRAN repository. To make the obtained results reproducible, all the code that have been used, will be presented in this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dataset"
+        },
+        {
+            "text": "In order to reproduce the results of this paper the Reader should install R language R Core Team (2019) and the BallMapper package D lotko (2019b). Subsequently the dataset is to be downloaded from the Kaagle webpage Data4u (2020) . This dataset is available in the format of Microsoft Exel. For the fuhrer processing it should be stored as a CSV file.",
+            "cite_spans": [
+                {
+                    "start": 217,
+                    "end": 230,
+                    "text": "Data4u (2020)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Dataset"
+        },
+        {
+            "text": "The Ball Mapper algorithm, inspired by the work in Carlsson (2009) , is a tool to produce a topological faithful representation of high dimensional dataset that can be visualized and explored in two dimensions. To achieve this aim, an input collection of points P together with a distance between points d, is covered with a collection of balls of a radius > 0. The centers of balls c 1 , . . . , c n are selected from the points of P in a greedy way as described in D lotko (2019a).",
+            "cite_spans": [
+                {
+                    "start": 51,
+                    "end": 66,
+                    "text": "Carlsson (2009)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ball Mapper and TDA"
+        },
+        {
+            "text": "The fact that the whole point cloud P is covered by balls of a radius centered in c 1 , . . . , c n implies that for every x \u2208 P there exist i \u2208 {1, . . . n} such that d(x, c i ) \u2264 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ball Mapper and TDA"
+        },
+        {
+            "text": "Given such a cover an abstract graph is constructed in the following way: Vertices corresponds to the centers of balls c 1 , . . . , c n . An edge is placed between vertices c i and c j for i, j \u2208 {1, . . . , n} if there exist p \u2208 P such that d(p, c i ) \u2264 and d(p, c j ) \u2264 . In other words, the point p is covered jointly by the ball centered in c i and the ball centered in c j . The graph obtained as described above is called a Ball Mapper graph. Its layout is a manifestation of the layout of the high dimensional point could P . Sizes of vertices in its visualization will correspond to the number of points covered by the corresponding ball.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ball Mapper and TDA"
+        },
+        {
+            "text": "In this experiment the variables 1 and 6-20 will constitute the point cloud P used to create the Ball Mapper graphs analyzed in this paper. A standard Euclidean distance between points will be used.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ball Mapper and TDA"
+        },
+        {
+            "text": "Our task is to present how the predictive variables 2, 3, 4 and 5 (SARS-Cov-2 result, standard ward, semi intensive care and intensive care admission) changes over P by examining how they change over the obtained Ball Mapper graph. This will be achieved by the following procedure: every vertex of the Ball Mapper graph corresponds to a ball B(c i , ). Let us take P i = B(c i , )\u2229P . The value of the ball, and therefore a point in the Ball Mapper graph, is determined as an average of value of the characteristic (one of the variables 1-5) in P i . This value will be presented using colour scale, where red colours means low values and violet means high values of the predictive variable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ball Mapper and TDA"
+        },
+        {
+            "text": "As one can observe in the Section 2 there is no major variation between ranges of variables except from the first variable. Therefore in this section we will use the original data from Data4u (2020) without any normalization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Raw Data"
+        },
+        {
+            "text": "In the first step the data are read into an array into R. We will also remove the rows with missing values and convert categorical variable in the column 2 to a numeric one. intensive_care <-data[,5] covid_and_icu <-covid_test*intensive_care pt_cloud<-cbind(data[,1],data[,6:19])",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Raw Data"
+        },
+        {
+            "text": "Give the prepared datasets, we can create the initial Ball Mapper plots using the following command. The radius set to 7 was chosen to belance the level of detail in the plot with the need for a tangible discussion of the evidence. BM1 <-BallMapper::BallMapper(as.data.frame(pt_cloud),as.data.frame(covid_test),7) BallMapper::ColorIgraphPlot(BM1,seed_for_plotting = 123)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Raw Data"
+        },
+        {
+            "text": "As a result the following plot presented in the Figure 1 is obtained. The obtained Ball Mapper graph suggest that the patients, which are likely to have positive result for SARS-Cov2, have quite similar values coming from the blood tests. It is straightforward to give the values of all the used variables for clinical practitioners. As an example, we will consider all the balls 1 and 10 it can be achieved by the following instructions:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 48,
+                    "end": 56,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Raw Data"
+        },
+        {
+            "text": "pts <-BallMapper::points_covered_by_landmarks( BM1 , c(1,10) ) subset <-data [pts,] 4 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 83,
+                    "text": "[pts,]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Raw Data"
+        },
+        {
+            "text": "The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "av <-numeric( length(subset) ) stdev <-numeric( length(subset) ) for ( i in 1:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The obtained values of average and standard deviations are summarized in the array below: In out second experiment we will use the value of the column 5 (determining if a patient was admitted to an intensive care unit). For that purpose the following code is used:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "BM2 <-BallMapper::BallMapper(as.data.frame(pt_cloud),as.data.frame(intensive_care),7) BallMapper::ColorIgraphPlot(BM2,seed_for_plotting = 123)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The results are presented in the Figure 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 33,
+                    "end": 41,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "As one can observe, the patients in the balls 14,23,24,24 but also 20 and 13 are likely to end up in the ICU. It is worth noticing that those balls are far away in space, and therefore they represent patients with different values of blood parameters that are used to construct the Ball Mapper graph. Once gain, it is possible to recover the precise values of be blood tests parameters and use them to assess the risk for newly admitted patients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Let us not consider the patients which are tested positively for SARS-Cov-2 that required treatment in Intensive Care Unit. To visualize their location the following code is to be used:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "BM3 <-BallMapper::BallMapper(as.data.frame(pt_cloud),as.data.frame(covid_and_icu),7) BallMapper::ColorIgraphPlot(BM3,seed_for_plotting = 123) 5 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061374 doi: medRxiv preprint Figure 2 : Ball Mapper plot for not normalized dataset with radius 7 colored by the variable determined if the patient was admitted to a Intensive Care Unit (ICU).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 107,
+                    "end": 115,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6"
+        },
+        {
+            "text": "The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. Figure 3 is obtained. As one can observe, Ball number 1 contains a lot of such patients, but also ball number 16 and 25 is clearly visible and majority of patients over there wil require ICU. In our next exercise we will focus on the patients which have positive values of tests for SARS-Cov2. To obtain them the following code is used: Let us observe which of those patients end up in normal ward, semi intensive and intensive care. For that purpose the following code is used. Once again, the value = 5 is chosen to optimise the information tractability trade off.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 203,
+                    "end": 211,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "BM3 <-BallMapper::BallMapper(as.data.frame(covid_positive_pt_cloud), as.data.frame(covid_positive_regular_ward ),5) BallMapper::ColorIgraphPlot(BM3,seed_for_plotting = 123) BM4 <-BallMapper::BallMapper(as.data.frame(covid_positive_pt_cloud), as.data.frame(covid_positive_semi_intensive_care ),5) BallMapper::ColorIgraphPlot(BM4,seed_for_plotting = 123) BM5 <-BallMapper::BallMapper(as.data.frame(covid_positive_pt_cloud), as.data.frame(covid_positive_intensive_care ),5) BallMapper::ColorIgraphPlot(BM5,seed_for_plotting = 123)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The results are presented in the Figure 4 As one can observe, the patients in the Ball 10 almost entirely end up in the intensive care unit as well as 20% of patients from balls 2, 7, 8. Patients from balls 1, 4, 11 will need at most semi intensive care.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 33,
+                    "end": 41,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In the second version of the paper, guided by a medical expert, we will provide combinations of variables that is characteristic for patients with SARS-Cov-2 as well as the characteristics of patients that will need an intensive care unit. 8 Unfortunately the dataset do not provide the information about the patients who died (except that there are such patients in the dataset). Consequently we are not able to locate them in the global picture and we cannot assess the risk of death of a patient. Consequently we cannot determine if there is a combination of blood results that is characteristics for those patients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In this section we will revisit the experiments from the Section 4 with all the columns normalized to the interval [0, 1]. This will be performed by constructing a linear map that transform the minimal value in the column to 0 and maximal value in the column to 1. This normalization may be important for the following reason: as one can see by the ranges of variables described in Section 2 it may be the case that not normalized data are skewed towards more senior patients as the value of the first columns is, for them, considerably larger than the values of the other columns.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "To normalize the data the following code is to be used:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "pt_cloud_normalized <-BallMapper::normalize_to_min_0_max_1(data)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "Given the normalized data we can now see where the SARS-Cov-2 patients as well as the patients that will require a intensive care unit are located in this normalized dataset. Note that, as usual, the value of the parameter is set to 1.2 in this instance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "BM6 <-BallMapper::BallMapper(as.data.frame( pt_cloud_normalized ), as.data.frame(covid_test),1.2) BallMapper::ColorIgraphPlot(BM6,seed_for_plotting = 123) BM7 <-BallMapper::BallMapper(as.data.frame( pt_cloud_normalized ), as.data.frame(intensive_care ),1.2) BallMapper::ColorIgraphPlot(BM7,seed_for_plotting = 123)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "In the Figure 5 we can see quite different picture compared to the one presented in Figure 1 . This time the patients which are SARS-Cov-2 positive values are all located in balls 5,6, 10, 12, 18, while ball 10 contain only patients with positive values of tests. It is worth remarking that the patients with the positive values of tests are located close to a large ball number 1 that contain no patients with SARS-Cov-2.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 7,
+                    "end": 15,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 84,
+                    "end": 92,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Normalized data"
+        },
+        {
+            "text": "This observation may indicate some relation between blood results and SARS-Cov-2 that may be useful to locate high risk groups and speed up diagnosis using only standard blood tests. Figure 6 show which patients required an Intensive Care Unit (ICU). As one can observe, amount the patients tested positively for SARS-Cov-2 the patients in the balls 10 and 18 have required ICU, but patients from other balls did not. Please note that the patients in Balls 3, 4 and 15 also required ICU, however those balls did not contain majority of SARS-Cov-2 patients. We believe that this is because the data describe all the patients in the hospital, not only ones with SARS-Cov-2.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 183,
+                    "end": 191,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Normalized data"
+        },
+        {
+            "text": "To locate the patients with SARS-Cov-2 that were admitted to ICU the following code can be used:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": "BM6 <-BallMapper::BallMapper(as.data.frame( pt_cloud_normalized ), as.data.frame(covid_and_icu),1.2) BallMapper::ColorIgraphPlot(BM6,seed_for_plotting = 123) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized data"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "10"
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101/2020.04.10.20061374 doi: medRxiv preprint Figure 6 : Ball Mapper graph for normalized data colored by the patients who required Intensive Care Unit.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 85,
+                    "text": "//doi.org/10.1101/2020.04.10.20061374",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 108,
+                    "end": 116,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 The results can be found in the Figure 7 . Once again, we see clear patterns in balls 10 and 18 of patients tested positively for SARS-Cov-2 that require Intensive Care treatment. In the medical practice, they need to be given special attention.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 65,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 126,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In the final part of this analysis we will therefore restrict only to patients diagnosed with SARS-Cov-2. To obtain them the following code is to be used: Given those datasets let us locate the patients in regular ward, Semi Intensive and Intensive Care Units. They can be localized using the following code. As usual, the value = 1.1 was obtained for the best balance of information and readability.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "BM8 <-BallMapper::BallMapper(as.data.frame( normalized_covid_positive_data ),",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "12"
+        },
+        {
+            "text": "The copyright holder for this preprint The results are presented in the Figure 8 The analysis in the Figure 8 indicate a hierarchy of patients:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 80,
+                    "text": "Figure 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 101,
+                    "end": 109,
+                    "text": "Figure 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "\u2022 Those within Ball 2 are very likely to stay in the regular ward.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "\u2022 Patients in ball 4 and 5 will probably need semi-intensive care.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "\u2022 Patients in balls 3 and 6, especially in 6, will need full ICU.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The presented analysis of the normalized data indicate that blood-based bio-markers may allow to determine, at early stage, patients with higher risk of being tested positively for SARS-Cov-2 as well as those, who may require ICU.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In the presented note we have analyzed the data provided in Data4u (2020) using methods of Topological Data Analysis, most notably Ball Mapper. The presented visualization indicate that the patients that may require special care (those with SARS-Cov-2 as well as those who may require ICU) are located in distinct regions of space. Given this, it seems to be possible to build a predictive system that would allow, for a given patient admitted to the hospital, to put him into appropriate risk factor groups. That may allow the health care providers more efficient use of resources and help the patient to optymize the treatment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "13"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 96,
+                    "end": 101,
+                    "text": "/2020",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "13"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Topology and data",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Carlsson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "46",
+            "issn": "",
+            "pages": "255--308",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Diagnosis of covid-19 and its clinical spectrum",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Data4u",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Ball mapper: a shape summary for topological data analysis",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "D Lotko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1901.07410"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "BallMapper: Create a Ball Mapper graph of the input data",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "D Lotko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Topology based data analysis identifies a subgroup of breast cancers with a unique mutational profile and excellent survival",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nicolau",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carlsson",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "108",
+            "issn": "17",
+            "pages": "7265--7270",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "R Core Team",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Ball Mapper plot for not normalized dataset with radius 7 colored by the result of Covid-19 test.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Ball Mapper plot for not normalized dataset with radius 7. Colouration by the patientest that are tested positively for SARS-Cov-2 that required Intensive Care treatment.7.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "result the Ball Mapper plot presented in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Ball Mapper graph for normalized data colored by the result of test for SARS-Cov-2.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Ball Mapper graph for normalized data colored by the patients who are tested positively for SARS-Cov-2 and required Intensive Care Unit treatement.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Patient age (integer quantile), ranging between 0 and 19, 2. SARS-Cov-2 exam result -binary variable having values positive or negative, 10. Red blood Cells, ranging between -3.970608234 and 3.645706177, 11. Lymphocytes, ranging between -1.865069628 and 3.764099598, 12. Mean corpuscular hemoglobin concentration (MCHC), ranging between -5.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "covid_positive_data <-data[data[,2]==1,] covid_positive_regular_ward <-covid_positive_data[,3] covid_positive_semi_intensive_care <-covid_positive_data [,4] covid_positive_intensive_care <-covid_positive_data [,5] covid_positive_pt_cloud<-cbind(covid_positive_data [,1], covid_positive_data[,6:19])",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "normalized_covid_positive_data <-pt_cloud_normalized[pt_cloud_normalized $V2==1,] normalized_covid_positive_regular_ward <-normalized_covid_positive_data [,3] normalized_covid_positive_semi_intensive_care <-normalized_covid_positive_data [,4] normalized_covid_positive_intensive_care <-normalized_covid_positive_data [,5] normalized_covid_positive_pt_cloud<-cbind(normalized_covid_positive_data[,1], normalized_covid_positive_data[,6:19])",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": ". https://doi.org/10.1101//doi.org/10. /2020 BM10 <-BallMapper::BallMapper(as.data.frame( normalized_covid_positive_data ), as.data.frame(normalized_covid_positive_intensive_care ),1.1) BallMapper::ColorIgraphPlot(BM10,seed_for_plotting = 123)",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

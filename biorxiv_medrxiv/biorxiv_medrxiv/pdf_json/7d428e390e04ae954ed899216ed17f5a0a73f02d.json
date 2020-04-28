@@ -1,0 +1,1507 @@
+{
+    "paper_id": "7d428e390e04ae954ed899216ed17f5a0a73f02d",
+    "metadata": {
+        "title": "Modelling strategies to predict hospital demand during the COVID-19 outbreak in Bogot\u00e1, Colombia",
+        "authors": [
+            {
+                "first": "Claudia",
+                "middle": [],
+                "last": "Rivera-Rodriguez",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "B",
+                "middle": [
+                    "Piedad"
+                ],
+                "last": "Urdinola",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": ")",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "This paper presents a prediction of the total number of ICU and regular beds that will be needed during the pandemic COVID-19 for Bogot\u00e1-Colombia. We use a SEIR model that includes three different compartments of infection: those who can stay at home, those in regular hospital beds and those in need of ICU treatment. The model allows for a time varying transmission rate which we use to incorporate the measures introduced by the government over the period of one year. The model predicts that by mid July 2020, the city will reach the peak of the epidemic with a total of 22 526 prevalent ICUs needed and 84 816 regular hospital beds needed. By the end of May 2020, the number of patients that need ICUs will overpass the current capacity set at 2000 beds for ICU hospital beds in the city. The model predicts that the death toll by the same date will reach 1752 people and the number of cases will be 54652 inhabitants by then. We provide a Shiny app available in https://claudia-rivera-rodriguez.shinyapps.io/shinyappcovidclinic/.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The original values in the app reproduce the results of this paper, but the parameters and starting values can be changed according to the users needs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The novel coronavirus disease 2019 (COVID-19) epidemic has spread from China to almost all countries in the world by April 1st 2020. It arrived to Colombia on March 6, 2020 from an imported case and evolved to local cases of transmission. In order to reduce the impact of the COVID-19 outbreak 10 in Bogot\u00e1, the largest city in Colombia, a local lock-down was introduced on March 15, 2020, followed by a national lock-down on March 19, 2020. Colombia, like many developing nations, does not have a strong health system able to respond to a pandemic of the magnitude of the present one. Neither in terms of infrastructure, medical personnel nor in terms of logistic preparedness or 15 technical capacities to arrange all medical needed resources. The latter is the main motivation to create a model that allows particular clinics and hospitals to estimate the number of beds in the respirators needed to attend during the peak days. Specifically, we are interested in estimating the number of patients that require Intensive Care Units-ICU care (critical), and the number of patients 20 that require hospital care (severe), but not ICU care.",
+            "cite_spans": [
+                {
+                    "start": 294,
+                    "end": 296,
+                    "text": "10",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 681,
+                    "end": 683,
+                    "text": "15",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As of April 04, 2020, Colombia has only carried out 460 test per million people (https://infogram.com/, https://ourworldindata.org/covid-testing), not have the testing facilities or production of biotechnology inputs to run the necessary number of tests required to detect all active cases of the virus. Additionally, on March 26 one of the two available machines used to run the detection tests broke, leading to a reduction on its production and causing delays in the total number of cases detected. One of the biggest concerns is that the data may 30 not inform well how many hospital beds (and ICU beds) will be needed during the outbreak peak. In fact, one of the main caveats for this study is that the official data is very likely to be under estimated as only patients with at least one symptom or that have had contact with another detected case have been tested [1]. Moreover, we are assuming an overall probability of requiring ICU 35 treatment, while sex, age and co-morbidity (diabetes, hypertension, acute respiratory diseases and depressed immune system) will highly determine differential probabilities, that we are not taken into account.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We implemented a SEIR model (Susceptible -Exposed -Infectious -Recovered) to forecast the number of cases in Bogot\u00e1, the largest city in Colombia 40 and the one with the most numbers of cases to date. The model includes three different compartments of infection: Infected that require ICU care, Infected that require hospital care, but not ICU care and Infected that only require Home care. The model accounts for the effect of control strategies introduced by the government by changing the transmission rate over time. We developed 45 a Shiny app that displays the results from the model (https://claudia-riverarodriguez.shinyapps.io/shinyappcovidclinic/). The initial parameters are the ones used in this work. However, users can change the parameters according to their needs. The Shiny app can be used as a forecast tool for specific clinics by specifying the market share (percentage) of the population corresponding to 50 the clinic. During the outbreak some clinics should be ready to see an increase in their market share because they may have more resources, such as ICU beds and the model allows for each clinic to adjust it. The model can be used for specific cities or towns, the user only needs to change the population size, and 3 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . some parameters of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The results from our assumptions show that Bogot\u00e1 city will need over 2000 beds, the Mayor's target number of ICUs, by the end of May 2020. By the last week of March there were 300 beds available and plans to expand it to reach 2000. This number could be well below Bogot\u00e1's needs based on our projections.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "55"
+        },
+        {
+            "text": "SIR methods (Susceptible-Infected-Recovered) became widespread in the prediction of communicable diseases since its creation in the early 20th century [2] . Several authors have provided forecasting models using this method as presented in [3], but SIR models heavily rely on initial strong assumptions.",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 154,
+                    "text": "[2]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "60"
+        },
+        {
+            "text": "SEIR models are a variation that relaxes some of those assumptions, includ-65 ing closed populations and account for communicable diseases that transmit in transitions, starting from the entire population (Susceptible) that incubate the disease for a period of time (Exposed) making the person infected but not infectious (I) and finally become Recovered (R) [4] . Each transition holds a rate based on what is observed from a population, that is a susceptible person gets 70 infected at a transmission rate once in contact with an infected individual, and become exposed. Once exposed transition to infected happens at a rate that captures the inverse of the mean latent period of the disease. The final transition is recovery with permanent immunity. We chose this model to estimate bed demands per institution in Colombia separating regular and ICU (Intensive 75 Care Units) beds, which allows a distinction for each type that reflects differential transition rates, preparedness and logistics for health providers. Similar works have been used to forecast similar needs in Europe and United States of America, but none has been done for a developing country, such as Colombia [5, 6, 7] . ",
+            "cite_spans": [
+                {
+                    "start": 359,
+                    "end": 362,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1180,
+                    "end": 1183,
+                    "text": "[5,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1184,
+                    "end": 1186,
+                    "text": "6,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1187,
+                    "end": 1189,
+                    "text": "7]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "60"
+        },
+        {
+            "text": "We fitted a deterministic SEIR model over 12 months, for practical purposes it is important to bear in mind that policies change along this time scenario and 4 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20065466 doi: medRxiv preprint therefore the models must be updated. The population is divided into Susceptible (S), Exposed (E), Infected (I), recovered (R), and D (death). Those Infected 85 (I) are subdivided into three compartments: I U , I NoU , I H which, respectively, denote infected individuals that require ICU care, infected individuals that require hospital care, but not ICU, and infected individuals that only require home care. We divided the population into susceptible (S), exposed (E), infected ICU (IU), infected in hospital but not ICU (INoU ), infected that require only home care (IH ), recovered (R) and dead subjects (D) individuals. Infected subjects are IU, INoU or IH with probabilities pU, pNoU and pH respectively. The term 1/\u03ba is the mean incubation period and 1/\u03b3U, 1/\u03b3NoU, 1/\u03b3H are the daily probabilities that the respective patients recover. d is the probability of death for ICU patients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "One implication of our model is that it does not consider events such as births, and it only considers deaths due to COVID-19. Note that we assume 90 that patients transit from E to ICU care directly, therefore we assume that the average time from (E) to (I U ) is larger than the average time from (E) to (I NoU ) and subsequently this is larger than the average time from (E) to (I H ). These transitions and considerations are summarized in figure 1. We also assume that only patients in ICU die, while other infected patients recover. The total 95 population of Bogot\u00e1 is 7.4 million, but we assume an initial population size of 8 million to account for its metropolitan area because people commute to work and study daily from those surrounding towns to Bogot\u00e1 Capital District.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20065466 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "We describe the epidemic transitions through the model",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "To model the impact of inter-100 ventions introduced by the government, we allow the transmission rate to be a step-wise function \u03b2(t), with 3 steps at t 0 , t 1 and t 2 . The time t 0 (2020-03-06) corresponds to the case when no actions have been taken, t 1 (2020-03-29) is 10 days after the national lock-down was introduced and t 2 (2020-04-10) is the date when the lock-down measures are eased but other strategies such as social dis-105 tance are implemented. We estimate \u03b2(t 0 ) from the basic reproduction number",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "The terms p U , p NoU and p H denote the probabilities that case requires ICU care, hospital non-ICU care and only home care, respectively. Note that p U + 110 p NoU + p H = 1. To estimate these probabilities, we follow [9] , assuming that critical cases require ICU, severe cases require hospital care, but not ICU and cases at home are mild. Their original estimates are p U = 0.05, p NoU = 0.14 and p H = 0.81, but we assume that 50% of cases at home are asymptomatic and therefore not detected. We recalculated the probabilities to be p U = 0.026, 115 p NoU = 0.134 and p H = 0.84 The parameter \u03ba is the daily probability of an exposed individual becoming infected, and \u03b3 U , \u03b3 NoU , \u03b3 H are the daily probabilities 6 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "of the corresponding infected individuals becoming recovered or dead. The probability d denotes the probability that an infected ICU individual dies. Table   1 displays the parameters of the models, their interpretation and sources The ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 150,
+                    "end": 159,
+                    "text": "Table   1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "5"
+        },
+        {
+            "text": "Value Source \u03b2(t)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Symbol Definition"
+        },
+        {
+            "text": "Transmission rate Stepwise function [10, 8] \u03ba Daily probability of an exposed individual becoming infected: \u03ba = 1/\u03b1, with \u03b1 being the mean incubation period 1/5.2 [11] p U Probability of patient being ICU 0.026 [9] p NoU Probability of patient being in Hospital, but not ICU 0.134 [9] p H Probability of patient being mild/at home 0.84 [9] \u03b3 U Daily probability that an infected individual in ICU recovers, when the mean infection period is b U , \u03b3 U = 1/b U 1/7 [12, 11, 13] \u03b3 NoU Daily probability that an infected individual in Hospital, but no ICU recovers, when the mean infection period is b NoU , \u03b3 NoU = 1/b NoU 1/5 [11, 13, 14, 12] \u03b3 H Daily probability that an infected individual in Hospital, but no ICU recovers, when the mean infection period is b H , \u03b3 H = 1/b H 1/4 [11, 13, 14, 12] d Probability of dying given that patient is in ICU 0.50 [9] 7 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 36,
+                    "end": 40,
+                    "text": "[10,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 41,
+                    "end": 43,
+                    "text": "8]",
+                    "ref_id": null
+                },
+                {
+                    "start": 163,
+                    "end": 167,
+                    "text": "[11]",
+                    "ref_id": null
+                },
+                {
+                    "start": 211,
+                    "end": 214,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 281,
+                    "end": 284,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 336,
+                    "end": 339,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 463,
+                    "end": 467,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 468,
+                    "end": 471,
+                    "text": "11,",
+                    "ref_id": null
+                },
+                {
+                    "start": 472,
+                    "end": 475,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 624,
+                    "end": 628,
+                    "text": "[11,",
+                    "ref_id": null
+                },
+                {
+                    "start": 629,
+                    "end": 632,
+                    "text": "13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 633,
+                    "end": 636,
+                    "text": "14,",
+                    "ref_id": null
+                },
+                {
+                    "start": 637,
+                    "end": 640,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 781,
+                    "end": 785,
+                    "text": "[11,",
+                    "ref_id": null
+                },
+                {
+                    "start": 786,
+                    "end": 789,
+                    "text": "13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 790,
+                    "end": 793,
+                    "text": "14,",
+                    "ref_id": null
+                },
+                {
+                    "start": 794,
+                    "end": 797,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 855,
+                    "end": 858,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Symbol Definition"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20065466 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Symbol Definition"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . number of exposed, infected and deceased the 2000 beds capacity is overrun one day before.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "This document presents a prediction of the total number of ICU and regular 155 beds the would be needed during the pandemic COVID-19 for Bogot\u00e1-Colombia.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We use a SEIR model that differentiates between three types of infected patients: Other than the intrinsic limitations of SEIR models, this prediction model 180 does not account for age and sex distribution of the population but we plan to 10 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "introduce such differences in a future version of the model with an additional mixing including the contact matrices, as the recently national population census in Colombia is available. Also, we have fitted a a model with 2 interventions: a lock-down and mitigation measures, but this can be modified later in time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Neither we accounted for regional differences that in a tropical context relate to weather and climate, because there is no evidence, to date, that the novel coronavirus could or not spread in an homogeneous pattern under certain weather conditions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "185"
+        },
+        {
+            "text": "Finally, we provide a Shiny app available in https://claudia-rivera-rodriguez.shinyapps.io/shinyapp 190 The original values in the app reproduce the results of this paper, but the parameters and starting values can be changed according to the users needs.",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 103,
+                    "text": "190",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "185"
+        },
+        {
+            "text": "COVID-19 has posed too many challenges to health systems around the globe, this model is an useful tool for cities, hospitals and clinics in Colombia 195 that need to prepare for the excess demand of services that a pandemic like this one generates. Unfortunately, the model predicts that by July capacity of the system in Bogot\u00e1 will not be enough. We expect the lock-down rules strength in the future days, so the death toll is not as bad as predicted by this model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14. CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20065466 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "We use the next generation matrix approach to find the basic reproduction number [15, 16] . We estimate \u03b2(t 0 ) from the basic reproduction number. To find R 0 , following [4] , ",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 85,
+                    "text": "[15,",
+                    "ref_id": null
+                },
+                {
+                    "start": 86,
+                    "end": 89,
+                    "text": "16]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 172,
+                    "end": 175,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "The inverse of V is given by ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14. The spectral radio of FV \u22121 is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "Using this, we find that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "When R 0 = 2.5, \u03b2(t 0 ) = 0.5. Our rational for choosing \u03b2(t 1 ) and \u03b2(t 2 ) is as 280 follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "Using the initial \u03b2 0 , we calculate S(t 1 )/N , and we assume that under the lock-down measures R(t) = 1.5 for t 1 \u2264 t \u2264 t 2 , and after the lock-down R(t) = 2 for t > t 2 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "To find \u03b2(t), we assume that R(t) \u2248 \u03b2(t) * \u03c4 S(t)/N . So, we have that 285 \u03b2(t) \u2248 R(t) * N/(\u03c4 * S(t)) So, we have \u03b2(t) = 0.3 for t 1 \u2264 t \u2264 t 2 , and after the lock-down \u03b2(t) = 0.4 for t > t 2 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "16 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.14.20065466 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The kermack-McKendrick epidemic threshold theorem",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "Bulletin of Mathematical Biology",
+            "volume": "53",
+            "issn": "1-2",
+            "pages": "80039--80043",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s0092-8240(05)80039-4"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Forecasting COVID-19 impact on hospital bed-days, ICU-days, ventilator-days and deaths by US state in the next 4 months",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.27.20043752"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "An introduction to mathematical epidemiology",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Martcheva",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Texts in applied mathematics",
+            "volume": "61",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The demand for inpatient and ICU beds for COVID-19 in the US: lessons from chinese cities",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rivers",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Murray",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Toner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.09.20033241"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "COVID-19: Forecasting short term 215 hospital needs in france",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Massonnaud",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Roux",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Cr\u00e9pey",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.16.20036939"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A model to estimate bed demand for COVID-19 related hospitalization",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mcfarlane",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vallon",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Blanchet",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Glynn",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Staudenmayer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schulman",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Scheinker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.24.20042762"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Early dynamics of transmission and control of covid-19: a mathematical mod-225 elling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jit",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Munday",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gimma",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Van Zandvoort",
+                    "suffix": ""
+                },
+                {
+                    "first": "]",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Gibbs",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hellewell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Jarvis",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Clifford",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Quilty",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Bosse",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Abbott",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Klepac",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flasche",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet Infectious Diseasesdoi",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30144-4"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Characteristics of and Important Lessons From the Coronavirus Disease 2019 (COVID-19) Outbreak in China: Summary of a Report of 72314 Cases From the Chinese Center for Disease Control 230 and Prevention",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgoogan",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.2648"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Journal of Travel Medicine",
+            "volume": "27",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/jtm/taaa021"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Evolving epidemiology and transmission dynamics of coronavirus disease 2019 outside hubei province, china: a descriptive and modelling study",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yi",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Longini",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Halloran",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Merler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Viboud",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ajelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet Infectious",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s1473-3099(20)30230-9"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Time-varying transmission dynamics of novel coronavirus pneumonia in 245 china",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Rong",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919787"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Dia-2019 (COVID-19) outbreak in wuhan, china with individual reaction and governmental action",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jit",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Klepac",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flasche",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Clifford",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A B"
+                    ],
+                    "last": "Pearson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Munday",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Abbott",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Gibbs",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rosello",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Quilty",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Jombart",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "93",
+            "issn": "",
+            "pages": "211--216",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2020.02.058"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Reproduction numbers of infectious disease models",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Van Den Driessche",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Infectious Disease Modelling",
+            "volume": "2",
+            "issn": "3",
+            "pages": "288--303",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.idm.2017.06.002"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The construction of 265 next-generation matrices for compartmental epidemic models",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A P"
+                    ],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Journal of The Royal Society Interface",
+            "volume": "7",
+            "issn": "47",
+            "pages": "873--885",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rsif.2009.0386"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Figure 1: We divided the population into susceptible (S), exposed (E), infected ICU (IU), infected in hospital but not ICU (INoU ), infected that require only home care (IH ), recovered (R) and dead subjects (D) individuals. Infected subjects are IU, INoU or IH with probabilities pU, pNoU and pH respectively. The term 1/\u03ba is the mean incubation period and 1/\u03b3U, 1/\u03b3NoU, 1/\u03b3H are the daily probabilities that the respective patients recover. d is the probability of death for ICU patients.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "120 starting values for the model are based on the numbers from Colombia reported by March 28. There where 1009 active cases, 39 recovered and 17 deaths by then in the country. We assume that half of those cases correspond to Bogot\u00e1 [1]. Therefore the model starts with I U0 = p U * 504 = 13, I NoU0 = p NoU * 504 = 68, , I H0 = p H * 504 = 423, E 0 = R 0 * I = 1262, D 0 = 17, R 0 = 39 and S 0 = 7999140 125",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Progress of the epidemic using model (1)Figure 2shows the results for each category the model predicts, ICU and regular hospital beds. Even all the positive measures assumed in the model, we predict that the peak of the epidemic can happen around 2020-07-13. During the epidemic peak, the model predicts that 22541 ICUs will be needed, and 85015 130 non-ICU hospital beds . We predict that the maximum number of prevalent cases will be 536673. With the parameters in the models, the total number of deaths could reach 82536 in 6 months time.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Progress of the epidemic -infected and deaths, results from model (Progress of the epidemic -Infected that require ICU and infected that require regular hospital beds, results from model (1)Figure 3displays a closer picture of those infected and the total number of deaths. We can see that the total number of infected that will need hospital care 135 (ICU and non-ICU) are concernedly high. Additionally,figure ?? shows those infected that will need hospital care, compared to the current number of ICU beds in the city. It shows that the number of ICUs needed will be 22541, i.e. the city has to increase its capacity by 11 times the current amount planned in order to provide care to everyone that needs it. The local authorities in Bogot\u00e1 are 140 planning to have a total of 2000 ICU beds in the city, but the current number is 300. The number 2000 is overrun by mid May/2020, with a death toll of 351 people by then. Unfortunately, the trend keeps on increasing for the following months, which reflects the lack of preparedness for a catastrophe like the current one in Bogot\u00e1 and likely in other similar developing nations.145When we double the number of days of ICU patients to recover in the model, i.e 1/\u03b3 U = 14 days, rather than 7, the number of ICU beds almost double in size. Moreover, if the probability of being an ICU patient p U is reduce, the number of beds is reduced, but even an small increase in this probability will cause a large increase in the number of ICU beds needed during the peak of the 150 epidemic. At last, if we assume an under reporting of 20% both in the initial 9",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "those who can stay at home, those in regular hospital beds and those in need of ICU treatment. With a mean incubation period of 5.2 days and mean infection period of 4 days (for patients at home), 5 days (for patients in regular hospital 160 beds) and 7 days (for patients in ICU). The parameters assumed in the model are for a positive scenario, where the effective reproduction number during the lock-down is assumed to be 1.5, and 2 after the lock-down, when other measures are introduced. We assume that 2.6% of patients require ICU treatment, 13.4% require regular hospital beds, and the rest only require home care. The model 165 allows for a time varying transmission rate which we use to incorporate the measures introduced by the government over the period of 1 year. The model predicts that by mid July, 2020, the city will reach the peak of the epidemic with a total of 22 541 active ICU prevalent cases and 85 015 regular hospital beds needed. 170 By the end of May 2020, the number of patients that need hospitalization will overpass the current planned capacity set at 2000 beds for ICU beds in the city, and the death toll will reach a total of 1752. Unpreparedness of the health system will only increase COVID-19 related and unrelated mortality, as already observed in Italy and other countries. Measures like lock-down have been used 175 in most countries to diffuse the demand for health services due to COVID-19 over time, however it may be insufficient if there are not enough resources to amp the health services in developing nations, such is the case of Colombia, where the need of additional resources are a priority at this point.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "A. Gimma, K. van Zandvoort, S. Funk, C. I. Jarvis, W. J. Edmunds, N. I. Bosse, J. Hellewell, The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in wuhan, china: a modelling study, The Lancet Public Healthdoi:10.1016/s2468-2667(20)30073-6.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Q. Lin, S. Zhao, D. Gao, Y. Lou, S. Yang, S. S. Musa, M. H. Wang, Y. Cai, 255 W. Wang, L. Yang, D. He, A conceptual model for the coronavirus disease 13 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "we let x = [E, I U , I NoU , I H ] and y = [S, R, D]. Disease free equilibrium is x 0 = [0, 0, 0, 0] and y 0 = [N, 0, 0]. Then,",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "whereas other countries such as Germany and South Korea have done over 1000 test per million people. Unfortunately, developing countries like Colombia do",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Parameters and definition for model(1)",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

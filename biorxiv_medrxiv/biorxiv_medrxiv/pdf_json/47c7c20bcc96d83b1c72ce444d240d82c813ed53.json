@@ -1,0 +1,1105 @@
+{
+    "paper_id": "47c7c20bcc96d83b1c72ce444d240d82c813ed53",
+    "metadata": {
+        "title": "Estimating required 'lockdown' cycles before immunity to SARS-CoV-2: Model-based analyses of susceptible population sizes, 'S0', in seven European countries including the UK and Ireland",
+        "authors": [
+            {
+                "first": "Rosalyn",
+                "middle": [
+                    "J"
+                ],
+                "last": "Moran",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Erik",
+                "middle": [
+                    "D"
+                ],
+                "last": "Fagerholm",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Maell",
+                "middle": [],
+                "last": "Cullen",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Jean",
+                "middle": [],
+                "last": "Daunizeau",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "UMRS 1127",
+                    "institution": "INSERM",
+                    "location": {
+                        "settlement": "Paris",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Mark",
+                "middle": [
+                    "P"
+                ],
+                "last": "Richardson",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Wellcome Trust Centre for Human Neuroimaging",
+                    "institution": "King's College London",
+                    "location": {
+                        "addrLine": "De Crespigny Park",
+                        "postCode": "SE5 8AF",
+                        "settlement": "London",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Steven",
+                "middle": [],
+                "last": "Williams",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Federico",
+                "middle": [],
+                "last": "Turkheimer",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Rob",
+                "middle": [],
+                "last": "Leech",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Karl",
+                "middle": [
+                    "J"
+                ],
+                "last": "Friston",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background: Following stringent social distancing measures, some European countries are beginning to report a slowed or negative rate of growth of daily case numbers testing positive for the novel coronavirus. The notion that the first wave of infection is close to its peak begs the question of whether future peaks or 'second waves' are likely. We sought to determine the current size of the effective (i.e. susceptible) population for seven European countries-to estimate immunity levels following this first wave. We compare these numbers to the total population sizes of these countries, in order to investigate the potential for future peaks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "We used Bayesian model inversion to estimate epidemic parameters from the reported case and death rates from seven countries using data from late January 2020 to April 5 th 2020. Two distinct generative model types were employed: first a continuous time dynamical-systems implementation of a Susceptible-Exposed-Infectious-Recovered (SEIR) model and second: a partially observable Markov Decision Process (MDP) or hidden Markov model (HMM) implementation of an SEIR model. Both models parameterise the size of the initial susceptible population ('S0'), as well as epidemic parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Parameter estimation ('data fitting') was performed using a standard Bayesian scheme (variational Laplace) designed to allow for latent unobservable states and uncertainty in model parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Results: Both models recapitulated the dynamics of transmissions and disease as given by case and death rates. The peaks of the current waves were predicted to be in the past for four countries (Italy, Spain, Germany and Switzerland) and to emerge in 0.5 -2 weeks in Ireland and 1-3 weeks in the UK. For France one model estimated the peak within the past week and the other in the future in two weeks. Crucially, Maximum a posteriori (MAP) estimates of S0 for each country indicated effective population sizes of below 20% (of total population size), under both the continuous time and HMM models. Using for all countries-with a Bayesian weighted average across all seven countries and both models, we estimated that 6.4% of the total population would be immune. From the two models the maximum percentage of the effective population was estimated at 19.6% of the total population for the UK, 16.7% for Ireland, 11.4% for Italy, 12.8% for Spain, 18.8% for France, 4.7% for Germany and 12.9% for Switzerland.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Our results indicate that after the current wave, a large proportion of the total population will remain without immunity. This suggests that in the absence of strong seasonal effects, new medications or more comprehensive contact tracing, a further set of epidemic waves in different geographic centres are likely. These findings may have implications for 'exit strategies' from any lockdown stage.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "As of early April 2020, the Coronavirus pandemic has reached different epidemic stages across the world.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "France was the earliest affected country in Europe with its first reported cases on 24 th January 2020 (Reusken, Broberg et al. 2020) with cases reported shortly after in Germany, then the United Kingdom, Italy, Spain, Switzerland and in Ireland on February 29th. Subsequently outbreaks have emerged across the European continent. The daily rates of new confirmed cases of the Covid-19 virus (SARS-CoV-2) have begun to decrease in some of these countries; in particular, in Italy and Spain, with promising signs that extensive social distancing measures have been effective and that these countries have reached or are past 'the peak' of infections. Epidemiological models that predict the progression of populations from Susceptible (S) to Exposed (E), Infected (I) and Recovered (R) (SEIR models (Kermack and McKendrick 1927) ) can be used to investigate the properties of these peaks, given the initial susceptibility of a population. For SARS-CoV-2, no (or limited) immunity can be assumed a priori in humans and thus the majority of the entire population is deemed susceptible (Team 2020) .",
+            "cite_spans": [
+                {
+                    "start": 103,
+                    "end": 133,
+                    "text": "(Reusken, Broberg et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 798,
+                    "end": 827,
+                    "text": "(Kermack and McKendrick 1927)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1082,
+                    "end": 1093,
+                    "text": "(Team 2020)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Several studies have developed and simulated SEIR models using epidemic parameters to 'nowcast' and forecast transmission (Wu, Leung et al. 2020) . Parameters of the model are being continuously improved and modified, such as reduced serial interval estimates (Nishiura, Linton et al. 2020 , Yang, Zeng et al. 2020 ), initially derived from observed cases in the initial outbreak in Wuhan, China (Sun, Chen et al. 2020 , Wang, Liu et al. 2020 . In most studies, these compartmental models are applied as dynamic generative (i.e., causal or mechanistic) models that assume a set of parameters and predict cases or clinical resources (Moghadas, Shoukat et al. 2020 ) and intervention effects (Prem, Liu et al. 2020 , Wells, Sah et al. 2020 . The (initial) susceptible size of a population (termed 'S0') is assumed to be the size of a particular city, e.g. 10 million in Wuhan (Prem, Liu et al. 2020) or-for a country-is assumed to comprise of multiples of smaller city sized outbreaks e.g. 100k (Ferguson, Laydon et al. 2020 ). Such models have lent important insight into the likely disease and clinical trajectories of countries as a whole, enabling planning and management for predicted numbers of cases requiring hospitalization and ventilation (Moghadas, Shoukat et al. 2020) .",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 145,
+                    "text": "(Wu, Leung et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 260,
+                    "end": 289,
+                    "text": "(Nishiura, Linton et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 290,
+                    "end": 314,
+                    "text": ", Yang, Zeng et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 396,
+                    "end": 418,
+                    "text": "(Sun, Chen et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 419,
+                    "end": 442,
+                    "text": ", Wang, Liu et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 632,
+                    "end": 662,
+                    "text": "(Moghadas, Shoukat et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 690,
+                    "end": 712,
+                    "text": "(Prem, Liu et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 713,
+                    "end": 737,
+                    "text": ", Wells, Sah et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 874,
+                    "end": 897,
+                    "text": "(Prem, Liu et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 993,
+                    "end": 1022,
+                    "text": "(Ferguson, Laydon et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 1247,
+                    "end": 1278,
+                    "text": "(Moghadas, Shoukat et al. 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Given the lockdowns around Europe which likely averted larger case surges (Wang, Liu et al. 2020) , we sought to investigate the current effective population size in seven European countries. Therefore, we used the SEIR model to determine the initial population size (S0) that was susceptible (i.e., would eventually become infected) at the beginning of the first wave and thus determine the levels of immunity that might exist in these countries after this wave, (by assuming the susceptible population will eventually become infected and develop immunity). One approach, to perform this inverse modelling, is to apply dynamic causal modelling (Friston, Mattout et al. 2007 )-enabling the incorporation of prior values for parameters (e.g. the serial interval, incubation period or number of daily contacts) and prior uncertainty about these values.",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 97,
+                    "text": "(Wang, Liu et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 645,
+                    "end": 674,
+                    "text": "(Friston, Mattout et al. 2007",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Quarantine and social isolation are often explicitly accounted for in SEIR models (Wearing, Rohani et al. 2005 , Feng 2007 , Ridenhour, Kowalik et al. 2018 ) making them appropriate for the current Government advised social distancing. Importantly, two particular forms of this SEIR model (with social distancing) have recently been developed (Friston, Parr et al. 2020 , Moghadas, Shoukat et al. 2020 ) that also account for deaths following hospitalization or treatment via ventilation within an Intensive Care Unit (ICU).",
+            "cite_spans": [
+                {
+                    "start": 82,
+                    "end": 110,
+                    "text": "(Wearing, Rohani et al. 2005",
+                    "ref_id": null
+                },
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": ", Feng 2007",
+                    "ref_id": null
+                },
+                {
+                    "start": 123,
+                    "end": 155,
+                    "text": ", Ridenhour, Kowalik et al. 2018",
+                    "ref_id": null
+                },
+                {
+                    "start": 343,
+                    "end": 369,
+                    "text": "(Friston, Parr et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 370,
+                    "end": 401,
+                    "text": ", Moghadas, Shoukat et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Specifically, they account for a potential time lag between becoming infected and developing acute respiratory distress. This makes these models putatively 'fit for purpose', when using death as well as case reporting data to fit or invert the models to recover (posterior) parameter values-and estimate their uncertainty.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We aimed to apply these two models to data from seven countries: including Ireland, the United Kingdom, Italy, Spain, France, Germany and Switzerland. Our goal was to estimate S0. One model, (the 'ODE model'-see Methods and (Moghadas, Shoukat et al. 2020) ) is based on a classical compartment model where a person in an epidemic can occupy only one compartment or 'state' and moves from state to state: from Susceptible to eventually (through intermediate states) either Recovery or Death. The other model-the 'HMM model' (Friston, Parr et al. 2020 )-features several factors that change together; including where a person is located (out of the home vs. in the home, for example), as well as their infectious, testing and clinical status. We apply both models to daily case and death reports to assess whether there is convergence on estimates of the initially susceptible (i.e., effective) population sizes.",
+            "cite_spans": [
+                {
+                    "start": 224,
+                    "end": 255,
+                    "text": "(Moghadas, Shoukat et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 523,
+                    "end": 549,
+                    "text": "(Friston, Parr et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Data from a repository for the 2019 Novel Coronavirus at John's Hopkins University Center for Systems Science and Engineering (JHU CSSE) were used (Dong, Du et al. 2020 ). Using these date-stamped entries of daily reported cases and reported deaths, we extracted seven timeseries pairs for the countries (including all territories) of Ireland, the United Kingdom, Italy, Spain, Germany, France and Switzerland.",
+            "cite_spans": [
+                {
+                    "start": 147,
+                    "end": 168,
+                    "text": "(Dong, Du et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "Data records from January 22 nd to April 5 th , 2020 were modelled. For the ordinary differential equation (ODE) model, daily cases and daily accumulated deaths were fitted while for the HMM model, daily cases and daily deaths were fitted, corresponding to the state equations (see (Friston, Parr et al. 2020) ).",
+            "cite_spans": [
+                {
+                    "start": 282,
+                    "end": 309,
+                    "text": "(Friston, Parr et al. 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Models"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10. 1101 ODE Model: A dynamic transmission model comprising a set of 12 coupled ordinary differential equations was adapted from Moghadas et al. (Moghadas, Shoukat et al. 2020 ). The original model included 12 states for four different age categories. We simplified the model structure by collapsing across age (see Appendix A). The 12 states or compartments in this simplified model (flow function, Figure 1 ) described susceptible (S) individuals who became infected with the disease through exposure (E) to other infected individuals. Infected individuals comprised three categories, an Asymptomatic or subclinical state (A), a symptomatic state who would not require hospitalization (InH) and a symptomatic state who would require hospitalization (IH). Each of these infected categories could also self-isolate -representing three more states defined by lower a priori contacts. People in states InH and A were assumed to recover, while those in states (IH) would transition to either hospitalized (H) or ICU states (ICU). From these states people would recover (R) or die (D), Figure 1 . Time constants of the mode included the incubation period, recovery period, time to self-isolate, time from symptom onset to hospitalization, time from ICU admission to death, time from non-ICU admission to death, length of stay in ICU and length of hospital stay. Parameters controlling proportions that entered branching states (e.g. proportion of all hospitalised cases admitted to ICU were also included (see Appendix A for full parameter list) as well as the transmission rate and contact per day either within or without self-isolation. Parameters were equipped with a priori values and optimisation was performed on log scale factors to ensure positivity (Appendix A) of these proportions and rate constants. To link these ODEs to the observed data we employed an observer function which assumed a variable rate of case reporting for symptomatic (without requiring hospitalization) and asymptomatic individuals. A priori we assumed that only 1% of individuals infected who were asymptomatic received tests. We assumed that 20% of symptomatic cases who do not require hospitalization receive tests. And that 100% of infected individuals who are hospitalised receive tests.",
+            "cite_spans": [
+                {
+                    "start": 61,
+                    "end": 65,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 202,
+                    "end": 232,
+                    "text": "(Moghadas, Shoukat et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 457,
+                    "end": 465,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1139,
+                    "end": 1147,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The levels of 1% and 20% testing were free parameters in our model. The 100% for hospitalised tests was fixed. Finally, 100% of deaths were assumed to be recorded. Finally, we placed a prior on the initial number of individuals in each state. A priori, we assume 100 individuals in infected states. We tested two alternatives for S0: In the ODE model (Model: ODE) we initialised S0 to 1 Million x _ 0 individuals, where _ 0 = 1. This parameter would be optimised for each individual dataset and so could accommodate total sizes; e.g. if _ 0 = 4.9 a posteriori then the total population of Ireland would be considered initially susceptible.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We also tested a 'cities'-based version of the ODE model (Model: ODE_City) that might recapitulate the death and case rates for each country. For this, we altered the observer function and imposed a prior of 1 Million x _ 0 individuals, where _ 0 = 1. Then we scaled the case and death rates by the population in millions (See Appendix A for equations). For this if we obtained _ 0 = 1 a posteriori then the total initial . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "susceptible population would also correspond to the total population of Ireland, but the epidemic dynamic would comprise 4.9 distinct outbreaks. is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10. 1101 factors describing location, infection status, test status and clinical status. Within each factor people may transition among four states probabilistically. The transitions generate predicted outcomes; for example, the number of people newly infected who have tested positive or the number of people newly infected who will remain untested. The location factor describes if an individual is at home, at work, in a critical care unit (CCU) or deceased. Similar to the early states in the ODE model, the HMM has a second factor describing infection status susceptible, infected, infectious or immune, where it is assumed that there is a progression from a state of susceptibility to immunity-through a period of (pre-contagious) infection to an infectious (contagious) status. The Clinical status factor comprises asymptomatic, symptomatic, acute respiratory distress syndrome (ARDS) or deceased. Finally, the fourth factor represents diagnostic status where an individual can be untested or waiting for the results of a test that can either be positive or negative. As with the ODE model, transitions amongst states are controlled by rate constants (inverse time constants) and non-negative probabilities. Similar to the ODE model above, we initialised (and set as priors) S0 to 1 Million x _ 0 individuals, where _ 0 = 1.",
+            "cite_spans": [
+                {
+                    "start": 61,
+                    "end": 65,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For the HMM and both ODE models (ODE model and ODE_City) to estimate the model parameters, we employed a standard (variational Laplace) Bayesian scheme to optimise parameters of corresponding DCM (spm_NLSI_GN) (Friston, Mattout et al. 2007) .",
+            "cite_spans": [
+                {
+                    "start": 210,
+                    "end": 240,
+                    "text": "(Friston, Mattout et al. 2007)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The key aim of our analysis was to estimate the likely immunity after the current set of cases and deaths.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "To ascertain the initial susceptibility S0, we examined the posterior estimate from both model types and its Bayesian credible intervals. However, first we examined the evidence for each model, relative to the worst performing model. We used two ODE models, with different constructs for epidemic sizes/metapopulations. The first ODE model (ODE) assumed a prior of 1 million susceptible individuals (S0), the. The second ODE model accounted for several effective populations of size 1 million (ODE_City). The third model was the HMM model, which also assumed a prior of 1 million initial susceptible individuals. Of all three models, ODE_City was the worst performing model for all countries data (Figure 2A ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 697,
+                    "end": 707,
+                    "text": "(Figure 2A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "From the two better performing models, we then estimated the effective population size of S0=S(t=0) as a proportion of the total population ( Figure 2B ). Taking a Bayesian average-across all models and countries-the estimated proportion of people that were initially susceptible at the start of this outbreak-and thus immune at the end of the outbreak-was 6.4% of the total population of each country.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 151,
+                    "text": "Figure 2B",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The ODE model produced consistently higher estimates of S0 at the end of the wave than the HMM.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "These values suggest that after the current wave of cases, between 3 (lowest estimates for Ireland and the UK) and 12 (highest estimate for Germany) more cycles (with identical dynamics to those from Jan 22 nd ) would be required to bring the total population to probable herd immunity levels (we assume herd immunity of 60%, Figure 2B ). We plot this fall in susceptibility state S (increase in immunity) over time, from the initial size S0 in figure 2C for the ODE and HMM models separately for Ireland and the UK ( Figure 2C ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 326,
+                    "end": 335,
+                    "text": "Figure 2B",
+                    "ref_id": null
+                },
+                {
+                    "start": 445,
+                    "end": 454,
+                    "text": "figure 2C",
+                    "ref_id": null
+                },
+                {
+                    "start": 518,
+                    "end": 527,
+                    "text": "Figure 2C",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "different models across countries. This shows that the models with a prior of 1 million S0 outperform the (multiple outbreak ODE_Cities) model, with priors of initial susceptible S0 equal to the total population of the country. B) From the two better performing models, we report the percent of the country's total population that are initially susceptible. We also plot the Bayesian parameter average of this percent, across all countries and models (6.4%). C) From the ODE model, we replot the fall in . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 2: A) lower bound on log model evidence given by variational free energy (Log Bayes Factor) for"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20060426 doi: medRxiv preprint the susceptible population for Ireland and the UK as the dynamics of the current wave unfold. At the end of this wave large percentages of the population remain susceptible. The projections under the HHM are more pessimistic because the effective population size at the start of the first outbreak (i.e.,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Our model inversion procedure produced fits to the data that recapitulated the rates up to April 5 th for both models (Figure 3 ). Systematic differences in future predictions were observed however between the ODE and HMM models (though predictions were of similar orders of magnitude). For all countries the peak date and peak number of cases was higher for the ODE model. However, both models exhibited peaks for dates in the past for four countries (Italy, Spain, Germany and Switzerland). For France the models were discrepant with the ODE model predicted a peak in the future on April 20 th and the HMM model estimating a peak had already occurred on April 7 th .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 127,
+                    "text": "(Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "susceptible population) is smaller (and more precise)."
+        },
+        {
+            "text": "Peaks in the future were expected for Ireland and the UK. For Ireland, the peak reported case rate predictions were estimated at April 9 th for the HMM and April 23 rd for the ODE. The estimate of the number of daily cases at the peak were 720 cases and 392 cases for the ODE and HMM models. For the UK, the peak case rate predictions were estimated at April 11 th for the HMM and April 17 th for the ODE model. The peak case rates (i.e. tested cases) were estimated at 9304 daily cases for the ODE and 5411 daily cases for the HMM models (Figure 3) . . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 539,
+                    "end": 549,
+                    "text": "(Figure 3)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "susceptible population) is smaller (and more precise)."
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 The cumulative deaths (Figure 4 ) evinced relatively small discrepancies between the models, with the ODE model predicting a larger cumulative death toll, of 1250 for Ireland compared with 1008 deaths in Ireland given by the HMM model. For the UK the ODE and HMM were remarkably consistent, predicting a cumulative death toll of 49296 and 49785, respectively 1 (Figure 4) . In other European countries, however, the discrepancies between the model predictions were greater in some countries such as France, Spain and Switzerland, with the HMM suggesting considerably lower cumulative deaths.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 65,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 108,
+                    "end": 117,
+                    "text": "(Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 447,
+                    "end": 457,
+                    "text": "(Figure 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Finally, to test the assumption that low S0 proportions of the population may be indicative of a 'next wave' or several 'next waves', we estimated the initial susceptible size from the initial peak of the Spanish Flu pandemic of 1918-1919. Using data collated from approximately half of the United Kingdom:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 4: Model predictions of cumulative deaths across countries."
+        },
+        {
+            "text": "i.e. a population of approximately 22 million. Using the HMM model and variational Laplace, we see fits to the data that capture the falling peak. Here, we estimated the effective or susceptible population size was S0 = 4.03% of the total population size ( Figure 5 ). Though dramatically different in terms of hospital care-the general picture remains -that large waves may be possible after low S0. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 257,
+                    "end": 265,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Figure 4: Model predictions of cumulative deaths across countries."
+        },
+        {
+            "text": "We used a variational Bayesian scheme (Friston, Mattout et al. 2007 ) to optimise the parameters of two distinctly constructed models of viral transmission (Friston, Parr et al. 2020 , Moghadas, Shoukat et al. 2020 ). We optimised the parameters of these models based on daily reported cases and daily reports of death due to Covid-19. We optimised the model from data acquired for seven European countries. Both models were able to predict (i.e. fit) the current epidemic dynamics with plausible estimated trajectories.",
+            "cite_spans": [
+                {
+                    "start": 38,
+                    "end": 67,
+                    "text": "(Friston, Mattout et al. 2007",
+                    "ref_id": null
+                },
+                {
+                    "start": 156,
+                    "end": 182,
+                    "text": "(Friston, Parr et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 183,
+                    "end": 214,
+                    "text": ", Moghadas, Shoukat et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The models differed in their exact case rate predictions but predicted commensurate figures for the deaths in the United Kingdom and Ireland. How do these estimates relate to previous predictions of Covid-19 deaths in the UK? It was predicted (Ferguson, Laydon et al. 2020 ) that without interventions 510,000 deaths could occur, in the UK due to Covid-19. This analysis (Ferguson, Laydon et al. 2020 ) also predicted, that even with an optimal mitigation scenario, these death rates would reduce only by one half i.e. to 255,000. Thus, the predicted death cases of our models ~50,000 in the current cycle are in line with the predictions of mitigation effects, if we assume that several more cycles are possible.",
+            "cite_spans": [
+                {
+                    "start": 243,
+                    "end": 272,
+                    "text": "(Ferguson, Laydon et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 371,
+                    "end": 400,
+                    "text": "(Ferguson, Laydon et al. 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Importantly, both models predicted that we are currently nearing or past the peak of daily case rates in all seven countries. However, the estimates suggest that after this cycle more than 80% of each country's total population in all countries studied remain susceptible. Therefore, we assume that future cycles will occur.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The predicted S0 was higher for the ODE model relative to the HMM model: in turn, the ODE model predicted a more prolonged cycle in the current period relative to the HMM model. This speaks to a trade-off between S0 and cycle times. Assuming herd immunity requires 60% of the susceptible population to be immune (Cohen and Kupferschmidt 2020) , where 60%-one may conclude that further cycles are possible. However, that is not to say that populations within current outbreak areas may not reach herd immunity after the current cycle. Yet, if this is the case (immunity is clustered in geographic or some other organisation of communities), then parts of the country-particularly those communities with high contact numbers that have not 'been involved' in the current cycle may be more likely to participate in future cycles. And while it is obviously unrealistic to suppose that an additive linear effect of populations will emerge (Sirakoulis, Karafyllidis et al. 2000 , Eubank, Guclu et al. 2004 ) (i.e., identically shaped cycles), given the complexity of contacts and population movement, our analysis may offer a rough guide to cycle immunity numbers.",
+            "cite_spans": [
+                {
+                    "start": 312,
+                    "end": 342,
+                    "text": "(Cohen and Kupferschmidt 2020)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 933,
+                    "end": 970,
+                    "text": "(Sirakoulis, Karafyllidis et al. 2000",
+                    "ref_id": null
+                },
+                {
+                    "start": 971,
+                    "end": 998,
+                    "text": ", Eubank, Guclu et al. 2004",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "As with most scientific research at this time, the modelling described above was conducted with haste. In line with the sentiments of the World Health Organization's Dr Mike Ryan 'Perfection is the enemy of the good when it comes to emergency management. Speed trumps perfection. And the problem in society we have at the moment is everyone is afraid of making a mistake. Everyone is afraid of the consequence of error, but the greatest error is not to move, the greatest error is to be paralyzed by the fear of failure.' 1 Therefore, we are grateful to the coding repositories listed below, where interested researchers can reproduce or nuance our analyses.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "For code and data see: https://github.com/RosalynMoran/Covid-19.git Friston, K., et al. (2007) . \"Variational free energy and the Laplace approximation.\" Neuroimage 34(1): 220-234. Friston, K. J., et al. (2020) Dynamic causal modelling of COVID-19. arXiv e-prints arXiv:2004.04463 This technical report describes a dynamic causal model of the spread of coronavirus through a population. The model is based upon ensemble or population dynamics that generate outcomes, like new cases and deaths over time. The purpose of this model is to quantify the uncertainty that attends predictions of relevant outcomes. By assuming suitable conditional dependencies, one can model the effects of interventions (e.g., social distancing) and differences among populations (e.g., herd immunity) to predict what might happen in different circumstances. Technically, this model leverages state-of-the-art variational (Bayesian) model inversion and comparison procedures, originally developed to characterise the responses of neuronal ensembles to perturbations. Here, this modelling is applied to epidemiological populations to illustrate the kind of inferences that are supported and how the model per se can be optimised given timeseries data. Although the purpose of this paper is to describe a modelling protocol, the results illustrate some interesting perspectives on the current pandemic; for example, the nonlinear effects of herd immunity that speak to a self-organised mitigation process.",
+            "cite_spans": [
+                {
+                    "start": 68,
+                    "end": 94,
+                    "text": "Friston, K., et al. (2007)",
+                    "ref_id": null
+                },
+                {
+                    "start": 172,
+                    "end": 210,
+                    "text": "220-234. Friston, K. J., et al. (2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 239,
+                    "end": 280,
+                    "text": "COVID-19. arXiv e-prints arXiv:2004.04463",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Code Availability"
+        },
+        {
+            "text": "1 https://www.rev.com/blog/transcripts/world-health-organization-covid-19-update-march-",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Code Availability"
+        },
+        {
+            "text": "Appendix A",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "13-2020"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ODE FLOW FUNCTION"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20060426 doi: medRxiv preprint % States S = x(1); % susceptible E = x(2);% exposed I_NH = x(3); % infected will not require hospitalization I_NH_SI = x(4); % infected will not require hospitalization -socially isolated I_RH = x(5); % infected will Require Hospitalization I_RH_SI = x(6); % infected will Require Hospitalization -socially isolated I_SC = x(7);% infected asymotmatic -Sub Clinical I_SC_SI = x(8);% infected asymotmatic -Sub Clinical -socially isolated I_H = x(9); % Hospitalized NOT n ICU I_ICU = x(10); % Hospitalized in the ICU R = x(11); % recovered D = x(12); % deaths % Parameters N0 = (exp(P.N))*1e6; beta = (0.09*exp(P.beta))*(10*exp(P.k)); % beta x contacts betaSI = (0.09*exp(P.beta))*(2*exp(P.k_SI)); % contacts in isolation gamma = (1/4.6)*exp(P.gamma); % recovery rate = 1/days_infection 4.6 from pnas, 3 or 7 from lancet kappa = (1/5.2)*exp(P.kappa); % latency rate 1/(days incubation) -assume 5. . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20060426 doi: medRxiv preprint %-Dynamics dS_dt = -beta*(S/N0)*(I_NH + I_RH) -alpha*beta*(S/N0)*I_SC... -betaSI*(S/N0)*(I_NH_SI + I_RH_SI) -alpha*betaSI*(S/N0)*I_SC_SI; dE_dt = beta*(S/N0)*(I_NH + I_RH) + alpha*beta*(S/N0)*I_SC ... + beta*(S/N0)*(I_NH_SI + I_RH_SI) + alpha*beta*(S/N0)*I_SC_SI-kappa*E; dI_NH_dt = p_clin*(1-q)*(1-h)*kappa*E -(1-fi)*gamma*I_NH -(fi)*taui*I_NH; dI_NH_SI_dt = p_clin*q*(1-h)*kappa*E -gamma*I_NH_SI + (fi)*taui*I_NH; dI_RH_dt = p_clin*(1-q)*(h)*kappa*E -(1-fi)*delta*I_RH -fi*taui*I_RH; dI_RH_SI_dt = p_clin*q*(h)*kappa*E -delta*I_RH_SI + fi*taui*I_RH; dI_SC_dt = (1-p_clin)*kappa*E -(1-fa)*gamma*I_SC -(fa)*taua*I_SC; dI_SC_SI_dt = (fa)*taua*I_SC -gamma*I_SC_SI; dH_dt = (1-c)*(1-fi)*delta*I_RH + (1-c)*delta*I_RH_SI -(mh*muh + (1-mh)*phih)*I_H; % dICU_dt = c*(1-fi)*delta*I_RH + c*delta*I_RH_SI -(mc*muc + (1-mc)*phic)*I_ICU; % dR_dt = gamma*(I_SC + I_NH + I_SC_SI + I_NH_SI) + (1-mh)*phih*I_H + (1-mc)*phic*I_ICU; dD_dt = mh*muh*I_H + mc*muc*I_ICU ; %% ODE Observer FUNCTION cases = prop_asymp*(x(7) +x(8)) + prop_sympNH*(x(3)+x(4)) + x(5) + x(6); % twenty percent of Symptomatic not hospitalised cases tested one percent of Asymptomatic tested deaths = x(12); prop_asymp = 0.01*exp(P.cases_from_SC); prop_sympNH = 0.2*exp(P.cases_from_NH); prop_asymp = min([prop_asymp, 1]); prop_sympNH = min([prop_sympNH, 1]); ODE CITY Observer FUNCTION cases = P.no_cities*(prop_asymp*(x(7) +x(8)) + prop_sympNH*(x(3)+x(4)) + x(5) + x(6)); % twenty percent of Symptomatic not hospitalised cases tested one percent of Asymptomatic tested deaths = P.no_cities*x(12);",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 ",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Countries test tactics in 'war'against COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kupferschmidt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "An interactive web-based dashboard to track COVID-19 in real time",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet infectious diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A contribution to the mathematical theory of epidemics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proceedings of the royal society of london. Series A",
+            "volume": "115",
+            "issn": "772",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Projecting hospital utilization during the COVID-19 outbreaks in the United States",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Moghadas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Serial interval of novel coronavirus (COVID-19) infections",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International journal of infectious diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Laboratory readiness and response for novel coronavirus (2019-nCoV) in expert laboratories in 30 EU/EEA countries",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Reusken",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Unraveling R 0: Considerations for Public Health Applications",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Ridenhour",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "American journal of public health",
+            "volume": "108",
+            "issn": "S6",
+            "pages": "445--454",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A cellular automaton model for the effects of population movement and vaccination on epidemic propagation",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Sirakoulis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Ecological Modelling",
+            "volume": "133",
+            "issn": "3",
+            "pages": "209--223",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Early epidemiological analysis of the coronavirus disease 2019 outbreak based on crowdsourced data: a population-level observational study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Digital Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Updated rapid risk assessment from ECDC on the novel coronavirus disease 2019 (COVID-19) pandemic: increased transmission in the EU/EEA and the UK",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Team",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Evolving Epidemiology and Impact of Non-pharmaceutical Interventions on the Outbreak of Coronavirus Disease",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Phase-adjusted estimation of the number of coronavirus disease 2019 cases in Wuhan, China",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell Discovery",
+            "volume": "6",
+            "issn": "1",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Appropriate models for the management of infectious diseases",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wearing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "PLoS medicine",
+            "volume": "2",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Impact of international travel and border control measures on the global spread of the novel 2019 coronavirus outbreak",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Wells",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "117",
+            "issn": "13",
+            "pages": "7504--7509",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Modified SEIR and AI prediction of the epidemics trend of COVID-19 in China under public health interventions",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Thoracic Disease",
+            "volume": "12",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Left: Flow function, or population dynamics. From the susceptible state (where initially at time t= 0S = S0), the infected population will enter one of three categories: IH (infected requiring hospitalization), InH (infected NOT requiring Hospitalization), or A (asymptomatic). From the IH state, subjects transfer either to H (Hospital) or ICU, from which subjects transfer either to R or D. Both the InH and A states lead to Recovery (R). The observer function evaluates the dependent variable at each iteration of the integration process of the flow function. The resultant model-based data is compared against empirical JHU data. Right: Network showing the transition between states for the HMM model. The ODE model is a 12-compartmental model-with one factor with 12 states). The HMM model is a 256-compartment model-with four factors (location, infection and clinical) each with four levels, giving 4 4 = 256 states. The structural difference between the ODE and HMM model rests upon the allowable combination of factors that describe the state of an individual in a population. For example, in the factorial (HMM) model it is possible to die from acute respiratory distress at (e.g. a care) home. Conversely, in the ODE model, one can only die after being in hospital. Certain transitions among these states are allowable. For example, in the 'testing' factor, an individual could transit from untested to waiting to a positive result. Or an individual could transition from untested to untested-where they remain untested even if they are infected (see (Friston, Parr et al. 2020) for a priori probability values). HMM model: Our second model of the cases and death rates was a Dynamic Causal Model of Covid-19.See(Friston, Parr et al. 2020) for a complete description of the model. In brief, the model represents four",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Model predictions of daily reported case rates across countries. Note both models assume that many infected individuals will not be tested or reported in the daily case rates.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Spanish Flu Pandemic of 1918-1919 from regions of England and Wales. Initial S0 estimates from the first peak have a similar size (S0 Spanish Flu = 4.03%) to those estimated for the current coronavirus pandemic (S0 Corona = 6.4%).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "exp(P.alpha); % reduced transmission rate for subclinical cases -a prior one quarter PNAS -one half alpha = min([alpha 0.5]); p_clin = (1/4)*exp(P.p); % proportion of cases that are symptomatic -that may or may not need hospitalization p_clin = min([p_clin 0.5]); delta = (1/7)*exp(P.delta); % 1/average time from symptom onset to hospitalization h = (1/2)*exp(P.h) ;% proportion of clinical cases requiring hospital or ICU 10)*exp(P.c); % proportion in hospital requiring ICU-estimate 10% -PNAS 1/100 c = min([c 0.75]); mh = 0.02*exp(P.mh); % weight of death rate among non ICU mh = min([mh 0.5]); muh = (1/9.7)*exp(P.muh) ; % 1/average days from hospitalized non-ICU deaths phih = (1/10)*exp(P.phih); % length of hospital stay before recovery mc = 0.13*exp(P.mc) ; % weight of death rate among ICU mc = min([mc 0.75]); muc = (1/7)*exp(P.muc) ; % 1/average days from hospitalized ICU to deaths phic = (1/14)*exp(P.phic) ; % length of ICU stay before 1*exp(P.taui); fa = 0.05*exp(P.fa); fa = min([fa 1]); taua = (1/2)*exp(P.taua);",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

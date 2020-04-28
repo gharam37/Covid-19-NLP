@@ -1,0 +1,1490 @@
+{
+    "paper_id": "4707cd61c81c2d73af8e5c8f07aa02d876d54e2c",
+    "metadata": {
+        "title": "Predicting the impact of asymptomatic transmission, non-pharmaceutical intervention and testing on the spread of COVID19",
+        "authors": [
+            {
+                "first": "Ira",
+                "middle": [
+                    "B"
+                ],
+                "last": "Schwartz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "U.S. Naval Research Laboratory",
+                    "location": {
+                        "postCode": "6792, 20375",
+                        "settlement": "Code, Washington",
+                        "region": "DC",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "James",
+                "middle": [],
+                "last": "Kaufman",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Almaden Research Center",
+                    "location": {
+                        "addrLine": "650 Harry Rd",
+                        "postCode": "95120-6099",
+                        "settlement": "San Jose",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Kun",
+                "middle": [],
+                "last": "Hu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Almaden Research Center",
+                    "location": {
+                        "addrLine": "650 Harry Rd",
+                        "postCode": "95120-6099",
+                        "settlement": "San Jose",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Simone",
+                "middle": [],
+                "last": "Bianco",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Almaden Research Center",
+                    "location": {
+                        "addrLine": "650 Harry Rd",
+                        "postCode": "95120-6099",
+                        "settlement": "San Jose",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We introduce a novel mathematical model to analyze the effect of removing non-pharmaceutical interventions on the spread of COVID19 as a function of disease testing rate. We find that relaxing interventions has a strong impact on the size of the epidemic peak as a function of intervention removal time. We show that it is essential for predictive models to explicitly capture transmission from asymptomatic carriers and important to obtain precise information on asymptomatic transmission by testing. The asymptomatic reservoir, reported to account for as much as 85% of transmission, will contribute to resurgence of the epidemic if public health interventions are removed too soon.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Use of more basic models that fail to capture asymptomatic transmission can result in large errors in predicted clinical caseload or in fitted epidemiological parameters and, therefore, may be unreliable in estimating the risk of a second wave based on the timing of terminated interventions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The ongoing Coronavirus Disease-19 (COVID19) pandemic, caused by the novel RNA virus SARS-CoV-2 [1], has demonstrated the need for swift and effective non-pharmaceutical intervention (NPI) strategies [2, 3] . In the absence of a cure or a vaccine and given the nature of the virus transmission, drastic measures need to be implemented to reduce contacts and \"flatten\" the epidemic curve. As quarantine and social distancing are enforced, it is important to understand the impact of early release or relaxation of such interventions on the affected population. We use a mathematical model which explicitly considers a NPI such as sheltering in place or social distancing, similar to what has been widely implemented in several countries around the world. We calculate the effect on the epidemic of removing intervention as a function of time. The use of drastic NPI strategies in China reportedly reduced the basic reproductive number, R 0 , to a value smaller than 1, strongly curbing the epidemic within a short period of time [2] . In other countries, the implementation of such policies has not been as strict [3] , with an optimistic reduction in transmission by about half. To complicate the containment of the disease, early reports of pre-symptomatic and asymptomatic infections have emerged [4, 7] , with estimates of asymptomatic transmission of as much as 85% of all cases, and 55% per person. These predictions have been supported by recent studies [18] . The US CDC estimates the population of asymptomatic infections to 25% of all cases [5] .",
+            "cite_spans": [
+                {
+                    "start": 200,
+                    "end": 203,
+                    "text": "[2,",
+                    "ref_id": null
+                },
+                {
+                    "start": 204,
+                    "end": 206,
+                    "text": "3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1028,
+                    "end": 1031,
+                    "text": "[2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1113,
+                    "end": 1116,
+                    "text": "[3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1299,
+                    "end": 1302,
+                    "text": "[4,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 1303,
+                    "end": 1305,
+                    "text": "7]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1460,
+                    "end": 1464,
+                    "text": "[18]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1550,
+                    "end": 1553,
+                    "text": "[5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "The potential of COVID19 to spread unchecked puts a stronger pressure on the rapid design and deployment of accurate testing. Where rigorous and widespread testing protocols have been adopted, such as South Korea, the spread has been controlled [8] . An optimal control release strategy may include testing individuals before release. Feasibility of testing the whole population in a short time is under question. Therefore, it is important to understand how testing only a fraction of the asymptomatic population impacts the disease spread under different NPI scenarios.",
+            "cite_spans": [
+                {
+                    "start": 245,
+                    "end": 248,
+                    "text": "[8]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Since public health interventions can affect symptomatic and asymptomatic individuals differently, we apply a model that explicitly captures both groups, as well as the case reporting rate which reflects the ratio of the symptomatic to asymptomatic infectious groups.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "2 Transmission and recovery rates may differ between symptomatic and asymptomatic individuals. We compare the model and its predictions with the outcomes of a basic SEIR model (that fails to model asymptomatic individuals), which demonstrate that the basic model (SEIR) can not adequately predict the dynamics of Sars-CoV-2 (see Figure 16 ). For example, when the transmission from asymptomatic individuals differs from symptomatic ones, we show that applying a reproductive number that accounts for both groups leads to significant error in predicted clinical infectious cases by the simple SEIR model. Conversely, adjusting the SEIR model parameters to correctly account for the total reported cases forces significant error in R o and incorrect timing for the epidemic wave. We report the relationship between the reproductive numbers in both models in the Supplementary section B.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 329,
+                    "end": 338,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "As is common with emerging outbreaks of novel pathogens, the epidemiology of SARS-CoV-2 is not completely determined. Current estimations of the disease basic reproduction number, R 0 , put a realistic value between 2 and 3 [3, 6]. In our analysis, we use a baseline value of R 0 = 2 (as a best case assumption). We also assume that implementations of control reduces transmission by 25% to 50%. The actual parameter values may differ and are still under investigations. However, the parameters we choose reflect a realistic scenario of transmission and are informative with regard to control strategies. Using these best case parameter, we then compute the additional cases that will occur as a function of the time when interventions are removed. The data suggests that decision to remove public health interventions can and should be informed by an analysis such as the one reported here. The fact that the epidemic curve is past its peak does not protect against a second wave so long as a large reservoir of unvaccinated susceptible population remains.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "To model the disease spread, we extend a classical Susceptible-Exposed-Infected-Recovered (SEIR) model to include an asymptomatic disease state, that is, a group of people capable of spreading the disease without showing any (or invisible) symptom which would induce testing. Asymptomatic transmission is thought to be mostly responsible for the worldwide distribution of the disease, as early travel bans imposed by China and other nations have focused on symptomatic cases (e.g., measuring body temperature at the airport) [6] , 3 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 525,
+                    "end": 528,
+                    "text": "[6]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint thereby failing to control importation of the disease. Because of mild or no symptomatology, transmission from these asymptomatic carriers happens at a higher contact rate than symptomatic individuals. We parameterize these cases with the effective contact rate (transmission rate) \u03b2 2 , different from the transmission rate from symptomatic infectious, defined as \u03b2 1 . As such, susceptible individuals can become infected by coming in contact with both asymptomatic (A) and symptomatic infectious (I) individuals, which together compose the infected class. Individuals in the I compartment exhibit clinical symptoms.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "Individuals in the A compartment may not be included in case reports absent widespread testing. We assume a proportionality constant (related to the case reporting rate) regulating the relative rate at which exposed individuals (who have come in contact with the disease but are not yet infectious), contribute to the A and I compartments respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "With the hypothesis that social distancing reduces transmission by 25% and considering a 25% fraction of asymptomatic infectious, it is possible to see a two-fold reduction in the peak proportion of infected ( Figure 1 ). If control is released before the epidemic peak, at t = 0.28 years, the model predicts a strong resurgence of the disease, with no flattening and an infectious fraction almost reaching the uncontrolled epidemic. Of course, while a delay in the peak is observed, which may buy the health care system time to respond, the reduction in the number of total infectious is marginal. When NPI is removed at the epidemic peak (figure 1(b)), a secondary peak is observed, showing an increase in total number of infected. Lastly, when control is released after the peak (at a late stage of epidemic shown in figure 1(c)), for t \u2248 0.5 years, we observe the emergence of a kink in the descending part of the curve, but not a full fledged resurgence of the disease. The outbreak has a very different shape when infectious include a large proportion of asymptomatic individuals (Figure 2 ). In this case, early release of intervention causes a dramatic resurgence of the total infections, even for stronger control and at a late stage of the epidemic.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 210,
+                    "end": 218,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1086,
+                    "end": 1095,
+                    "text": "(Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "When evaluating the effect of NPIs, we calculate the total cumulative incidence (including asymptomatics) caused by releasing intervention for a sample population of 100000 people (Figures 3 and 4) . Simulations show that early release of intervention causes an expected total number of cases similar to the case of no intervention. If one considers asymptomatics to make for 1 in 4 people as suggested by the CDC, release at later time show a delay in the peak and a reduction in cumulative incidence between \u2248 10% and 20%, which translates 4 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 180,
+                    "end": 197,
+                    "text": "(Figures 3 and 4)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint into \u2248 5000 to 10000 less infected people. Even a conservative estimation of the disease death rate results in a large impact of different policies on the population. On the other hand, when asymptomatics make for the majority of the infections, as recent data seems to suggest, the release of NPI even after a long time is predicted to cause a strong resurgence and a large impact, as measured by the cumulative incidence, and a large second wave of infection is observed. When taken together, the results in Figures 1 through 4 show the need to obtain precise information about the fraction of the population which is actually currently infected with the disease before any release of control can be decided.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "16.20068387 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 655,
+                    "end": 674,
+                    "text": "Figures 1 through 4",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "II. MODEL DESCRIPTION AND RESULTS"
+        },
+        {
+            "text": "We next extend of our model to describe the impact that testing a fraction of the population would have on the disease dynamic. We assume that testing captures only a part of the asymptomatic population, indicated as A 1 . Testing susceptible and recovered has no effect on the epidemic curve, but detecting asymptomatic cases requires significant random sampling. We further assume that widespread testing effectively removes A 1 asymptomatic individuals from the population transmitting the disease through self isolation or quarantine. We model this removed A 1 population fraction by assuming an increased recovery rate for this class (since isolation is akin to removal). A fraction A 2 is not tested and will be able to spread the virus upon release of NPI as before. It is informative to consider the case of testing both with and without social distancing. We imagine two scenarios: In the first scenario, as soon as the first confirmed case is reported, a fraction of the population is tested but no social distancing is implemented. This is reported in Figures 5 and 7. The cumulative incidence for this scenario is shown in Figures 6 and 8 for 25%",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1135,
+                    "end": 1150,
+                    "text": "Figures 6 and 8",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "and 85% fraction of asymptomatics, respectively. Our simulations show that, regardless of the composition of the infected class, a secondary peak of infection is not observed when testing is implemented on a fraction of the population. However, an early testing policy that catches even 25% of all asymptomatic cases results in a significant reduction of the number of new cases per 100k (\u2248 1000 less cases predicted per 25% of the population tested).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "In the second scenario, we consider relaxing NPI only after testing a fraction of the population. This is reported in Figures 9 through 12 . In this scenario, we implement 5 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 138,
+                    "text": "Figures 9 through 12",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint NPI when the first case is reported. Testing serves as a mean to relax NPI by releasing the untested fraction of the population to their dynamic in the absence of social distancing.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "Again, asymptomatic individuals that are detected through testing will be removed from the population at a higher rate, while asymptomatic untested are allowed to transmit the disease without restrictions. If the asymptomatic carriers are 25% of the total infected population, removing NPI before the epidemic peak when testing a fraction of the population (e.g. 25%)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "results in a 5 to 10% increase in the disease burden. Testing at or after the peak results in an epidemic curve which closely follows the full control. However, when the fraction of asymptomatics makes for the majority of infected cases, the results are markedly different.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "Even if NPIs are relaxed at a later time, a strong resurgence of the epidemic is observed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "The presence of a large fraction of asymptomatics that resume social activities untested is predicted to cause \u2248 30000 (30%) more cases than the full control, even if 25% of all asymptomatic are found through testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "In conclusion, we have described the combined effect of release NPI and testing strategies as applied to the current COVID19 epidemic. Our simulations clearly show that, absent testing of a significant fraction of the population (both symptomatic and asymptomatic), early release of NPI will cause a resurgence of the epidemic. This suggests the fundamental role of widespread testing in any policy of NPI release. As suggested by recent publications [18] , when universal testing is administered, asymptomatic individuals are found to make up for a large majority of all identified cases. As such, widespread testing policies must target this population rather than only individuals with evidence of influenza-like or SARS-like symptoms.",
+            "cite_spans": [
+                {
+                    "start": 451,
+                    "end": 455,
+                    "text": "[18]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "As a final remark pointing to further study, quarantines such as those who are performing self-imposed isolation, are similar to the case where people change their behavior in the presence of a fatal disease. Adjusting their behavior to avoid those who are contagious leads to a dynamic network where the connections depend on the state of the population of individuals. That is, the network of contacts is one that is adaptive [11] . Although there does not exist a vaccine currently, when one will be introduced, it will initially be a limited resource. Continuing controls, such as those adaptive contacts in which people can avoid contagious individuals, can greatly help with the extinction of disease [12] , especially in the presence of limited vaccines. Combining large scale testing, continued social distancing, along with vaccine control increases the probability of being able to bring the COVID19 6 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 428,
+                    "end": 432,
+                    "text": "[11]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 707,
+                    "end": 711,
+                    "text": "[12]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint disease to extinction in the presence of limited resources. The equations for the SEAIR model are:",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "We indicate with (\u03b2 1 , \u03b3 I ), (\u03b2 2 , \u03b3 A ), respectively, the symptomatic and asymptomatic transmission and recovery rates, \u03b1 is the incubation rate, p is the fraction of asymptomatic infectious. We assume also that \u00b5 d is the case mortality rate due to the virus for symptomatic individuals, but not asymptomatics. It is different from the background birth and death rate, \u00b5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "To find the fraction of susceptibles in the population and thus R 0 , we let \u03ba be function of p:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "From the equilibrium state, we find the following reproductive numbers in terms of the rate parameters:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "7 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Notice that in the limit of p = 0, R 0 = \u03b2\u03b1 (\u00b5+\u00b5 d +\u03b3 I )(\u00b5+\u03b1) , which is the reproductive rate for the SEIR model without asymptomatic individuals. NPIs and release thereof are implemented as difference in the contact rates, \u03b2 1 and \u03b2 2 . When control is implemented, then \u03b2 1 = \u03b2 2 and lowered to reflect social distancing. We report the overall R 0 values for the different contact rates under control and release.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "16.20068387 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "Appendix B: SEAIR with testing and social distancing",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "We assume that testing asymptomatic individuals has the effect of increasing the recovery rate so that tested asymptomatic individuals are removed from the population at a faster rate. The equations read:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "where z \u2208 [0, 1] represents the fraction of A that are tested, and \u03b6 \u2265 1 is the increase in the rate of recovery for those tested, since they are removed from the population at a faster rate. Note that since the the recovery rate of tested asymptomatics decreases the fraction of total A = A 1 + A 2 , the effective contact rate between S and I is already reduced.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "We can rederive the reproductive rate of infection as before, by expressing the steady state epidemic solution all in terms of I. The result is then given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "8 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint where",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "16.20068387 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "Assuming z = 0, \u03b6 = 1; i.e., no testing, we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "Limiting cases:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "We remark that for Figs. 9 and 11, we chose the contact rates so that R 0 = 1.77, 1.11",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "respectively, and assumed that the contact rates were chosen so \u03b2 2 = \u03b2 1 /2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. TESTING AND SOCIAL DISTANCING"
+        },
+        {
+            "text": "For the SEIR model with infectious deaths, we assume the following:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix C: SEIR model structure"
+        },
+        {
+            "text": "Notice that in the infected equation, there is an extra death term, \u00b5 d . The idea is to incorporate the deaths due to infection independent to regular birth and death rates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix C: SEIR model structure"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "9"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "9"
+        },
+        {
+            "text": "With the extra removal of infected by death, the contact rate, \u03b2, must be increased to sustain a given value of R 0. For example, with \u00b5 d = 0.035/year, and the parameters given by \u00b5 = 0.02, \u03b1 = 36.5, \u03b2 = 36.5, we find that to achieve an R 0 = 2 requires \u03b2 \u2248 73.1/year.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "In Figure 13 , we consider the case where the population has effective contact rates on average that yield a reproductive rate of infection, R 0 = 2. We plot the predicted infected and exposed fractions of the population as a function of time in years. Starting from a very initial infected, we that the peak is reach in approximately 0.5 years, or 26 weeks. In addition, for such a low reproductive rate, the exposed class precedes the infected with a slightly higher peak.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 12,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "We then assume that controls are induced by requiring the population to remove 1 in 4 people, or reducing the effective contact rate by 25 percent. The results in Figure 13 are shown for both R 0 = 1.75, 1.2. In both cases, as expected the peak is reduced greatly, and shifted in time. The implication is that even with constant control of quarantine, the virus persists. In order to achieve an R 0 = 1, which is needed drive the disease to extinction, \u03b2 < 36.55/year for the chosen demographic and epidemic parameters.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 163,
+                    "end": 172,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "We now consider interventions which are phased depending on the population size, and whether the incidence is increasing or decreasing. The results are plotted in Figure 15 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 163,
+                    "end": 172,
+                    "text": "Figure 15",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "The relative peaks on the upward slope when controls are released clearly explode. Even if controls are released at the peak of the steady control curve, there is an increase in the fraction of infectious. A similar behavior is observed if control is released at later times. . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint intervention is implemented). In Fig. 14 , they are plotted as solid and dashed red lines, respectively. Notice that with controls always on, the peak of the epidemic is reduced by about 2.5 times.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 178,
+                    "end": 185,
+                    "text": "Fig. 14",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "We now consider the same controls, but we turn off quarantine when the fraction of infected population is approximately 0.1, or 10 per cent. In the first case, we release quarantine, on the upward slope of the infected population. The results are shown as a solid black line in Fig. 14 . The infected population explodes to a peak that is about 2.3 times the peak at which controls are on fully.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 278,
+                    "end": 285,
+                    "text": "Fig. 14",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "On the downward side of the controls, we release quarantine again when the infected population is about 1 per cent of the population. The results are plotted as a blue line, and shows that although there is no ignition to a large outbreak, the disease takes an increase such that it takes longer to reach a minimum.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "Appendix E: Comparison of SEAIR and SEIR predictions Figure 16 shows a comparison of SEIR and SEAIR epidemic curve as a function of the fraction of asymptomatic infectious, p. Our simulations show that, when a low fraction of asymptomatic is considered (p = 15%), the SEIR overestimates the infectious count, and slightly underestimates the position of the peak. When a larger fraction is considered (p = 85%), the SEIR predictions fail with respect to both the size and timing of the peak.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 53,
+                    "end": 62,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Using this model, the reproductive rate of infection becomes"
+        },
+        {
+            "text": "The still evolving nature of the pandemic makes it generally challenging to estimate parameters accurately. The following table shows our choices for the parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix F: Parameter values"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16 When social distancing is implemented as control, the contact rates are assumed to be such that \u03b2 A is a fraction of \u03b2 I ; i.e., we capture a fraction of the asymptomatic individuals.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 113,
+                    "text": "16",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "Typically, we assume that fraction is 50 per cent. When control is off, then the contact rates are equal, and set to values such that the value of R 0 \u2248 2, which is our typical baseline.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "Control is released in a smooth fashion using an arctangent function to avoid discontinuities. This is reflected in the small deviations between control and release curves observed in the figures. 12 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Asymptomatic infectious are now 85% of all infectious cases. 16",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "17"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 4 : Cumulative incidence for an example population of 100k, with release of control at different times. Asymptomatics make for 85% of the infectious population. 50% reduction of transmission is achieved by reducing the asymptomatic transmission rate.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "17"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "18"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 5 : Effect of testing a fraction of the asymptomatic population as soon as the first case of infection is reported, in the absence of additional NPI. The asymptomatic make for 25% of all infectious cases. While a secondary peak is not observed, testing asymptomatics is predicted to reduce the intensity of the epidemic peak.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "18"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "19"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint 20 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "19"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 7 : Effect of testing a fraction of the asymptomatic population as soon as the first case of infection is reported, in the absence of additional NPI. The asymptomatics make for 85% of all infectious cases. While a secondary peak is not observed, testing asymptomatics is predicted to reduce the intensity of the epidemic peak.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "19"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "21"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "21"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 9 : Effect of testing and social distancing, at different times, when asymptomatics are 25% of the infectious population. If 25% of the population is tested, a strong resurgence of the epidemic is observed if release of NPI occurs before the epidemic peak.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "21"
+        },
+        {
+            "text": "On the other hand, testing at or after the epidemic peak results in a negligible difference between full control and release of control.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "21"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "23"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint 24 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "23"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 11 : Effect of testing and social distancing, at different times, when asymptomatics are 85% of the infectious population. If 25% of the population is tested, a strong resurgence of the epidemic is observed if release of NPI occurs before the epidemic peak.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 154,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "23"
+        },
+        {
+            "text": "Testing at or after the epidemic peak results in a strong secondary peak of infection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "23"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "25"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint Figure 12 : Cumulative incidence for a example population of 100k people. NPI are assumed in place, and release is assumed at time of testing. Asymptomatics are 85% of the infectious population.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 154,
+                    "text": "Figure 12",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "25"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "26"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint 27 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "26"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16 28 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 113,
+                    "text": "16",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "26"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16 ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 113,
+                    "text": "16",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "26"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "29"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint The dashed lines are the asymptomatic infectious, A. We observe that not including asymptomatic incorrectly estimates both size and timing of the infectious peak.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20068387",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "29"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "30"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20068387 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "16.20068387 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "30"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The effect of travel restrictions on the spread of the 2019 novel coronavirus (COVID-19) outbreak",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chinazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ajelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gioannini",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Litvinova",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Merler",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.aba9757"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus-Infected Pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The New England Journal of Medicine",
+            "volume": "382",
+            "issn": "13",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Countries test tactics in a war against COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kupferschmidt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "367",
+            "issn": "6484",
+            "pages": "1287--1288",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.367.6484.1287"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Seasonality and period-doubling bifurcations in an epidemic model",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Aron",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "Journal of theoretical biology",
+            "volume": "110",
+            "issn": "4",
+            "pages": "665--679",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Infinite subharmonic bifurcation in an SEIR epidemic model",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "Journal of mathematical biology",
+            "volume": "18",
+            "issn": "3",
+            "pages": "233--253",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Fluctuating epidemics on adaptive networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Shaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Physical Review E",
+            "volume": "77",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Enhanced vaccine control of epidemics in adaptive networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Shaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Physical Review E",
+            "volume": "81",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Incubation period of 2019 novel coronavirus (2019-nCoV) infections among travellers from Wuhan, China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Backer",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Klinkenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "European Communicable Disease Bulletin",
+            "volume": "25",
+            "issn": "5",
+            "pages": "1--6",
+            "other_ids": {
+                "DOI": [
+                    "10.2807/1560-7917.ES.2020.25.5.2000062"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Case-Fatality Rate and Characteristics of Patients Dying in Relation to COVID-19 in Italy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Onder",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rezza",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Brusaferro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "JAMA -Journal of the American Medical Association",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.4683"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in Wuhan",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. The Lancet",
+            "volume": "395",
+            "issn": "10223",
+            "pages": "30183--30188",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A novel coronavirus emerging in China -Key questions for impact assessment",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Munster",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Koopmans",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Van Doremalen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Van Riel",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "De Wit",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "382",
+            "issn": "8",
+            "pages": "692--694",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMp2000929"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Universal Screening for SARS-CoV-2 in Women Admitted for Delivery",
+            "authors": [
+                {
+                    "first": "Desmond",
+                    "middle": [],
+                    "last": "Sutton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karin",
+                    "middle": [],
+                    "last": "Fuchs",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mary",
+                    "middle": [],
+                    "last": "D\u00e1lton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dena",
+                    "middle": [],
+                    "last": "Goffman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2009316"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "useful discussions of the modeling with Janine Tucker of McKean Defense, as well as support from the NRL Base funding no. N0001420WX00410, as well as the Office of Naval Research no. N00001419WX01322. KH, JHK and SB acknowledge discussions with the IBM COVID19 modeling taskforce. SB also acknowledges discussions with the Cellular Engineering team at IBM Research Almaden. Appendix A: Equations for the SEAIR model",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Wang, C., Horby, P. W., Hayden, F. G., Gao, G. F. (2020). A novel coronavirus outbreak of global health concern. The Lancet, 395(10223), 470-473. https://doi.org/10.Wang, C., et al. (2020). Evolving Epidemiology and Impact of Non-pharmaceutical Interventions on the Outbreak of Coronavirus Disease 2019 in Wuhan, China. MedArxiv, 2020.03.03.20030593. https://doi.org/10.101/2020.03.03.20030593 [3] Ferguson, N. M. et al (2020). Impact of non-pharmaceutical interventions (NPIs) to reduce COVID-19 mortality and healthcare demand, (March), 20. https://doi.org/10.25561/77482",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Effect of early removal of non medical intervention on the dynamic of the disease. The red curve shows the unmitigated epidemic, i.e. no intervention. The green curve is the effect of reducing transmission rate by 25% as consequence of reducing social interactions. The orange curves show release of control at various stages of the epidemic curve: (a) at t = 0.28 years, (b) at the epidemic peak, and (c) at t = 0.51 years. Asymptomatic infectious are 25% of all infectious cases. Effect of early removal of non medical intervention on the dynamic of the disease. The red curve shows the unmitigated epidemic, i.e. no intervention. The green curve is the effect of reducing transmission rate by 50% as consequence of reducing social interactions. The orange curves show release of control at various stages of the epidemic curve: (a) at t \u2248 0.5 years, (b) at the epidemic peak, and (c) at t = 2.5 years.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Cumulative incidence for an example population of 100k, with release of control at different times. Asymptomatics make for 85% of the infectious population. 25% reduction of transmission is achieved by reducing the asymptomatic transmission rate.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Cumulative incidence for a example population of 100k people, for various fractions of the asymptomatic population tested. Asymptomatics are 25% of the infectious population.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Cumulative incidence for a example population of 100k people, for various fractions of the asymptomatic population tested. Asymptomatics are 85% of the infectious population 22 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Cumulative incidence for a example population of 100k people. NPI are assumed in place, and release is assumed at time of testing. Asymptomatics are 25% of the infectious population.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Exposed (blue) and infected (red) for R0 = 2, 1.75, and 1.2. R0 = 1.75 corresponds to quarantining 1 in 4 people from the population. That is reflected in a 25 percent reduction in the contact rates. Other parameters where rates are in years: \u00b5 = 0.02, \u00b5 d = 0.035, \u03b1 = \u03b3 = 36.5. \u03b2 is adjusted to get the appropriate value of R 0 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Depicted shows the uncontrolled infected (Solid red line), the controlled infected (dashed red) when R 0 = 1.75. Two different controls are implemented when the infected fraction hits approximately 1 per cent. The black line releases the controls on the upward slope, while the blue line turns off control on the downward slope.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "NPIs are released during control measurements. The red dashed line depicts the results for continuous control for all time. The other curves release control at various times on the upward and downward slopes of the control curve (red dashed line).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Comparison between SEIR and SEAIR for various fractions of the asymptomatic population, p. The solid lines represent the symptomatic infectious class, I.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Appendix D: Effect of Non-pharmaceutical Intervention relaxation on the SEIR model Since we see a definitive effect of NPI on the population for various fractions of the population, we consider here how the effects of turning off controls by allowing people to remix with the population; i.e., what happens when control is turned off. To quantify the effects of controls release, we first plot the case where there is no control, so we can compare",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,1181 @@
+{
+    "paper_id": "1fce1d7b9a6a36ae51bad667a59e6df9842a5788",
+    "metadata": {
+        "title": "An unsupervised algorithm for host identification in flaviviruses",
+        "authors": [
+            {
+                "first": "Phuoc",
+                "middle": [],
+                "last": "Truong",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Turku",
+                    "location": {
+                        "settlement": "Turku",
+                        "country": "Finland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Santiago",
+                "middle": [],
+                "last": "Garcia-Vallve",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Rovira i Virgili University",
+                    "location": {
+                        "settlement": "Tarragona",
+                        "region": "Catalonia",
+                        "country": "Spain"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Pere",
+                "middle": [],
+                "last": "Puigb\u00f2",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Turku",
+                    "location": {
+                        "settlement": "Turku",
+                        "country": "Finland"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Early characterization is essential to control the spread of emerging viruses, such as the Zika Virus outbreak in 2014. A major challenge is the identification of potential hosts for novel viruses. We introduce an algorithm to identify the host range of a virus from its raw genome sequence that will be a useful tool to understand host-virus relationships.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Recent viral pandemics have shown that rapid characterization of the virus is essential during the development of an outbreak [1] [2] [3] [4] . Among other factors, host information is essential for surveillance and control of virus spread. However, emerging viruses are fully characterized only after several confirmed cases occur; this is an inefficient method of deterring current and future outbreaks 5 . Fast and reliable computational biology methods are needed to develop antiviral treatments, to improve medical diagnoses and to efficiently contain viral outbreaks 6 . Viral genomes are modulated by high mutation rates 7 and by selective forces to adapt their codon usage to that of their hosts, especially when the viruses can infect a wide host range, as in flaviviruses 8 .",
+            "cite_spans": [
+                {
+                    "start": 126,
+                    "end": 129,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 130,
+                    "end": 133,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 134,
+                    "end": 137,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 138,
+                    "end": 141,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 405,
+                    "end": 406,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 573,
+                    "end": 574,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 628,
+                    "end": 629,
+                    "text": "7",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 782,
+                    "end": 783,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "MAIN"
+        },
+        {
+            "text": "In this article, we introduce an unsupervised algorithm to identify putative virus host ranges based on only genome sequence information (figure 1). The proposed methodology has been tested in 94 viruses of genus Flavivirus and 16 potential hosts. Several flaviviruses are major human pathogens, with potential host ranges from vertebrates to arthropods 9 . Flaviviruses are classified by vector type into mosquito-borne (MBFV), tick-borne (TBFV), insect-only (IOFV) and unknown vector (UVFV) 10 flaviviruses. In MBFVs, there exists a paraphyletic subgroup of mosquito-specific viruses 11 , also known as dual-host insect-only flaviviruses (dhIOFVs). Flaviviruses with the same host type tend to be monophyletic and are subject to the same selective pressures as the host; this situation is reflected in their codon usage and dinucleotide composition 12 . The most widespread and prevalent flaviviruses include Dengue virus (DENV), West Nile virus (WNV), Japanese encephalitis virus (JEV), and Zika virus (ZKV) 13 . Several articles suggest that highly similar codon usage frequencies between viruses and hosts are indicative of a high virus-host adaptation level 14 . Thus, the codon adaptation index (CAI) 15 may be a robust indicator to determine putative hosts. Here, we use a normalized CAI (nCAI) to compare codon usage frequencies across virus and host sequences (see methods section). The highest level of optimization is at nCAI=1.0, when the relative use of synonymous codons in the virus and host is identical. Virus-host adaptations are also evaluated with a correspondence analysis (CA) plot (figure 2). Flaviviruses able to infect a wide range of hosts (generalists) tend to be in the center of the plot, whereas host-specific flaviviruses move away from the center towards their optimal hosts (supplementary figures 1-2). Therefore, the nCAI-CA algorithm provides a fast and reliable method of identifying the putative host range of a virus. This method requires only coding sequences (CDSs) without prior knowledge and can be implemented with minimal computational equipment. In addition, we have developed an easy-to-use web server, available at http://ppuigbo.me/programs/CAIcal/nCAI , to calculate nCAI values.",
+            "cite_spans": [
+                {
+                    "start": 354,
+                    "end": 355,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 493,
+                    "end": 495,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 586,
+                    "end": 588,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1011,
+                    "end": 1013,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1164,
+                    "end": 1166,
+                    "text": "14",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1208,
+                    "end": 1210,
+                    "text": "15",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "MAIN"
+        },
+        {
+            "text": "First, to assess whether a codon usage methodology could distinguish subgroups within a viral species, we performed nCAI-CA analysis for all the available CDSs of DENV, WNV, JEV, and ZKV, which numbered 4865, 297, 1619 and 494 , respectively. Each viral subgroup formed a distinct cluster based on relative synonymous codon usage (supplementary figures 3-4) and GC content (%GC) (supplementary figures 5-7). In addition, we determined the interspecies and intraspecies variability of the relative synonymous codon usage (RSCU) and %GC in the DENV, JEV, WNV and ZKV genomes. The results showed that the RSCU values could differentiate viral subgroups within species and that their distances mostly reflected the evolutionary histories of the viruses (supplementary figure 5 ). The %GC was not a discriminating factor at the intraspecific level (supplementary figure 6) . At the interspecies level, the clustering patterns based on the RSCU were only slightly more similar to the evolutionary histories of the viruses than the %GC (supplementary figure 7) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 764,
+                    "end": 772,
+                    "text": "figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 858,
+                    "end": 867,
+                    "text": "figure 6)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1044,
+                    "end": 1053,
+                    "text": "figure 7)",
+                    "ref_id": null
+                }
+            ],
+            "section": "MAIN"
+        },
+        {
+            "text": "Next, we used the nCAI-CA algorithm (figure 1) to identify the optimal hosts of 94 flaviviruses based on only complete CDSs and codon usage tables from 16 potential hosts (vertebrates: mammals, birds, reptiles and amphibians; arthropods: mosquitoes and ticks) (supplementary tables 1 -3). The nCAI-CA algorithm was able to accurately determine host types for MBFVs and UVFVs (vertebrates), IOFVs ( Aedes mosquitoes), and TBFVs ( Ixodes scapularis ) (figure 2). The paraphyletic group of dhIOFVs clustered between Aedes mosquitoes and vertebrates (supplementary figure 1 ). The CA plot shows a partial overlap between the MBFV and TBFV groups (supplementary figure 1) ; however, on average, TBFVs had higher nCAI values (0.813) than MBFVs (0.765) for I. scapularis , suggesting a higher degree of optimization for tick hosts (supplementary table 2 ). The nCAI-CA analysis also revealed unexpected findings for individual viruses, e.g., WNVs clustered within MBFVs but near TBFVs, which aligns with the results of previous infectivity tests 18 and some observational studies (supplementary table 1). All the viruses could be classified into two general host groups: vertebrates (MBFVs, TBFVs, UVFVs and dhIOFVs) and mosquitoes (IOFVs) (supplementary figure 2). As expected, no group clustered near Anopheles gambiae or Culex quinquefasciatus , suggesting that these are not optimal hosts for flaviviruses.",
+            "cite_spans": [
+                {
+                    "start": 1039,
+                    "end": 1041,
+                    "text": "18",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 561,
+                    "end": 569,
+                    "text": "figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 657,
+                    "end": 666,
+                    "text": "figure 1)",
+                    "ref_id": null
+                },
+                {
+                    "start": 824,
+                    "end": 846,
+                    "text": "(supplementary table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "MAIN"
+        },
+        {
+            "text": "The heat map of nCAI values for all flaviviruses shows common adaptation patterns (supplementary figure 8 ). Likely optimal hosts (within an nCAI range of 0.9-1.1) include mammals ( Myotis brandtii , M. davidii , Mus musculus , Bos taurus and Homo sapiens ) and Aedes mosquitoes ( Aedes aegypti and A. albopictus ). Unlikely hosts due to low adaptation (nCAI < 0.9) include C. quinquefasciatus , A. gambiae , I. scapularis and Sus scrofa . These results are in accordance with previous studies and observations, e.g., most MBFVs have a reproductive cycle that includes Aedes (host-vector) or Culex (vector) mosquitoes and a primary mammalian host (supplementary table 1 ). Based on these analyses, flaviviruses are potentially less adapted to reproduction in Culex mosquitoes due to the differences in %GC between Culex and Aedes mosquitoes . Moreover, our analysis suggests that TBFV is a group of flaviviruses optimized to reproduce in vertebrates and use ticks as vectors (and we speculate that they may occasionally reproduce in ticks). In general, flavivirus codon usage is overoptimized (nCAI > 1.1) for birds ( Columba livia , Gallus gallus , Anas platyrhynchos ), amphibians ( Xenopus laevis ) and reptiles ( Alligator mississippiensis ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 97,
+                    "end": 105,
+                    "text": "figure 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 647,
+                    "end": 669,
+                    "text": "(supplementary table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "MAIN"
+        },
+        {
+            "text": "Despite the accurate results produced by nCAI, there are certain limitations in its application. The algorithm is based on the assumption that there is a selection pressure to optimize the relative use of synonymous codons in the virus. However, it is well known that some viruses use the opposite strategy, and some viruses deoptimize codon usage to hide from host defense mechanisms 19 . In addition, viruses with overoptimized codon usage (nCAI >> 1) might be explained by multiple factors, e.g., adaptation to multiple hosts, effects of extreme %GC bias or adaptation to highly expressed genes 20 . Nevertheless, further empirical investigations are necessary to determine reliable confidence intervals for nCAI. Host determination may be uncertain if viruses display approximately equal optimizations for different host types; for example, although dhIOFV codon usage is optimized for both vertebrate and mosquito hosts, they are insect-specific 11 . Although common host preference patterns are observed, the optimal hosts vary depending on the virus or subgroup and may not reflect documented cases (supplementary table 1 ). The observed host ranges also do not distinguish between vectors and hosts, and classical phylogenomic methods cannot determine potential hosts without confirmed cases. Our nCAI-based method overcomes this limitation by directly measuring the adaptation of viruses to the translational machinery of their hosts.",
+            "cite_spans": [
+                {
+                    "start": 385,
+                    "end": 387,
+                    "text": "19",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 951,
+                    "end": 953,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1106,
+                    "end": 1128,
+                    "text": "(supplementary table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "MAIN"
+        },
+        {
+            "text": "In conclusion, this novel algorithm provides a fast and proactive method to assess the potential host ranges and the risk of zoonotic host shift for new and emerging viruses. In flaviviruses, this method distinguishes between arthropod and vertebrate hosts with high accuracy. However, it might produce ambivalent results for viruses undergoing host shifts. Overall, this nCAI-based algorithm may be used as a complement to current phylogenetic methods to monitor current and future outbreaks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "MAIN"
+        },
+        {
+            "text": "The optimal host identification algorithm (figure 1b) consists of two phases. In the first phase, the algorithm computes the required codon usage tables through two subroutines: one for the host and the other for the virus. These tables along with complete genomic CDSs are then used as the input data for CAIcal 21 . This produces CAI data between the virus and host (CAI h ) using virus CDSs and host codon usage tables and CAI data for the virus itself (CAI s ) using virus CDSs and virus codon usage tables. In the second phase, the CAI h values are normalized by dividing each by its respective CAI s as follows:",
+            "cite_spans": [
+                {
+                    "start": 313,
+                    "end": 315,
+                    "text": "21",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Normalized codon adaptation index (nCAI)"
+        },
+        {
+            "text": "This yields the normalized CAI (nCAI) value, from which the optimal and likely hosts can be inferred depending on how similar the codon usage of a virus is to the codon usage of its host organisms. The nCAI values range between -\u221e and +\u221e, and the optimal value is 1.0, indicating identical codon usage between the virus and host and therefore perfect adaptation to the host. Values above and below 1.0 would indicate over-and underoptimization, respectively, and thus suboptimal adaptation to a host.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Normalized codon adaptation index (nCAI)"
+        },
+        {
+            "text": "The nCAI calculations can be performed with the CAIcal tool in a dedicated web server written in PHP that works on any web browser ( http://ppuigbo.me/programs/CAIcal/nCAI ). The server requires two sets of inputs: complete DNA or RNA CDSs of the viruses of interest in FASTA format and the codon usage tables of the potential host animals in the format used by the Codon Usage Database 22 . CAIcal will then output the results in a tab-delimited The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050047 doi: bioRxiv preprint CAI s (nCAI), length of the query sequence (Length), overall %GC, and GC content at the first, second or third nucleotide of each codon (%GC1-3).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation of the nCAI"
+        },
+        {
+            "text": "Available flavivirus CDSs and their respective protein sequences were obtained from the RefSeq 16 and GenBank 17 databases. The viruses were chosen according to phylogenetic studies [23] [24] [25] and current ICTV classifications 10 (supplementary table 1 ).",
+            "cite_spans": [
+                {
+                    "start": 95,
+                    "end": 97,
+                    "text": "16",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 182,
+                    "end": 186,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 187,
+                    "end": 191,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 192,
+                    "end": 196,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 230,
+                    "end": 232,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 233,
+                    "end": 255,
+                    "text": "(supplementary table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Sequence data"
+        },
+        {
+            "text": "In this study, a vector is defined as an organism capable of transmitting a virus to another type of organism. This definition does not take into account whether the virus is virulent within a vector, i.e., there is no differentiation between a vector and a vector-host. A host is, on the other hand, an organism in which the virus primarily replicates, and it does not directly transmit the virus to another organism of the same type.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Host and vector organisms"
+        },
+        {
+            "text": "The host organisms for this study were chosen based on information primarily provided by the Virus-Host Database 26 , which includes representative arthropod (mosquitoes and tick) and vertebrate (mammals, birds, reptiles and amphibians) host species. Additionally, a more comprehensive list of hosts and vectors for each flavivirus is included in supplementary table 1. This table includes only confirmed cases of viruses sequenced from an organism or cases in which viruses have successfully infected the cells of a host in a laboratory experiment. It is important to note that not all host animals listed in the database are primary hosts, as they might have acquired the viruses through happenstance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Host and vector organisms"
+        },
+        {
+            "text": "We computed a codon usage reference table for 16 putative hosts representing all possible flavivirus host types among vertebrates (mammals, birds, reptiles and amphibians) and arthropods (mosquitoes and ticks). We analyzed genomes that contained over 10,000 CDSs to reflect actual codon usage frequencies, as well as those of G. gallus (6,017) and S. scrofa (2, 953) .",
+            "cite_spans": [
+                {
+                    "start": 358,
+                    "end": 361,
+                    "text": "(2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 362,
+                    "end": 366,
+                    "text": "953)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Codon usage reference tables"
+        },
+        {
+            "text": "The %GC and RSCU values were calculated from the CDSs of the flaviviruses. The RSCU describes the preference bias for a codon to be used to encode an amino acid 27 . This can be calculated by dividing the observed number of a codon by the expected frequency of the same codon assuming that individual codons for amino acids were used at equal frequency 28 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Genome analysis"
+        },
+        {
+            "text": "CA was performed for two different types of nCAI datasets. The first analysis included all known flaviviruses, and the second included separate datasets containing only the values for DENV, JEV, WNV and ZKV. The correspondence analyses were performed with the \"ca\" package (version 0.70) and then plotted with the \"ggplot2\" package (version 2.2.1) in R (version 3.4.4).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Correspondence analysis"
+        },
+        {
+            "text": "The nCAI values of all MBFVs were plotted in a heat map with the \"pheatmap\" package (version 1.0.10) in R. The virus phylogenetic tree was computed with the following steps: first, the amino acid sequences of each genome were aligned using MUSCLE 29 . Tree construction was performed with FastTree 30 . Host trees were built based on NCBI Taxonomy 31 . Each of the viruses and host organisms were sorted to match their respective phylogenies. Variation test: For the DENV, JEV, WNV and ZKV genomes, their results were clustered based on k-means (5) in the heat map (supplementary figure 9 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 580,
+                    "end": 588,
+                    "text": "figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Heat maps"
+        },
+        {
+            "text": "The clustering of each subgroup was performed and visualized by computing centroids based on the multivariate normal distribution of each subgroup with a confidence level of 0.95. This was achieved with the \"ggplot2\" package (version 2.2.1) in R (version 3.4.4). The virus subgroups included MBFV, TBFV, IOFV, UVFV and dhIOFV, and the host type subgroups were vertebrates, mosquitoes and ticks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Clustering method"
+        },
+        {
+            "text": "This work has been supported by funds from the Turku Collegium for Science and Medicine (Turku, Finland). The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.050047 doi: bioRxiv preprint Figure 1 a) Host (89.4%)",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 264,
+                    "text": "Host",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 248,
+                    "end": 256,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "ACKNOWLEDGMENTS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Zika: the origin and spread of a mosquito-borne virus",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Kindhauser",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Allen",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Santhana",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dye",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Bull. World Health Organ",
+            "volume": "94",
+            "issn": "",
+            "pages": "675--686",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The West African ebola virus disease epidemic 2014-2015: A commissioned review",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Omilabu",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Salu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Oke",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "James",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Niger. Postgrad. Med. J",
+            "volume": "23",
+            "issn": "",
+            "pages": "49--56",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "470--473",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "A (H1N1) influenza virus pandemic: A review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Girard",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Tam",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Assossou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kieny",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "The",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Vaccine",
+            "volume": "28",
+            "issn": "",
+            "pages": "4895--4902",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Responding to Covid-19 -A Once-in-a-Century Pandemic?",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gates",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N. Engl. J. Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMp2003762"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Applications of bioinformatics and computational biology to influenza surveillance and vaccine strain selection",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Vaccine",
+            "volume": "21",
+            "issn": "",
+            "pages": "1758--1761",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Viral mutation rates",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sanju\u00e1n",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Nebot",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chirico",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mansky",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Belshaw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "J. Virol",
+            "volume": "84",
+            "issn": "",
+            "pages": "9733--9748",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Host range specificity of flaviviruses: correlation with in vitro replication",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kuno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "J. Med. Entomol",
+            "volume": "44",
+            "issn": "",
+            "pages": "93--101",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Flavivirus genome organization, expression, and replication",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Chambers",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Galler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Rice",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Annu. Rev. Microbiol",
+            "volume": "44",
+            "issn": "",
+            "pages": "649--688",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "ICTV virus taxonomy profile: flaviviridae",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Simmonds",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. Gen. Virol",
+            "volume": "98",
+            "issn": "",
+            "pages": "2--3",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Novel flaviviruses from mosquitoes: mosquito-specific evolutionary lineages within the phylogenetic group of mosquito-borne flaviviruses",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Huhtamo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Virology",
+            "volume": "464",
+            "issn": "465",
+            "pages": "320--329",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Virus-host coevolution: common patterns of nucleotide motif usage in Flaviviridae and their hosts",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Lobo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PLoS ONE",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Four human diseases with significant public health impact caused by mosquito-borne flaviviruses: West Nile, Zika, dengue and yellow fever",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guarner",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hale",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Semin. Diagn. Pathol",
+            "volume": "36",
+            "issn": "",
+            "pages": "170--176",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Viral adaptation to host: a proteome-based analysis of codon usage and amino acid preferences",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Bahir",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fromer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Prat",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Linial",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Mol. Syst. Biol",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The codon Adaptation Index--a measure of directional synonymous codon usage bias, and its potential applications",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sharp",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "Nucleic Acids Res",
+            "volume": "15",
+            "issn": "",
+            "pages": "1281--1295",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "O&apos;leary",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nucleic Acids Res",
+            "volume": "44",
+            "issn": "",
+            "pages": "733--778",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Susceptibility of mosquito and tick cell lines to infection with various flaviviruses",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lawrie",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Uzc\u00e1tegui",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Armesto",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Bell-Sakyi",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gould",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Med. Vet. Entomol",
+            "volume": "18",
+            "issn": "",
+            "pages": "268--274",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Comparative [corrected] codon usage between the three main viruses in pestivirus genus and their natural susceptible livestock",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Virus Genes",
+            "volume": "44",
+            "issn": "",
+            "pages": "475--481",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Codon usage bias from tRNA's point of view: redundancy, specialization, and efficient decoding for translation optimization",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Rocha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Genome Res",
+            "volume": "14",
+            "issn": "",
+            "pages": "2279--2286",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "CAIcal: a combined set of tools to assess codon usage adaptation",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Puigb\u00f2",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Bravo",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Garcia-Vallve",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biol. Direct",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Codon usage tabulated from international DNA sequence databases: status for the year 2000",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Nakamura",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gojobori",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ikemura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Nucleic Acids Res",
+            "volume": "28",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Phylogenetic relationships of flaviviruses correlate with their epidemiology, disease association and biogeography",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Gaunt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "J. Gen. Virol",
+            "volume": "82",
+            "issn": "",
+            "pages": "1867--1876",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Phylogeny of the genus Flavivirus",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kuno",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Tsuchiya",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Karabatsos",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Cropp",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "J. Virol",
+            "volume": "72",
+            "issn": "",
+            "pages": "73--83",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Genomics and evolution of Aedes-borne flaviviruses",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Grard",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J. Gen. Virol",
+            "volume": "91",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "and design of the study: PP. Data collection: PT. Data analysis: PP, PT, SGV. Manuscript drafting: PT. Manuscript revision for critical intellectual content: PP, SGV. Writing the final version of the manuscript: PP. All authors read and approved the final manuscript.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Scheme of the algorithm to calculate the normalized codon adaptation index (nCAI) a) Pipeline to identify putative hosts based on nCAI values. The complete coding sequences of hosts and viruses are used to compute nCAI values, which are put into a table. These values are then subjected to correspondence analysis to identify optimal hosts and, thus, the likelihood of a virus to infect an organism. b) Algorithm to calculate nCAI. The CAI values for possible hosts and viruses of interest are computed from the complete coding sequences (CDSs) and the codon usage tables, which are calculated from the same sequences. The CAI values of the host (CAI h ) are calculated from virus CDSs and host codon usages, and the CAI values of the viruses (CAI s ) are computed using virus CDSs and the codon usage values of the viruses themselves. The resulting CAI values are then normalized by dividing each CAI h by its respective CAI s .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Correspondence analysis of the normalized codon adaptation index (nCAI) values of flaviviruses (genus Flavivirus ; N = 94). The plot shows that nCAI can differentiate multiple subgroups of flaviviruses based on their degree of codon usage optimization relative to their host organisms. Mosquito-borne flaviviruses are generally optimized for vertebrate hosts, while tick-borne flaviviruses are optimized for ticks, and insect-only flaviviruses are optimized for mosquitoes. Dual-host insect-only flaviviruses show optimization for both mosquitoes and vertebrates, and unknown vector flaviviruses are also optimized for vertebrates. Dimension 1 explains 89.4 percent of the variation, and Dimension 2 explains 8.5 percent of the variation.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Mihara, T. et al. Linking Virus Genomes with Host Taxonomy. Viruses 8, 66 (2016). 27. Sharp, P. M. & Li, W. H. An evolutionary perspective on synonymous codon usage in unicellular organisms. J. Mol. Evol. 24, 28-38 (1986). 28. Sharp, P. M., Tuohy, T. M. & Mosurski, K. R. Codon usage in yeast: cluster analysis clearly differentiates highly and lowly expressed genes. Nucleic Acids Res. 14, 5125-5143 (1986). 29. Edgar, R. C. MUSCLE: multiple sequence alignment with high accuracy and high throughput. Nucleic Acids Res. 32, 1792-1797 (2004). 30. Price, M. N., Dehal, P. S. & Arkin, A. P. FastTree 2 -approximately maximum-likelihood trees for large alignments. PLoS ONE 5, e9490 (2010). 31. Federhen, S. The NCBI Taxonomy database. Nucleic Acids Res. 40, D136-43 (2012).",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors declare no competing interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "COMPETING INTERESTS"
+        }
+    ]
+}

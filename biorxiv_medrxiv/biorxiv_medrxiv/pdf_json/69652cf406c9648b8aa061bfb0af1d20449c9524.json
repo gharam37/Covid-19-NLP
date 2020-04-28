@@ -1,0 +1,3755 @@
+{
+    "paper_id": "69652cf406c9648b8aa061bfb0af1d20449c9524",
+    "metadata": {
+        "title": "In silico approach toward the identification of unique peptides from viral protein infection: Application to COVID-19",
+        "authors": [
+            {
+                "first": "Benjamin",
+                "middle": [
+                    "C"
+                ],
+                "last": "Orsburn",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Proteomic und Genomic Sciences, LLC",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Conor",
+                "middle": [],
+                "last": "Jenkins",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Sierra",
+                "middle": [
+                    "M"
+                ],
+                "last": "Miller",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Millersville University",
+                    "location": {
+                        "addrLine": "Science Lane",
+                        "settlement": "Millersville",
+                        "region": "PA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Benjamin",
+                "middle": [
+                    "A"
+                ],
+                "last": "Neely",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Proteomic und Genomic Sciences, LLC",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Namandje",
+                "middle": [
+                    "N"
+                ],
+                "last": "Bumpus",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We describe a method for rapid in silico selection of diagnostic peptides from newly described viral pathogens and applied this approach to SARS-CoV-2/COVID-19. This approach is multi-tiered, beginning with compiling the theoretical protein sequences from genomic derived data. In the case of SARS-CoV-2 we begin with 496 peptides that would be produced by proteolytic digestion of the viral proteins. To eliminate peptides that would cause cross-reactivity and false positives we remove peptides from consideration that have sequence homology or similar chemical characteristics using a progressively larger database of background peptides. Using this pipeline, we can remove 47 peptides from consideration as diagnostic due to the presence of peptides derived from the human proteome. To address the complexity of the human microbiome, we describe a method to create a database of all proteins of relevant abundance in the saliva microbiome. By utilizing a protein-based approach to the microbiome we can more accurately identify peptides that will be problematic in COVID-19 studies which removes 12 peptides from consideration. To identify diagnostic peptides, another 7 peptides are flagged for removal following comparison to the proteome backgrounds of viral and bacterial pathogens of similar clinical presentation. By aligning the protein sequences of SARS-CoV-2 field isolates deposited to date we can identify peptides for removal due to their presence in highly variable regions that may lead to false negatives as the pathogen evolves. We provide maps of these regions and highlight 3 peptides that should be avoided as potential diagnostic or vaccine targets. Finally, we leverage publicly deposited proteomics data from human cells infected with SARS-CoV-2, as well as a second study with the closely related MERS-CoV to identify the two proteins of highest abundance in human infections. The resulting final list contains the 24 peptides most unique and diagnostic of SARS-CoV-2 infections. These peptides represent the best targets for the development of antibodies are clinical diagnostics. To demonstrate one application of this we model peptide fragmentation using a deep learning tool to rapidly generate targeted LCMS assays and data processing method for detecting CoVID-19 infected patient samples.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The identification of peptides expressed unique to pathogens is required for the development of diagnostic assays as well as vaccine targets. Antibody based techniques such as enzyme linked immunosorbent assay rely on antibodies raised against specific peptide targets. Mass spectrometry (MS) based diagnostic assays typically require many rounds of optimization to identify peptides that are unique in both sequence or in chemical characteristics to distinguish them from the complex host background. 1 The detection of viral proteins in body fluids can be a rapid and specific diagnostic for infection in severe acute respiratory syndrome (SARS). [2] [3] [4] During the 2003 (SARS) outbreak, non-MS based methods of protein detection proved to be more successful 5,6 than LCMS methods. [7] [8] [9] Non-MS based methods, such as western blots, enzyme-linked immunosorbent assays (ELISAs), and protein arrays, rely on antibodies for the detection of proteins. Given recent studies concerning high variability in antibody production, LCMS-based methods are an attractive alternative approach for the rapid identification of small molecules, proteins, and peptides in clinical settings where consistency is paramount. 10, 11 In the 15 years since the 2003 SARS outbreak, LCMS technology has experienced a revolution led primarily by increases in the speed, sensitivity, and resolution of MS instruments. Today, protein array and antibody-based methods are falling out of favor in both research and clinical diagnostics, due in large part to the improvements in LCMS technology. 12, 13 A review of this growth by Grebe and Singh described a clinical lab with no LCMS systems in 1998 that completed over 2 million individual LCMS clinical assays in 2010. 14 Incremental improvements in rapid sample preparation techniques, chromatography, and data processing have also contributed to the increasing use of LCMS-based clinical testing. A 2013 study demonstrated the level of advance by identifying 4,000 yeast proteins in one hour of LCMS run time, identifying approximately 75 proteins/min at a rate 100 times faster than studies a decade prior. 15 Targeted peptide-centric assays are advantageous when sensitivity is paramount over the quantity of identified targets. Targeted assays often rely on tandem MS with high speed, but relatively low accuracy, quadrupoles. 16 Quadrupoles can be used to select ions for fragmentation with quantification of fragment ions by other quadrupoles in single reaction monitoring (SRM). They can also be used in conjunction with high resolution systems in single ion monitoring (SIM) and parallel reaction monitoring (PRM). SRM relies on fragmentation which requires a priori the mass to charge ratio (m/z) of both the peptide ion of interest and its dominant ions produced during fragmentation. Commonly, the collision energy is optimized for each peptide fragment in order to maximize efficiency and signal. SIM uses higher resolution scans in lieu of fragmentation, which requires a priori only an approximate m/z ratio for the peptide. In SIM targeted assays, the peptide ion's exact mass is extracted post-run during data processing. Two studies have shown that SIM scans with \u226560,000 resolution produce selectivity comparable to SRM. 17, 18 PRM targeted assays combine fragmentation and high resolution molecule monitoring. In contrast to SIM, isolated ions are subjected to fragmentation. Post-run data processing then calculates quantification from the highresolution accurate mass of the fragment ions. For proteins with only one available peptide target, PRM is the most selective technique in modern proteomics. 19, 20 Due to the high sensitivity of targeted LCMS assays, background signal is of central concern. Peptides must be selected that are unique in one or more of the following characteristics to be truly diagnostic; m/z, peptide sequence, or hydrophobicity. Due to the complexity of the human background thousands of peptides may be possible that are within 0.1 Da in m/z. 21 In the case of ions with high m/z similarity, fragmentation to reveal peptides with sequences of low homology to the background can be used to easily discern these targets. The elution time of the peptides, once characterized and monitored with internal standards can be utilized to distinguish between even highly similar peptides, including sequences that are chemically modified but on alternative residues. 22 To address these concerns an increasing number of in silico tools have been developed that can speed the identification of suitable LCMS targets. Tools such as Picky, 23 the Phosphopedia, 22 the Peptide Manager, and Purple 1 , and Skyline 24 allow the removal of peptides from theoretical proteome backgrounds or the intelligent selection of peptide targets based on other parameters. Peptide retention times can be calculated based on amino acid hydrophobicity calculations, although the inclusion of internal reference calibration standards such as ProCal are necessary for adjustments to different chromatographic conditions. 25 In traditional LCMS targeted assay development, once suitable targets are identified, peptides are then synthesized, and ideal fragment ions are selected for use following rounds of selection and optimization. One way to improve development time is by using databases of experimental fragmentation data such as the PeptideAtlas. 26 However, peptide fragmentation follows specific energetic patterns, resulting primarily in fragments caused by separation at the peptide bond. It is therefore possible to create theoretical spectral libraries in silico from peptide sequence alone. Theoretical spectral libraries are especially useful when the biological samples are unavailable. New tools that employ deep learning algorithms have been demonstrated to produce theoretical MS2 spectra superior to previous prediction models and, in the absence of true experimental data, are the best resources currently available. 27, 28 These deep learning algorithms can learn from vast libraries of experimental data to predict the fragmentation patterns of new peptide sequences that they are given. One such algorithm, PROSIT, uses the vast synthetic human peptide libraries, from the ProteomeTools project 29 for its training dataset. Due to the high quality of the 450,000 synthetic peptides experimentally fragmented in ProteomeTools to date, PROSIT has been demonstrated to create spectral libraries that are, in some cases, superior to experimentally derived in-house spectral libraries. 30 In this study, we describe a in silico approach to identify unique peptides presented during viral infection of human cells. Using a stepwise elimination approach, we outline strategies to begin with a theoretical protein sequence and remove peptides with homology in clinically relevant systems. By removing peptides with homology to human and the relevant human microbiome, we can eliminate many targets that would produce false positive tests for the virus in any healthy person. We further improve on this by removing peptides that could be present in diseases with a similar clinical presentation. By utilizing the data in public repositories, we can determine the protein targets with the highest abundance as well as the highest likelihood of being diagnostic in different assays. We further apply this method toward the analysis of SARS-CoV-2 infected materials by identifying regions of variability in field isolates identified to date and flag these peptides, as diagnostics targeted on these peptides may lead to false negatives. The restricted target list may be utilized toward the generation of immunological based assays such as ELISA or immunoswabs 2 or provide peptides of value as vaccine targets.",
+            "cite_spans": [
+                {
+                    "start": 502,
+                    "end": 503,
+                    "text": "1",
+                    "ref_id": null
+                },
+                {
+                    "start": 649,
+                    "end": 652,
+                    "text": "[2]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 653,
+                    "end": 656,
+                    "text": "[3]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 657,
+                    "end": 660,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 788,
+                    "end": 791,
+                    "text": "[7]",
+                    "ref_id": null
+                },
+                {
+                    "start": 792,
+                    "end": 795,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 796,
+                    "end": 799,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1216,
+                    "end": 1219,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1220,
+                    "end": 1222,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1576,
+                    "end": 1579,
+                    "text": "12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1580,
+                    "end": 1582,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1751,
+                    "end": 1753,
+                    "text": "14",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 2142,
+                    "end": 2144,
+                    "text": "15",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 2364,
+                    "end": 2366,
+                    "text": "16",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 3272,
+                    "end": 3275,
+                    "text": "17,",
+                    "ref_id": null
+                },
+                {
+                    "start": 3276,
+                    "end": 3278,
+                    "text": "18",
+                    "ref_id": null
+                },
+                {
+                    "start": 3655,
+                    "end": 3658,
+                    "text": "19,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 3659,
+                    "end": 3661,
+                    "text": "20",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 4027,
+                    "end": 4029,
+                    "text": "21",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 4441,
+                    "end": 4443,
+                    "text": "22",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 4611,
+                    "end": 4613,
+                    "text": "23",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 4632,
+                    "end": 4634,
+                    "text": "22",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 5073,
+                    "end": 5075,
+                    "text": "25",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 5405,
+                    "end": 5407,
+                    "text": "26",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 5989,
+                    "end": 5992,
+                    "text": "27,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 5993,
+                    "end": 5995,
+                    "text": "28",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 6556,
+                    "end": 6558,
+                    "text": "30",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To demonstrate an application of this approach we use the peptides identified in this work to create materials to facilitate LCMS studies of SARS-CoV-2 infected tissues. We provide along with this work necessary resources for both DDA and DIA investigation of these materials through the production of spectral libraries and a list of predicted PTMs investigators should consider when analyzing these materials. The peptide spectral libraries are further utilized to create transition lists optimized for hardware from 5 LCMS instrument vendors. All materials and methods described herein are available as supplemental material to this publication. The supplemental material includes protein sequences (FASTA files), predicted PTMs, theoretical MS2 spectral libraries, instrument methods and targeted method data processing templates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Our work demonstrates not only the feasibility of this approach, but also its ability to rapidly develop methods even in the face of limitation of access to sample experimental data. We use the example of SARS-CoV-2 viral protein detection to underscore the power of today's protein informatics tools in responding to an urgent public health crisis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Genetics based assays that rely on the polymerase chain reaction (PCR) have well established sensitivity due to the ability to amplify nucleotide chains. Primer design must be optimized and may be adversely affected by unknown complex matrices such as in human stool where the true depth of the microbiome may be unknown. 39 PCR-based assays have also been considered cost-prohibitive in some areas of clinical microbiology compared to other assays. 40 A comparison of the relative sensitivity of PCR and protein based assays is challenging due to the differences in nomenclature and in the actual targets being analyzed. A comparison of detection limits of real-time (RT) PCR and other methods for Giardia pathogens in human stool determined revealed conflicting results. When compared to a rapid immunoassay for Giardia lambia, PCR was found inferior to both a rapid immunoassay and manual microscopic analysis. A later similar work compared assays for Giardia intestinalis and concluded that RT-PCR was a superior method to ELISA or microscopic analysis. In addressing the detection of emerging pathogens PCR requires several steps to be deployed en masse. First, a genomic sequence must be generated from which primers can be designed. These primers must be evaluated for cross-reactions in clinical samples and these reagents must be generated in bulk, subjected to quality control (QC) procedures and shipped to the site of testing. The lead time for these reagents has been well-publicized in addressing the COVID-19 pandemic, as has the challenges in quality of the primers for an assay deployed by the US CDC in February, 2020. 41 A summary of relevant assays is shown in Table 1 . ELISA based assays for SARS-CoV display the least sensitivity of the these assays with detections in nanograms/mL. 3 ImmunoSwab assays first described for SARS-CoV and recently shown to provide rapid utility for SARS-CoV-2 report sensitivity in the former case of 10 picograms/mL. 2 Due to the high similarity of the two platforms we hypothesized that the SARS-CoV-2 assay will be of similar performance. Two examples of optimized peptide pharmacokinetics assays in serum have demonstrated the utility of rapid LCMS based targeted assays that can achieve limits of detection and assay time comparable to current validated assays. ",
+            "cite_spans": [
+                {
+                    "start": 322,
+                    "end": 324,
+                    "text": "39",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 450,
+                    "end": 452,
+                    "text": "40",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1637,
+                    "end": 1639,
+                    "text": "41",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 1972,
+                    "end": 1973,
+                    "text": "2",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1681,
+                    "end": 1688,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Comparison of LCMS to Alternative Pathogen Detection Methods"
+        },
+        {
+            "text": "In shotgun proteomics, proteins are first digested into smaller peptide fragments that are more easily detected by the instrument. Given its widespread use, high efficiency and speed of digestion, we chose to develop methods that exclusively use the proteolytic enzyme trypsin, which produces \"tryptic peptides.\" Sequencing grade trypsin exhibits high efficiency cleavage at unmodified (1) arginine and (2) lysine residues unless followed by a proline. Trypsin also has the advantage of leaving a terminal basic residue at the cleavage site, which increases the likelihood of complete fragment ion coverage from the charged terminal. 48 Due to these reasons, trypsin is utilized unless the protein sequence has an abnormally high or low number of lysine or arginine residues. A very high frequency of the residues (such as Lysine-rich proteins) will create very short peptides that could be uninformative for protein identification. A very low frequency of the residues will create very large peptides, or undigested (\"intact\") proteins in some cases, that are difficult to detect and fragment. Our theoretical trypsin digest of the 2019-nCoVpFASTA1 database produced tryptic peptides with average lengths of 8 to 18 amino acids. These results indicate that trypsin digestion is an appropriate choice for detection of these viral proteins.",
+            "cite_spans": [
+                {
+                    "start": 634,
+                    "end": 636,
+                    "text": "48",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theoretical peptides"
+        },
+        {
+            "text": "The recently described program Purple was used for background subtraction of relevant theoretical proteomes using default parameters. Peptides were considered relevant with a sequence between 6 and 24 amino acids in length. Using these parameters, the COVID-19 UniProt FASTA produced 496 unique peptide sequences. In the first stage analysis we eliminated human peptides from further consideration. By subtracting all the human proteome background, we find that two peptide sequences are identical in SARS-CoV-2 and the human sequence. For example, the peptide sequence TLLSLR is found in the Replicase 1a protein of SARS-CoV-2 as well as in 4 human proteins, including Focadhesin (S4R400). These identical peptides should be excluded due from any further analysis due to these identical sequences. Purple was also used to remove peptides of identical amino acid composition with alternate sequence according the to default parameters previously described, 1 removing another 45 peptides from this list.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Removal of proteome theoretical background"
+        },
+        {
+            "text": "In the second stage we developed a pipeline to remove proteins derived from the complex human microbiome from consideration. The NIH Microbiome initiative has created vast libraries using genomic sequencing technologies to identify the organisms present in and on Homo sapiens. 49, 50 These libraries do . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint not, however, address protein abundance. In order to create a relevant proteome background for subtraction we performed a meta-analysis of a recent in depth study of the human saliva metaproteome. 38 The raw instrument data was searched using the complete NIH saliva microbiome FASTA database of 536,284 protein sequences derived from 249 organisms as well as the complete UniProt catalog of reviewed bacterial and human protein sequences to date as well as the common list of protein lab contaminants. A new database was created of all protein sequences that contained at least one peptide spectral match (PSM), resulting in 29,816 unique protein sequences. Although it is possible that the proteins provided in the NIH FASTA are possible in the saliva microbiome, without adjusting for protein abundance and removing redundancy for shared proteins between organisms the proteome background may be misconstrued as more complex than it truly is. By removing from consideration, the 29,816 proteins of most relevant abundance we can more accurately measure the proteome background (data not shown.) Subtraction of the human microbiome background removed another 12 peptides that should be excluded in oral diagnostics or in the development of vaccine targets for SARS-CoV-2.",
+            "cite_spans": [
+                {
+                    "start": 278,
+                    "end": 281,
+                    "text": "49,",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 282,
+                    "end": 284,
+                    "text": "50",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 721,
+                    "end": 723,
+                    "text": "38",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Removal of proteome theoretical background"
+        },
+        {
+            "text": "For the third stage subtraction we narrowed the peptide list to those targets that would be diagnostic for SARS-CoV-2 infection but would not cross-react with organisms of similar symptoms or clinical presentation. We created separate protein FASTA databases from UniProt 2020_01 for the viral pathogens, rhinovirus, influenza, pneumoniae, pneumophila and respiratory syncytial virus (RSV) as well as staph aureus and streptococcus species. The subtraction of these proteins from the background removed another six peptides from consideration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Removal of proteome theoretical background"
+        },
+        {
+            "text": "The final stage of proteome background subtraction focused on the removal of peptides that could be derived from other coronavirus strains, including MERS, SARS-CoV and other protein sequences. Unsurprisingly, this proved to be the largest removal step, with 306 peptides subtracted from consideration and only 125 remaining as clearly unique and diagnostic of SARS-CoV-2. These results are available as Supplemental X and visualized in Figure 1 . The copyright holder for this preprint (which was not peer-reviewed) is the . Figure 1 . A summary of the peptide numbers as they are removed from an increasingly complex theoretical proteome background",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 437,
+                    "end": 445,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 526,
+                    "end": 534,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Removal of proteome theoretical background"
+        },
+        {
+            "text": "As shown in Table X , several studies for related coronavirus strains had been deposited in public repositories. In March of 2020, three new studies were released featuring work with SARS-CoV-2. In order to determine if some viral proteins would be of higher relative abundance in human infection, we first began by searching previously released, but unpublished, files from MERS-CoV infection of Calu3 cells. As shown in Figure 2A more peptides were identified from the nucleocapsid protein than any other protein, followed by the Spike protein. When the first SARS-CoV-2 study was released we reprocessed this study and observed the same trend, as shown in Figure 2B . Although not strictly quantitative, counting the number of peptides identified in a global proteomics experiment has been historically used as a metric for approximating relative protein abundance in a sample. These results suggest that the Nucleoprotein and Spike Glycoprotein may be the highest abundance SARS-CoV-2 proteins present in human infections ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 19,
+                    "text": "Table X",
+                    "ref_id": null
+                },
+                {
+                    "start": 422,
+                    "end": 431,
+                    "text": "Figure 2A",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 659,
+                    "end": 668,
+                    "text": "Figure 2B",
+                    "ref_id": null
+                }
+            ],
+            "section": "Utilization of Publicly deposited proteomics data to identify ideal protein targets"
+        },
+        {
+            "text": "To identify peptides likely to make poor targets due to genomic variability, we performed a 2-stage approach. The first consisted of aligning and visualizing protein sequences being deposited in NCBI MetAlign and AliView software in R. These tools allow the color coding and rapid flagging of regions of alternative protein sequences in those aligned. A visualization of one such region from the nucleocapsid protein is shown in Figure 3A . To verify these results, we processed proteomics data derived from cloned nucleocapsid proteins utilizing every unique full length nucleocapsid protein sequence available in UniProt. Figure 3B mirrors the results from the visualization analysis. We identify one peptide region in the nucleocapsid and two in the spike glycoprotein that may provide false positives for diagnostic assays. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint Figure 3A . AliView output predicting protein variability in a region of the nucleocapid protein sequence. 3B. Comparison of all available annotated NCBI protein sequences to recently deposited proteomics data that reflects the variability in this viral protein region.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 429,
+                    "end": 438,
+                    "text": "Figure 3A",
+                    "ref_id": null
+                },
+                {
+                    "start": 624,
+                    "end": 633,
+                    "text": "Figure 3B",
+                    "ref_id": null
+                },
+                {
+                    "start": 970,
+                    "end": 979,
+                    "text": "Figure 3A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Identification of peptides most likely to be affected by evolutionary pressures"
+        },
+        {
+            "text": "In the absence of any experimentally derived spectra from SARS-CoV-2 proteins we used the Prosit deep learning tool to generate theoretical spectra for each peptide. Figure 4 is an example of a nucleocapsid peptide predicted by Prosit on January 27 th compared to the first experimental data available for a cloned protein from this virus. The top panel is the experimental spectra and the bottom is a mirror plot showing the predicted fragments and their expected relative intensities. Prosit accurately predicted the absence of fragments y14 and y15 as well as the presence of only b ions central to the peptide sequence. Furthermore, the abundance predictions allow for the selection of the most appropriate ions for MS/MS assays such as PRM and MRM. As one utility of the methods described herein, we used the Skyline software to create transition lists optimized specifically for each of the Skyline-compatible triple quadrupole instruments. While minor modifications are required for SCIEX, Agilent, and Shimadzu instruments, Waters Xevo and Thermo instruments use identical parameters for transition list design. Most modern triple quadrupole instruments are capable of 500 SRMS/sec and fully permit the use of 2,000 transition lists, as provided here. For older instruments that lack this scan speed or that require higher dwell times, the transition lists included in the supplemental methods may be reduced by the end user accordingly.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 166,
+                    "end": 174,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Generation of Spectral Libraries and Experimental Methods"
+        },
+        {
+            "text": "PRM methods monitor multiple transitions simultaneously but at a time cost. The highest scan speed currently available in Orbitrap instruments is 48 scans per second and is only available on the Exploris 480 system (data not shown). In order to achieve maximum sensitivity, higher fill times are often required for these instruments. We chose to utilize three peptides/protein for these methods. Alternative peptides . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint can be selected from the Skyline files provided (Supplemental Information) or by selecting peptide mass targets from the other transition lists. A summary of the resources provided in this work are available in the Supplemental Information. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generation of Spectral Libraries and Experimental Methods"
+        },
+        {
+            "text": "In the course of this work, we created the minimal resources required for untargeted shotgun analysis of SARS-CoV-2 infected materials. These resources are made available in the supplemental material including the full Prosit Spectral libraries, FASTA files and predicted post-translational modifications. The Prosit spectral libraries (Supplemental Material) enable the interrogation of DIA data and may be used for DDA experiments that employ tools such as the MSPepSearch (NIST). 51 DDA data requires only the protein FASTA file and a list of PTMs that may be present in the sample. Our analysis using ModPred predicted 17 possible PTMs (Supplemental Table 1 ). Amidation was the most frequent predicted PTM, but there is no known biological mechanism that we could derive from a survey of the literature. Palmitoylation, the second most frequent predicted PTM, is a well characterized viral PTM with critical functions in human immunodeficiency virus (HIV), human herpes virus (HHV), and influenza virus infectivity. [52] [53] [54] During the assembly of this manuscript, proteomics data became available from the infection of Chlorocebus sabaeus (Green monkey) cells with SARS-CoV-2. Multiple phosphorylation sites observed on the nucleocapsid protein from this study were accurately predicted as high confidence sites by the ModPred software, including S176 and S205, further strengthening our confidence in this program for this function (Supplemental Table 1 ). ",
+            "cite_spans": [
+                {
+                    "start": 483,
+                    "end": 485,
+                    "text": "51",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 1021,
+                    "end": 1025,
+                    "text": "[52]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 1026,
+                    "end": 1030,
+                    "text": "[53]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 1031,
+                    "end": 1035,
+                    "text": "[54]",
+                    "ref_id": "BIBREF52"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 654,
+                    "end": 661,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1459,
+                    "end": 1466,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Resources for untargeted proteomics methods"
+        },
+        {
+            "text": "The COVID-19 global health crisis has permitted an unprecedented degree of scientific sharing and progress. Prior to March 11, 2020 no proteomics data existed in any public repository for SARS-CoV-2 infected materials. Table 2 is a summary of the LCMS data available as of the date of this writing for both SARS-CoV-2 and the most closely related coronavirus strains as recently described. 55",
+            "cite_spans": [
+                {
+                    "start": 117,
+                    "end": 131,
+                    "text": "March 11, 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 219,
+                    "end": 226,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "LCMS Data for SARS-CoV-2"
+        },
+        {
+            "text": "Using in silico methods, we have developed methods for the rapid selection of unique viral peptides for diagnostic assay and vaccine development, using the example of SARS-CoV-2. In vitro validation of these peptides and methods is required and outside the scope of this work given our current lack of access to such samples. To demonstrate the utility of our pipeline, we have provided the minimum materials for data processing for both DDA and DIA untargeted proteomics methods with FASTA databases, spectral libraries and by predicting relevant PTMs for consideration. To broaden the number of labs that can apply our methods, we optimized run parameters for widely used LCMS systems compatible with Skyline, representing instruments from five companies. We will continue to refine these resources and post updates to these methods to LCMSmethods.org and invite researchers anywhere in the world to contact us for assistance in further optimization to address this emerging threat.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary"
+        },
+        {
+            "text": "At the date of this writing, only theoretical protein sequences for SARS-CoV-2, are available. These sequences are being acquired and annotated and the result of translation of genomic sequence information. All sequences in this study were obtained from NCBI accession: txd2697049, https://www.ncbi.nlm.nih.gov/protein/?term=txid2697049). Using Proteome Discoverer 2.4 (Thermo), the protein sequences were combined into a single protein FASTA database (2019-nCOVpFASTA1; Supplemental Information), and added to human proteome sequences (UniProt SwissProt Human database; downloaded 2/15/2020) to produce a database including both human and COVID-19 protein sequences (Human_plus_2019-nCOVpFASTA2; Supplemental Information). The UniProt 2020_01 prereleased protein FASTA for SARS-CoV-2 was downloaded on 3/15/2020 is also provided here. (UniProt_202001_prerelease_COVID19. Fasta; Supplemental material)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Coronavirus FASTA databases"
+        },
+        {
+            "text": "Publicly available experiments on other coronavirus experiments were found by searching the ProteomeXchange Consortium web interface (http://www.proteomexchange.org/). 31, 32 Clarification of the identity of unpublished data from Pacific Northwest National Laboratory (PNNL) was provided by Dr. Michael Monroe. SARS-CoV-2 labeled proteomics data was made available ahead of publication 33 as ProteomeXchange PXD017710. SARS-CoV-2 protein-protein interaction RAW files were downloaded from ProteomeXchange PXD018117. 34 ",
+            "cite_spans": [
+                {
+                    "start": 168,
+                    "end": 171,
+                    "text": "31,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 172,
+                    "end": 174,
+                    "text": "32",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 516,
+                    "end": 518,
+                    "text": "34",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Publicly available proteomics data from human samples infected with other coronaviruses"
+        },
+        {
+            "text": "The 2019-nCOVpFASTA1 (Supplemental Information) was converted to PROSIT peptide format with the EncyclopeDIA 35 software, resulting in an in silico peptide digestion (parameters: Charge Range = 2-3; Max missed cleavage = 1, m/z range = 400-1,500; default NCE = 30eV; default charge = +2). PROSIT peptide fragmentation prediction libraries were generated using the PROSIT online web portal (https://www.proteomicsdb.org/prosit/) with the spectral library modeling interface (options: prediction model = Prosit_2019_intensity; iRT prediction model = Prosit_2019_irt). The libraries were exported in NIST MSP text format for use in Skyline. 24, 36 ",
+            "cite_spans": [
+                {
+                    "start": 638,
+                    "end": 641,
+                    "text": "24,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 642,
+                    "end": 644,
+                    "text": "36",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Creation of peptide spectral libraries exclusive to SARS-CoV-2 with Prosit deep learning"
+        },
+        {
+            "text": "For SRM transitions, the 2019-nCOVpFASTA1 (Supplemental Information) was imported into Skyline v20.1.0.28 (University of Washington) along with the PROSIT tryptic peptide spectral library. Peptide settings and transitions were optimized within Skyline to reflect the vendor optimization requirements. For Agilent systems, the 20ms default dwell time was selected for the transition settings. For SCIEX instruments, the same dwell time was utilized as well as automatic optimization of the declustering potential and compensation voltage from the transition settings menu. For Waters, Thermo, and Shimadzu systems, no further settings were required for transition list generation. All transition lists were exported as unscheduled 15min methods. For PRM methods, three peptides were selected for each protein due to the increased time per scan relative to SRM methods. Instrument-specific Skyline files are included in the Supplemental information as described in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 963,
+                    "end": 970,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "PRM and SRM method development"
+        },
+        {
+            "text": "PTMs were predicted for the 2019-nCOVpFASTA1 proteins (Supplemental Information) using the ModPred web interface (www.modpred.org; accessed 1/31/2020). 37 All PTMs available at the date of analysis were selected as theoretical sites, and the Basic non evolutionary model was applied. ModPred ranks each PTM as high, medium, or low confidence as previously described. 37 The ModPred web interface can accept a maximum of 5,000 amino acids. In order to analyze YP_009724389.1 the predicted sequence had to be divided into five sequences, using a 100 amino acid overlap to avoid disrupting potential large motifs. The results of ModPred were compiled into a single spreadsheet with all modifications of all confidence levels. A second sheet was created that contained only the high confidence PTMs predicted, as well as a final summary for the counting of predicted high confidence PTM occurrence, provided as Supplemental Material as detailed in Supplemental Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 152,
+                    "end": 154,
+                    "text": "37",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 367,
+                    "end": 369,
+                    "text": "37",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 944,
+                    "end": 964,
+                    "text": "Supplemental Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "PRM and SRM method development"
+        },
+        {
+            "text": "To ensure that our assay targets did not lie in a mutable portion of the genome, all available SARS-CoV-2 genome constructs (as of March 21st, 2020) were downloaded from NCBI and aligned using MAFFT (sorted fasta output and automatic input detection; ver 7.453) and visualized with AliView (ver 1.26). The protein sequences for the nucleocapsid, polymerase, spike protein, and membrane glycoproteins were collected from NCBI's IPG database. Search terms included: nucleocapsid, N protein, E protein, envelope, polymerase, replicase, rdrp, spike protein, surface protein, S protein. Entries labeled 'hypothetical' were not included. Final alignments visualized included only entries originating directly from the virus (excluding things such as Bat-SARS-CoV, civet, Rhinolophus, etc.). All collected accession numbers can be found in Supplemental File 1. The evaluation of suitable targets was performed by manual review.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation of genomic stability in SARS-COV-2"
+        },
+        {
+            "text": "LCMS RAW instrument files from Gordon et al., 34 were downloaded from ProteomeXchange ( Table 2 ). The files for cloned nucleocapsid protein were processed in PD 2.2 using the default template for Q Exactive Basic ID. The files were searched against the cRAP database, the UniProt 2020_01 FASTA and a compiled database of all full length nucleocapsid protein variants available in NCBI on 3/24/2020. Of the 15 protein sequences available, only 10 were flagged as having unique sequences by PD. The search results were not merged into protein groups in order to facilitate the visualization of protein sequences using the sequence comparison view post processing tool.",
+            "cite_spans": [
+                {
+                    "start": 46,
+                    "end": 48,
+                    "text": "34",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 88,
+                    "end": 95,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Evaluation of Nucleocapsid Protein Stability and Identification of Variable Regions"
+        },
+        {
+            "text": "Files deposited in ProteomeXchange with identifier PXD004319 were utilized to create a saliva microbiome background. 38 The files were searched in Proteome Discoverer 2.2 using the parameters detailed in Supplemental Table 1 . The FASTA databases used were the complete Oral Microbiome.FA file from the NIH Microbiome initiative, a custom database of all bacterial species in UniProt 2020_01 as well as the Homo sapiens FASTA from the same, as well as the cRAP database of common lab protein and peptide contaminants. The database marker node was utilized to flag sequences derived from each FASTA. Protein grouping was not employed in this analysis to allow the largest possible sequence variation. All protein sequences with more than one potential peptide spectral match (PSM) were retained and exported. The FASTA database utilities tool in PD 2.2 was used to compile these results into a FASTA that contained only proteins in UniProt standard accession format, entitled Adjusted_Human_Saliva_Microbiome_3_24_20.FASTA (Supplemental Table 1 ). ",
+            "cite_spans": [
+                {
+                    "start": 117,
+                    "end": 119,
+                    "text": "38",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 204,
+                    "end": 224,
+                    "text": "Supplemental Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1036,
+                    "end": 1043,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Creation of saliva microbiome background interference databases"
+        },
+        {
+            "text": "To remove peptides that with homology to those of the COVID-19 theoretical peptides, Purple_portable_0.4.2 for Windows was installed locally. The UniProt 2020_01 release of the SARS-CoV-2 FASTA was placed into the same local file with the FASTA databases from Human and the FASTA databases of pathogens with similar clinical presentation. Two analyses were performed, the first to remove peptides that occur in human alone for use in serum or plasma-based LCMS assays. A second analysis was performed using these in addition to the saliva microbiome peptides for use in saliva or nasopharyngeal sampling methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Automatic removal of interfering peptide targets with Purple"
+        },
+        {
+            "text": "Labeled proteomics of SARS-CoV-2 infected human cells were recently deposited as ProteomeXchange PXD017710. To evaluate the relative abundance of proteins during infectivity, the RAW files were reprocessed in PD 2.2, using the default workflow for TMT 10-plex quantification with the FASTA databases for UniProt human and the SARS-CoV-2 FASTA prerelease from UniProt 2020_01. Protein and peptide assemblies were manually reviewed to cross-reference suitable peptide targets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation of SARS-CoV-2 Proteomics Data for Evaluating In silico targets"
+        },
+        {
+            "text": "All data described in this manuscript, including protein databases, instrument methods, transition lists and Skyline templates are included in the Supplemental Information as detailed in Supplemental Table 1. ( The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 200,
+                    "end": 208,
+                    "text": "Table 1.",
+                    "ref_id": null
+                }
+            ],
+            "section": "Data and Code Availability"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A Rapid Point of Care Immunoswab Assay for SARS-CoV Detection",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kammila",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bhatnagar",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Sunwoo",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zayas-Zamora",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "King",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Suresh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "J. Virol. Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jviromet.2008.05.023"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Novel System for Detecting SARS Coronavirus Nucleocapsid Protein Using an SsDNA Aptamer",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Woo",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Jeong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J. Biosci. Bioeng",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jbiosc.2011.08.014"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Nucleocapsid Protein as Early Diagnostic Marker for SARS",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Che",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Di",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Sen; Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "C C"
+                    ],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Yuen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Emerg. Infect. Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3201/eid1011.040516"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Application of ProteinChip Array Profiling in Serum Biomarker Discovery for Patients Suffering from Severe Acute Respiratory Syndrome",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "K C"
+                    ],
+                    "last": "Ngan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C K"
+                    ],
+                    "last": "Law",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Methods Mol. Biol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-1-59745-304-2_20"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Protein Chip Array Profiling Analysis in Patients with Severe Acute Respiratory Syndrome Identified Serum Amyloid A Protein as a Biomarker Potentially Useful in Monitoring the Extent of Pneumonia",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "T C"
+                    ],
+                    "last": "Yip",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W M"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "C S"
+                    ],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Yip",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Kwan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C K"
+                    ],
+                    "last": "Law",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "N C"
+                    ],
+                    "last": "Tsang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K C"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Clin. Chem",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1373/clinchem.2004.031229"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The Use of Proteomics in the Discovery of Serum Biomarkers from Patients with Severe Acute Respiratory Syndrome",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/pmic.200400897"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Quantitative Proteomics Analysis Reveals BAG3 as a Potential Target To Suppress Severe Acute Respiratory Syndrome Coronavirus Replication",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ge",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "J. Virol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/jvi.00213-10"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Proteomic Analysis on Structural Proteins of Severe Acute Respiratory Syndrome Coronavirus",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/pmic.200300676"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Commercial Antibodies and Their Validation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L A"
+                    ],
+                    "last": "Voskuil",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.12688/f1000research.4966.2"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The Challenges with the Validation of Research Antibodies",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L A"
+                    ],
+                    "last": "Voskuil",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.12688/f1000research.10851.1"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Plasma Proteome Profiling to Assess Human Health and Disease",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Geyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kulak",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pichler",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Holdt",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Teupser",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cell Syst",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cels.2016.02.015"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Clinical Peptide and Protein Quantification by Mass Spectrometry (MS)",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "K G"
+                    ],
+                    "last": "Grebe",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Singh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.trac.2016.01.026"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "LC-MS/MS in the Clinical Laboratory -Where to from Here?",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "K G"
+                    ],
+                    "last": "Grebe",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Singh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Clin. Biochem. Rev",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The One Hour Yeast Proteome",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hebert",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Richards",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ulbrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Coughlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Westphall",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Coon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Mol. Cell. Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/mcp.M113.034769"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Matrix-Matched Calibration Curves for Assessing Analytical Figures of Merit in Quantitative Proteomics",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Pino",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Searle",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Hoofnagle",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Noble",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Maccoss",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Proteome Res",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jproteome.9b00666"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Parallel Reaction Monitoring for High Resolution and High Mass Accuracy Quantitative",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Peterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Westphall",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Coon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Targeted Proteomics. Mol. Cell. Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/mcp.O112.020131"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Technical Considerations for Large-Scale Parallel Reaction Monitoring Analysis",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gallien",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bourmaud",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Domon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J. Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jprot.2013.10.029"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "How Many Human Proteoforms Are There?",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Aebersold",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Agar",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Amster",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Baker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Bertozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Boja",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Costello",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Cravatt",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fenselau",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Garcia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nature Chemical Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nchembio.2576"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Plug-and-Play Analysis of the Human Phosphoproteome by Targeted High-Resolution Mass Spectrometry",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lawrence",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Searle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Llovet",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vill\u00e9n",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat. Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nmeth.3811"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "A Simple Online PRM and SRM Method Designer for Targeted Proteomics",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zauber",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kirchner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Selbach",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Picky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nature Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nmeth.4607"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Platform-Independent and Label-Free Quantitation of Proteomic Data Using MS1 Extracted Ion Chromatograms in Skyline",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Schilling",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rardin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Maclean",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Zawadzka",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Frewen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Cusack",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sorensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Bereman",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Jing",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Mol. Cell. Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/mcp.M112.017707"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "PROCAL: A Set of 40 Peptide Standards for Retention Time Indexing, Column Performance Monitoring, and Collision Energy Calibration",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Zolg",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Knaute",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zerweck",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wenschuh",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Reimer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schnatbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kuster",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/pmic.201700263"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "The PeptideAtlas Project",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Deutsch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Methods Mol. Biol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gkj040"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Intensity-Based Protein Identification by Machine Learning from a Library of Tandem Mass Spectra",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Elias",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Gibbons",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "King",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Roth",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Gygi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Nat. Biotechnol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nbt930"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Silico Spectral Libraries by Deep Learning Facilitate Data-Independent Acquisition Proteomics",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Qiao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Commun",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41467-019-13866-z"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "ProteomeTools: Systematic Characterization of 21 Post-Translational Protein Modifications by Liquid Chromatography Tandem Mass Spectrometry (LC-MS/MS) Using Synthetic Peptides",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Zolg",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schmidt",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "M\u00e9dard",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zerweck",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Knaute",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wenschuh",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Reimer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schnatbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kuster",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Mol. Cell. Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/mcp.tir118.000783"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Prosit: Proteome-Wide Prediction of Peptide Tandem Mass Spectra by Deep Learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gessulat",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schmidt",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Zolg",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Samaras",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schnatbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zerweck",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Knaute",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rechenberger",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Delanghe",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Huhmer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41592-019-0426-7"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "ProteomeXchange Provides Globally Coordinated Proteomics Data Submission and Dissemination",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Vizca\u00edno",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Deutsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Csordas",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Reisinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "R\u00edos",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Dianes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Farrah",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Bandeira",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nature Biotechnology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nbt.2839"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "How to Submit MS Proteomics Data to ProteomeXchange via the PRIDE Database",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ternent",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Csordas",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "G\u00f3mez-Baena",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Beynon",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hermjakob",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Vizca\u00edno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/pmic.201400120"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "SARS-CoV-2 Infected Host Cell Proteomics Reveal Potential Therapy Targets",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Klann",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Koch",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Krause",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.21203/rs.3.rs-17218/v1"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "A SARS-CoV-2-Human Protein-Protein Interaction Map Reveals Drug Targets and Potential Drug-Repurposing",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Gordon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Jang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bouhaddou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Obernier",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "O&apos;meara",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Swaney",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Tummino",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Huettenhain",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.22.002386"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Chromatogram Libraries Improve Peptide Detection and Quantification by Data Independent Acquisition Mass Spectrometry",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Searle",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Pino",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Egertson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Ting",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lawrence",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Maclean",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vill\u00e9n",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Maccoss",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Commun",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41467-018-07454-w"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Skyline: An Open Source Document Editor for Creating and Analyzing Targeted Proteomics Experiments",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Maclean",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Tomazela",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Shulman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chambers",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Finney",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Frewen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kern",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Tabb",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Liebler",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Maccoss",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Bioinformatics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btq054"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "The Structural and Functional Signatures of Proteins That Undergo Multiple Events of Post-Translational Modification",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Pejaver",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hsu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Dunker",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Uversky",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Radivojac",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Protein Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/pro.2494"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Metaproteomics of Saliva Identifies Human Protein Markers Specific for Individuals with Periodontitis and Dental Caries Compared to Orally Healthy Controls",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Belstr\u00f8m",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jersie-Christensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lyon",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Damgaard",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Holmstrup",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Olsen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PeerJ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj.2433"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Comparison of Microscopy, Real-Time PCR and a Rapid Immunoassay for the Detection of Giardia Lamblia in Human Stool Specimens",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schuurman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Lankamp",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Van Belkum",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kooistra-Smid",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Van Zwet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Clin. Microbiol. Infect",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1469-0691.2007.01836.x"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "PCR-Based Diagnostics for Infectious Diseases: Uses, Limitations, and Future Applications in Acute-Care Settings. Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Rothman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(04)01044-8"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Coronavirus and the Race to Distribute Reliable Diagnostics",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sheridan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Biotechnol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/d41587-020-00002-2"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Diagnosis of Acute Respiratory Syndrome Coronavirus 2 Infection by Detection of Nucleocapsid Protein",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Diao",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dan",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.07.20032524"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Severe Acute Respiratory Syndrome Diagnostics Using a Coronavirus Protein Microarray",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Jona",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kreiswirth",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Willey",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Mazzulli",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Proc. Natl. Acad. Sci. U. S. A",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.0510921103"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Development and Validation of Protein Microarray Technology for Simultaneous Inflammatory Mediator Detection in Human Sera",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Selvarajah",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Negm",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hamed",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tubby",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Todd",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tighe",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Harrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Fairclough",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Mediators Inflamm",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1155/2014/820304"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Rapid Detection of 2019 Novel Coronavirus SARS-CoV-2 Using a CRISPR-Based DETECTR Lateral Flow Assay",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Broughton",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Fasching",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Streithorst",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Granados",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sotomayor-Gonzalez",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zorn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gopez",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.06.20032334"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Determination of Methionine-Enkephalin and Leucine-Enkephalin by LC-MS in Human Plasma: Study of Pre-Analytical Stability",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ozalp",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Barroso",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Meijer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Van Den Beld",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Anal. Biochem",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ab.2018.07.001"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "From Radioimmunoassay to Mass Spectrometry: A New Method to Quantify Orexin-A (Hypocretin-1) in Cerebrospinal Fluid",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hirtz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vialaret",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gabelle",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Nowak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dauvilliers",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lehmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Sci. Rep",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/srep25162"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "A Critical Review of Trypsin Digestion for LC-MS Based Proteomics",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kolsrud",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Malerod",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ray",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Reubsaet",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lundanes",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Greibrokk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Integrative Proteomics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.5772/29326"
+                ]
+            }
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "A Framework for Human Microbiome Research",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Meth\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pop",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Creasy",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Giglio",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huttenhower",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gevers",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Petrosino",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Abubucker",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Badger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nature11209"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "The NIH Human Microbiome Project",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Garges",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Giovanni",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mcinnes",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Schloss",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Bonazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mcewen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Wetterstrand",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Deal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Genome Res",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/gr.096651.109"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Reverse and Random Decoy Methods for False Discovery Rate Estimation in High Mass Accuracy Peptide Spectral Library Searches",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Burke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mirokhin",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Tchekhovskoi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Markey",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Chaerkady",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hess",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Stein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J. Proteome Res",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jproteome.7b00614"
+                ]
+            }
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Systems Analysis of Protein Fatty Acylation in Herpes Simplex Virus-Infected Cells Using Chemical Proteomics",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Serwa",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Abaitua",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Krause",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tate",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "O&apos;hare",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Chem. Biol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.chembiol.2015.06.024"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Palmitoylation of Virus Proteins",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Veit",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Biol. Cell",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/boc.201200006"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Palmitoylation of Influenza Virus Proteins",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Veit",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Serebryakova",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Kordyukova",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "In Biochemical Society Transactions",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1042/BST20120210"
+                ]
+            }
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Protein Structure and Sequence Re-Analysis of 2019-NCoV Genome Refutes Snakes as Its Intermediate Host or the Unique Similarity between Its Spike Protein Insertions and HIV-1",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Bell",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Proteome Res",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acs.jproteome.0c00129"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF2": {
+            "text": "The number of unique peptides identified in a metanalysis of MERS-CoV infection for each protein in human cells. 2B. The same analysis performed on the first proteomic study released on SARS-CoV infected human samples.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "A mirror plot demonstrating the Prosit derived MS/MS spectra (bottom half) against the first known fragmentation pattern for this SARS-CoV-2 nucleocapsid peptide in the literature (top half)",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Publicly available data relevant to SARS-CoV-2 Studies",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": ".CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.03.08.980383 doi: bioRxiv preprint FASTA databases of pathogens with similar clinical presentation Protein FASTA databases were downloaded from UniProt 2020_01 to create databases of proteins indicative of pathogens with similar clinical presentation using the following search terms: Coronavirus reviewed [no], Influenza, Middle East Respiratory, Pneumoniae, Respiratory Syncytial Virus, Rhinovirus, Staphylococcus aureus, Streptococcus reviewed [yes].",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "1) Lechner, J.; Hartkopf, F.; Hiort, P.; Nitsche, A.; Grossegesse, M.; Doellinger, J.; Renard, B. Y.; Muth, T. Purple: A Computational Workflow for Strategic Selection of Peptides for Viral Diagnostics Using MS-Based Targeted Proteomics. Viruses 2019. https://doi.org/10.3390/v11060536.Table 1. LCMS resources provided as supplemental material with this submission. FASTA file of COVID-19 Protein Sequences Human_plus_2019-nCoVpFASTA2 Human UniProt FASTA plus COV-19 Proteins above 2019-nCoV_Trypsin_Prosit_Spectral_Library-MSP-format.zip Prosit derived spectral library of COV-19 peptides Adjusted Oral Microbiome FASTA FASTA database generated from meta-analysis of saliva metaproteomics samples Instrument-Specific Run Parameters SRM Transition lists Thermo TSQ Quantum/Vantage Formatted for Thermo/Finnigan Legacy TSQ Thermo TSQ Altis/Quantis/Fortis Formatted for current generation Thermo TSQ SCIEX Triple Quadrupole Systems Contains specific SCIEX parameters as described in methods Agilent all models Formatted for Agilent Waters XEVO Formatted for Waters and Waters XEVO Shimadzu all models Transitions in .txt format as required by vendor interfaced PRM Window List for 3 peptides/protein Monoisotopic mass for 3 peptides for building PRM methods Example PRM methods for Thermo Q Exactive/Exploris/Fusion Premade .meth files with all parameters for these systems Data Processing PRM Example Processing Skyline Templates Skyline PRM format .sky file SRM Example Processing Skyline Templates SRM format .sky files with 10 peptides/protein SIM Example Processing Skyline Template SIM Templates for Orbitrap or TOF systems PD settings for processing Excel sheet with all PD processing details Post Translational Modification Predictions ModPred All Predicted Modifications Excel Sheet A compiled list of all PTMs from ModPred output ModPred All High confidence Predicted Modifications A simplified sheet of all high confidence PTMs ModPred Summary and counts of high confidence PTMs A combined sheet for counting high confidence PTMs . CC-BY 4.0 International license author/funder. It is made available under a",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank Dr. Matthew Monroe at Pacific Northwest National Laboratory (PNNL) for assistance curating unpublished data in the ProteomeXchange/MASSIVE public repository.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

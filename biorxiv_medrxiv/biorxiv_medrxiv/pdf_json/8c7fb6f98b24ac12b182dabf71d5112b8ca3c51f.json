@@ -1,0 +1,2094 @@
+{
+    "paper_id": "8c7fb6f98b24ac12b182dabf71d5112b8ca3c51f",
+    "metadata": {
+        "title": "BioLaboro: A bioinformatics system for detecting molecular assay signature erosion and 1 designing new assays in response to emerging and reemerging pathogens 2 3 E. mails for communication: 13",
+        "authors": [
+            {
+                "first": "Mitchell",
+                "middle": [],
+                "last": "Holland",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Daniel",
+                "middle": [],
+                "last": "Negr\u00f3n",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Shane",
+                "middle": [],
+                "last": "Mitchell",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Nate",
+                "middle": [],
+                "last": "Dellinger",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Mychal",
+                "middle": [],
+                "last": "Ivancich",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Tyler 4 Barrus",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Sterling",
+                "middle": [],
+                "last": "Thomas",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Katharine",
+                "middle": [
+                    "W"
+                ],
+                "last": "Jennings",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Bruce",
+                "middle": [],
+                "last": "Goodwin",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Shanmuga",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Sozhamannan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Shanmuga",
+                "middle": [],
+                "last": "Sozhamannan",
+                "suffix": "",
+                "affiliation": {},
+                "email": "shanmuga.sozhamannan.ctr@mail.mil"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background: Emerging and reemerging infectious diseases such as the novel Coronavirus 23 disease, COVID-19 and Ebola pose a significant threat to global society and test the public 24 health community's preparedness to rapidly respond to an outbreak with effective diagnostics 25 and therapeutics. Recent advances in next generation sequencing technologies enable rapid 26 generation of pathogen genome sequence data, within 24 hours of obtaining a sample in some 27 instances. With these data, one can quickly evaluate the effectiveness of existing diagnostics and 28 therapeutics using in silico approaches. The propensity of some viruses to rapidly accumulate 29 mutations can lead to the failure of molecular detection assays creating the need for redesigned 30 or newly designed assays.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Results: Here we describe a bioinformatics system named BioLaboro to identify signature 32 regions in a given pathogen genome, design PCR assays targeting those regions, and then test the 33 PCR assays in silico to determine their sensitivity and specificity. We demonstrate BioLaboro 34 with two use cases: Bombali Ebolavirus (BOMV) and the novel Coronavirus 2019 (SARS-CoV-35 2). For the BOMV, we analyzed 30 currently available real-time reverse transcription-PCR 36 assays against the three available complete genome sequences of BOMV. Only two met our in 37 silico criteria for successful detection and neither had perfect matches to the primer/probe 38 sequences. We designed five new primer sets against BOMV signatures and all had true positive 39 hits to the three BOMV genomes and no false positive hits to any other sequence. Four assays 40 are closely clustered in the nucleoprotein gene and one is located in the glycoprotein gene.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "41",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Similarly, for the SARS-CoV-2, we designed five highly specific primer sets that hit all 145 42 whole genomes (available as of February 28, 2020) and none of the near neighbors. : bioRxiv preprint 3 Conclusions: Here we applied BioLaboro in two real-world use cases to demonstrate its 44 capability; 1) to identify signature regions, 2) to assess the efficacy of existing PCR assays to 45 detect pathogens as they evolve over time, and 3) to design new assays with perfect in silico 46 detection accuracy, all within hours, for further development and deployment. BioLaboro is 47 designed with a user-friendly graphical user interface for biologists with limited bioinformatics 48 experience. 49 Background 50 Emerging and reemerging infectious diseases have serious adverse impacts on society 51 with respect to lives lost and annual economic losses [1-5], as being witnessed currently in the 52 COVID-19 outbreak caused by a novel Coronavirus, SARS-CoV-2. As of March 9, 2020, there 53 have been 113,584 confirmed cases of COVID-19 around the globe and 3,996 deaths [6-8]. 54 Factors such as climate change, urbanization, zoonotic spillover, international travel, lack or 55 breakdown of public health care systems, natural or man-made disasters, and pathogen evolution 56 to name a few, contribute to infectious disease emergence and sustainment [2]. 57 A unique challenge associated with emerging infectious diseases is rapidly identifying 58 the etiological agent and developing or repurposing existing medical countermeasures (MCMs), 59 including diagnostic assays, to curtail the spread of an outbreak. With respect to reemerging 60 infectious diseases the challenge is to determine whether existing MCMs are effective or not, and 61 in the latter case, develop or modify the MCMs in a timely manner. In some cases, the failure of 62 existing MCMs can be accounted for by genetic drift and shift and the resulting altered genotypic 63 and phenotypic profiles of the newly emergent pathogen. Ebolavirus is one such reemerging 64 infectious disease agent that exhibits high degrees of genetic changes in every new outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Using next generation sequencing, the whole genome sequence (WGS) of SARS-CoV-2 134 are continuously being released and shared (306 complete genomes as of March 09, 2020) with 135 the entire research community through Global Initiative on Sharing All Influenza Data (GISAID) 136 [31]. The release of WGS allowed us to test the BioLaboro pipeline (described in this study) to 137 evaluate currently used diagnostic assays and to rapidly design new assays. 138 In a previous study, we described a bioinformatics tool called PSET (PCR signature 139 erosion tool) and used it to show in silico, confirmed with wet lab work, the effectiveness of 140 existing Ebolavirus diagnostic assays against a large number of sequences available at that time 141 [32]. The phrase \"signature erosion\" used here signifies potential false-positive or false-negative 142 results in PCR assays due to mutations in the primers, probe, or amplicon target sequences (PCR 143 signatures). Signature erosion could also mean failure of medical countermeasures; for example, 144 a change in the genomic sequence resulting in an amino acid change that could potentially alter 145 the efficacy of sequence-based therapeutics [33, 34] . 146 In this study, we describe an expanded bioinformatics pipeline called BioLaboro in which 147 we have integrated several tools: BioVelocity\u00ae, Primer3 and PSET for end-to-end analysis of 148 outbreak pathogen genome sequences to evaluate existing PCR assay efficacy against the new 149 sequences, and to identify unique signature regions (BioVelocity), design PCR assays to these ",
+            "cite_spans": [
+                {
+                    "start": 275,
+                    "end": 278,
+                    "text": "136",
+                    "ref_id": null
+                },
+                {
+                    "start": 455,
+                    "end": 458,
+                    "text": "138",
+                    "ref_id": null
+                },
+                {
+                    "start": 742,
+                    "end": 745,
+                    "text": "141",
+                    "ref_id": null
+                },
+                {
+                    "start": 1194,
+                    "end": 1198,
+                    "text": "[33,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1199,
+                    "end": 1202,
+                    "text": "34]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1205,
+                    "end": 1208,
+                    "text": "146",
+                    "ref_id": null
+                },
+                {
+                    "start": 1298,
+                    "end": 1301,
+                    "text": "147",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "BioLaboro architecture 158 BioLaboro is comprised of three algorithms -BioVelocity, Primer3, and PSET -which 159 are built into a pipeline for user-friendly applications. The user has the option to launch one of 160 four different job types: Signature Discovery, Score Assay Targets, Validate Assay, or New 161 Assay Discovery. Each of the three algorithms can be run individually or together as a complete 162 end-to-end pipeline (Figure 1 ). For the BOMV use case, in the first phase of the pipeline 163 BioVelocity was used to analyze a set of genome sequences for unique regions that are both 164 conserved and signature to the target sequences selected. This was achieved by splitting a chosen 165 representative whole genome sequence into sliding 50 base pairs (bps) k-mers. Each k-mer was 166 then scanned against all target sequences to determine conservation. Conserved k-mers were then 167 elongated based on overlaps and formed into contigs. These contigs were then split into k-mers \u2264 168 250 bps and scanned against all non-target sequences to determine specificity. All passing 169 sequences were then elongated based on overlaps and the signature contigs were passed to the 170 next step in the pipeline. Primer3 was then used to evaluate the signature contigs to identify 171 suitable primers and probes for assay development. Primer3 was run in parallel against all 172 signatures and the output was ranked by penalty score in ascending order. The top five best 173 primer sets were passed along to the final step in the pipeline, PSET. In this step the primer sets 174 were run through a bioinformatics pipeline which aligned the sequences against large public 175 sequence databases from NCBI using BLAST and GLSEARCH [36] to determine how well each 176 assay correctly aligned to all target sequences while excluding off-target hits. 199 Even the two assays that passed in silico criteria did not have perfect matches raising the 200 possibility that these assays may fail in wet lab testing due to mismatches against currently 201 available BOMV genomic sequences. Hence, as described below, we designed new assays using 202 the BioLaboro platform.",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 26,
+                    "text": "158",
+                    "ref_id": null
+                },
+                {
+                    "start": 502,
+                    "end": 505,
+                    "text": "163",
+                    "ref_id": null
+                },
+                {
+                    "start": 597,
+                    "end": 600,
+                    "text": "164",
+                    "ref_id": null
+                },
+                {
+                    "start": 699,
+                    "end": 702,
+                    "text": "165",
+                    "ref_id": null
+                },
+                {
+                    "start": 796,
+                    "end": 799,
+                    "text": "166",
+                    "ref_id": null
+                },
+                {
+                    "start": 1718,
+                    "end": 1741,
+                    "text": "BLAST and GLSEARCH [36]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1854,
+                    "end": 1857,
+                    "text": "199",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 431,
+                    "end": 440,
+                    "text": "(Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "157"
+        },
+        {
+            "text": "Discovery of potential new BOMV assays using BioLaboro end-to-end pipeline 204 Using BioLaboro we ran a New Assay Discovery job to discover new BOMV signatures 205 and determine their potential for accurate detection using PSET. In the first phase, BioVelocity 206 was used to search for conserved and signature regions within the selected genomes. We selected 207 the organism of interest by searching for \"Bombali ebolavirus\" from the database and selecting 208 the three available complete genomes. The MF319185.1 genome was used as the algorithmic 209 reference sequence as it is the same one that NCBI selected for the RefSeq database (Genbank 210 ID: NC_039345.1). The algorithmic reference sequence was first split into k-mers of 50 bps each 211 using a sliding window of 1 bp, which amounts to 18,994 k-mers to be evaluated with 212 BioVelocity's conserved sequence detection algorithm. BioVelocity found 27% (5,237) of these 213 k-mers to be conserved in all three of the BOMV genomes. The conserved k-mers were then 214 evaluated to determine overlapping segments and were combined into 120 conserved contigs.",
+            "cite_spans": [
+                {
+                    "start": 75,
+                    "end": 78,
+                    "text": "204",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "203"
+        },
+        {
+            "text": "These contigs were next evaluated with BioVelocity's signature sequence detection algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "215"
+        },
+        {
+            "text": "The contigs were split into signatures with a max size of 250 bps (longer contigs were split into 217 250 k-mers with a step size of 1). The conserved k-mer sequences were evaluated against 218 . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint 563,843 complete genomes and plasmids from the NCBI GenBank repository. There were 291 k-219 mers sequences found to be signatures to BOMV. The signatures were then evaluated to 220 determine overlapping reads and combined back into 119 signature contigs. Metrics for the 221 BioVelocity run in phase one are shown in Table 2 Table 3 Legend. The five new assays identified by Primer3 ranked by lowest penalty score. The",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 738,
+                    "end": 745,
+                    "text": "Table 2",
+                    "ref_id": "TABREF8"
+                },
+                {
+                    "start": 746,
+                    "end": 753,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "216"
+        },
+        {
+            "text": "Identifier column is an automated ID generated from the pipeline, the Targets column is the 237 Taxonomy ID for BOMV, the Definition column contains the amplicon sequence with the 238 primers in brackets (orange) and the probe in parentheses (blue), and the Penalty Points column 239 contains the score generated after taking into account primer design parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "236"
+        },
+        {
+            "text": "The signature regions identified by BioVelocity and the five new assays selected by 241 Primer3 were mapped to the BOMV genome ( Figure 2 ). As shown, the four assays are clustered The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 129,
+                    "end": 137,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "240"
+        },
+        {
+            "text": "In the third phase, PSET was used to test the five newly designed assays identified by 250 Primer3 in silico against publicly available sequences. PSET was used to analyze the primers and 251 probes in the new assays using bioinformatics tools to identify potential false-positive and false-252 negative matches to NCBIs BLAST nucleotide sequence repositories (nt, gss, and env_nt) 253 comprised of over 220 million sequences (as of last update in September 2019). BLAST+ was 254 used to compare the assay amplicon sequences against these sequence repositories to identify 255 matches. These matches were then used to create a custom library of sequences for GLSEARCH, 256 a global-local sequence comparison tool in the FASTA suite of programs, which was used to 257 search for the individual primers and probes. The resulting output was then processed and 258 filtered based on pre-defined hit acceptance criteria. These criteria require that the assay 259 components all hit to 90% identity over 90% of the component length, primer pairs were on 260 opposite strands, and the total amplicon size was no greater than 1000 bps. The results were then 261 validated by comparing the hits to the target NCBI Taxonomy identifier (ID), and true and false 262 matches were reported. PSET results confirmed that the top five primer sets had true positive hits 263 to all three BOMV genomes and no false positive hits to any other organism (Table 4) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1432,
+                    "end": 1441,
+                    "text": "(Table 4)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "249"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint Discovery of potential SARS-CoV-2 assays using BioLaboro end-to-end pipeline 278 Using BioLaboro, we ran a New Assay Discovery job to discover SARS-CoV-2 279 signatures and determine their potential for true positive viral detection. In the first phase,",
+            "cite_spans": [
+                {
+                    "start": 303,
+                    "end": 306,
+                    "text": "278",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "264"
+        },
+        {
+            "text": "BioVelocity was used to search for conserved and signature regions within the selected genomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "280"
+        },
+        {
+            "text": "Ninety six complete SARS-CoV-2 whole genome sequences were downloaded from the GISAID 282 and uploaded to BioLaboro as a custom database. These 96 genomes were used as our reference 283 set and EPI_ISL_404253 (Genbank ID: MN988713.1) was used as the algorithmic reference 284 . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint sequence. The algorithmic reference sequence was first split into k-mers of 50 bps each using a 285 sliding window of 1 bp, which amounted to 29,833 k-mers to be evaluated with the conserved 286 sequence detection algorithm. BioVelocity found 79% (23,542) of these k-mers to be conserved 287 in all 96 of the SARS-CoV-2 genomes. The conserved k-mers were then evaluated to determine 288 overlapping segments and were combined into 96 conserved contigs. These contigs were next 289 evaluated with BioVelocity's signature sequence detection algorithm. The contigs were split into Table 5 . In the second phase, Primer3 was used to identify potential primer pairs and probes for 302 generating new PCR detection assays as described above for BOMV. There were 330 primer 303 sets created from the signatures which were assigned a penalty score to facilitate comparison of 304 the results. Primer sets were sorted by lowest penalty score and five potential assays were chosen 305 . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint manually in order to distribute potential candidates across the genome. These assays were then 306 formatted and sent to the final step for validation using PSET. Primer sets sent to PSET are 307 shown in Table 6 . 308 Table 6 Legend: The five new assays identified by Primer3 ranked by lowest penalty score. The",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1080,
+                    "end": 1087,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 1908,
+                    "end": 1915,
+                    "text": "Table 6",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 1922,
+                    "end": 1929,
+                    "text": "Table 6",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "281"
+        },
+        {
+            "text": "Identifier column is an automated ID generated from the pipeline, the Targets column is the 312 Taxonomy ID for SARS-CoV-2, the Definition column contains the amplicon sequence with the 313 primers in brackets (orange) and the probe in parentheses (blue), and the Penalty Points column 314 contains the score generated after taking into account primer design parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "311"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "315"
+        },
+        {
+            "text": "The five new assays were mapped to the SARS-CoV-2 genome presented below (Figure 3 ). This 316 figure shows that four assays are in the ORF1ab and one is located in the spike (S) gene. By 317 comparison, the CDC and Corman group assays are clustered primarily at the 3' end of the 318 genome in the envelope (E) and nucleocapsid phosphoprotein (N) genes. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 73,
+                    "end": 82,
+                    "text": "(Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "315"
+        },
+        {
+            "text": "In the third phase, PSET was used to test the five newly designed assays identified by 326 Primer3 in silico against publicly available sequences as described above for BOMV signatures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "325"
+        },
+        {
+            "text": "The results were then validated by comparing the hits to the target NCBI Taxonomy identifier Table 2 ]. Results are shown alongside assays from CDC and 333 Corman et al. [39, 40] (Table 7) .",
+            "cite_spans": [
+                {
+                    "start": 156,
+                    "end": 174,
+                    "text": "Corman et al. [39,",
+                    "ref_id": null
+                },
+                {
+                    "start": 175,
+                    "end": 178,
+                    "text": "40]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 93,
+                    "end": 100,
+                    "text": "Table 2",
+                    "ref_id": "TABREF8"
+                },
+                {
+                    "start": 179,
+                    "end": 188,
+                    "text": "(Table 7)",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "327"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "334"
+        },
+        {
+            "text": "We also tested the SARS-CoV-2 assays using PSET on near neighbor sequences that 351 were generated during this outbreak, such as the bat and pangolin sequences. As expected the 352 analyses showed a range of TP from pan assays, FN results due to sequence divergence (Table   353   8 ). Table 8 . PSET results of SARS-CoV-2 PCR assays against bat and pangolin SARS-CoV 355 sequences. Since its discovery in 2016, BOMV RNA has been detected in oral and rectal swabs as The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint diversity and ecology. Given these gaps and the human and economic impacts of ebolavirus 366 disease, there is an ongoing need for ebolavirus biosurveillance and further characterization of 367 BOMV. Availability of efficient viral RNA detection assays is critical for bio surveillance of 368 these reservoirs.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 266,
+                    "end": 282,
+                    "text": "(Table   353   8",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 286,
+                    "end": 293,
+                    "text": "Table 8",
+                    "ref_id": "TABREF9"
+                }
+            ],
+            "section": "334"
+        },
+        {
+            "text": "Based on in silico analyses, we determined that current EBOV assays could potentially 370 fail to detect BOMV sequences, and thus there is a need for BOMV specific assays. Using 371 BioLaboro we rapidly designed and evaluated new, more specific assays. An advantage of 372 BioVelocity is that the end user obtains results quickly with high confidence that the output of The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint mutations altered protein sequences, it became apparent that the changes should be monitored for 389 impacts on diagnostics, vaccines, and therapies critical to outbreak response. In an earlier study 390 conducted to decipher the impact of the then-available diagnostics, we determined that many of 391 the real-time reverse transcription PCR (rRT-PCR) assays that were in use during that outbreak ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "369"
+        },
+        {
+            "text": "Using the in silico methods described here, only two of the 30 EBOV rRT-PCR assays evaluated 396 against BOMV target sequences met our criteria for successful detection and neither showed 397 perfect matches. For ongoing biosurveillance, we recommend wet lab testing and validation of 398 the rRT-PCR assays described here to ensure detection of BOMV. 399 We also tested the BioLaboro pipeline with available SARS-CoV-2 viral genomes and The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint contains less than 10 SNPs with the exception of one having 25. None of the variations impact 412 the diagnostic assay signatures. However, real-time monitoring of these assays against WGS as 413 they become available, will enable rapid identification of signature erosion if it occurs and 414 generation of new assays as needed. The newly designed assays we have described here need to 415 be validated in wet lab testing and with appropriate clinical matrices to determine their 416 performance. However, we have demonstrated that the BioLaboro pipeline can be used 417 effectively and rapidly to validate available assays and to design new assays using genome 418 sequences of newly emerging pathogens.",
+            "cite_spans": [
+                {
+                    "start": 352,
+                    "end": 355,
+                    "text": "399",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "395"
+        },
+        {
+            "text": "By periodically re-running BioLaboro on emerging and reemerging pathogen sequences 421 as they become available, over time the relative diversity can be monitored, and assays can be 422 updated to remain current with regards to available data. By tracking assay performance 423 measures over time, one can evaluate the efficacy of MCMs on a routine basis. These analyses 424 would ensure that the most accurate MCMs are available when an outbreak response is 425 necessary. In this study we demonstrate the value of real-time genomic sequencing and MCM 426 evaluation to provide actionable information before and during a public health emergency.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "420"
+        },
+        {
+            "text": "Combined with an active biosurveillance of zoonotic reservoirs and generation of sequence data 428 to understand the genetic diversity of these pathogens, BioLaboro is broadly applicable for The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "427"
+        },
+        {
+            "text": "BioLaboro is an application for rapidly designing de novo assays and validating existing 436 PCR detection assays. It is composed of three tools: BioVelocity, Primer3, and PSET which are The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint system to attempt to determine the fitness of the resulting primers thus allowing an end user to 456 assess which signatures yield the best primers when the signatures themselves may be of 457 similar size.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "435"
+        },
+        {
+            "text": "PSET is configured to test PCR assays in silico against the latest versions of public test currently deployed assays as well as new assays designed using BioLaboro's capabilities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "458"
+        },
+        {
+            "text": "The BioLaboro application is composed of a fully functional GUI front-end that allows 467 users to submit jobs to the back-end bioinformatics pipeline hosted on a dedicated large RAM 468 system. The system has multi-user capability with discrete logins and a single job queue. The The copyright holder for this preprint (which was not peer-reviewed) is the . https: //doi.org/10.1101 //doi.org/10. /2020 The BioLaboro application allows job submissions through a simplified user interface 475 designed for scientists with minimal or no command-line experience. The user can search for 476 sequences of interest using the built-in Organism Select tool, Figure 5 , which allows for 477 searching on free text, NCBI Accession number, or NCBI Taxonomy ID. The results can then be 478 filtered using a \"smart filter\" which will only include sequences within +/-10% of the calculated 479 median genome length of the results. This tool is useful for automatically excluding plasmids or 480 sequence fragments which can negatively impact signature identification. Alternatively, custom 481 sequence size filters can also be used if the user wants to target specific plasmids or 482 chromosomes. Once all sequences are selected and added the user can optionally choose a 483 specific sequence to serve as the algorithmic reference. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint BioLaboro employs a queuing system to manage job submissions due to the high computational The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint",
+            "cite_spans": [
+                {
+                    "start": 366,
+                    "end": 383,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 384,
+                    "end": 403,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 652,
+                    "end": 660,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "466"
+        },
+        {
+            "text": "The queue includes three sections: 1) The currently running job is identified with information on 495 the current sub-process, 2) The job queue is shown, which can be re-arranged as needed, and 3) 496 The finished jobs section shows completed jobs with timestamp metadata and an option to re-run 497 the same job with identical parameters.",
+            "cite_spans": [
+                {
+                    "start": 197,
+                    "end": 200,
+                    "text": "496",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "466"
+        },
+        {
+            "text": "The Database Management and Settings Page contains many options for maintaining 499 system data and pipeline settings. BioLaboro's simple user interface design allows the user to The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint GISAID and used in this study. The \"Signature Creation\" column indicates which sequences 520 were used to generate the signatures, and the \"Validation\" column indicates which sequences 521 were used to validate the signatures with PSET. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "498"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Emerging infectious diseases: a 10-year 610 perspective from the National Institute of Allergy and Infectious Diseases. Emerg 611 Infect Dis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Fauci",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Touchette",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Folkers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "",
+            "volume": "11",
+            "issn": "",
+            "pages": "519--525",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Emerging infectious diseases: threats to human health and 613 global stability",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Morens",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Fauci",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "PLoS Pathog",
+            "volume": "9",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "What Recent History Has Taught Us",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Paules",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Eisinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Marston",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Fauci",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "About Responding to Emerging Infectious Disease Threats",
+            "authors": [],
+            "year": 2017,
+            "venue": "Ann Intern Med",
+            "volume": "",
+            "issn": "11",
+            "pages": "805--811",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Pricing infectious disease. The economic and health implications of 618 infectious diseases",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Fonkwo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "EMBO Rep",
+            "volume": "9",
+            "issn": "1",
+            "pages": "13--17",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Emerging infectious diseases: A proactive approach",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Bloom",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Black",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rappuoli",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Coronavirus disease 2019",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "An interactive web-based dashboard to track COVID-19",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Ebola epidemic",
+            "authors": [],
+            "year": 2015,
+            "venue": "EMBO Mol Med",
+            "volume": "7",
+            "issn": "1",
+            "pages": "17--23",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "World Health Organization: Situation Report-Ebola Virus Disease-10",
+            "authors": [],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "World Health Organization: Ebola in the Democratic Republic of Congo-Health 635",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Controlled Trial of Ebola Virus Disease Therapeutics",
+            "authors": [],
+            "year": 2019,
+            "venue": "N Engl J Med",
+            "volume": "639",
+            "issn": "24",
+            "pages": "2293--2303",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "European Medicines Agency: First Vaccine to protect against Ebola",
+            "authors": [],
+            "year": null,
+            "venue": "641 EMA/CHMP/565403/2019. 2019. 642 15. Food and Drug Administration: First FDA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Ebola virus disease, marking a critical milestone in public health preparedness and 644 response",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "General introduction into the Ebola virus biology 648 and disease",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zawilinska",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kosz-Vnenchak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Folia Med Cracov",
+            "volume": "54",
+            "issn": "3",
+            "pages": "57--65",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Ebola Virus Disease",
+            "authors": [],
+            "year": 2017,
+            "venue": "Annu Rev Pathol",
+            "volume": "12",
+            "issn": "",
+            "pages": "387--418",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Reston ebolavirus in humans and animals in the 654 Philippines: a review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Miranda",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Miranda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J Infect Dis",
+            "volume": "204",
+            "issn": "",
+            "pages": "757--760",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The discovery of Bombali 657 virus adds further support for bats as hosts of ebolaviruses",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Belaganahalli",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Wells",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Dhanota",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat Microbiol",
+            "volume": "658",
+            "issn": "10",
+            "pages": "1084--1089",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Fruit bats as reservoirs of Ebola virus",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Paweska",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Gonzalez",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Swanepoel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nature",
+            "volume": "661",
+            "issn": "7068",
+            "pages": "575--576",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Ebola: Hidden reservoirs",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Heeney",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nature",
+            "volume": "527",
+            "issn": "7579",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Assessing the 664",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Leendertz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gogarten",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dux",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Calvignac-Spencer",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Leendertz",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Evidence Supporting Fruit Bats as the Primary Reservoirs for Ebola Viruses. 665 Ecohealth",
+            "authors": [],
+            "year": 2016,
+            "venue": "",
+            "volume": "13",
+            "issn": "",
+            "pages": "18--25",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Filoviruses in bats: current knowledge and future directions. 667 Viruses",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Olival",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Hayman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "6",
+            "issn": "",
+            "pages": "1759--1788",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Conserved 669 differences in protein sequence determine the human pathogenicity of Ebolaviruses",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pappalardo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Julia",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Howard",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rossman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Michaelis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wass",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Is the Bombali virus 672 pathogenic in humans?",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Martell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Masterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mcgreig",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Michaelis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Wass",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Bioinformatics",
+            "volume": "2019",
+            "issn": "19",
+            "pages": "3553--3558",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "World Health Organization: WHO Director-General's opening remarks at the media 674 briefing on COVID-19 -11",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "678 Clinical features of patients infected with 2019 novel coronavirus in Wuhan, China. 679 Lancet",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "395",
+            "issn": "",
+            "pages": "497--506",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Huang CL 681 et al: A pneumonia outbreak associated with a new coronavirus of probable bat 682 origin",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Coronavirus disease 2019 (COVID-19)Situation Report -684",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Data, disease and diplomacy: GISAID's innovative 687 contribution to global health",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Elbe",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Buckland-Merrett",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Glob Chall",
+            "volume": "2017",
+            "issn": "1",
+            "pages": "33--46",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Evaluation of Signature Erosion 690 in Ebola Virus Due to Genomic Drift and Its Impact on the Performance of 691 Diagnostic Assays",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Td",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Campbell",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Berger",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Christopher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Viruses",
+            "volume": "7",
+            "issn": "6",
+            "pages": "3130--3154",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Draft versus finished 696 sequence data for DNA and protein diagnostic signature development. Nucleic Acids 697 Res",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Slezak",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kuczmarski",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ott",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Torres",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Medeiros",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Truitt",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Mulakken",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Gardner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lam",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Torres",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Slezak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "",
+            "volume": "33",
+            "issn": "",
+            "pages": "5838--5850",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Basic local alignment search 699 tool",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Altschul",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Gish",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Myers",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lipman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "J Mol Biol",
+            "volume": "215",
+            "issn": "3",
+            "pages": "403--410",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "The EMBL-EBI search and sequence analysis tools APIs in 702 2019",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Potter",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Finn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nucleic Acids Res",
+            "volume": "47",
+            "issn": "W1",
+            "pages": "636--641",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Implementation of Objective PASC-Derived Taxon 705",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jm",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ebihara",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Formenty",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Demarcation Criteria for Official Classification of Filoviruses",
+            "authors": [],
+            "year": null,
+            "venue": "Viruses",
+            "volume": "2017",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "DNA Features Viewer, a sequence annotations 707 formatting and plotting library for Python",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Zulkower",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Rosser",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Initial Public Health Response and Interim 709",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Patel",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Jernigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nco",
+                    "middle": [],
+                    "last": "Vcdcrt",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Clinical Guidance for the 2019 Novel Coronavirus Outbreak -United States",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "-714 nCoV) by real-time RT-PCR",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Brunink",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schmidt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Detection of 2019 novel coronavirus",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Bombali Virus in Mops 720 condylurus Bats, Guinea. Emerg Infect Dis",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bayandin",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gladysheva",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Shipovalov",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Genomic surveillance elucidates Ebola virus origin and 723 transmission during the 2014 outbreak",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fullah",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Dudas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Science",
+            "volume": "345",
+            "issn": "6202",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "Ebola virus disease outbreak in 726",
+            "authors": [
+                {
+                    "first": "Di",
+                    "middle": [],
+                    "last": "Paola",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chitty",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Diop",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ayouba",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Democratic Republic of the Congo: a retrospective genomic 727 characterisation",
+            "authors": [
+                {
+                    "first": "Equateur",
+                    "middle": [],
+                    "last": "Province",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Lancet Infect Dis",
+            "volume": "19",
+            "issn": "6",
+            "pages": "641--647",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "MAFFT multiple sequence alignment software version 7: 729 improvements in performance and usability",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Katoh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Standley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Mol Biol Evol",
+            "volume": "30",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "SNP-sites: 731 rapid efficient extraction of SNPs from multi-FASTA alignments",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Page",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Taylor",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Delaney",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Soares",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Seemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Keane",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Harris",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "47. R: A language and environment for statistical computing. R Foundation for",
+            "volume": "732",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "Statistical Computing",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "735",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "150 regions (Primer3), and test the new assays' efficacy (PSET) against current National Center for 151 Biotechnology Information Basic Local Alignment Search Tool (BLAST) standard databases 152 [35]. We have used the BOMV and SARS-CoV-2 sequences as proof of concept for BioLaboro 153 to develop and evaluate new PCR assays in silico.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "BioLaboro-New Assay Discovery pipeline.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "in the nucleoprotein (NP) gene and one is in the glycoprotein (GP) gene. The signature segments 243 (blue) indicate that there are many potential assay regions throughout the genome. Linear map of BOMV genome.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Legend: Linear map of the BOMV genome with annotations. The BOMV genes are 247 colored in green, the signature segments are colored in blue, and the new assays are colored in 248 red. The figure was created using the DNA Features Viewer Python library [38].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "290 signatures with a max size of 250 bps (longer contigs were split into 250 k-mers with a step size 291 of 1). The conserved k-mer sequences were evaluated against 563,941 complete genomes and 292 plasmids from the NCBI GenBank repository. There were 11,152 sequences found to be 293 signature to SARS-CoV-2. The signatures were then evaluated to determine overlapping reads 294 and combined back into 91 signature contigs. Metrics for the BioVelocity run in phase one are 295 shown in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Linear Legend. A linear map of the SARS-CoV-2 genome with annotations. The genes and 322 open reading frames (ORFs) are colored in green and the new assays are colored in red, Corman 323 assays (blue), CDC assays (purple), and assays discovered in this study (red). The figure was 324 created using the DNA Features Viewer Python library [36].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "ID), and true and false matches were reported. PSET confirmed that the top five primer sets had 329 true positive hits to all 145 (SARS-CoV-2) genomes (as of February 28, 2020) and no false 330 positive hits to any other organism. An additional table lists the identifiers and metadata for these 331 145 complete genome sequences generated from human samples and not from other sources such 332 as bat or pangolin [see Additional",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "360 well as internal organs of Mops condylurus and Chaerephon pumilus bats in Sierra Leone, Kenya 361 and Guinea [20, 41, 42]. These data add to the body of evidence suggesting that bats are a 362 reservoir for filoviruses. However, these did not conclusively link the presence of viral RNA in 363 bats to human infections with filoviruses. The discovery of BOMV in bats residing near and in 364 human dwellings and residential areas further highlights the gaps in knowledge about ebolavirus",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "373conserved and unique signature regions are accurate and not based on heuristics and 374 probabilities. Additionally, Primer3 allows an end user to determine which signatures yield the 375 best primers and probes, based on an objective penalty scoring system. PSET tests the PCR 376 assays in silico against the latest versions of public sequence repositories, including newly added 377 strain genomes, to validate that the primers and probes match only to their intended targets.378BioLaboro's easy-to-use Graphical User Interface (GUI) provides full functionality for 379 submitting a new job, viewing the current job queue, checking results from previously completed 380 jobs, and exploring the system database management and settings. The dedicated large RAM 381 system easily supports multiple users with discrete logins and rapid operations. Moreover, the 382 user-friendly GUI allows scientists without command-line experience to design and evaluate an 383 assay for immediate wet lab testing.384Due to the relative novelty of BOMV there are currently only three complete genomes 385 available from NCBI. As more samples are identified and sequenced the genetic diversity will 386 likely increase. During the 2014 -2016 Western African EBOV outbreak, rapid accumulation of 387 inter-and intra-host genetic variations were observed[43]. Since many of the nucleotide",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "392 identified regions outside of those that BioVelocity selected as unique to EBOV, SUDV, and 393 RESTV [32]. In another study, signature erosion of diagnostic assays was identified during the 394 2018 outbreak in North Kivu and Ituri Provinces of the Democratic Republic of the Congo [44].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "400rRT-PCR assays. We identified five signature sequences distributed across the genome and in 401 different regions than those of the CDC or German group[39, 40]. There are seven assays402 currently in use (3 CDC and 4 German) for SARS-CoV-2 diagnostics and they all produced true 403 positive results against the human-derived sample sequences without any signs of signature 404 erosion. A few whole genome sequences that showed false negative results were from 405 environmental samples (Bat and Pangolin origin) indicating that the diagnostic assays are 406 specific for human isolates. The assays that produced true positive results were pan assays. The 407 lack of signature erosion is in agreement with the whole genome sequence data analyzed thus far 408 (February 28, 2020). A simple pipeline consisting of Multiple Sequence Alignment using Fast 409 Fourier Transform (MAFFT), snp-sites, and R we calculated 228 single nucleotide 410 polymorphisms (SNPs) (159 unique) across 145 genomes [45-47]. Each of the 145 WGS",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "437built into a pipeline for user-friendly new assay discovery via an interactive graphic user 438 interface.439BioVelocity is a bioinformatics tool based on an innovative algorithm and approach to 440 genomic reference indices[32]. Using a fast and accurate hashing algorithm, BioVelocity can 441 quickly align reads to a large set of references. BioVelocity takes advantage of large RAM 442 systems (hardware specification described in AdditionalTable 1) and creates a k-mer index of all 443 selected reference sequences (e.g. GenBank) by identifying all possible base pair sequences of 444 various k-mer lengths. This index is used to determine all possible matches between query 445 sequences and references, simultaneously. The advantage of this approach is that it allows for 446 rapid identification of sequences conserved within or omitted from a set of target references.447Thus, the used has high confidence in the conserved and signature (unique) designations because 448 they are not based on heuristics and probabilities.449 Primer3 [48] is a tool for designing primers and probes for real-time PCR reactions. It 450 considers a range of criteria such as oligonucleotide melting temperature, size, GC content, and 451 primer-dimer possibilities. Potential new primer sets are identified within the signature regions 452 using Primer3 analysis. For the BioLaboro pipeline, Primer3 has been configured to analyze 22 453 parameters influencing suitability of a sequence to primer creation and construct viable primers 454 which cover identified signature regions. These primers are scored with a penalty scoring",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "459 sequence repositories to determine if the primers and probes still match only to their intended 460 targets. An elaborate description of PSET is provided in ref [32]. As NCBI's database and other 461 public databases are updated periodically, newly added genomic sequences can reveal where 462 primers and probes may no longer be functional or where PCR assays may detect previously 463 un-sequenced near neighbors. Using this information, an assay provider can be better aware of 464 potential false hits and design new primers when false hits become an issue. PSET is used to 465",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "469 landing screen, shown in Figure 4, gives the user options for submitting a new job, viewing the 470 current job queue, checking results from previously completed jobs, and exploring the system 471 database management and settings. The landing page of BioLaboro.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "The Job Submission page for the BioVelocity component of BioLaboro showing the 485 BOMV sequences.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "488requirements of the BioVelocity algorithm. The queue page identifies the currently running job, 489 the ordered list of queued jobs, and a list of previously finished jobs with timestamps and 490 completion status,Figure 6. Each finished job can be re-launched from this dialog in the future 491 with previously used parameters while utilizing the newest available datasets. The BioLaboro job queue.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF23": {
+            "text": "500manage the genomic reference databases from within the GUI. The GenBank Repository page, lists the databases loaded on the system along with the number of sequences each 502 contains. These databases are used for selecting sequences for signature creation and can be 503 updated on-demand by submitting a sync job to the queue. Other GenBank databases or custom 504 sequence databases can also be added and maintained through this entry point.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF25": {
+            "text": "The assays are also maintained in the system and can be viewed and searched 509 for in the Assay Repository. The system maintains a history of past assay runs so that the user 510 can track performance of assays over time, as well as re-run assays when new sequences of 511 interest are available. Lastly the Database and Management Settings page maintains the default 512 settings for each of the three system tools which can be permanently set here, or specifically 513 tailored for each job at run-time. Results for completed runs are available from the Results page 514 which allows the user to view raw data or system generated reports as well as download them to 515 local copies.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF27": {
+            "text": ". The funding body did not play any roles in the design of the study and 589 collection, analysis, and interpretation of data and in writing the manuscript. BioVelocity is a 590 patented and trademarked tool developed by Noblis exclusively at its private expense. The 591 research and reports related to the SARS-CoV-2 work also was funded exclusively by Noblis at 592 its private expense.in real time. Lancet Infect Dis 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Performance assessment of currently available EBOV PCR assays on BOMV using PSETThe phylogenetic classification criteria for filoviruses were reported to be 64-77% similarity for species and 41-50% for genera, based on BLAST alignment results[37].Compared to other ebolaviruses, the BOMV showed 55-59% nucleotide identity, 64-72% amino 183 acid identity[20]. Given the sequence diversity, we assessed if the current diagnostic assays 184 were effective against BOMV. We compared the current Ebola assay signatures against the three 185 available complete genome sequences of BOMV (NCBI Accession numbers: MF319185.1, MF319186.1, and MK340750.1). Of the 30 Ebola assays examined (assay details in reference187[32]), only two met our in silico criteria for successful detection (90% identity over 90% of the 188 length for all primers and probe sequences in the amplicon). Of the two assays that did meet detection criteria for BOMV, neither had perfect matches to the primer sequences. The primer set 190 match percentages (the average identity of all primers/probes) for all 30 Ebola assays against the 191 three BOMV complete genomes are shown in the heat map(Table 1). The two assays which pass 192 the in silico criteria are shown in green while the matches in red indicate failure or no alignment. Heat map of PSET results of Ebola assays against BOMV sequencesTable 1Legend: The average primer set percent identity matches for thirty current Ebola assays tested against the three BOMV genomes. Cells in green have an average primer identity over 90% which indicates likely primer binding while red cells have below 90% average identity or 198 no alignment at all, indicating likely primer binding failure.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "BioVelocity run statistics for BOMV.In the second phase, Primer3 was used to identify potential primer pairs and probes for",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "PSET results of BOMV assays",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Legend: True positive (TP: All assay components hit with >=90% identity over >=90% components hit with <90% alignment to the correct target) counts for each of the five new BOMV assays tested. The targets column is the NCBI Taxonomy ID of the target sequence,BOMV.There are a high number of true negative (TN) results for 4 of 5 assays due to the similarity of the amplicon sequences with Zaire ebolavirus although these TNs are not expected to produce PCR positive results in wet lab experiments.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "BioVelocity run statistics for SARS-CoV-2. Legend: Total number of conserved and signature segments along with total bases, average sequence length, median sequence length, and percent coverage of the SARS-CoV-2",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Primer3 identified assays for SARS-CoV-2.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "PSET results of SARS-CoV-2 PCR assays.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Legend: True positive (TP: All assay components hit with >=90% identity over >=90% but one or more assay components hit with <90% alignment to an incorrect target), false positive 339 (FP: All assay components hit with >=90% identity over >=90% of the component length to an SARS-CoV-2 assays tested. The targets column is the NCBI Taxonomy ID of the target",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "which contains a large stretch of Ns over the majority of the amplicon sequence (80%)",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "Legend: TP, TN, FP and FN definitions are similar to Table 7. 358",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "Large RAM System Hardware Specifications. . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint Additional Table 2. (gisaid_sequences.xlsx) List of whole genome sequences downloaded from",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": "World Health Organization: Fact Sheet/Details/Ebola virus disease [https://www.who.int/news-room/fact-sheets/detail/ebola-virus-disease] . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.08.031963 doi: bioRxiv preprint 10. Mari Saez A, Weiss S, Nowak K, Lapeyre V, Zimmermann F, Dux A, Kuhl HS, Kaba M, 18. Cantoni D, Hamlet A, Michaelis M, Wass MN, Rossman JS: Risks Posed by Reston, the",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

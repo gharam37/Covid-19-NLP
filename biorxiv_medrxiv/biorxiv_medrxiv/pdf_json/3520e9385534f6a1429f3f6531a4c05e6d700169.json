@@ -1,0 +1,1885 @@
+{
+    "paper_id": "3520e9385534f6a1429f3f6531a4c05e6d700169",
+    "metadata": {
+        "title": "Bayesian Adaptive Clinical Trials for Anti-Infective Therapeutics during Epidemic Outbreaks *",
+        "authors": [
+            {
+                "first": "Qingyang",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "MIT Operations Research Center",
+                    "location": {
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Shomesh",
+                "middle": [],
+                "last": "Chaudhuri",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "QLS Advisors, LLC",
+                    "location": {
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Danying",
+                "middle": [],
+                "last": "Xiao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "MIT Operations Research Center",
+                    "location": {
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Andrew",
+                "middle": [
+                    "W"
+                ],
+                "last": "Lo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "MIT Operations Research Center",
+                    "location": {
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In the midst of epidemics such as COVID-19, therapeutic candidates are unlikely to be able to complete the usual multi-year clinical trial and regulatory approval process within the course of an outbreak. We apply a Bayesian adaptive patient-centered model-which minimizes the expected harm of false positives and false negatives-to optimize the clinical trial development path during such outbreaks. When the epidemic is more infectious and fatal, the Bayesian-optimal sample size in the clinical trial is lower and the optimal statistical significance level is higher. For COVID-19 (assuming a static 2 and initial infection percentage of 0.1%), the optimal significance level is 7.1% for a clinical trial of a non-vaccine anti-infective therapeutic clinical trial and 13.6% for that of a vaccine. For a dynamic ranging from 2 to 4, the corresponding values are 14.4% and 26.4%, respectively. Our results illustrate the importance of adapting the clinical trial design and the regulatory approval process to the specific parameters and stage of the epidemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "With growing public concern over the outbreak of Coronavirus Disease 2019 (COVID-19), significant efforts have been undertaken by global biomedical stakeholders to develop effective diagnostics, vaccines, anti-viral drugs, medical devices, and other therapeutics against this highly infectious and deadly pandemic. While in the past, the traditional randomized clinical trial (RCT) and regulatory approval process often took several years (U.S. Food & Drug Administration, 2018)-longer than the typical duration of an epidemic outbreak (Pronker et al. 2013 )-recently the FDA has responded with actions such as the Breakthrough Devices Program, Emergency Use Authorization (EUA) authority, and Immediately in Effect guidance documents to prevent novel diagnostics and therapeutics from lagging behind the urgent needs of the population. In this paper, we propose adapting yet another tool that the FDA has already been exploring for medical devices (Chaudhuri et al. , 2019 to therapeutics for treating COVID-19 that are currently under development.",
+            "cite_spans": [
+                {
+                    "start": 536,
+                    "end": 556,
+                    "text": "(Pronker et al. 2013",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 949,
+                    "end": 973,
+                    "text": "(Chaudhuri et al. , 2019",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In recent years, Bayesian adaptive RCT protocols have been increasingly used to expedite the clinical trial process of potentially transformative therapies for diseases with high mortality rates (Berry, 2015) . Currently, these protocols have mainly been applied within the oncology domain, such as I-SPY for breast cancer (Barker et al., 2009 ) and GBM AGILE for glioblastoma (Alexander et al. 2018) . These studies use Bayesian inference algorithms to greatly reduce the number of patients needed to assess the therapeutic effects of a drug candidate, without lowering the statistical power of the final approval decision, as measured by Type I and II error rates. As a result, therapeutic candidates can progress more quickly through the regulatory process and reach patients faster and at lower cost.",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 208,
+                    "text": "(Berry, 2015)",
+                    "ref_id": null
+                },
+                {
+                    "start": 323,
+                    "end": 343,
+                    "text": "(Barker et al., 2009",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 377,
+                    "end": 400,
+                    "text": "(Alexander et al. 2018)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "For severe diseases with no curative treatments, such as pancreatic cancer, patients tend to tolerate a higher Type I error of accepting an ineffective therapy in exchange for a lower Type II error of rejecting an effective therapy as well as expedited approvals of potentially effective treatments. Based on this observation, a patient-centered Bayesian protocol was proposed (Isakov et al., 2018; Montazerhodjat et al., 2017) that incorporates patient values into clinical trial design and identify the optimal balance between the possibilities of false positives (Type I error) and false negatives (Type II error). For more severe diseases, this protocol sets a tolerated Type I error rate much larger than the traditional 5% threshold, which leads to higher rates of approvals and expedited approval decisions.",
+            "cite_spans": [
+                {
+                    "start": 377,
+                    "end": 398,
+                    "text": "(Isakov et al., 2018;",
+                    "ref_id": null
+                },
+                {
+                    "start": 399,
+                    "end": 427,
+                    "text": "Montazerhodjat et al., 2017)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, the original Bayesian adaptive RCT framework does not take into account patient risk preferences. To address this gap, developed an adaptive version of the Bayesian patient-centered model that achieves an optimal balance between Type I and Type II error rates, significantly reducing the number of subjects needed in trials to achieve a statistically significant conclusion. A key feature of this model is the time evolution of the loss function of the Bayesian decision algorithm. This mechanism favors the expedited approval of diagnostic or therapeutic candidates that show early positive effects, since patients place a lower value on delayed approval of an effective diagnostic or therapy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There is a natural but subtle analog to this dilemma in the case of therapeutics for an infectious disease during the course of an epidemic outbreak. Approving an effective therapeutic early will prevent future infections and deaths, while approving it later will save fewer people from infection. On the other hand, approving an ineffective therapeutic early 8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Page 2 of 27 All Rights Reserved will not prevent any future casualties. Worse still, it may prevent people from taking adequate precautions against infection, since they will falsely believe that they are safe from the disease after the advent of the ineffective therapy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Moreover, the cost of Type I versus Type II error can differ from therapy to therapy. A novel vaccine that could trigger a significant immune response such as a cytokine storm has a much higher cost of a Type I error than a medical device such as an air filtration system designed to destroy virions through intense ultraviolet light. Therefore, the appropriate statistical threshold for approval should depend on the specific therapy, as well as the circumstances of the current burden of disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this article, we apply the Bayesian adaptive protocol to anti-infective therapeutic development using a loss function that evolves over the course of an epidemic outbreak. We achieve an optimal balance between Type I and Type II errors for therapeutics that treat infectious diseases and identify the optimal time to reach the approval decision based on the accumulation of clinical evidence. Our results show that when the epidemic is more infectious, the necessary sample size of the RCT decreases, while the tolerable Type I error increases. This confirms our earlier intuition that potentially effective therapies that are known to be safe should receive expedited approval when an epidemic is spreading rapidly.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The starting point for our analysis is the Susceptible-Exposure-Infective-Removed (SEIR) epidemic model, which has been applied to model the outbreak of COVID-19 in China in a number of recent studies (Yang et al. 2020; Wu et al. 2020 ). The population of N subjects is partitioned into four distinct groups: susceptible (S), exposed (E), infectious (I), and removed (R). The time evolution of the epidemic is specified by the following group of ordinary differential equations:",
+            "cite_spans": [
+                {
+                    "start": 201,
+                    "end": 219,
+                    "text": "(Yang et al. 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 220,
+                    "end": 234,
+                    "text": "Wu et al. 2020",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "Here we use the convention that , , , and are the proportions of the susceptible, exposed, infectious and removed populations, respectively, satisfying the conservation constraint for all :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "100% .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "(",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "The parameters , , and denote the average rates of infection, incubation and recovery, respectively, and \u2208 0%, 100% denotes the mortality rate of the epidemic. For example, if 5%, we expect 5% of infected subjects will die from the disease. At time , subjects will have died, and 1 will have recovered.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "A critical measure of the infectivity of an epidemic is its basic reproduction number, defined as / in the SEIR model. This is the expected number of secondary infections caused by each infected subject in a population with no public health measures (such as quarantine, social-distancing, or vaccination). In addition, to model the impact of governmental nonpharmaceutical interventions (NPIs) on containing the spread of the epidemic, we consider a dynamic transmission SEIR model where the infection rate monotonically decreases in time as a result of the NPI. Specifically, we assume that takes the sigmoid functional form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "Here and denote the infection rates in the initial and final stages of the epidemic (with ), respectively, denotes the half-life of the decay in infection rate, and the length of the time window when this decay occurred. A larger difference corresponds to more significant reduction of epidemic transmission, a smaller value of corresponds to a speedier decision to enforce the NPI, and a smaller value of corresponds to more strict enforcement of the NPI since decays more rapidly. We calibrate the values 3 and 1.5 based on the estimates of the dynamic transmission rate of COVID-19 in Wuhan, China from December 2019 to February 2020 (Kucharski et al., 2020) . We consider different values of and to reflect the variability in timing and stringency of NPIs enforced by governments around the globe.",
+            "cite_spans": [
+                {
+                    "start": 637,
+                    "end": 661,
+                    "text": "(Kucharski et al., 2020)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "To model the significant variability in mortality rates of COVID-19 for patients in different age groups, we extend this basic model to a multi-group SEIR model, where the population is partitioned into five age groups, (1) below 49, (2) 50 to 59, (3) 60 to 69, (4) 70 to 79, and (5) above 80. We use , , , and to denote the corresponding type in each group (and continue to use , , , and for the total proportion of each type in all groups). The dynamics of the epidemic are specified by the modified ordinary differential equations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "Here denotes the contact rate of the susceptible subjects in the th age group with the total infected population of all groups. This contact rate is measured relative to group 1, which we normalize to 1. In the case of COVID-19, although the mortality rate is much higher for senior populations (Onder et al., 2020) , the elderly also tends to have less frequent contact with the infected population outside the household (Walker et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 295,
+                    "end": 315,
+                    "text": "(Onder et al., 2020)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 422,
+                    "end": 443,
+                    "text": "(Walker et al., 2020)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "We solve the differential equations in the multi-group SEIR model using the ODE45 solver in MATLAB 2019a with initial conditions for each age group: The parameter denotes the proportion of the initially infected population, is the ratio of initially exposed and infected subjects, and is the percentage of the th age group in the population. The assumed demographic, contact rate, and mortality rate values are summarized in Table 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 425,
+                    "end": 432,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Multi-Group SEIR Epidemic Model"
+        },
+        {
+            "text": "Similar to , we develop a Bayesian patient-centered decision model for RCT approval which minimizes the expected loss (or harm) incurred on the patients by optimally balancing the losses of Type I and Type II errors. Here the loss does not refer to financial costs afforded by the patients, but rather the loss in patient value (i.e. how much patients weigh the relative harms of infection and death). We assign the losses per patient of being susceptible, infected, and deceased. Since Bayesian decision thresholds are invariant under the rescaling of the losses, we normalize by setting the loss per patient infection 1 . We then assign the loss per patient death relative to as , and the loss due to susceptibility to the disease as . The parameter values we assume, summarized in Table  1 , are meant to represent one reasonable valuation of the relative losses. However, in practice patient value will differ from one patient group another, especially given the large variability of mortality rate of COVID-19 in different age groups (Onder et al., 2020) . Here we report the main results of optimal sample size and statistical significance (Table 3 and 4) assuming 100. The results for 10 are provided in Supplementary Materials.",
+            "cite_spans": [
+                {
+                    "start": 1039,
+                    "end": 1059,
+                    "text": "(Onder et al., 2020)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 784,
+                    "end": 792,
+                    "text": "Table  1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 1146,
+                    "end": 1154,
+                    "text": "(Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "We simulate the multi-group SEIR model over a time period of weeks, where is the duration of the epidemic outbreak. Let denote the weekly subject enrollment rate in each arm of the clinical trial. We assume that the value of is known (or well-estimated) at initial time 0 and stays constant during the course of the outbreak. At time \u2208 0, , the Bayesian loss C t of choosing the action under is defined as: 0 do not approve 1 approve 0 (no effect) 0",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "where we define the cumulative number of infected patients until time t:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "By design, this loss function penalizes Type I errors early in the epidemic by the susceptible term, . We subtract the base level from since the multi-group SEIR model predicts that subjects will not be infected by the epidemic. A Type I error . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "Page 5 of 27 All Rights Reserved at an earlier time will expose more currently susceptible population to the epidemic, since they will falsely believe that they are safe from the disease after the advent of the ineffective therapeutic. On the other hand, the loss function also penalizes correct approval decisions made at later stages of an epidemic via to the cumulative infected and death terms, and . A correct but delayed approval decision for the therapeutic is less valuable since it will save fewer susceptible people from infection and death. The Bayesian decision model considers the null hypothesis 0 that the anti-infective therapeutic (or vaccine) has no clinical effect, against the alternative hypothesis that it has positive clinical effect with signal-to-noise ratio . We use and to denote the Bayesian prior probabilities of 0 and 1, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "This patient-value model imposes higher losses for incorrect approvals at earlier stages and correct approvals at later stages of an epidemic. Under these constraints, the Bayesian decision algorithm yields the sample size and statistical significance threshold of the RCT that optimally balances Type I and Type II error.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Bayesian Patient-Centered Approval Process"
+        },
+        {
+            "text": "We simulate an epidemic outbreak over a time period of weeks, where is the duration of the outbreak. For an epidemic with higher infectivity, its duration is shorter, which puts more pressure to reach a timely approval decision. To avoid numerical instability, we formally define as the first time when the number of cumulative infected patients reaches 99.9% of total infections predicted by the SEIR model. We assume an age-specific mortality rate at the level of COVID-19 (Onder et al. 2020; World Health Organization, 2020) , and incubation and recovery periods of 7 days each (Yang et al. 2020). These estimated parameters can all be challenged to varying degrees, depending on the specific drugindication pair under consideration and the particular circumstances of the epidemic, but they are meant to be representative for a typical anti-infective therapeutic during the midst of a growing epidemic.",
+            "cite_spans": [
+                {
+                    "start": 475,
+                    "end": 494,
+                    "text": "(Onder et al. 2020;",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 495,
+                    "end": 527,
+                    "text": "World Health Organization, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "We also assume that it takes 7 days after injection to assess the efficacy of the therapeutic on each subject. We adopt the optimization scheme of Montazerhodjat et al. (2017) to find the optimal Type I and Type II error rates of the non-adaptive Bayesian RCT. To represent typical practice of the pharmaceutical industry, we optimize under the upper bound on the model's power Power 90% (Isakov et al. 2019) . We then use these optimal error rates as our stopping criteria to simulate the sequential decision process of a Bayesian adaptive RCT via Monte Carlo simulation . The simulation results are summarized in Table 3 .",
+            "cite_spans": [
+                {
+                    "start": 147,
+                    "end": 175,
+                    "text": "Montazerhodjat et al. (2017)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 388,
+                    "end": 408,
+                    "text": "(Isakov et al. 2019)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 615,
+                    "end": 622,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "We separate the results into two distinct types of therapeutics-non-vaccine anti-infectives and vaccines-because of the differences in their historical probabilities of success. Vaccine development programs have an estimated PoS of 40% as of 2019Q4 (https://projectalpha.mit.edu) whereas the corresponding figure for non-vaccine antiinfectives is 23% (Wong et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 351,
+                    "end": 370,
+                    "text": "(Wong et al., 2020)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Page 6 of 27 All Rights Reserved",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "We first analyze the case when the infectivity remains constant in time (e.g. in the absence of effective NPIs). For the fixed-sample Bayesian RCT on a non-vaccine anti-infective therapeutic, as increases from 2 to 4 (Rows 1 to 2 of Table 3 ), the optimal sample size of each experimental arm decreases from 242 to 152 and the optimal Type I error rate drastically increases from 7.1% to 17.3% (Figure 1 ), much higher than the traditional 5% threshold. As the epidemic spreads across the population more rapidly, the Bayesian RCT model has greater pressure to expedite the approval process and a much higher tolerance of false positive outcomes.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 233,
+                    "end": 240,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 394,
+                    "end": 403,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "For the Bayesian adaptive RCT, when the therapeutic is ineffective ( 0), the average sample size required to reject the therapeutic is much smaller than that of the non-adaptive version (Columns 7 and 8 of Table 3 ). Also, the required sample size decreases with the infectivity in both mean and quartiles, yet always achieves Type I error rate below that of the non-adaptive version (Column 11). The adaptive Bayesian decision model is able to reject an ineffective therapeutic with a relatively small sample size and a bounded falsepositive rate.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 206,
+                    "end": 213,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "On the other hand, when the therapeutic is effective ( 1), as increases from 2 to 4, the average sample size required by the Bayesian adaptive RCT decreases from 148 to 78 (Columns 9 and 10 of Table 3 ). The Bayesian adaptive model places more weight on approving an effective therapeutic earlier to prevent future infections when the epidemic is more infectious. Despite the smaller sample size, the model still retains an empirical power above 91.0% for all values of (Column 12). The Bayesian adaptive model simultaneously expedites the approval of an effective therapeutic and retains a bounded false-negative rate. The results are illustrated in Figure 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 193,
+                    "end": 200,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 651,
+                    "end": 659,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "Furthermore, as the proportion of the initially infected population decreases from 0.1% to 0.01% (Rows 4 to 6 of Table 3 ), the optimal sample sizes for non-adaptive and adaptive RCTs both increase, while the optimal Type I error rates decrease. Beginning the clinical trials for a therapeutic during the earlier stages of an epidemic outbreak reduces the need to expedite the approval process in order to contain its future spread. Clinicians and researchers have more time to evaluate the efficacy of a therapeutic and record adverse effects by testing it on a larger number of subjects, which leads to a lower Type I error rate.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 113,
+                    "end": 120,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "Finally, when the mortality rate increases from the level of COVID-19 (Onder et al. 2020; World Health Organization, 2020) , to the level of SARS (World Health Organization, 2003) , and further to the level MERS (World Health Organization, 2019), the optimal sample sizes for both non-adaptive and adaptive Bayesian models decrease and the optimal Type I error rates increase (Rows 7 to 12 of Table 3 ). When the epidemic is more lethal, the Bayesian adaptive model requires fewer subjects in the RCT, since both Type I and Type II errors will lead to greater losses due to death by infection. The higher death tolls provides significantly more incentive in the Bayesian adaptive framework to approve the therapeutic in the hopes of saving more people from future infection and death.",
+            "cite_spans": [
+                {
+                    "start": 70,
+                    "end": 89,
+                    "text": "(Onder et al. 2020;",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 90,
+                    "end": 122,
+                    "text": "World Health Organization, 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 146,
+                    "end": 179,
+                    "text": "(World Health Organization, 2003)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 393,
+                    "end": 400,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "Page 7 of 27 All Rights Reserved One interesting feature of the Bayesian decision model is that the optimal Type I error rate is not a monotonic function , but rather has a global minimum of 8% at 1.7 for COVID-19, as shown in Figure 1 . As decreases below 1.7, the optimal Type I error rate increases. The intuition for this result that we define the loss of Type I error as the excess risk of being susceptible to infection , where is the fraction of the population that remains uninfected throughout the epidemic outbreak. When is small, is close to 100% and the excess risk is small compared to the benefit of preventing future deaths. Therefore, when the epidemic is not very infectious, the Bayesian decision model expedites the approval decision. This also confirms the intuition that smaller sample sizes are required in adaptive trials for diseases that affect a small fraction of the population. If we instead define the loss of Type I error as the absolute risk of being susceptible , we find that the optimal Type I error indeed monotonically increases with , as shown in Figure 11 of Supplementary Materials.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 227,
+                    "end": 235,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1084,
+                    "end": 1093,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Static Transmission Rate"
+        },
+        {
+            "text": "The results for the dynamic transmission model with 3, 1.5, 3 weeks and 1 week are summarized in Table 3 . For COVID-19 (rows 3 and 6), we find that the Bayesian optimal sample size and Type I error rate of the dynamic transmission model lie in between the scenarios 2 and 4. This suggests that timely and effective government interventions will protect more subjects from infection and allow more time for the RCT.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 97,
+                    "end": 104,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Dynamic Transmission Rate"
+        },
+        {
+            "text": "However, for the more fatal SARS and MERS (rows 9 and 12), the dynamic transmission model sets higher optimal Type I error and smaller sample size than 4. This is due to the U-shaped curve of optimal vs. , shown in Figure 1 . When the NPI reduces below a certain threshold, the optimal starts to increase. For highly fatal epidemics, when the government adopts NPIs to protect most of the susceptible population from infection, the regulatory priority should be to expedite potentially effective treatments that can help current patients since the loss of Type I error is much lower than that of the Type II error.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 215,
+                    "end": 223,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Dynamic Transmission Rate"
+        },
+        {
+            "text": "In addition, we investigate the impact of the timing and stringency of NPIs enforced by the government with different values of and . The results are summarized in Table 5 . We find that the optimal Type I error is larger for 3 weeks than 6 weeks. Therefore, if the government adopts well-enforced NPIs early on (such as the lockdown of Wuhan, China) to protect the susceptible population, this will reduce the loss associated with Type I error, leading to expedited approvals of potentially effective therapeutics. Furthermore, the sooner an effective therapeutic is approved, the sooner will NPIs be lifted.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 164,
+                    "end": 171,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "Dynamic Transmission Rate"
+        },
+        {
+            "text": "We repeat the above analysis for RCT of vaccines using a prior probability of having an effective vaccine 40% as reported at https://projectalpha.mit.edu for 2019Q4. The simulation results are summarized in Table 4 . Overall, we observe the same pattern in the optimal sample size and Type I error rates on infectivity, mortality, and proportion of initial infections. However, since is higher for vaccines, the Bayesian decision model requires fewer subjects on average in the RCT to ascertain the positive effects of the vaccine, compared to the case of anti-infective therapeutics in Table 3 . We find that vaccines should receive even more expedited evaluation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 207,
+                    "end": 214,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 587,
+                    "end": 594,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Vaccines"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Vaccines"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Vaccines"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Vaccines"
+        },
+        {
+            "text": "Page 8 of 27 All Rights Reserved",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Vaccines"
+        },
+        {
+            "text": "To assess the robustness of our model's predictions against the assumed values of model parameters, we perform a sensitivity analysis on the parameter values. The results are summarized in Supplementary Materials.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Vaccines"
+        },
+        {
+            "text": "A natural consequence of using a patient-centered framework for determining the approval threshold is, of course, more false positives-and the potential for a greater number of patients with adverse side-effects-in cases where the burden of disease is high. These false positives can be addressed through more vigilant post-approval surveillance by regulatory agencies and greater requirements for drug and device companies to provide such patientlevel data to the regulator following approval. Failure to provide such data or evidence of an ineffective therapy can be grounds for revoking the approval.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "However, past experience shows that withdrawing an approved drug can be challenging and disruptive for several reasons (Onakpoya, Heneghan, and Aronson, 2016) . Therefore, implementing the patient-centered approach may require creating a new category of temporary approvals for crisis situations involving urgent needs at national or international levels, similar to the FDA's EUA program. Such a program might involve provisional approval of a candidate therapy consisting of a one-or two-year license-depending on the nature of the drug-indication pair-to market the therapy to a pre-specified patient population, no offlabel use of the therapy, and regular monitoring and data reporting to the regulator by the manufacturer and/or patients' physicians during the licensing period (Lo, 2017) . At the end of this trial period, one of two outcomes would occur, depending on the accumulated data during this period: (a) the \"urgent needs\" license expires; or (b) the license converts to the traditional regulatory license. Of course, at any point during the trial period, the regulator can terminate the license if the data show that the therapeutic is ineffective and/or unsafe.",
+            "cite_spans": [
+                {
+                    "start": 119,
+                    "end": 158,
+                    "text": "(Onakpoya, Heneghan, and Aronson, 2016)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 783,
+                    "end": 793,
+                    "text": "(Lo, 2017)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "While such a process may impose greater burdens on patients, manufacturers, and regulators, it may still be worthwhile if it brings faster or greater relief to patients facing mortal illnesses and extreme suffering. In this respect, an urgent-needs program may be viewed as a middle ground between a standard clinical trial and an approval, similar in spirit to the adaptive designs of sophisticated clinical trials with master protocols such as I-SPY 2, LUNG-MAP, and GBM-AGILE, in which patient care and clinical investigations are simultaneously accomplished. Also, because the Centers for Medicare and Medicaid Services (CMS) has demonstrated a willingness to cover the cost of certain therapeutics for which evidence is still being generated (see, for example, CMS's \"coverage with evidence\" programs listed at https://go.cms.gov/2v6ZxWm), additional economic incentives may be available to support such temporary licenses.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Page 9 of 27 All Rights Reserved",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We apply the Bayesian adaptive patient-centered model of to clinical trials for therapeutics that treat infectious diseases during an epidemic outbreak. Using a simple epidemiological model, we find that the optimal sample size in the clinical trial decreases with the infectivity of the epidemic, measured by the basic reproduction number . At the same time, the optimal Type I error rate increases with . Lower levels of initial infection increase the number of subjects required to verify the therapeutic efficacy of the therapeutic under investigation, while higher levels of mortality increase the optimal sample size. The results confirm our intuition that clinical trials should be expedited and a higher false positive rate should be tolerated when the epidemic spreads more rapidly through the population, has a higher mortality rate, and has already infected a sizable portion of the population at the beginning of the RCT.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "To provide transparency for how a patient-centered approach differs from the traditional statistical framework in the anti-infectives context, we used a relatively simple mathematical model of epidemic disease dynamics to estimate the societal loss in an outbreak. More sophisticated epidemiological models can easily be incorporated into our framework at the cost of computational tractability and transparency.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "One interesting trade-off to be explored is the difference between COVID-19 vaccine and an anti-viral treatment that can cure an infected patient. While prevention through vaccination is the ultimate solution, a successful treatment for the disease using repurposed drugs that have already been approved for other indications (and whose safety profile has already been established) may be even more valuable, especially if it can be deployed in the nearer term and reduce the growing fear and panic among the general population. In such cases, the approval threshold should clearly reflect these cost/benefit differences.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Of course, in practice regulators consider many factors beyond p-values in making its decisions. However, that process is opaque even to industry insiders, and the role of patient preferences is unclear. The proposed patient-centered approach provides a systematic, objective, adaptive, and repeatable framework for explicitly incorporating patient preferences and burden-of-disease data in the therapeutic approval process. This framework also fulfills two mandates for the FDA, one from the fifth authorization of the Prescription Drug User Fee Act (PDUFA) for an enhanced quantitative approach to the benefit-risk assessment of new drugs (U.S FDA, 2013), and the other from Section 3002 of the 21 st Century Cures Act of 2016 requiring the FDA to develop guidelines for patientfocused drug development, which includes collecting patient preference and experience data and explicitly incorporating this information in the drug approval process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We hope this work will shed further insight into improving the current clinical trial process for infectious disease therapeutics and contribute to the timely development of effective treatments for COVID-19 patients in particular.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Page 10 of 27 All Rights Reserved ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Value(s) Basic reproduction number (Li et al. 2020; Zhao et al., 2020) 2 Loss per capita from death by infection 10, 100 Loss per capita from being infected 1 Loss per capita from being susceptible without precaution 0.2 . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 35,
+                    "end": 51,
+                    "text": "(Li et al. 2020;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 52,
+                    "end": 70,
+                    "text": "Zhao et al., 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "Page 11 of 27 All Rights Reserved . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo Page 12 of 27 All Rights Reserved Table 3 . Simulation results of a Bayesian adaptive RCT on non-vaccine anti-infective therapeutics obtained from 10,000 Monte Carlo runs and assuming . denotes the basic reproduction number, \u00b5 the disease morality, and the proportion of initial infected subjects. Sample size refers to the number of subjects enrolled in each arm of the RCT. SD denotes standard deviation, and IQR the interquartile range about the median. (t) denotes the use of a dynamic transmission model with half-life weeks and window length week. . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 27,
+                    "end": 50,
+                    "text": "Chaudhuri, Xiao, and Lo",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 85,
+                    "end": 92,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Parameter Description (Source)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 15 of 27 All Rights Reserved Figure 3 . Sensitivity of optimal sample size (in each arm of non-adaptive Bayesian RCT) to the weekly subject enrollment rate . From the lower to upper end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value used in our analysis (Table 1 ). Figure 4 . Sensitivity of optimal Type I error rate to the weekly subject enrollment rate . From the upper to lower end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value used in our analysis (Table 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 42,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 323,
+                    "end": 331,
+                    "text": "(Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 335,
+                    "end": 343,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 587,
+                    "end": 596,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 20 of 27 All Rights Reserved Figure 5 . Sensitivity of optimal sample size (in each arm of non-adaptive Bayesian RCT) to the signal to noise ratio (SNR) of treatment effect . From the upper to lower end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value . used in our analysis (Table 1 ). Figure 6 . Sensitivity of optimal Type I error rate to the signal to noise ratio (SNR) of treatment effect . From the upper to lower end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value . used in our analysis (Table 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 42,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 342,
+                    "end": 350,
+                    "text": "(Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 354,
+                    "end": 362,
+                    "text": "Figure 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 625,
+                    "end": 634,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 21 of 27 All Rights Reserved Figure 7 . Sensitivity of optimal sample size (in each arm of non-adaptive Bayesian RCT) to the prior probability of having an ineffective treatment . From the lower to upper end of each box plot, the five-parameter summary corresponds to [70%, 85%, 100%, 115%, 125%] of the baseline value % used in our analysis (Table 1 ). Figure 8 . Sensitivity of optimal Type I error rate to the prior probability of having an ineffective treatment . From the upper to lower end of each box plot, the fiveparameter summary corresponds to [70%, 85%, 100%, 115%, 125%] of the baseline value % used in our analysis (Table 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 42,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 347,
+                    "end": 355,
+                    "text": "(Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 359,
+                    "end": 367,
+                    "text": "Figure 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 634,
+                    "end": 643,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 22 of 27 All Rights Reserved Figure 9 . Sensitivity of optimal sample size (in each arm of non-adaptive Bayesian RCT) to the time to assess the efficacy of the non-vaccine anti-infective therapeutics \u2206 . From the upper to lower end of each box plot, the five-parameter summary corresponds to [0%, 50%, 100%, 150%, 200%] of the baseline value \u2206 used in our analysis (Table 1 ). Figure 10 . Sensitivity of optimal Type I error rate to the time to assess the efficacy of the anti-infective therapeutic \u2206 . From the lower to upper end of each box plot, the five-parameter summary corresponds to [0%, 50%, 100%, 150%, 200%] of the baseline value \u2206 used in our analysis (Table 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 42,
+                    "text": "Figure 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 370,
+                    "end": 378,
+                    "text": "(Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 382,
+                    "end": 391,
+                    "text": "Figure 10",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 669,
+                    "end": 678,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 23 of 27 All Rights Reserved Figure 11 . Sensitivity of optimal sample size (in each arm of non-adaptive Bayesian RCT) to the incubation rate a of the infectious disease. From the upper to lower end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value used in our analysis (Table 1 ). Figure 12 . Sensitivity of optimal Type I error rate to the incubation rate a of the infectious disease. From the lower to upper end of each box plot, the five-parameter summary corresponds to [50%, 75%, 100%, 125%, 150%] of the baseline value used in our analysis (Table 1) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 43,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 336,
+                    "end": 344,
+                    "text": "(Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 348,
+                    "end": 357,
+                    "text": "Figure 12",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 613,
+                    "end": 622,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 24 of 27 All Rights Reserved Table 6 . Optimal sample size and Type I error rate for Bayesian non-adaptive RCT on anti-infective therapeutics with (basic reproduction number) close to 1. \u00b5 denotes the disease morality, and the proportion of initial infected subjects. Sample size denotes the number of subjects enrolled in each arm of the RCT. . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 41,
+                    "text": "Table 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "8 April 2020 \u00a9 2020 by Xu, Chaudhuri, Xiao, and Lo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "Page 27 of 27 All Rights Reserved This alternative definition is not very realistic. For an epidemic with , the loss of Type I error converges to a large positive value as time approaches the end of the epidemic outbreak. However, at the end of the outbreak, there are no more infected patients and thus no susceptible subjects. Therefore, the loss of Type I error should approach zero as \u2192 . This is the case for the excess risk of susceptibility but not for the absolute risk of susceptibility .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemic Parameters"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Adaptive Global Innovative Learning Environment for Glioblastoma",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Alexander",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Clinical Cancer Research",
+            "volume": "24",
+            "issn": "4",
+            "pages": "737--780",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The Brave New World of clinical cancer research: Adaptive biomarkerdriven trials integrating clinical practice with clinical research",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Barry",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Molecular Oncology",
+            "volume": "9",
+            "issn": "5",
+            "pages": "951--959",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Bayesian Adaptive Patient-Centered Clinical Trials",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Chaudhuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Use of Bayesian Decision Analysis to Maximize Value in Patient-Centered Randomized Clinical Trials",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Chaudhuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hauber",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Mange",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Caldwell",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Benz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ruiz",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bardot",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sheehan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mclaughlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gwinn",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sheldon",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "I-SPY 2: An Adaptive Breast Cancer Trial Design in the Setting of Neoadjuvant Chemotherapy",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Barker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sigman",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kelloff",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hylton",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Berry",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Esserman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Clinical Pharmacology & Therapeutics",
+            "volume": "86",
+            "issn": "",
+            "pages": "97--100",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Is the FDA too conservative or too aggressive?: A Bayesian decision analysis of clinical trial design",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Isakov",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Montazerhodjat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Econometrics",
+            "volume": "211",
+            "issn": "",
+            "pages": "117--136",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Use of Bayesian Decision Analysis to Minimize Harm in Patient-Centered Randomized Clinical Trials in Oncology",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Montazerhodjat",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Chaudhuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sargent",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "JAMA Oncology",
+            "volume": "",
+            "issn": "9",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus-Infected Pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001316"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Discussion: New directions for the FDA in the 21 st century",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Biostatistics",
+            "volume": "18",
+            "issn": "",
+            "pages": "404--407",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Post-Marketing Withdrawal of 462 Medicinal Products Because of Adverse Drug Reactions: A Systematic Review of the World Literature",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Onakpoya",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Heneghan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Aronson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "BMC Medicine",
+            "volume": "14",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12916-016-0553-2"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Case-Fatality Rate and Characteristics of Patients Dying in Relation to COVID-19 in Italy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Onder",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rezza",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Brusaferro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "23",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.4683"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Risk in vaccine research and development quantified",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pronker",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Weenen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Commandeur",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Claassen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Osterhaus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "PLoS One",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Structured Approach to Benefit-Risk Assessment in Drug Regulatory Decision-Making: Draft PDUFA V Implementation Plan-February 2013, Fiscal Years",
+            "authors": [],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Vaccine Product Approval Process",
+            "authors": [],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "WHO Collaborating Centre for Infectious Disease Modelling, MRC Centre for Global Infectious Disease Analysis, Abdul Latif Jameel Institute for Disease and Emergency Analytics",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "G T"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Whittaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Watson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Estimation of clinical trial success rates and related parameters",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Siah",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Biostatistics",
+            "volume": "20",
+            "issn": "2",
+            "pages": "273--286",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Estimating Probabilities of Success of Clinical Trials for Vaccines and Other Anti-Infective Therapeutics",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Siah",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Coronavirus disease 2019 (COVID-19) Situation report-59",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Consensus document on the epidemiology of severe acute respiratory syndrome (SARS)",
+            "authors": [],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "MERS situation update",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Incubation rate (per week) (Yang et al. final infection rate in the dynamic transmission model (Kucharski et al. subject enrollment in each arm of RCT 100 Prior probability of having an ineffective anti-infective therapeutic (Wong et al., 2019) 77%Prior probability of having an ineffective vaccine(Wong et al.,  power of Bayesian decision model(Isakov et al., 2019) 0.9",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Optimal Type I error rate of a non-adaptive Bayesian RCT vs. basic reproduction number (assuming . %, , disease mortality of COVID-19, and constant ). The Bayesian decision model yields a higher for epidemics with high and low infectivity.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Subject sample size in each arm of a Bayesian adaptive RCT under H = 1 decreases with the basic reproduction number(assuming . %, and disease mortality of COVID-19). BNA denotes Bayesian non-adaptive optimal; BA 50% denotes median patient size of Bayesian adaptive. The 25% and 75% quantiles of Bayesian adaptive patient size are shown as lower and upper ends of the error bar.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Optimal Type I error rate of non-adaptive Bayesian RCT monotonically increases with the basic reproduction number (assuming . %, and disease mortality of COVID-19) if we define the loss of making a Type I error as the absolute risk of being susceptible .",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "A number of studies have used different statistical schemes to estimate for COVID-19 during its initial outbreak period in central China in January 2020. These estimated values of",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Simulation parameters and values.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Demographic (US Census Bureau, 2018), relative contact rate (Walker et al. 2020) and mortality (Onder et al. 2020; World Health Organization 2003; 2019; 2020) profile of various age groups for COVID-19, SARS and MERS.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Simulation results of Bayesian adaptive RCT for vaccines obtained from 10,000 Monte Carlo runs and assuming .denotes the basic reproduction number, \u00b5 the disease morality, and the proportion of initial infected subjects. Sample size refers to the number of subjects enrolled in each arm of the RCT. SD denotes standard deviation, and IQR the interquartile range about the median. (t) denotes the use of a dynamic transmission model with half-life weeks and window length week.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Optimal sample size and Type I error of Bayesian non-adaptive RCT for nonvaccine anti-infective therapeutics for dynamic transmission model. denotes the basic reproduction number, \u00b5 the disease morality, and the proportion of initial infected subjects. Sample size refers to the number of subjects enrolled in each arm of the RCT. (t) denotes the use of a dynamic transmission model with, \u221e . .",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": " Table 7 . Simulation results of Bayesian adaptive RCT on non-vaccine anti-infective therapeutics obtained from 10,000 Monte Carlo runs and assuming . denotes the basic reproduction number, \u00b5 the disease morality, and the proportion of initial infected subjects. Sample size refers to the number of subjects enrolled in each arm of the RCT. SD denotes standard deviation, and IQR the interquartile range about the median. (t) denotes dynamic transmission model with half-life weeks and window length week. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1,
+                    "end": 8,
+                    "text": "Table 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "All Rights Reserved"
+        },
+        {
+            "text": "week. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "basic reproduction number, \u00b5 the disease morality, and the proportion of initial infected subjects. Sample size refers to the number of subjects enrolled in each arm of the RCT. SD denotes standard deviation, and IQR the interquartile range about the median. (t) denotes dynamic transmission model with half-life weeks and window length"
+        }
+    ]
+}

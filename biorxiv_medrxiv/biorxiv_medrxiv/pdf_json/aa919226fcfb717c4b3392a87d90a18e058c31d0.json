@@ -1,0 +1,984 @@
+{
+    "paper_id": "aa919226fcfb717c4b3392a87d90a18e058c31d0",
+    "metadata": {
+        "title": "A multivariate spatiotemporal spread model of COVID-19 using ensemble of ConvLSTM networks",
+        "authors": [
+            {
+                "first": "Swarna",
+                "middle": [],
+                "last": "Kamal Paul",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Tata Consultancy Services Kolkata",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": "swarna.kpaul@gmail.com"
+            },
+            {
+                "first": "Saikat",
+                "middle": [],
+                "last": "Jana",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Tata Consultancy Services Kolkata",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Parama",
+                "middle": [],
+                "last": "Bhaumik",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Jadavpur University",
+                    "location": {
+                        "settlement": "Kolkata",
+                        "country": "India"
+                    }
+                },
+                "email": "paramabhaumik@gmail.com"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The high R-naught factor of SARS-CoV-2 has created a race against time for mankind and it necessitates rapid containment actions to control the spread. In such scenario short term accurate spatiotemporal predictions can help understanding the dynamics of the spread in a geographic region and identify hotspots. We propose an ensemble of convolutional LSTM based spatiotemporal model to forecast spread of the epidemic with high resolution and accuracy in a large geographic region. A data preparation method is proposed to convert spatial causal features into set of 2D images with or without temporal component. The model has been trained with available data for USA and Italy. It achieved 5.57% and 0.3% mean absolute percent error for total number of predicted infection cases in a 5day prediction period for USA and Italy respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Wuhan city in China initially observed an outbreak of Covid-19 disease caused by SARS-CoV-2. Eventually it became a pandemic and more than 200 countries are fighting hard to contain the infection [1] . This has become a unique challenge for mankind as the competition has turned out to be against time due to exponential rate of infection spread. One of the best ways to contain the infection is rapid identification of positive cases and isolation. However due to limited resources random and widespread testing may not be feasible in populous countries. Forecasting regional spread can help identify future hotspots and distribution of infection which would eventually help to take containment measures.",
+            "cite_spans": [
+                {
+                    "start": 196,
+                    "end": 199,
+                    "text": "[1]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A spatiotemporal epidemic spread model can accommodate both spatial and temporal correlations in data. However, most of the models either require disease specific domain knowledge [11] or are too spatially coarse [18] . Deep learning models can learn the dynamics of epidemic spread with high spatial resolution and high degree of accuracy with minimal initial bias due to its capability of highly nonlinear representation. Deep neural network based spatiotemporal models [4] have already been applied to predict epidemic spread. However, this model is experimented on a small localized region and influence of external factors are ignored. Deep learning models also tend to overfit to noise due to its high representational capability. Thus, modelling an epidemic spread in a wide region with high spatial and temporal resolution is challenging. To address the problem of spatiotemporal prediction of Covid-19 spread in a large geographical region with high resolution, we propose an ensemble of Convolutional LSTM [5] based model to be trained with multilayer temporal geospatial data, transformed as sequence of images. Each layer of the geospatial data corresponds to a causal factor that might influence the spread of the epidemic. We experimented with data of US and Italy and achieved country level mean absolute percent error (MAPE) of 5.57% and 0.3% respectively on forecasting of total infection cases in 5 days period. The paper is organized as following. In section 2 we conducted a literature review. A brief discussion on modelling the epidemic spread and data preparation method is presented in section 3. In section 4 we explained the ensemble of Convolutional LSTM model and performance measurement metrics. Section 5 is about experimental results. The following section concludes the paper.",
+            "cite_spans": [
+                {
+                    "start": 180,
+                    "end": 184,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 213,
+                    "end": 217,
+                    "text": "[18]",
+                    "ref_id": null
+                },
+                {
+                    "start": 472,
+                    "end": 475,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1016,
+                    "end": 1019,
+                    "text": "[5]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Hu et. al. developed a modified stacked autoencoder model of the epidemic spread in China and they claimed to achieve high level of forecasting accuracy [2] . On observing a universality in the epidemic spread in each country, Fanelli and Piazza [3] applied meanfield kinetics of Susceptible-Infected-Recovered/Dead epidemic model to forecast the spread and provided an estimation of peak infections in Italy. Zhan et. al. [8] integrated the intercity migration data in China with Susceptible-Exposed-Infected-Removed model to forecast an estimation of epidemic spread in China. Xi et. al. [4] used deep residual networks to model spatiotemporal characteristics of the spread of influenza and experimented with real dataset of Shenzen city in China. Shi et. al. [5] proposed convolutional LSTM network for spatiotemporal modelling of localized rainfall over a short period of time and used it for rainfall nowcasting. Yuan et. al. [6] used an ensemble of ConvLSTM models to predict road accidents by using heterogeneous multi-layered spatiotemporal data.",
+            "cite_spans": [
+                {
+                    "start": 153,
+                    "end": 156,
+                    "text": "[2]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 246,
+                    "end": 249,
+                    "text": "[3]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 423,
+                    "end": 426,
+                    "text": "[8]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 590,
+                    "end": 593,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 762,
+                    "end": 765,
+                    "text": "[5]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 931,
+                    "end": 934,
+                    "text": "[6]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Disease spread is a complex dynamical system and numerous factors contribute to the dynamics of spread making it non-stationary. Covid19 is no different. Geographical location, weather conditions [7] , human mobility [8] , population statistics might be some of the impacting factors changing the dynamics of the spread. Epidemic spread is correlated in time as well as spatial dimensions. There is high chance of spreading the infection in spatially co-located geographical regions specially during community spread. Thus, a spatiotemporal model can more accurately capture the dynamics of the spread. However, it may be spatially autocorrelated in a small localized region but not across wide regions. Thus, we divided a large geographic region into relatively smaller grids and trained our model with samples drawn from local distribution of infection cases. The goal of the model is to forecast new cases of infection on daily basis in different regions across a country which can be added up to calculate total cases of infection. The model can be trained with historical time series data of new cases of infection in different regions along with some external spatial and/or spatiotemporal features. During prediction, the . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 196,
+                    "end": 199,
+                    "text": "[7]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 217,
+                    "end": 220,
+                    "text": "[8]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modelling Covid-19 spread"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 17.20069898 doi: medRxiv preprint model is fed with temporal sequence of distribution of new infection cases in a region along with other external spatiotemporal features and the model in turn forecasts the distribution of new infection cases in that region.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "17.20069898",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modelling Covid-19 spread"
+        },
+        {
+            "text": "All the observations in the dataset is mapped to a spatial region bounded by predefined latitude and longitude. The spatial region may represent a section of a single country or multiple countries. The region is geospatially divided in M x N grids of equal sizes bounded by calculated latitudes and longitudes. It is assumed that disease spread in locations within a grid is spatially autocorrelated due to its smaller size compared to the whole region. Fig.  1a illustrates a grid bounded by latitudes and longitudes. The box represented by the dotted line is called as frame. The frames have overlapping areas in all 4 direction. The overlap allows flow of spatial influence from neighbouring grids. Each frame is in turn divided into L x L pixels which includes the overlapping area. Each pixel represents a bounded area in geospatial region. The values in each pixel is mapped to certain feature in the bounded geospatial region. Separate frame matrices are constructed for each feature and concatenated through channels. For example, new infection count and population are two features and they represent two separate L x L matrices in a frame concatenated across a third axis. Each pixel in the infection count matrix contains the count of new infections (\u2206I) in the pixel area in a day. Infection count is distributed both in spatial and temporal dimensions. To reduce the variance, the infection count in a pixel is log transformed and normalized in 0-1 scale. Considering R0 factor of Covid-19 between 2 and 3 it is calculated that 60% of the population (P) in an area needs to get infected to attain herd immunity and reduce further spreading [20] . Similar to the SIR model [14] , the total population P is compartmentalized into susceptible (S) and infected/recovered/deceased (I) group. Susceptible population at any day is calculated as 0.6P \u2212 I. In a single day new infection count cannot exceed number of susceptible populations. Thus, a pixel value is calculated as ln(\u2206I + 1) /ln(S + 2). Total population is distributed spatially in similar fashion and it is assumed time invariant within a short interval. Pixel value of population matrix is calculated as ln(0.6P + 1) /ln(max(0.6P)). Each frame is represented as tensor of dimension T x L x L x C, where T is the total time span and C is number of channels or features. As shown in Fig. 1b each training sample in a frame is generated by sliding a time window size of W+1 by 1, leaving behind a test case sample of time window size of W \u2032 in the most recent period. Number of training samples in a frame can be calculated as T \u2212 W \u2032 \u2212 W \u2212 1. Thus, total number of training samples for all frames can be calculated",
+            "cite_spans": [
+                {
+                    "start": 1653,
+                    "end": 1657,
+                    "text": "[20]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1685,
+                    "end": 1689,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 454,
+                    "end": 462,
+                    "text": "Fig.  1a",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 2352,
+                    "end": 2359,
+                    "text": "Fig. 1b",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data Preparation"
+        },
+        {
+            "text": "The forecasting problem is framed as supervised learning problem. Given a sequence of observed matrices of spatial data as images 1 , 2 \u2026 the objective of the model is to predict the next image +1 . The training samples are divided into input sequences each of length W and output image. The model predicts the normalized log transformed new infections count in each pixel in a image. Thus, the output image consists of only 1 channel. The input training dataset (X train )can be represented as a tensor of size S train xWxLxLxC and the output dataset (Y train ) as S train x1xLxLx1. For training, the input sequences are selected from all frames having non-zero total infection count. Fig.  1b illustrates the sequence of images in a frame. The image t-6 to t-3 represents an input training sequence (X train ) of length W. The output image (Y train ) for this training sample . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 686,
+                    "end": 694,
+                    "text": "Fig.  1b",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data Preparation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 17.20069898 doi: medRxiv preprint is t-2. Other training samples are generated by sliding the window W backwards in time by 1. The most recent images t-0 and t-1 represents the test output images (Y test ) and immediate sequence of images t-5 to t-2 is the test input sample (X test ). The test set X test is represented by a tensor of size (M * N)xWxLxLxC and Y test by (M * N)xW\u2032xLxLx1. ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "17.20069898",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data Preparation"
+        },
+        {
+            "text": "Recurrent neural networks (RNN) are a class of artificial neural networks with nodes having feedback connections thereby allowing it to learn patterns in variable length temporal sequences. However, it becomes difficult to learn long term dependencies for traditional RNN due to vanishing gradient problem [9] . LSTMs [10] solve the problem of learning long term dependencies by introducing a specialized memory cells as recurrent unit. The cells can selectively remember and forget long term information in its cell state through some control gates. In convolutional LSTM [5] a convolution operator is added in state to state and input to state transition. All inputs, outputs and hidden states are represented by 3D tensors having 2 spatial dimensions and 1 temporal dimension. This allows the model to capture spatial correlation along with the temporal one. In our model we configured multichannel input such that distinct features can be passed through different channels. Multiple convolutional LSTM layers are stacked sequentially to form a network with high representational capability. The network terminates with a 3D convolutional layer having one filter. This layer constructs a single channel output image as the next frame prediction. A single model may be prone to overfitting on training dataset and loose stability in terms of prediction made. Creating an ensemble of diverse models intended to solve the same task and combining the predictions made by them typically improves test accuracy and stability [12] . We used bagging or bootstrap aggregation [13] to create an ensemble of models. 60% random samples are drawn with replacement from the original training dataset and an ensemble of five models are trained individually. During prediction the output of each of the models are weighted as per following equation.",
+            "cite_spans": [
+                {
+                    "start": 306,
+                    "end": 309,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 318,
+                    "end": 322,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 573,
+                    "end": 576,
+                    "text": "[5]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1522,
+                    "end": 1526,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1570,
+                    "end": 1574,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. is output of the ensemble, is output of the model , is set of all models in the ensemble, is number of infected patients in the training samples of model , is mean squared error of model on validation dataset and is softmax function. The weights are proportional to the amount of positive cases used for training the model and inversely proportional to the validation error. During testing the model is given a sequence of most recent frames as input and the next frame is predicted. The predicted frame is temporally appended to the input sequence of frames and fed to the model again to obtain the next predicted frame. This continues until required number of future frames are predicted. The accuracy of a model is tested with the metric \"mean absolute percent error\" (MAPE) and Kullback-Liebler (KL) divergence [17] .",
+            "cite_spans": [
+                {
+                    "start": 966,
+                    "end": 970,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "The pixel values are transformed to \u2206I and summed up cumulatively to calculate total infection cases I, up till a specific day. MAPE is calculated at pixel level for total infection cases at the end of prediction period and averaged. The pixels with 0 susceptible population count are ignored while calculating MAPE. Pixel MAPE is calculated as per equation 2, where is set of all unique pixels in all grids such that the frame for each corresponding grid have non zero total infection count, \u2032 is prediction time period, \u2032\u2032 = \u2212 \u2032 is total time period in training set, is a pixel from a set of unique pixels in the total region having non zero actual susceptible population, is predicted pixel value on th day, is susceptible population at pixel on th day calculated from and \u22121 , \u2206 is actual new infection count at pixel on th day and is total number of pixels in the region. \u0302 and are total predicted and actual infection cases respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "KL divergence at pixel level is calculated for total infection cases at the end of prediction period to measure the dissimilarity of distribution of predicted infection cases with respect to actual. is softmax function applied after scaling a series in 0 to 1 scale and ( ) is probability distribution of . Softmax is applied to convert total infection cases as probability distribution across pixels.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "= \u2211 ( (\u0302) ) log (",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "MAPE is also calculated at country level with respect to total predicted infection cases across the region during the prediction period.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ensemble of Convolutional LSTM models"
+        },
+        {
+            "text": "Experiments have been carried out to predict the future new infection cases in Italy for a period of 5 days and 10 days and in USA for a period of 5 days and 8 days. Data has been collected from Harvard dataverse [15, 16] and [19] . For USA the data collection period is '2020-03-09' to '2020-04-08' and for Italy it is '2020-02-05' to '2020-04-10'. Test data period for Italy data is '2020-04-01' to '2020-04-10' and for USA it is '2020-04-01' to '2020-04-08'. Fig. 2a shows the region of USA which has been divided into 18x30 grids. The length W of each training input sequence is taken as 10 days. As shown in Fig. 2b , the region of Italy is divided in 7x6 grids. For both the countries the frames containing at least a single Covid-19 infection case will be considered for training and testing the model. The Covid-19 cases are marked in red bubbles in the map. Each frame in turn is divided in 16x16 pixels with an overlap Margin of 4 pixel. Training sequences containing at least one positive case are only selected. The model consists of ensemble of 5 Convolutional LSTM networks. For Italy each network contains 4 hidden layers with sigmoid activation. The output layer is a Convolutional 3D layer with exponential linear unit as activation. The models are trained for 30 epochs with mean squared error as loss function. Each Conv2D layer has kernel of size 3x3. The Conv3D layer has kernel size 3x3x3. The input and hidden layers have 32 filters. The input layer is configured to take images of size 16x16x2. Each frame in the input sample have 2 channels for 2 features. The first channel contains the normalized log transformed count of new cases per day. The second channel contains the normalized log transformed population in each pixel with no temporal variation. The region in USA is approximately 13 times than Italy and the distribution of Covid-19 cases in USA is geospatially highly skewed. Thus, grids are divided in four equal sections by a latitude and . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 213,
+                    "end": 217,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 218,
+                    "end": 221,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 226,
+                    "end": 230,
+                    "text": "[19]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 462,
+                    "end": 469,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 613,
+                    "end": 620,
+                    "text": "Fig. 2b",
+                    "ref_id": null
+                }
+            ],
+            "section": "Experimental Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 17.20069898 doi: medRxiv preprint longitude with each section containing 9x15 grids. A set of 4 heterogenous ensembles are trained for each of the 4 sections. The configuration of networks is same as that of Italy except they contain 2 hidden layers and each network is trained for 20 epochs. The implementation has been done on Python and code is available at https://github.com/swarna-kpaul/covid19spatiotemporal. Table I shows the performance of the models in terms of KL divergence and MAPE. For both USA and Italy, low KL divergences states that the predicted geospatial probability distribution of total infection cases nearly matches with the actual probability distribution. The pixel level MAPE for Italy stays below 30%. For USA in 8-day forecasting period MAPE is 44% as there are many pixels in USA with low total patient count. A slight deviation in the prediction for these pixels shoots up the MAPE. Country level MAPE is low for both Italy and USA. Fig. 3a and 4a shows predicted vs actual total Covid-19 cases for a period of 8 and 10 days in USA and Italy respectively. For Italy the prediction follows closely with the actual whereas for USA it is little underestimated. Fig. 3b and 4b shows predicted vs actual daily new Covid-19 cases for a period of 8 and 10 days in USA and Italy respectively. Fig. 5a and 5b shows the distribution of total predicted vs actual infection cases in each pixel after 10 day and 8 day in Italy and USA respectively. The predicted distribution closely follows with actual with residuals distributed both on negative and positive side.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "17.20069898",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 527,
+                    "end": 534,
+                    "text": "Table I",
+                    "ref_id": null
+                },
+                {
+                    "start": 1076,
+                    "end": 1090,
+                    "text": "Fig. 3a and 4a",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1301,
+                    "end": 1315,
+                    "text": "Fig. 3b and 4b",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1428,
+                    "end": 1435,
+                    "text": "Fig. 5a",
+                    "ref_id": null
+                }
+            ],
+            "section": "Experimental Results"
+        },
+        {
+            "text": "An ensemble of Convolutional LSTM based spatiotemporal epidemic spread model has been proposed for short term forecasting of Covid-19 spread. Experiments done on data obtained for USA and Italy reveals high prediction accuracy with high resolution. Since the model has option to fed in any number of external features so we are experimenting with multiple external features that might influence the spread. This might help to find important causal features that are impacting the spread across multiple locations. We are also trying to combine models of multiple countries so that a single ensemble of model can be trained through transfer learning and will eventually help predicting cases across the globe. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "[1] https://www.who.int/docs/default-source/coronaviruse/situation-reports/20200401sitrep-72-covid-19.pdf?sfvrsn=3dd8971b_2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.17.20069898 doi: medRxiv preprint . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 17.20069898 doi: medRxiv preprint [18] Pitzer, V. E., Viboud, C., Simonsen, L., Steiner, C., Panozzo, C. A., Alonso, W. J., ... & Grenfell, B. T. (2009). \"Demographic variability, vaccination, and the spatiotemporal dynamics of rotavirus epidemics\". Science, 325(5938), 290-294.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "17.20069898 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": "[19] https://www.citypopulation.de/en/italy/admin/ [20] Fine, P., Eames, K., & Heymann, D. L. (2011). \"Herd immunity: a rough guide\". Clinical infectious diseases, 52 (7), 911-916.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "References"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 17.20069898 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "17.20069898 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "References"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Artificial intelligence forecasting of covid-19 in china",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Ge",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.07112"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Analysis and forecast of COVID-19 spreading in China, Italy and France",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fanelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Piazza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Chaos, Solitons & Fractals",
+            "volume": "134",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A deep residual network integrating spatial-temporal properties to predict influenza trends at an intra-urban scale",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Xi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 2nd ACM SIGSPATIAL International Workshop on AI for Geographic Knowledge Discovery",
+            "volume": "",
+            "issn": "",
+            "pages": "19--28",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Convolutional LSTM network: A machine learning approach for precipitation nowcasting",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "H I"
+                    ],
+                    "last": "Xingjian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Woo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "802--810",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Hetero-convlstm: A deep learning approach to traffic accident prediction on heterogeneous spatio-temporal data",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "984--992",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Temperature and latitude analysis to predict potential spread and seasonality for covid-19",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sajadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Habibzadeh",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vintzileos",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shokouhi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Miralles-Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Amoroso",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Modelling and Prediction of the",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tse",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Coronavirus Disease Spreading in China Incorporating Human Migration Data",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The vanishing gradient problem during learning recurrent neural nets and problem solutions",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hochreiter",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems",
+            "volume": "6",
+            "issn": "02",
+            "pages": "107--116",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "LSTM can solve hard long time lag problems",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hochreiter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schmidhuber",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "473--479",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Optimal vaccine distribution in a spatiotemporal epidemic model with an application to rabies and raccoons",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Neilan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lenhart",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of mathematical analysis and applications",
+            "volume": "378",
+            "issn": "2",
+            "pages": "603--619",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Why M heads are better than one: Training a diverse ensemble of deep networks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Purushwalkam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cogswell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Crandall",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Batra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1511.06314"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Bagging predictors",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Machine learning",
+            "volume": "24",
+            "issn": "",
+            "pages": "123--140",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Qualitative analyses of communicable disease models",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hethcote",
+                    "suffix": ""
+                }
+            ],
+            "year": 1976,
+            "venue": "Mathematical Biosciences",
+            "volume": "28",
+            "issn": "3-4",
+            "pages": "335--356",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "US COVID-19 Daily Cases with Basemap",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "0--1",
+            "other_ids": {
+                "DOI": [
+                    "10.7910/DVN/HIDLTK"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Coronavirus Disease 2019 (COVID-19) in Italy",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7910/DVN/KDFYZW"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "On information and sufficiency",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kullback",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Leibler",
+                    "suffix": ""
+                }
+            ],
+            "year": 1951,
+            "venue": "The annals of mathematical statistics",
+            "volume": "22",
+            "issn": "",
+            "pages": "79--86",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": ") Illustration of overlapping frames obtained by spatially dividing a geographical region. The bold lines represent latitudes and longitudes which separates the grids. The box with dotted line represents the overlapping frame which represented as an image for training the model. Each grid is divided in certain number of pixels. The margin refers to number of pixels of overlapping region. b) Illustration of sequence of images in a frame. t-0 is the most recent image. Xtrain, Ytrain are the training samples and Xtest, Ytest are testing samples.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "A region of USA divided in 18x30 grids. The red bubbles denote cumulative number of Covid-19 cases. b) A region of Italy divided in 8x7 grids with cumulative Covid-19 cases denoted by red bubbles.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "a) Predicted vs Actual total Covid-19 cases for a period of 8 days in a region of USA. b) Predicted vs Actual daily new Covid-19 cases for a period of 8 days in a region of USA Fig. 4. a) Predicted vs Actual total Covid-19 cases for a period of 10 days in a region of Italy. b) Predicted vs Actual daily new Covid-19 cases for a period of 10 days in a region of Italy Fig. 5. a) Log transformed Predicted vs Actual total Covid-19 cases after a period of 10 days in each pixel in Italy. b) Log transformed Predicted vs Actual total Covid-19 cases after a period of 8 days in each pixel in USA",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Table 1. KL divergence at pixel level and mean absolute percent error at pixel and country level for Italy and USA . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.17.20069898 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

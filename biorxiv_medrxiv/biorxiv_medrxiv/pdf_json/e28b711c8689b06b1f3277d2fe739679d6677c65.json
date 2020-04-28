@@ -1,0 +1,2752 @@
+{
+    "paper_id": "e28b711c8689b06b1f3277d2fe739679d6677c65",
+    "metadata": {
+        "title": "Characterizing geographical and temporal dynamics of novel coronavirus SARS-CoV-2 using informative subtype markers",
+        "authors": [
+            {
+                "first": "Zhengqiao",
+                "middle": [],
+                "last": "Zhao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Drexel University",
+                    "location": {
+                        "settlement": "Philadelphia",
+                        "region": "PA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Bahrad",
+                "middle": [
+                    "A"
+                ],
+                "last": "Sokhansanj",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "\u2020",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Gail",
+                "middle": [
+                    "L"
+                ],
+                "last": "Rosen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Drexel University",
+                    "location": {
+                        "settlement": "Philadelphia",
+                        "region": "PA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We propose an efficient framework for genetic subtyping of a pandemic virus, with application to the novel 2 coronavirus SARS-CoV-2. Efficient identification of subtypes is particularly important for tracking the 3 geographic distribution and temporal dynamics of infectious spread in real-time. In this paper, we utilize an 4 entropy analysis to identify nucleotide sites within SARS-CoV-2 genome sequences that are highly 5 informative of genetic variation, and thereby define an Informative Subtype Marker (ISM) for each sequence. 6 We further apply an error correction technique to the ISMs, for more robust subtype definition given 7 ambiguity and noise in sequence data. We show that, by analyzing the ISMs of global SARS-CoV-2 sequence 8 data, we can distinguish interregional differences in viral subtype distribution, and track the emergence of 9 subtypes in different regions over time. Based on publicly available data up to April 5, 2020, we show, for 10 example: (1) distinct genetic subtypes of infections in Europe, with earlier transmission linked to subtypes 11 prevalent in Italy with later development of subtypes specific to other countries over time;",
+            "cite_spans": [
+                {
+                    "start": 534,
+                    "end": 535,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "(2) within the 12 United States, the emergence of an endogenous U.S. subtype that is distinct from the outbreak in New York, 13 which is linked instead to subtypes found in Europe; and (3) dynamic emergence of SARS-CoV-2 from : bioRxiv preprint localization in China to a pattern of distinct regional subtypes in different countries around the world over 15 time. Our results demonstrate that utilizing ISMs for genetic subtyping can be an important complement to 16 conventional phylogenetic tree-based analyses of the COVID-19 pandemic. Particularly, because ISMs are 17 efficient and compact subtype identifiers, they will be useful for modeling, data-mining, and machine learning 18 tools to help enhance containment, therapeutic, and vaccine targeting strategies for fighting the COVID-19 19 pandemic. We have made the subtype identification pipeline described in this paper publicly available at 20 https://github.com/EESI/ISM. 21 Author Summary 22 The novel coronavirus responsible for COVID-19, SARS-CoV-2, expanded to reportedly 1.3 million confirmed 23 cases worldwide by April 7, 2020. The global SARS-CoV-2 pandemic highlights the importance of tracking 24 dynamics of viral pandemics in real-time. Through the beginning of April 2020, researchers obtained genetic 25 sequences of SARS-CoV-2 from nearly 4,000 infected individuals worldwide. Since the virus readily mutates, 26 each sequence of an infected individual contains useful information linked to the individual's exposure 27 location and sample date. But, there are over 30,000 bases in the full SARS-CoV-2 genome -so tracking 28 genetic variants on a whole-sequence basis becomes unwieldy. We describe a method to instead efficiently 29 identify and label genetic variants, or \"subtypes\" of SARS-CoV-2. Applying this method results in a 30 compact, 17 base-long label, called an Informative Subtype Marker or \"ISM.\" We define viral subtypes for 31 each ISM, and show how regional distribution of subtypes track the progress of the pandemic. Major findings 32 include (1) showing distinct viral subtypes of infections in Europe emanating from Italy to other countries 33 over time, and (2) tracking emergence of a local subtype across the United States connected to Asia and 34 distinct from the outbreak in New York, which is connected to Europe.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "35",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "For the aligned sequences, we merged the sequence with the metadata in Nextstrain project 4 as it is in April 6, 2020 based on identification number, gisaid epi isl, provided by GISAID [27] . We further filtered out sequences with incomplete date information in metadata (e.g, \"2020-01\"), so that our analysis can also incorporate temporal information with daily resolution, given the fast-moving nature of the pandemic. In addition, we filtered out sequences from unknown host or non-human hosts. The resulting final data set contains 3832 sequences excluding the reference sequence. Then, we calculate the entropy by:",
+            "cite_spans": [
+                {
+                    "start": 185,
+                    "end": 189,
+                    "text": "[27]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Entropy analysis and ISM extraction"
+        },
+        {
+            "text": "H \"\u00b4\u00ff kPL p k\u02dal og 2 pp k q where L is a list of unique characters in all sequences and p k is a probability of a character k. We estimated 130 p k from the frequency of characters. We refer to characters in the preceding because, in addition to the bases 131 A, C, G, and T, the sequences include additional characters representing gaps (-) and ambiguities, which are 132 listed in 1. 5 133 Sites N and -(representing a fully ambiguous site and a gap respectively) are substantially less 134 informative. Therefore, we further define a masked entropy as entropy calculated without considering 135 sequences containing N andin a given nucleotide position in the genome. Based on the entropy calculation, 136 we developed a masked entropy calculation whereby we ignore the N and -. With the help of this masked 137 entropy calculation, we can focus on truly informative positions, instead of positions at the start and end of 138 the sequence in which there is substantial uncertainty due to artifacts in the sequencing process. Finally, 139 high entropy positions are selected by two criteria: 1) entropy \u0105 0.5, and 2) the percentage of N andis less 140 than 25%. This yielded 17 distinct positions along the viral genome sequence. We then extract Informative 141 4 https://github.com/nextstrain/ncov/blob/master/data/metadata.tsv 5 The sequences are of cDNA derived from viral RNA, so there is a T substituting for the U that would appear in the viral RNA sequence. identified these two criteria. The left hand side of the plot shows that there is a peak with entropy greater 143 than 0.5, which we sought to retain. Looking to the right hand side of the plot, setting threshold to 0.25 will 144 keep the peak on the left which represents the most informative group of sites in the genome. 145 Error correction to resolve ambiguities in sequence data and remove spurious 146 ISMs 147",
+            "cite_spans": [
+                {
+                    "start": 388,
+                    "end": 391,
+                    "text": "133",
+                    "ref_id": null
+                },
+                {
+                    "start": 489,
+                    "end": 492,
+                    "text": "134",
+                    "ref_id": null
+                },
+                {
+                    "start": 704,
+                    "end": 707,
+                    "text": "136",
+                    "ref_id": null
+                },
+                {
+                    "start": 1037,
+                    "end": 1040,
+                    "text": "139",
+                    "ref_id": null
+                },
+                {
+                    "start": 1331,
+                    "end": 1332,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1791,
+                    "end": 1794,
+                    "text": "145",
+                    "ref_id": null
+                },
+                {
+                    "start": 1872,
+                    "end": 1875,
+                    "text": "146",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Entropy analysis and ISM extraction"
+        },
+        {
+            "text": "The focus of the error correction method is to correct an ISM that contains ambiguous symbols, i.e., a subject ISM, if the generated nucleotide symbol identifies a smaller set of bases, e.g., Y representing C or T rather than N, which may be any base, we use the generated symbol to correct the original one. At the highest level, we assess the geographic distribution of SARS-CoV-2 subtypes, and, in turn, we count 170 the frequency of unique ISMs per location and build charts and tables to visualize the ISMs, including the 171 pie charts, graphs, and tables shown in this paper. All visualizations in this paper and our pipeline are 172 generated using Matplotlib [12] . To improve visualization, ISMs that occur with frequency of less than 5% in 173 a given location are collapsed into \"OTHER\" category per location. Our pipeline then creates pie charts for 174 different locations to show the geographical distribution of subtypes. Each subtype is also labeled with the 175 earliest date associated with sequences from a given location in the dataset. 176 To study the progression of SARS-CoV-2 viral subtypes in the time domain, we group all sequences in a given location that were obtained no later than a certain date (as provided in the sequence metadata) together and compute the relative abundance (i.e., frequency) of corresponding subtypes. Any subtypes with a relative abundance that never goes above 2.5% for any date are collapsed into \"OTHER\" category per location. The following formula illustrates this calculation:",
+            "cite_spans": [
+                {
+                    "start": 668,
+                    "end": 672,
+                    "text": "[12]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1058,
+                    "end": 1061,
+                    "text": "176",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Entropy analysis and ISM extraction"
+        },
+        {
+            "text": "where ISM ps,cq ptq is the relative abundance of a subtype, s, in location, c, at a date t, N s,c ptq is the total visualized in a tree format, as shown below in Figure 16 . The leaves in Figure 16 Importantly, even though the combinatorial space for potential ISMs is potentially very large due to the 197 large number of characters that may present at any one nucleotide position, only certain ISMs occur in 198 significantly large numbers in the overall sequence population. Figure 3 shows the rapid decay in the 199 frequency of sequences with a given ISM, and shows that only the first nine ISMs represent subtypes that are 200",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 162,
+                    "end": 171,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 188,
+                    "end": 197,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 478,
+                    "end": 486,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Entropy analysis and ISM extraction"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint event. An example of this is the number of sequences from cruise vessels in the database. We expect that the 208 impact of any such clustering will be diminished in time as more comprehensive sequencing efforts take place. 209 there would be high selection pressure (i.e., due to exposure to the human immune response or need to gain 215 entry to host cells). ambiguities. We expect that as the number of publicly available sequences increases, there will likely be 220 additional samples that will allow resolution of base-call ambiguities. That said, it is possible that the 221 ambiguity symbols in the ISMs reflect genomic regions or sites that are difficult to resolve using sequencing 222 methods, in which case the ISMs will never fully resolve. Importantly, however, because of the application of 223 the error correction algorithm, there are fewer spurious subtypes which are defined due to variants arising 224 from sequencing errors, and all remaining ISMs are still usable as subtype identifiers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "9/35"
+        },
+        {
+            "text": "After the informative nucleotide positions were identified, we then mapped those sites back to the 226 annotated reference sequence for functional interpretation [35] . As shown in Table 2 , we found that all but 227 one of the nucleotide positions that we identified were located in coding regions of the reference sequence.",
+            "cite_spans": [
+                {
+                    "start": 162,
+                    "end": 166,
+                    "text": "[35]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 181,
+                    "end": 188,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "225"
+        },
+        {
+            "text": "The majority of the remaining sites (9/16) were found in the ORF1ab polyprotein, which encodes a 229 polyprotein replicase complex that is cleaved to form nonstructural proteins that are used as RNA 230 polymerase (i.e., synthesis) machinery [16] . One site is located in the reading frame encoding the S spike 231 glycoprotein, which is responsible for viral entry and antigenicity, and thus represents an important target for 232 understanding the immune response, identifying antiviral therapeutics, and vaccine design [22, 34] .",
+            "cite_spans": [
+                {
+                    "start": 242,
+                    "end": 246,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 522,
+                    "end": 526,
+                    "text": "[22,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 527,
+                    "end": 530,
+                    "text": "34]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "228"
+        },
+        {
+            "text": "High-entropy nucleotide positions were also found in the nucleocapsid formation protein, which is important 234",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "233"
+        },
+        {
+            "text": "for packaging the viral RNA. [39] A study has also shown that, like the spike protein, the internal 235 ",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 33,
+                    "text": "[39]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 100,
+                    "end": 103,
+                    "text": "235",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "233"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint nucleoprotein of the virus is significant in modulating the antibody response. [32] Additionally, Table 2 shows a high-entropy, informative site in the predicted coding region ORF8. Based 237 on structural homology analysis the ORF8 region in SARS-CoV-2 does not have a known functional domain 238 or motif [5] . In previously characterized human SARS coronavirus, ORF8 has been associated with an 239 enhanced inflammatory response, but that sequence feature does not appear to have been conserved in 240 SARS-CoV-2, and, in general, SARS-CoV-2 ORF8 appears divergent from other previously characterized 241 SARS-related coronaviruses [5, 40] . Previous entropy-based analysis of earlier and smaller SARS-CoV-2 242 sequence data sets have suggested that there is a mutational hotspot in ORF8, including early divergence 243 between sequences found in China, and large scale deletions found in patients in Singapore -which is 244 consistent with the results we have found here on a much more comprehensive analysis of genomes [4, 28, 30] . 245 Similarly, sites were identified in the ORF3a reading frame, which also appears to have diverged 246 substantially from other SARS-related viruses. In particular, the SARS-CoV-2 variant in the predicted 247 ORF3 region appear also to not contain functional domains that were responsible for increased inflammatory 248 response as they were in those viruses [5, 40] . Japan 2020-03-08 2020-03-11 2020-02-10 - though, Japan includes a number of sequences, of a subtype that is found extensively in European countries, 288 TCTCGTCCACGGGTAAC, first found in Japan on March 11, 2020 . This subtype has also been found in Canada 289",
+            "cite_spans": [
+                {
+                    "start": 302,
+                    "end": 306,
+                    "text": "[32]",
+                    "ref_id": null
+                },
+                {
+                    "start": 530,
+                    "end": 533,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 859,
+                    "end": 862,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 863,
+                    "end": 866,
+                    "text": "40]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1249,
+                    "end": 1252,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1253,
+                    "end": 1256,
+                    "text": "28,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1257,
+                    "end": 1260,
+                    "text": "30]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1263,
+                    "end": 1266,
+                    "text": "245",
+                    "ref_id": null
+                },
+                {
+                    "start": 1624,
+                    "end": 1627,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1628,
+                    "end": 1631,
+                    "text": "40]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1830,
+                    "end": 1844,
+                    "text": "March 11, 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 321,
+                    "end": 328,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "11/35"
+        },
+        {
+            "text": "and Brazil, suggesting a geographical commonality between cases in these diverse countries with the The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint data set (see Supplementary file 1 -ISM abundance table of 16 countries/regions). The subtype is found, 298 however, in other countries like Canada, Australia, and Japan, suggesting a potential viral transmission due 299 specifically to travel between France and those two countries. We also found that different states within the United States have substantially different subtype 301 distributions. Figure 5 shows the predominant subtype distributions in the states with the most available 302",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 643,
+                    "end": 651,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "11/35"
+        },
+        {
+            "text": "sequences. Figure 5 also shows the subtypes found among U.S. passengers on the Diamond Princess cruise, 303",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 11,
+                    "end": 19,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "11/35"
+        },
+        {
+            "text": "which experienced an outbreak that was traced back to a Hong Kong passenger who embarked on the vessel 304 on January 21, 2020. [24] . The pie charts demonstrate subregional viral subtype diversity within the United 305",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[24]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "11/35"
+        },
+        {
+            "text": "States. The colors shown on the charts are also keyed to the colors used in Figure 4 , which allows for the The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint Belgium. California, on the other hand, includes as a dominant subtype, CCCCGCCCACAGGTGGG, which is also 314 a major subtype in Mainland China, as shown in Figure 4 . The most abundant subtype in Washington, 315 CCCTGCCTGTAGGCGGG, is also the most abundant in the United States as a whole, likely as the result of 316 Washington state having the most subtypes overall. The same CCCTGCCTGTAGGCGGG subtype is also found in 317 substantial abundance in Canada as well. Consistent with the hypothesis that this subtype is endogenous to 318 the US, the ISM was found in the sequence of one suspected case of exposure in the United States found in 319 The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint (CCCCTCCCACAGTTGGG) corresponds to cases that were linked to original exposure from China, which is consistent with the ISM being in common with one found in Hong Kong.) Figure 6 shows the relative 333 abundance (proportion of total sequences in that country/region) of each of these two dominant subtypes in 334 Italy in other countries/regions. As the plot shows, the outbreak in other European countries have generally 335 involved the same viral subtypes as those which are most abundant in Italy, as defined by ISM. Indeed, 336 initial reports of cases in various other European countries in late February 2020 were linked to travellers 337 from Italy [2] . The Italy subtypes are found, however, at lower yet still significant abundance in countries 338 including Japan, Canada, the United States, and Australia. in New York (TTTCGTCCACGTGTGGG) was detected in one sequence in Iceland linked to exposure in Italy. 346 However, that same subtype was found in Iceland in sequences from 27 cases linked to exposure in Austria, 2 347 from Denmark, and 1 from Germany. This further suggests that it was unlikely that the incidence of the 348 TTTCGTCCACGTGTGGG subtype in New York is connected to Italy rather than elsewhere in Europe, but limited 349 sequence coverage prevents more definitive inference.",
+            "cite_spans": [
+                {
+                    "start": 458,
+                    "end": 461,
+                    "text": "315",
+                    "ref_id": null
+                },
+                {
+                    "start": 1695,
+                    "end": 1698,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1958,
+                    "end": 1961,
+                    "text": "346",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 76,
+                    "end": 84,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 406,
+                    "end": 414,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1208,
+                    "end": 1216,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF13"
+                }
+            ],
+            "section": "11/35"
+        },
+        {
+            "text": "The dominant subtypes in Italy are not found at all in locations in Asia, however, such as Mainland",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "350"
+        },
+        {
+            "text": "China and Singapore, as indicated in Figure 6 . An additional observation to note from 6 is that the most 352 abundant subtype in Italy (TCGTCCACGGGTGGG) is found proportionately much more in France and Spain 353 than the second-most abundant subtype (TCGTCCACGGGTAAC), detected later. Conversely, the second-most 354 abundant subtype is found more uniformly in other countries. These observations give rise to two potential 355 hypotheses for further study: (1) An outbreak centered in Italy moved earlier to France and Spain, and cases 356 elsewhere are connected to a combination of earlier and later exposures. Or, (2) the second-most abundant 357 subtype in Italy is linked to potential exposure from another country in Europe. Overall, the foregoing 358 results are consistent with phylogenetic tree-based analyses, such as that illustrated on NextStrain's website 359 (http://www.nextstrain.org/ncov), which suggest a flow of the infection from Asia, to Italy, and then 360 subsequently export from Italy to other countries in Europe. It is important to note, however, that the ISMs 361 also resolve potentially significant differences in the subtype distributions in European countries outside of 362 Italy as the virus continues to progress, indicated in Figure 4 . The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint subtype in the United States (CCCCGCCCACAGTTGGG). The plot in Figure 8 further shows that the putative endogenous U.S. subtype was expanding prior to the first detection of the New York major subtype, further 415 supporting the theory that New York's outbreak is not linked to the dominant subtype elsewhere in the 416 United States, particularly Washington state (see Figure 5 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 37,
+                    "end": 45,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF13"
+                },
+                {
+                    "start": 1264,
+                    "end": 1272,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1479,
+                    "end": 1487,
+                    "text": "Figure 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 1786,
+                    "end": 1794,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "351"
+        },
+        {
+            "text": "As shown in Figures Figs. 11-13 , the subtype distribution in sequences in European countries differs 418 significantly from that of North America and Australia. In particular, as detailed above, the European 419 dynamics of SARS-CoV-2 appear to reflect the theory that in many European countries, the first cases were 420 due to travel from Italy. In data from the United Kingdom, however, we observe the same initial subtypes 421 shared with Mainland China that were also observed in Australia and Canada, i.e., CCCTGCCCACAGGCGGG 422 amd CCCCGCCCACAGGTGGG. It may be the case though that these subtypes would have been observed early on 423 in the Netherlands and Spain as well, but were missed because sequencing only began with later cases. As 424 expected, however, especially initially but throughout, the predominant subtypes in Italy discussed above,",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 31,
+                    "text": "Figures Figs. 11-13",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "417"
+        },
+        {
+            "text": "TCGTCCACGGGTAAC and TCGTCCACGGGTGGG, are represented among viral sequences in all three countries. But 426 distinct subtypes are found in these countries as well. The CCCCTCTCACAGTTGGG subtype has emerged as a 427 highly abundant subtype in United Kingdom data. This subtype has also been found in substantial numbers 428 in the Netherlands, as well as in Australia, but not in Spain. As Figure 13 shows, in Spain, the 429 CCCCTCTCACAGTTGGG subtype was also found in an early sequence data but not thereafter. And, in Spain, a 430 unique subtype has emerged that is not found in abundance in any other country.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 388,
+                    "end": 397,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "425"
+        },
+        {
+            "text": "Temporal dynamics of individual viral subtypes across different regions 432 Our pipeline also includes the generation of plots that show how the dynamics of a subset evolve over time in 433 different geographical regions. We illustrate this analysis by tracing the progress of the subtype associated 434 with the ISM obtained from the reference viral sequence [35] . Since this sequence appears to have arisen 435 early in the international spread of the virus, it is a useful demonstration for this kind of comparative 436 temporal analysis. This plot illustrates how the reference subtype, which was characterized in early 437 sequences has progressed from being found entirely in Mainland China to being found in the United States, 438",
+            "cite_spans": [
+                {
+                    "start": 360,
+                    "end": 364,
+                    "text": "[35]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "431"
+        },
+        {
+            "text": "and then subsequently to a greater degree in Europe. A critical point to keep in mind while interpreting 439 these time series data is that they are based on the reported date of sequences. The sequences of individuals 440 who test SARS-CoV-2 positive will likely lag the actual infection date, since many of those individuals will 441 be tested because they have symptoms -although some were almost certainly tested while presymptomatic 442 due to contacts, such as passengers on the Diamond Princess cruise ship. is simply being missed. In those cases, it appears from Figures 8, 11 , and 12 that in later times, other 450 subtypes have emerged over time and are becoming increasingly abundant. One potential explanation is that 451 because the SARS-CoV-2, is an RNA virus and thus highly susceptible to mutation as transmissions 452 occur [20] . Therefore, as transmissions have continued, the ISM associated with the reference sequence has 453 been replaced by different ISMs due to these mutations. Another plausible explanation for such leveling off 454 in a region is that the leveling off in relative abundance of the subtype represents containment of that 455 subtype's transmission while other subtypes continue to expand in that country or region. The latter could 456 plausibly explain the pattern observed in the United States, where earlier subtypes connected to Asia did not 457 increase in abundance while a putative endogenous subtype, as well as the dominant New York subtype, have 458 significantly increased in abundance (see Figure 8 and accompanying discussion above). Further investigation 459 and modeling of subtype distributions, as well as additional data, will be necessary to help resolve these questions -particularly in view of the caveats described below.",
+            "cite_spans": [
+                {
+                    "start": 842,
+                    "end": 846,
+                    "text": "[20]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 571,
+                    "end": 584,
+                    "text": "Figures 8, 11",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1546,
+                    "end": 1554,
+                    "text": "Figure 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "431"
+        },
+        {
+            "text": "All the inferences from the temporal trends in subtypes described in the foregoing, however, must be 462 limited by important caveats: Because the number of viral sequences is much smaller than the number of 463 cases, there may be a lag before a sample is sequenced that includes a particular ISM. As a result, even 464 though subtype CCCTGCCTGTAGGCGGG is first seen in the United States on February 20, 2020 and then a 465 sequence with that ISM was obtained in Canada sequences about 14 days later, that does not necessarily 466 mean that Canada acquired this subtype from the United States. While the presence or absence of this 467 subtype in sequences obtained from travelers may shed light on this question, it cannot be definitive because 468 so few cases due to travel have been sequenced. However, given the amount of time that has lapsed, the 469 general result that this subtype did not originate in Mainland China, for example, is more robust.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "431"
+        },
+        {
+            "text": "Our approach, like all sequence-based interpretation of the COVID-19 pandemic, is further limited in that 471 the depth of sequencing within different regions is highly variable. As an extreme case, Iceland, which has a 472 small population, represents nearly 9% of all sequences in the complete data set. Italy, on the other hand, 473 had a large and early outbreak but has disproportionately less sequencing coverage. As a result, tracking the 474 relative abundances of subtypes across different regions is complicated, because a region that does more is evinced by the results discussed above, which show that the spatiotemporal trends of ISMs are consistent 489 with our general understanding of how the virus has spread, as well as sequence data from travel cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "470"
+        },
+        {
+            "text": "Moreover, we observe that the diversity of ISMs has increased over time in a manner. We expect this to 491 occur, because as the number of transmissions of the virus between people increases over time, the 492 probability of changes to the sequence that will lead to a different ISM will increase. To evaluate the increase in ISM diversity, we computed the Hamming distance between each of the 50 494 most prevalent ISMs and the ISM of the reference sequence [13] . These distances, although na\u00efve as they are 495 based on an equally probably nucleotide changes, provide a rough measure of how much each ISM has 496 changed relative to the reference. We then plotted the distance of each ISM along the dates of the first 497 sequence in which the ISM was first detected. As Figure 15 illustrates, even though there is significant 498 variability in this rough measure of the difference between ISMs, there is a clearly accelerating trend towards 499 greater differences over time based on the sequence dates. This provides additional confidence in the 500 robustness of subtyping by ISM according to sequence date. By way of further illustrating this point, Figure 501 15 superimposes the cumulative reported number of confirmed COVID-19 cases over time. 6 While these data 502 provide only a limted picture of the actual number of SARS-CoV-2 infections (including because of limited 503 testing), it further demonstrates that ISM subtypes following sequence dates are capable of tracking the 504 actual temporal progress of the virus.",
+            "cite_spans": [
+                {
+                    "start": 459,
+                    "end": 463,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1255,
+                    "end": 1256,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 774,
+                    "end": 783,
+                    "text": "Figure 15",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1158,
+                    "end": 1168,
+                    "text": "Figure 501",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "470"
+        },
+        {
+            "text": "As the growing diversity shown in Figure 15 illustrates, the number of ISMs is increasing, thus motivating 506 6 The cumulative reported Worldwide cases were obtained from the Our World In Data Project, which reported them from the European Center for Disease Prevention and Control, made available at https://ourworldindata.org/ coronavirus-source-data. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint the development of methods to group and organize ISMs into different levels of subtyping. As an initial illustration of this approach, the tree shown in Figure 16 illustrates relationships between geographical and 508 temporal subtypes, which suggests that subtyping can be done using \"consensus ISMs\" that include common 509 subunits of ISMs beneath them in the hierarchy.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 112,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 43,
+                    "text": "Figure 15",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 650,
+                    "end": 659,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "505"
+        },
+        {
+            "text": "For example, the subtree colored dark-yellow (labeled D and E in Figure 16 contains the subtypes that 511 are close to the reference sequence ISM subtype (CCCCGCCCACAGGTGGG). Other subtypes in this subtree are 512 also found in Asia, as well as in other countries with links to travel exposure to Asia and, as discussed above, 513 Iran (i.e. with the subtype CCCCTCCCACAGGTGGG). The closest subtree to the dark-yellow (labeled D and E) is 514 the purple-colored subtree (labeled C). This cluster \"C\" includes many subtypes that first were observed in 515 the United States, including the endogenous U.S. subtype described above, CCCTGCCTGTAGGCGGG. (This 516 subtype is labeled as being first observed in Canada, though that first sequence was found from a case linked 517 to U.S. exposure.) Clusters labeled A (green) and B (cyan and red), on the other hand, primarily include 518 subtypes first found in Europe or (as indicated for Brazil) due to exposure from travelers to Europe.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 65,
+                    "end": 74,
+                    "text": "Figure 16",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "510"
+        },
+        {
+            "text": "Interestingly, cluster C (purple) with putative endogenous U.S. subtypes is closer to the cluster with 520 predominantly cases from Asia than cluster A (colored green), which ontains subtypes first seen in Europe, 521 including the subtype that is dominant in New York state (TTTCGTCCACGTGTGGG). Overall, ISM clustering 522 further supports the hypothesis that the emergent putative endogenous U.S. subtypes is linked to the original 523 U.S. outbreaks linked to Asia, and that subtypes in the New York outbreak are conversely linked more 524 directly to Europe. We are currently following up on the proof-of-concept clustering results shown here to 525 develop more sophisticated machine learning approaches to identify patterns in viral subtype distribution.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "519"
+        },
+        {
+            "text": "In this paper, we propose to use short sets of nucleotides, based on error corrected entropy-based 528 identification of highly informative nucleotide sites in the viral genome, as markers to define subtypes of The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint United States. In addition, we demonstrate that by using ISMs for subtyping, we can also readily visualize 537 the geographic and temporal distribution of subtypes in an efficient and uniform manner. We have developed 538 and are making available a pipeline to generate quantitative profiles of subtypes and the visualizations that 539 are presented in this paper on Github at http://github.com/EESI/ISM. 540 Overall, the entropy-based, and error corrected, subtyping approach described in this paper represents a 541 potentially efficient way for researchers to gain further insight on the diversity of SARS-CoV-2 sequences and 542 their evolution over time. An important caveat of this approach, as with others based on analysis of viral 543 genome sequence, is that it is limited by the sampling of viral sequences. Small and non-uniform samples of 544 sequences may not accurately reflect the true diversity of viral subtypes within a given population. However, 545 the ISM-based approach has the advantage of being scalable as sequence information grows, and as a result 546 will be able to become both more accurate and precise as sequence information grows within different 547 geographical and other subpopulations.",
+            "cite_spans": [
+                {
+                    "start": 758,
+                    "end": 761,
+                    "text": "540",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "527"
+        },
+        {
+            "text": "Indeed, with the ISM subtyping pipeline in place and access to continuously updating sequencing data, 549 we are capable of (and are presently) updating subtype identification as new sequences are sequenced and 550 categorized to a subtype for further analysis. In the future, therefore, as data becomes available, ISM-based 551 subtyping may be employed on subpopulations within regions, demographic groups, and groups of patients 552 with different clinical outcome. Efficient subtyping of the massive amount of SARS-CoV-2 sequence data will 553 therefore enable quantitative modeling and machine learning methods to develop improved containment and 554 potentially also therapeutic strategies against SARS-CoV-2. Moreover, the ISM-based subtyping scheme and 555 the computational pipeline described here for SARS-CoV-2 are directly applicable to other viruses and, 556 therefore, can be utilized for efficient subtyping and real-time tracking of potential viral pandemics that may 557 emerge in the future as well.",
+            "cite_spans": [
+                {
+                    "start": 102,
+                    "end": 105,
+                    "text": "549",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "548"
+        },
+        {
+            "text": "We downloaded all SARS-Cov-2 sequences available from and acknowledge the contributions of the Global 560 Initiative on Sharing All Influenza Data (GISAID) EpiFlu database, which has made accessible novel 561 coronavirus sequencing data, including from the NIH Genbank resource [27] . We would also like to The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.07.030759 doi: bioRxiv preprint Science and Engineering Discovery Environment (XSEDE), which is supported by National Science Foundation grant number #ACI-1548562. 568 Author Contributions 569 ZZ contributed to the conceptualization of the problem and solution, data curation, methodology, software, 570 validation, visualization, and original draft preparation. GLR contributed to the project administration, 571 conceptualization, methodology development, acquiring resources, validation, visualization, and original draft 572 preparation. BAS contributed to the conceptualization, data curation, methodology, software, validation, and 573 visualization.",
+            "cite_spans": [
+                {
+                    "start": 278,
+                    "end": 282,
+                    "text": "[27]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 581,
+                    "end": 584,
+                    "text": "568",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "559"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "References 1. Nomenclature for incompletely specified bases in nucleic acid sequences. recommendations 1984. nomenclature committee of the international union of biochemistry (nc-iub)",
+            "authors": [],
+            "year": 1986,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "83",
+            "issn": "",
+            "pages": "4--8",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Coronavirus: Outbreak spreads in europe from italy",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "An entropy-based approach for the identification of phylogenetically informative genomic regions of papillomavirus",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Batista",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ferreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Freitas",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Balbino",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Infection, Genetics and Evolution",
+            "volume": "11",
+            "issn": "8",
+            "pages": "2026--2033",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Genomic variance of the 2019-ncov coronavirus",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ceraolo",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Giorgi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Medical Virology",
+            "volume": "92",
+            "issn": "5",
+            "pages": "522--528",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Genomic characterization of the 2019 novel human-pathogenic coronavirus isolated from a patient with atypical pneumonia after visiting wuhan",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-H",
+                    "middle": [],
+                    "last": "Kok",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K W"
+                    ],
+                    "last": "To",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-Y",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerging Microbes & Infections",
+            "volume": "9",
+            "issn": "1",
+            "pages": "221--236",
+            "other_ids": {
+                "PMID": [
+                    "31987001"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Ribosomal Database Project: data and tools for high throughput rRNA analysis",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Fish",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chai",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgarrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Porras-Alfaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Kuske",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Tiedje",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nucleic Acids Research",
+            "volume": "42",
+            "issn": "D1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Phylogenetic tree shapes resolve disease transmission patterns. Evolution, Medicine, and Public Health",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Colijn",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gardy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "2014",
+            "issn": "",
+            "pages": "96--108",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Oligotyping: differentiating between closely related microbial taxa using 16s rrna gene data",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eren",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Maignien",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sul",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Murphy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Grim",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Morrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sogin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Methods in Ecology and Evolution",
+            "volume": "4",
+            "issn": "12",
+            "pages": "1111--1119",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Qiime allows analysis of high-throughput community sequencing data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gregory Caporaso",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kuczynski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Stombaugh",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bittinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Bushman",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Costello",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Fierer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gonzalez Pe\u00f1a",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Goodrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gordon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Huttley",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kelley",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Knights",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Koenig",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ley",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lozupone",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Mcdonald",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Muegge",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pirrung",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Knight",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Nature methods",
+            "volume": "7",
+            "issn": "",
+            "pages": "335--341",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Tracking virus outbreaks in the twenty-first century",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Andersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature Microbiology",
+            "volume": "4",
+            "issn": "1",
+            "pages": "10--19",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Nextstrain: real-time tracking of pathogen evolution",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hadfield",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Megill",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bell",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huddleston",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Potter",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Callender",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sagulenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bedford",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Neher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "23",
+            "pages": "4121--4123",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Matplotlib: A 2d graphics environment",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hunter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Computing in Science & Engineering",
+            "volume": "9",
+            "issn": "3",
+            "pages": "90--95",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "An introduction to bioinformatics algorithms",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pevzner",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pevzner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Sars-cov-2 exhibits intra-host genomic plasticity and low-frequency polymorphic quasispecies. bioRxiv",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Karamitros",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Papadopoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bousali",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Mexias",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tsiodras",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Mentis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Katoh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Standley",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Molecular Biology and Evolution",
+            "volume": "30",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Structure of the sars-cov nsp12 polymerase bound to nsp7 and nsp8 co-factors",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Kirchdoerfer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Ward",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature Communications",
+            "volume": "10",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lam",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "382",
+            "issn": "13",
+            "pages": "1199--1207",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Context and the human microbiome",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Mcdonald",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Birmingham",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Knight",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The population genetics and evolutionary epidemiology of rna viruses",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Moya",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Holmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez-Candelas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Nature Reviews Microbiology",
+            "volume": "2",
+            "issn": "4",
+            "pages": "279--288",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Modern hierarchical, agglomerative clustering algorithms",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "M\u00fcllner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Characterization of spike glycoprotein of sars-cov-2 on virus entry and its immune cross-reactivity with sars-cov",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lei",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Mi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Mu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Qian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Communications",
+            "volume": "11",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Genomics and outbreak investigation: from sequence to consequence",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Robinson",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pallen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Genome Medicine",
+            "volume": "5",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "COVID-19 outbreak on the Diamond Princess cruise ship: estimating the epidemic potential and effectiveness of public health countermeasures",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sj\u00f6din",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Haplotype networks of sars-cov-2 infections in the diamond princess cruise ship outbreak. medRxiv",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wakita",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kuroda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Genomic diversity of SARS-CoV-2 in Coronavirus Disease 2019 patients",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Gisaid: Global initiative on sharing all influenza data -from vision to reality",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mccauley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Eurosurveillance",
+            "volume": "22",
+            "issn": "13",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Discovery of a 382-nt deletion during the early evolution of sars-cov-2. bioRxiv",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "A novel coronavirus genome identified in a cluster of pneumonia cases-wuhan",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "China CDC Weekly",
+            "volume": "2",
+            "issn": "4",
+            "pages": "61--63",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "On the origin and continuing evolution of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Qian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "National Science Review",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Covid-19: New york city deaths pass 1000 as trump tells americans to distance for 30 days",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Tanne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Temporal profiles of viral load in posterior oropharyngeal saliva samples and serum antibody responses during infection by sars-cov-2: an observational cohort study. The Lancet. Infectious diseases",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Hung",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Xsede: Accelerating scientific discovery",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Towns",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cockerill",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dahan",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Foster",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gaither",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Grimshaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Hazlewood",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lathrop",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lifka",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Peterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Roskies",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Scott",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Wilkins-Diehr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Computing in Science Engineering",
+            "volume": "16",
+            "issn": "5",
+            "pages": "62--74",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Structure, function, and antigenicity of the sars-cov-2 spike glycoprotein",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Walls",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-J",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Tortorici",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wall",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Mcguire",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Veesler",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "The establishment of reference sequence for sars-cov-2 and variation analysis",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Journal of Medical Virology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "International expansion of a novel sars-cov-2 mutant. medRxiv",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Brave",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Werf",
+                    "suffix": ""
+                },
+                {
+                    "first": "E.-Q",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zong",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "16s ribosomal dna amplification for phylogenetic study",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Weisburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Barns",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pelletier",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J W"
+                    ],
+                    "last": "Lane",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "Journal of bacteriology",
+            "volume": "173",
+            "issn": "",
+            "pages": "697--703",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Relating phylogenetic trees to transmission trees of infectious disease outbreaks",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "J F"
+                    ],
+                    "last": "Ypma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Van Ballegooijen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Genetics",
+            "volume": "195",
+            "issn": "3",
+            "pages": "1055--1062",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Recombinant severe acute respiratory syndrome (sars) coronavirus nucleocapsid protein forms a dimer through its c-terminal domain",
+            "authors": [
+                {
+                    "first": "I.-M",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L T"
+                    ],
+                    "last": "Gustafson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Diao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W I"
+                    ],
+                    "last": "Burgner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "The Journal of biological chemistry",
+            "volume": "280",
+            "issn": "",
+            "pages": "23280--23286",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Sars-cov-2 and covid-19: The most important research questions",
+            "authors": [
+                {
+                    "first": "K.-S",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-Y",
+                    "middle": [],
+                    "last": "Fung",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-P",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "D.-Y",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell & Bioscience",
+            "volume": "10",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "The 2019 novel coronavirus resource. Yi chuan = Hereditas",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "B\u00e0o",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "42",
+            "issn": "",
+            "pages": "212--221",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Left: histogram of masked entropy values; Right: histogram of percentages of n and -",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "nucleotide identifier that represents an ambiguous base call (more details in 1 based on [1]), such as N, which 149 represents a position that could either be A, C, T, or G. The basic idea for error correction of ISMs is to use 150 ISMs with no or fewer ambiguous symbols to correct ISMs with such errors (ambiguities). Given an ISM151 with an error, we first find all ISMs that are identical to the subject ISM at all nucleotide positions in which 152 there is no error in the subject ISM. We refer here to these nearly-identical ISMs as supporting ISMs. Then 153 we iterate over all positions with an error that must be corrected in the subject ISM. For a given nucleotide 154 position, if all other such supporting ISMs with respect to the said erroneous position contain the same 155 non-ambiguous base (i.e., an A, C, T, or G), then we simply correct the ambiguous base by the non-ambiguous 156 base found in the supporting ISMs. However, when the supporting ISMs disagree at a respective nucleotide 157 position, the method generates an ambiguous symbol which represents all the bases that occurred in the 158 supporting ISMs and compare this artificially generated nucleotide symbol with the original position in the 159",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Overall entropy as a function of nucleotide position for all SARS-CoV-2 sequences in the data set Figure 2 shows the overall entropy at each nucleotide position, determined based on calculating the 189 masked entropy for all sequences as described in the Methods section. Notably, at the beginning and the end 190 of the sequence, there is high level of uncertainty. This is because there are more N andsymbols, 191 representing ambiguity and gaps, in these two regions (Gaps are likely a result of artifacts in MAFFT's 192 alignment of the viruses or its genomic rearrangement [14], and both N's and -'s may result due to the 193 difficulty of accurately sequencing the genome at the ends). After applying filtering to remove low entropy 194 positions and uncertain positions, we identified 17 informative nucleotide positions on the sequence to 195 generate informative subtype markers (see filtering details in Methods section).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Number of sequences containing the 20 most abundant ISMs within the total data set (out of 3982 sequences).significantly represented in the sequences available worldwide.201Some potential reasons for the rapid dropoff in the frequency relative to the diversity of ISMs may 202 include the following: (1) Since the virus is transmitting and expanding so quickly, and the pandemic is still 203 at a relatively early stage, there has not been enough time for mutations that would affect the ISM to occur 204 and take root. In that case, we would expect the number of significant ISMs to rise over time.(2) The 205 population of publicly available sequences is biased to projects in which multiple patients in a cluster are 206 sequenced at once: For example, a group of travelers, a family group, or a group linked to a single spreading 207",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "ISMs may be constrained by the fact that certain mutations may result in a phenotypic change that may 210 be selected against. In this case, we may expect a steep change in a particular ISM or close relative in the 211 event that there is selection pressure in favor of the corresponding variant phenotype. However, as described 212 above, at the present time the high-entropy nucleotide sequences appear to be primarily in open reading 213 frame regions that, at least in comparison to other SARS-related viruses, do not represent areas in which214",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "also shows that despite the application of the error correction method detailed in the the 217 Methods section, some symbols representing ambiguously identified nucleotides, such as S and K still remain 218 in the ISMs. These represent instances in which there was insufficient sequence information to fully resolve 219",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "While the significance of ORF8 to viral biology and clinical outcomes remains uncertain, the majority of 250 high-entropy sites are in regions of the genome that may be significant for disease progression and the design 251 of vaccines and therapeutics. Accordingly, ISMs derived from the corresponding nucleotide positions can be 252used for viral subtyping for clinical applications, such as identifying variants with different therapeutic 253 responses or patient outcomes, or for tracking variation that may reduce the effectiveness of potential vaccine 254 shows the distribution of ISMs, each indicating a different subtype, in the countries/regions with the 257 relatively larger amount of available sequenced genomes. As shown therein, the ISMs are able to successfully 258 identify and label viral subtypes that produce distinct patterns of distribution in different countries/regions. 259 Beginning with Mainland China, the consensus source of SARS-CoV-2, we observe three dominant subtypes 260 in Mainland China, as indicated by relative abundance of the ISM among available sequences: 261 CCCCGCCCACAGGTGGG (as indicated on the plot, first seen in December 24, 2019 in sequences from Mainland 262 China in the dataset), CCCTGCCCACAGGCGGG (first seen in January 5, 2020 in sequences from Mainland China 263 in the dataset) and CCCCTCCCACAGGTGGG (first seen in January 18, 2020 in sequences from Mainland China in 264the dataset). These subtypes are found in other countries/regions, but in distinct patterns, which may likely 265",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "progression of the virus in Europe.291    While many of the connections between shared subtypes inFigure 4reflect the general understanding of 292 how the virus has progressed between Asia, North America, and Europe, ISM-based subtyping further 293 suggests hypotheses of more granular linkages. For example, one of the most prevalent subtypes in sequences 294 from France, TCTCGTCCACGTGTGGG, is also found in neighboring Belgium, but it is not a prevalent subtype in 295 other European countries shown inFigure 4. Indeed, this subtype was found in 0.59% of sequences in the 296 United Kingdom, and in only one sequence in Iceland, which has the largest per capita sample size in the",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Viral subtype distribution in the United States, showing California (CA), New York (NY), Washington (WA), and U.S. passengers on the Diamond Princess cruise ship. Subtypes with less than 5% abundance are plotted as Other. The raw counts for all ISMs in each state, as well as the date each ISM was first found in a sequence in that state, are provided in Supplementary file 2 -ISM abundance table of 5 U.S. states and Diamond Princess",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "visualization of commonalities between the subregional subtypes in the United States and the subtypes 307 distributed in other regions. As expected, the viral subtypes on the Diamond Princess cruise ship are the 308 same as those found in Mainland China early in the progress of the virus, which is consistent with the 309 hypothesis of an outbreak resulting from an early exposure by a single source linked to China. In the United 310States, by contrast, the patterns of viral subtypes are distinctly different.311Most prominently, the sequences in New York are dominated a subtype, TTTCGTCCACGTGTGGG, which is 312 also highly abundant among sequences from European countries, including France, Iceland, Germany, and",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Canada and 11 sequences in Iceland associated with suspected exposure in the United States. (One travel 320 case in Iceland was of the TTTCGTCCACGTGTGGG subtype dominant in New York.) But this 321 Washington-dominant ISM has not been detected in sequences from New York, further suggesting that the 322 outbreak of SARS-CoV-2 centered in New York may have distinct characteristics likely due to it arising from 323 import in Europe rather than a connection to other U.S. cases on the West Coast. Interestingly, as shown in 324 this Washington-dominant and suspected-endogenous U.S. subtype has been detected in 325Connecticut, which may suggest that there could be some unsequenced circulating cases of this viral subtype 326 in New York as well.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Relative abundance in other countries of the second-most abundant subtype in Italy, TCGTCCACGGGTAAC (left) and most abundant subtype in Italy TCGTCCACGGGTGGG (right). To further validate the utility of ISMs for subtyping, we focused on the analysis of the geographical 328 distribution of the dominant subtypes in Italy. Based on publicly available sequence data from Italy, we 329 found that Italy had two particularly abundant ISMs, TCGTCCACGGGTAAC and TCGTCCACGGGTGGG, as can be 330 seen in the pie chart in Figure 4. (The third-most abundant subtype shown in the chart",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "Somewhat surprisingly, though the Italy subtypes were found in other states, only 1 out of the 50 340 sequences from New York in the data set had the same ISM as a dominant subtype in Italy (see341    Supplementary file 2 -ISM abundance table of 5 U.S. states and Diamond Princess). This suggests that 342 the outbreak in New York may not be linked directly to travel exposure directly from Italy, but rather from 343 another location in Europe, with the important caveat that the relatively low number of sequences available 344 from Italy means that potential subtypes may not have been detected there. Indeed, the dominant subtype 345",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "temporal trends underlying the expansion of SARS-CoV-2 virus and the COVID-19 pandemic.367    To demonstrate the feasibility of modeling the temporal dynamics of the virus, we first analyzed the 368 temporal progression of different ISMs on a country-by-country basis. This allows examination of the 369 complex behavior of subtypes as infections expand in each country and the potential influence on regional370 outbreaks by subtypes imported from other regions. Relative abundance (%) of ISMs in DNA sequences from Australia as sampled over time. We focused our analysis on the temporal dynamics of the viral subtypes in Mainland China, Australia, 372 Canada, the United States, the Netherlands, United Kingdom, and Spain. As Figure 4 shows, Australia and 373 Canada have many different subtypes with similar relative abundance showing a substantial level of 374 geographical diversity in ISMs, and by contrast, the United States and larger European countries have a 375 smaller number of predominant subtypes, which may be due to the relative importance of cases linked to 376 travel exposure and endogenous transmission. We include Mainland China in the analysis, as it was the 377 earliest site of viral detection. Following the methods described in the Methods section, we graph how viral 378 subtypes are emerging and growing over time, by plotting the relative abundance of viral subtypes in a 379 country/region (via the most frequently occurring ISMs over time), in Figs. 7-13. As discussed above, 380 through the pipeline we have developed, these plots use a consistent set of colors to indicate different ISMs 381 Relative abundance of ISMs in DNA sequences from USA as sampled over time. Relative abundance of ISMs in DNA sequences from Canada as sampled over time. Relative abundance of ISMs in DNA sequences from Mainland China as sampled over time. Relative abundance of ISMs in DNA sequences from the United Kingdom as sampled over time. Relative abundance of ISMs in DNA sequences from the Netherlands as sampled over time. Relative abundance of ISMs in DNA sequences from Spain as sampled over time.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "shows, the reference genome subtype began to grow in abundance in Mainland China, before Stacked plot of the number of sequences of the reference sequence ISM subtype (CCCCGCCCACAGGTGGG).leveling off, and then being detected in the United States and Europe, and subsequently levelling off in those 445 countries as well. In the case of Mainland China, that could be due to the substantial reduction in reported 446 numbers of new infections and thus additional sequences being sampled. However, the other countries have 447 continuing increases in reported infection as of the date of the data set, as well as substantially increasing 448 numbers of sequences being sampled -making it less likely that the reference subtype (CCCCGCCCACAGGTGGG) 449",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "475sequencing may simply end up having a greater number of sequences of any given subtype. This problem is 476 exacerbated in temporal analysis, because the extent of sequencing efforts in a region may also change over 477 time. Some ISMs also include gaps and ambiguity, which indicate the presence of noise in some sequence 478 data. For example, subtype TCTCGTCCACGGGNNNN could in fact be subtype TCTCGTCCACGGGTAAC and subtype 479 TCTCGTCCACGGGTGGG. Although we have implemented our \"error\" correction algorithm to improve the 480 precision of ISM definition by accounting for technical sequencing errors and ambiguous base calls, there are 481 still bases that can not be fully corrected. We are also evaluating the potential to use epidemiological data 482 for the growth in the number of cases, as a potential supplement for effectively calibrating temporal analysis 483 of viral subtype dynamics.484 Increasing ISM subtype diversity over time and hierarchical clustering of 485 related ISM subtypes 486 While keeping in mind the foregoing limitations on the data and our analysis, we do observe that tracking 487 ISM based on the reported date of sequences does reflect the dynamics of the progress of SARS-CoV-2. This 488",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF18": {
+            "text": "Plots of the Hamming Distance of sequences obtained after the date of the reference sequence (dated December 24, 2019) (open circles), and the cumulative reported number of worldwide COVID-19 cases over days after December 24, 2019 (filled circles).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "Hierarchical",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": "529SARS-CoV-2 sequences (ISMs). We validate the utility of ISM distributions as a complement to phylogenetic 530 tree-based approaches, e.g. as used in the Nextstrain project and by other investigators, by demonstrating531 that patterns of ISM-based subtypes similarly model the general understanding of how the outbreak has 532 progressed through travel exposure and community transmission in different regions. Specifically, we show 533 that the distribution of ISMs is an indicator of the geographical distribution of the virus as predicted by the 534 flow of the virus from China, the initial European outbreak in Italy and subsequent development of local 535 subtypes within individual European countries as well as interregional differences in viral outbreaks in the",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "562 acknowledge the authors, originating and submitting laboratories of the sequences from GISAID's EpiFlu 563 Database on which this research is based (a list is detailed in Supplementary file 3 -Acknowledgements of 564 sequences this research is based on) and all future SARS-CoV-2 sequence contributors in GISAID's EpiFlu 565Database. This work was partially supported by NSF grant #1919691. This work also used the Extreme",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Sequence",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "When we apply the foregoing error correction algorithm to all ISMs that have ambiguous nucleotide symbols resulting from the present data set, we find that 85.4% of erroneous ISMs are partially corrected 163 (meaning at least one nucleotide position with ambiguity was corrected for that ISM but not all), and 41.6% 164 of erroneous ISMs are fully corrected (meaning all positions with ambiguity are corrected to a non-ambiguous 165 base (i.e., an A, C, T, or G)). Since one ISM my represent multiple sequences in the data set, overall the error 166 correction algorithm is able to partially correct 90.4% of sequences identified by an erroneous ISM, and 47.0% of subjects with an erroneous ISM are fully corrected.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "are labeled with the earliest 184 date associated with sequences with the ISM subtypes in the dataset, and the corresponding countries or regions in which a sequence with that ISM was first observed.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Figure 4. Major subtypes in countries/regions with the most sequences (indicating date subtype was first sequenced in that country/region). Subtypes with less than 5% abundance are plotted as \"OTHER\". The raw counts for all ISMs in each country/region, as well as the date each ISM was first found in a sequence in that country/region, are provided in Supplementary file 1 -ISM abundance table of 16 countries/regions. correspond to different patterns of transmission of the virus. For example, sequences in Japan are dominated 266 by CCCCTCCCACAGGTGGG, the third of the subtypes listed for Mainland China, and first observed in a sequence in Japan on February 10, 2020. However, this subtype is not prevalent in other countries/regions, 268 with limited abundance in Australia, Canada, and Singapore -countries that are likely to have travel links 269 to both Mainland China and Japan. However, in Singapore a major subtype is CCCTGCCCACAGG-GGG , which 270 is very close to subtype which was found in Mainland China (CCCCTCCCACAGGTGGG).Moreover, additional metadata provided for certain sequences for the country of exposure in cases involving travelers reveals that in other non-Asian countries, the CCCCTCCCACAGGTGGG subtype was frequently 273 found in travelers from Iran, including multiple sequences from Canada and Australia, as well as sequences 274 from the United States (specifically New York), New Zealand, and France. Given that the subtype was otherwise not abundant in these countries, it suggests that these traces are due to the subtype being prevalent in Iran at the time these travel cases were found. But in the absence of sequence data from Iran, it 277 is not presently possible to confirm that hypothesis. In any event, the analysis shows that the ISM-based subtype patterns in Asian countries/regions are related or shared, though as can be seen, the larger portion 279 of outbreaks Singapore and Japan appear to have drawn from distinct subtypes that were found earlier in Mainland China, potentially leading to the hypothesis that there were multiple distinct travel-related 281 transmissions from China (or potentially from Iran) to both countries by the time of this analysis.The data further indicate that the United States has a distinct pattern of dominant subtypes. In particular the subtype with the highest relative abundance among U.S. sequences is CCCTGCCTGTAGGCGGG, first seen in February 20, 2020. This subtype has also emerged as a major subtype in Canada, with the first 285 sequence being found on March 5, 2020. A different pattern is found among sequences in Europe, in which 286 dominant subtypes tend to be different from those found in most Asian countries/regions. Of particular note 287",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

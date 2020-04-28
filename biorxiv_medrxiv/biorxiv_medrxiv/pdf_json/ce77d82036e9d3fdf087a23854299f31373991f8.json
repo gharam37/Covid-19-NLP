@@ -1,0 +1,1240 @@
+{
+    "paper_id": "ce77d82036e9d3fdf087a23854299f31373991f8",
+    "metadata": {
+        "title": "Title: A simple method to quantify country-specific effects of COVID-19 containment measures",
+        "authors": [
+            {
+                "first": "Morten",
+                "middle": [],
+                "last": "Gram Pedersen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Padova",
+                    "location": {
+                        "country": "Italy"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Matteo",
+                "middle": [],
+                "last": "Meneghini",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Padova",
+                    "location": {
+                        "country": "Italy"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Most of the world is currently fighting to limit the impact of the COVID-19 pandemic. Italy, the Western country with most COVID-19 related deaths, was the first to implement drastic containment measures in early March, 2020. Since then most other European countries, the USA, Canada and Australia, have implemented similar restrictions, ranging from school closures, banning of recreational activities and large events, to complete lockdown. Such limitations, and softer promotion of social distancing, may be more effective in one society than in another due to cultural or political differences. It is therefore important to evaluate the effectiveness of these initiatives by analyzing country-specific COVID-19 data. We propose to model COVID-19 dynamics with a SIQR (susceptible -infectious -quarantined -recovered) model, since confirmed positive cases are isolated and do not transmit the disease. We provide an explicit formula that is easily implemented and permits us to fit official COVID-19 data in a series of Western countries. We found excellent agreement with data-driven estimation of the day-of-change in disease dynamics and the dates when official interventions were introduced. Our analysis predicts that for most countries only the more drastic restrictions have reduced virus spreading. Further, we predict that the number of unidentified COVID-19-positive individuals at the beginning of the epidemic is \u223c10 times the number of confirmed cases. Our results provide important insight for future planning of non-pharmacological interventions aiming to contain spreading of COVID-19 and similar diseases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The COVID-19 disease due to the SARS-nCov2 coronavirus is spreading rapidly across the globe since its outbreak in China, and was declared a pandemic by the WHO on March 11, 2020 . After the first severe patient was brought to the hospital of Codogno, Italy on February 20, 2020, and subsequently tested positive for SARS-nCov2, a rapidly increasing number of patients have been identified, initially in Northern Italy and later in the rest of the country and Europe. Italy is the most affected Western country, with more than 130.000 1 confirmed cases, a death toll of \u223c16.000, and the first to implement drastic measures in an attempt to contain the disease. Since then, most other European countries, the USA and Canada, have implemented similar restrictions, ranging from school closures, banning of recreational activities and large events, to complete lockdown. In order to evaluate the effectiveness of these initiatives, it is necessary to analyze COVID-19 data carefully to investigate if and how the limitations in societal activities affect the disease dynamics.",
+            "cite_spans": [
+                {
+                    "start": 164,
+                    "end": 178,
+                    "text": "March 11, 2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "It is not obvious that specific interventions have the same effects in all countries. For example, school closures may have secondary effects concerning \"smart working\" of the parents staying at home with the children. However, the possibility to work from home depends on the type of job, so that school closures may have a bigger effect in countries with more tertiary sector jobs compared to, for example, factories. Further, there are social aspects that come into play, such as the possibility of grandparents to care for the children when schools close, which makes it possible for parents to continue working, but also expose the older citizens, who are the most vulnerable to COVID-19, to the disease. Naturally, also the relative number of children in the society play a role. Another important aspect to consider concerns national and regional cultural and psychological differences for example regarding respect versus authorities. If the general population does not trust the communications coming from health and political authorities, or if these communications are confusing and contradictory, more stringent bans can be necessary in order to contain the disease, since softer suggestions may not be followed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Simple mathematical models of infectious diseases are useful for providing insight into disease dynamics, and compared to more complex models, can be fitted to data with a minimum number of assumptions on model parameters. This fact is particularly important when analyzing data from a series of countries without assuming for example that specific interventions have the same effect in all countries. However, even simple models should respect that nature of the data. There is thus a compromise between using a parsimonious model but sufficiently complex to be based on correct underlying assumptions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In our setting, to fit the data on identified SARS-nCov2 positive cases, a SIQR [1] is appropriate. In this model, infected individuals may be isolated, entering the \"quarantined\" subpopulation Q, so that these individuals no longer transmit the disease. Since positive cases are put in isolation (in hospitals or at home) immediately, the revealed data of active cases thus corresponds to the number of individuals in state Q. It would not be correct to confront the infectious subpopulation of a SIR/SEIR (susceptible -infectious -[exposed] -recovered) model with the recorded data, since it is unknown how many infectious but undetected individuals are circulating in the population. As will be clear in the following, besides being conceptually clearer, the explicit quantification of the quarantined individuals will allow us to provide estimates of the infectious cases at the very beginning of the epidemic outbreak as well as of the current number of undetected infectious individuals.",
+            "cite_spans": [
+                {
+                    "start": 80,
+                    "end": 83,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We show that our relatively simple approach is able to capture and quantify the effects of restrictions in a series of Western countries. In contrast to previous modelling approaches [2] , we do not assume that interventions have effect on a particular date, or have the same effect in all countries. Our model can thus estimate for example if the effect of an interventions is delayed with respect to the date of implementation, or if the disease dynamics changed earlier, for example because of public awareness of the necessity of restricting social interactions, thus anticipating formal bans.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 186,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To parameterize the SIQR model, we fitted analytically derived expressions for Q + R (see Methods) to the data of total COVID-19 cases in seven different European countries, British Columbia (Canada), New South Wales (Australia) and New York City (USA), from the first date when the number of confirmed cases of the single regions passed above 50 through April 2, 2020. (Fig. 1 ). The underlying model was assumed to have a piecewise-constant transmission rate \u03b2, taking one value before a given date and another value after that date (date-of-change in the following). This assumption on \u03b2 translates into a piecewise constant growth rate for the number of infectious individuals I (see Methods). Table 1 shows estimated values for the four free, identifiable parameters of the model: date-of-change (T c ), growth rates before (\u03c4 \u22121 1 ) and after (\u03c4 \u22121 2 ) the date-of-change, and the combined parameter \u03b7I 0 of quarantine rate (\u03b7) times the initial value of the number of non-identified positive cases (I 0 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 370,
+                    "end": 377,
+                    "text": "(Fig. 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 698,
+                    "end": 705,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Most countries and regions initially had similar growth rates of 0.2-0.3/day (Fig. 2) , corresponding to a doubling time of \u223c2.5-3.5 days. However, growth in New York City (N.Y.C.) was much faster with a doubling time of \u223c1.4 days. After the date-of-change all regions lowered the growth rate significantly (p < 0.001). We estimated that the growth rate in Austria, Switzerland, and British Columbia (B.C.) is practically zero, i.e., the basic reproduction number R 0 \u2248 1, whereas New South Wales (N.S.W.) have statistically significant negative growth rate (p = 0.02). Italy, Germany, and N.Y.C. have growth rates of \u223c0.03-0.06/day, i.e. doubling times of 11-22 days. In a more detailed analysis with two dates-of-change (not shown here) we have estimated that Italy more recently have lowered the growth rate to \u223c0/day following closure of job activities deemed not strictly necessary. France, Spain and the UK still have growth rates of 0.08-0.11/day (doubling times 6.5-8.5 days).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 77,
+                    "end": 85,
+                    "text": "(Fig. 2)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "[ FIGURE 1 about here ]"
+        },
+        {
+            "text": "[ FIGURE 2 about here ] Table 2 shows when major restrictions were introduced in the different countries. We notice an excellent agreement between data-driven estimation of T c and the dates of major public interventions, in particular school closings or partial or complete lockdown. However, there are interesting differences between the countries. For example, in Italy disease dynamics changed only after complete lockdown whereas in New South Wales (Australia), COVID-19 was contained in response to suggested, not ordered, absence from school. These differences point to important cultural, political or societal differences between the countries. We will return to this crucial point in the Discussion.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 24,
+                    "end": 31,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "[ FIGURE 1 about here ]"
+        },
+        {
+            "text": "Our model has only two free parameters to be determined from other data. The estimated values for the cure rate of non-identified cases, \u03b1 = 0.067/day, and the rate of isolation, \u03b7 = 0.033/day, (see Methods) yield \u03b2 = \u03c4 \u22121 + 0.1 and basic reproduction number R 0 = \u03c4 \u22121 /0.1 + 1, which falls between 3.1 and 4.5 for all regions except N.Y.C. (R 0 = 6.1) for the initial period. These values are in line with previous estimates of R 0 lying between 2 and 4 [3] [4] [5] [6] [7] . After the restrictions were introduced, R 0 dropped to 0.2 -2.1.",
+            "cite_spans": [
+                {
+                    "start": 456,
+                    "end": 459,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 460,
+                    "end": 463,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 464,
+                    "end": 467,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 468,
+                    "end": 471,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 472,
+                    "end": 475,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "[ FIGURE 1 about here ]"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3"
+        },
+        {
+            "text": "The copyright holder for this preprint . Table 1 : Estimated model parameters for the different countries and regions: Dateof-change (T c ) and dates falling within the 95% confidence interval (CI), growth rates before (\u03c4 \u22121 1 ) and after (\u03c4 \u22121 2 ) the date-of-change with standard errors (SE), the quarantine rate times the initial number of infectious cases (\u03b7I 0 ) with SE, and the combined death/recovery rate (\u03b3) with SE.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 41,
+                    "end": 48,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Tc Further, we obtain an estimate of the number of infectious individual at the moment of the outbreak in the different countries and regions (Fig. 2) . Assuming that \u03b7 is identical for all countries we estimate that there are large differences in this number. For Italy, the first European country hit by COVID-19, we estimate that as many as \u223c1500 individuals were infectious but unidentified at the moment of the outbreak, possibly because the outbreak of the disease was considered an unlikely event in the country, which therefore did not test patients with milder COVID-19 symptoms. In other European countries (Spain, France, Germany, Switzerland), which saw the epidemic arriving a few days later than Italy, the estimated initial number of infectious individuals is 600-800. In contrast, for B.C. in Canada and N.S.W. in Australia, which had more time to prepare for COVID-19, this number was only \u223c200 when the number of confirmed cases reached 50.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 150,
+                    "text": "(Fig. 2)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Country/Region"
+        },
+        {
+            "text": "We simulated the dynamics of the SIQR model (Fig. 3) and found that the data of the different countries was very well fitted when assuming piecewise-constant time-variance in \u03b2. From Eq. 3 and Eq. 5 (see Methods) it can be shown analytically that following the transient and during the initial exponential growth, I/Q = (\u03b3 + \u03c4 \u22121 1 )/\u03b7, where the com-bined recovery/death rate \u03b3 can be estimated from data (see Methods). In other words, the relation between Q and I follows directly from the data up to the factor \u03b7. With the value of \u03b7 = 0.033/day that we use here, we obtain that, e.g., for Italy the number of hidden infectious individuals is \u223c7 times the number of positive cases, whereas in N.Y.C. this number is as high as \u223c15. In the other countries the value is 6-10. These I-to-Q-ratios are slightly higher than the result of a recent study on the number of unidentified infectious individual during the epidemic in China [8] , but in line with a study on the European countries [2] .",
+            "cite_spans": [
+                {
+                    "start": 931,
+                    "end": 934,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 988,
+                    "end": 991,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 44,
+                    "end": 52,
+                    "text": "(Fig. 3)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Country/Region"
+        },
+        {
+            "text": "[ FIGURE 3 about here ]",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country/Region"
+        },
+        {
+            "text": "We have presented a mathematically simple framework for the study of the effects of public interventions in specific countries, regions or cities based on a SIQR model. Remarkably, we show that for all analyzed countries our model can effectively estimate the date in which the measures started being effective, thus allowing to assess the efficacy of the interventions put in place by the different governments and the response of the populations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "Interestingly the regions that have lowered the growth rate to zero have imposed relatively mild restrictions. In New South Wales schools are not closed, but parents were invited to keep their children at home on March 23, 2020. This date coincides almost perfectly with our estimated date-of-change, suggesting that this invitation has been followed, and has had immediate effect. Indirect effects likely contribute: keeping children at home often means that their parent will work from home, and in addition, the increased awareness of the situation following such an invitation may have wider, general effects, as might be expected to have occurred in N.S.W. Similarly, B.C. has not imposed lockdown, although schools were closed on March 18, 2020 (in agreement with our estimated date-of-change) and restaurants are only allowed to sell take-away food.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "Switzerland, in spite of its closeness to Italy, has managed to contain COVID-19 without a strict lockdown as seen in Italy. In Switzerland, schools closed on March 16, 2020, and a partial lockdown involving closure of bars, shops and other gathering places, but leaving open certain essentials, such as grocery stores, pharmacies, (a reduced) public transport and the postal service, was imposed from March 17, 2020. We estimate that these interventions had effect on the COVID-19 transmission rate within a few days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "Our analysis of Germany and Austria in many aspects mimic Switzerland, except that for Germany the growth rate is still positive (R 0 > 1). Our estimated date-of-change coincides with the dates of school closures and partial lockdown. Most German federal states closed schools from March 16, 2020 followed by the remaining country from March 18, 2020 -one day before our estimated date of change. The German government imposed partial lockdown from March 17, closing all non-essential shops, and imposing limitation restaurants and banning leisure activities, which was followed by further restrictions in the following days. On March 16 the government of Austria prohibited gatherings of groups of more than five people in public, and all schools were closed from March 17. On this latter date, the closure of restaurants was also ordered. People were recommended to leave home only for purchasing necessary goods (medications, groceries), for assisting other people, or 5 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint for important professional activities. The date-of-change estimated by our model (March 20) corresponds nicely to the dates of these restrictions, demonstrating their effectiveness in limiting the growth rate of the epidemics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For Italy we saw no effect of school closures. However, the worst hit Northern regions closed schools immediately after the first cases were registered on February 20-21, 2020. These dates coincides with the beginning of the carnival school holidays. Hence, the date of school closure may not show up in the data since schools were shut anyway. The fact that the initial estimated growth rate in Italy is slightly slower than in e.g. France and Spain may reflect that schools were closed from the beginning of the epidemic in Italy. For Italy, we estimated that the growth rate changed on 12/3, coinciding with the complete lockdown that was introduced March 9-11, 2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "France closed schools between March 13-16, 2020, first in the worst hit areas and then nationally. Our estimated date-of-change, March 13, suggests that school closure in the worst hit regions had immediate effect. March 17, the date of further lockdown, did not show up in our data analysis but these additional restrictions may nonetheless contribute to the overall lowering of the growth rate. In Spain and UK, the estimated dates-of-change coincide with the lockdowns introduced March 14, 2020, respectively March 21, 2020, which were accompanied by school closures within a few days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In spite of the lockdowns in France, Spain and the UK, the estimated growth rates are still high. There might be important social, political and communicative differences between these countries and e.g. Switzerland, B.C., N.S.W. and Germany, which can explain how more stringent measures have had less effect.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "On a more methodological side, our analysis clarifies that the early decrease in slope seen in the log-transformed data (Fig. 1) is not due to early containment measures, but a direct consequence of the model structure. Further, our model approach, which notably has only two free parameters to estimate, allows us to estimate that the number of infectious individuals I is approximately 10 times larger than the number of isolated patients Q (Fig. 3 ). This fact follows to a large extent directly from the data, as explained above.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 120,
+                    "end": 128,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 443,
+                    "end": 450,
+                    "text": "(Fig. 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We were also able to estimate that there were \u223c1500 of infectious but undetected infectious individuals in Italy at the time of the outbreak around February 21, 2020. Only when a patient with severe symptoms was hospitalized and tested for SARS-nCov2, and the first infected person died from COVID-19 on the following day, wide testing and isolation efforts started, which revealed a large basin of overlooked cases. In contrast, we found a much lower number of hidden cases for New South Wales (Australia) and British Columbia (Canada) at the time of the outbreak, likely because these countries had more time to prepare for the epidemic and starting testing for COVID-19 early.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In summary, our parsimonious modelling approach permits extracting important information on the efficacy of COVID-19 containment measures in individual countries, regions and cities. These results can then be analyzed further to understand why some measures are working in one societal setting but is less effective in another. Such insight would help future planning of non-pharmacological interventions aiming to contain spreading of COVID-19 and similar diseases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We use a SIQR model [1] to describe COVID-19 dynamics in Italy. The model equations are",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 23,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where R models SARS-nCov2-positive, isolated individuals that recover or die from the disease. We do not explicitly model the number of recovered or deceased non-identified COVID patients, but only the rate \u03b1 with which these patient become non-infectious. Further, N is the total number of individuals in the population, assumed constant since we are studying the early phase of the epidemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Since there is evidence that the SARS-nCov2 virus can be transmitted in the absence of symptoms [9, 10] , we do not include an explicit exposed-but-noninfectious (E) state, i.e., we do not consider a SEIQR model [11] . Further, from the Diamond Princess cruiseship, it has been found that \u223c50% of SARS-nCoV2-positive individuals do not develop symptoms [12] . Similarly, complete testing in the village of Vo' Euganeo showed that 50-75% of infected individuals were asymptomatic [13] . We assume that such positive but asymptotic individuals can transmit the disease, i.e., the I state includes both individuals that will not develop symptoms, cases that did not develop symptoms yet, and symptotic patient that still have not been tested positive and isolated.",
+            "cite_spans": [
+                {
+                    "start": 96,
+                    "end": 99,
+                    "text": "[9,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 100,
+                    "end": 103,
+                    "text": "10]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 212,
+                    "end": 216,
+                    "text": "[11]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 353,
+                    "end": 357,
+                    "text": "[12]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 479,
+                    "end": 483,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "So far a relatively small fraction of the Italian population has been found positive for COVID-19. Thus, we are still in the early phase of the epidemic where S \u2248 N , and as well known in the case of constant parameters, the number of infected individuals follows exponential growth dI dt \u2248 \u03c4 \u22121 I, i.e., I(t) = I 0 e t/\u03c4 ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where I 0 is the number of infectious individuals at the beginning of the outbreak t = 0 and \u03c4 \u22121 = \u03b2 \u2212 (\u03b1 + \u03b7) is the growth rate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "As mentioned, the number of individuals that have been found SARS-nCov2 positive and put in isolation does not correspond to I but to Q + R. From Eq. 5 it follows that Q + R follows",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "which yields",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where Q 0 and R 0 are initial values of Q and R, respectively. Assuming that the growth rate changes from \u03c4 \u22121",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "on the date-of-change T c , we obtain (Q + R)(t) = Q 0 + R 0 + \u03b7I 0 \u03c4 1 e t/\u03c4 1 \u2212 1 , t < T c , Q 0 + R 0 + \u03b7I 0 \u03c4 1 e Tc/\u03c4 1 \u2212 1 + \u03b7I 0 e Tc/\u03c4 1 \u03c4 2 e t/\u03c4 2 \u2212 1 , t \u2265 T c .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Using the nls function in R [14] , we fitted Eq. 8 with free parameters T c , \u03c4 \u22121 1 , \u03c4 \u22121 2 , and (\u03b7I 0 ), to the log-transformed COVID-19 data for each country or region, from the first date when the number of infected cases passed above 50 until April 2, 2020. Confidence and prediction bands were calculated in Origin.",
+            "cite_spans": [
+                {
+                    "start": 28,
+                    "end": 32,
+                    "text": "[14]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The recovery/death rate \u03b3 was obtained, for each country, by averaging the day-to-day differences in the number of recovered/deceased cases (\u2206R i = R i \u2212 R i\u22121 ) divided by the number of active cases on the corresponding day (Q i\u22121 ), i.e., \u03b3 = avg(\u2206R i /Q i\u22121 ). The values obtained are reported in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 300,
+                    "end": 307,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "To identify the other individual parameters we use previous findings. It has been estimated that the average incubation time is \u223c5 days [3, 15] and the duration of the milder cases of disease it 5-10 days [9] . We assume an average time of duration from infection to recovery or death of non-isolated cases of 10 days, corresponding to a rate of 0.1/day. If a fraction \u03b4 of infectious individuals is tested positive and put in isolation, we obtain \u03b1 = (1 \u2212 \u03b4) \u00d7 0.1/day.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 139,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 140,
+                    "end": 143,
+                    "text": "15]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 205,
+                    "end": 208,
+                    "text": "[9]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Similarly \u03b7 related to the time until patients are tested positive and isolated, but also to the fraction of all infectious individuals that are tested positive. These are mostly symptomatic patients, which we assume are isolated 5 days after the incubation time is over and first symptoms appear, i.e., after \u223c10 days. Letting \u03b4 denote the fraction of infectious individual entering Q, we obtain \u03b7 = \u03b4 \u00d7 0.1/day.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Since \u223c50-75% of the population is asymptomatic [12, 13] , and some milder cases may also go unnoticed and not end in isolation, we assume that \u03b4 = 1/3 of infectious individuals are tested after an average of 10 days. We thus obtain \u03b7 = 0.033/days and \u03b1 = 0.067/days. Table 1 . The number of active cases (calculated as confirmed minus recovered and deceased cases) are shown by the dots. The blue curves show the simulated number of quarantined cases Q. The red, dashed curves indicate the simulated number of infectious but hidden cases, I.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 52,
+                    "text": "[12,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 53,
+                    "end": 56,
+                    "text": "13]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 268,
+                    "end": 275,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "10"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint Figure 1 11 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 145,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "10"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint Growth rate before intervention (t 1 -1 , days -1 )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "10"
+        },
+        {
+            "text": "Growth rate after intervention (t 2 -1 , days -1 ) I t a ly F r a n c e G e r m a n y A u s t r ia ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "10"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "12"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint Figure 3 13 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 145,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "12"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20057075 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "12"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Effects of quarantine in six endemic models for infectious diseases",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hethcote",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhien",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Shengbing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Mathematical biosciences",
+            "volume": "180",
+            "issn": "1-2",
+            "pages": "111--117",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0025-5564(02"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Estimating the number of infections and the impact of nonpharmaceutical interventions on COVID-19 in 11 European countries. Imperial College COVID-19 Response Team",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flaxman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mishra",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gandy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.25561/77731"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus-Infected Pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001316"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Preliminary prediction of the basic reproduction number of the Wuhan novel coronavirus 2019-nCoV",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Evid Based Med",
+            "volume": "13",
+            "issn": "1",
+            "pages": "3--7",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jebm.12376"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ran",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "92",
+            "issn": "",
+            "pages": "214--217",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2020.01.050"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The reproductive number of COVID-8",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "is higher compared to SARS coronavirus",
+            "authors": [],
+            "year": 2020,
+            "venue": "Journal of travel medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/jtm/taaa021"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Early phylogenetic estimate of the effective reproduction number of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bergna",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Acciarri",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Galli",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zehender",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of medical virology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/jmv.25723"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pei",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Presumed asymptomatic carrier transmission of COVID-19",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Jama",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.2565"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Transmission of 2019-nCoV infection from an asymptomatic contact in Germany",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rothe",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schunk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sothmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bretzel",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Froeschl",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wallrauch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "970--971",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2001468"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A SEIQR model for pandemic influenza and its parameter identification",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Jumpen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wiwatanapataphee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "International Journal of Pure and Applied Mathematics",
+            "volume": "52",
+            "issn": "2",
+            "pages": "247--265",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Diamond Princess COVID-19 Cases",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Covid-19: identifying and isolating asymptomatic people helped eliminate virus in Italian village",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "368",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/bmj.m1165"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "R: A Language and Environment for Statistical Computing",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "R Core Team",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The Incubation Period of Coronavirus Disease 2019 (COVID-19) From Publicly Reported Confirmed Cases: Estimation and Application",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Meredith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Intern Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-0504"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "The total number of COVID-19 positive cases (circles) and the best fits (red curve) with piecewise constant growth rates \u03c4 \u22121 i , i = 1, 2. The date-of-change is indicated by the vertical dashed line, 95% confidence bands are given in blue and 95% prediction bands in green. Data from https://github.com/pcm-dpc/COVID-19 and https://github.com/CSSEGISandData/COVID-19.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Overview of the estimated growth rates before and after the date-of-change (left), and the number of infectious individuals (I 0 , right) at the beginning of the outbreak.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Simulation of the SIQR model with parameters as given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Figure 2",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Confrontation between estimated date-of-change (T c ; fromTable 1) and major containment measures. Asterisks indicate local restrictions in part of the country.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Funding: this work was supported by MIUR (Italian Minister for Education) under the initiative \"Departments of Excellence\" (Law 232/2016). The funding source had no role in study design; in the collection, analysis, and interpretation of data; in the writing of the report; or in the decision to submit the paper for publication.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        },
+        {
+            "text": "Authors contributions: MGP and MM conceived research and discussed all results. MGP developed the theoretical framework and performed parameter estimation. MM developed the simulation framework and compared real data to model results. MGP wrote the paper. MM commented drafts and approved the final version of the paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        }
+    ]
+}

@@ -1,0 +1,680 @@
+{
+    "paper_id": "9d4146eb31b060c8b7295306b21ce8148d941981",
+    "metadata": {
+        "title": "Real-time biomedical knowledge synthesis of the exponentially growing world wide web using unsupervised neural networks",
+        "authors": [
+            {
+                "first": "Tyler",
+                "middle": [],
+                "last": "Wagner",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Samir",
+                "middle": [],
+                "last": "Awasthi",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Gayle",
+                "middle": [],
+                "last": "Wittenberg",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Janssen pharmaceutical companies of Johnson & Johnson (J&J)",
+                    "location": {
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "A",
+                "middle": [
+                    "J"
+                ],
+                "last": "Venkatakrishnan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Dan",
+                "middle": [],
+                "last": "Tarjan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Anuli",
+                "middle": [],
+                "last": "Anyanwu-Ofili",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Janssen pharmaceutical companies of Johnson & Johnson (J&J)",
+                    "location": {
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Andrew",
+                "middle": [],
+                "last": "Badley",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Mayo Clinic",
+                    "location": {
+                        "postCode": "55905",
+                        "settlement": "Rochester",
+                        "region": "MN",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "John",
+                "middle": [],
+                "last": "Halamka",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Mayo Clinic",
+                    "location": {
+                        "postCode": "55905",
+                        "settlement": "Rochester",
+                        "region": "MN",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Christopher",
+                "middle": [],
+                "last": "Flores",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Janssen pharmaceutical companies of Johnson & Johnson (J&J)",
+                    "location": {
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Najat",
+                "middle": [],
+                "last": "Khan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Janssen pharmaceutical companies of Johnson & Johnson (J&J)",
+                    "location": {
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Rakesh",
+                "middle": [],
+                "last": "Barve",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Venky",
+                "middle": [],
+                "last": "Soundararajan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Decoding disease mechanisms for addressing unmet clinical need demands the rapid assimilation of the exponentially growing biomedical knowledge. These are either inherently unstructured and non-conducive to current computing paradigms or siloed into structured databases requiring specialized bioinformatics. Despite the recent renaissance in unsupervised neural networks for deciphering unstructured natural languages and the availability of numerous bioinformatics resources, a holistic platform for real-time synthesis of the scientific literature and seamless triangulation with deep omic insights and real-world evidence has not been advanced. Here, we introduce the nferX platform that makes the highly unstructured biomedical knowledge computable and supports the seamless visual triangulation with statistical inference from diverse structured databases. The nferX platform will accelerate and amplify the research potential of subject-matter experts as well as non-experts across the life science ecosystem (https://academia.nferx.com/).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The nference cloud-based software platform (nferX) enables dynamic inference from 45 quadrillion possible conceptual associations that synthesize over 100 million documents scraped from the published world wide web, and this is continuously updated as new material is published online. The platform supports visual triangulation of insights via statistical enrichments from nearly 50,000 curated collections of structured databases, with the diseases, biomolecules, drugs, and cells & tissues collections loaded by default. A hypergeometric test is used to capture the overlap between the knowledge synthesis results and each of these enrichment sets. The sources include all freely accessible literature integrated into a Core Corpus as well as distinct sub-corpora that provide contextual lenses into PubMed, preprints, clinical trials, SEC filings, patents, grants, media, company websites, etc. The collections include curated ontologies or statistical inference applied to molecular data (e.g. genomics, bulk and single cell RNA-seq, proteomics) and realworld data (e.g. FDA adverse event reports, clinical trial outcomes, epidemiology, clinical case reports). Here, we describe how the nferX platform 1 can enable data science driven decisionmaking via a pair of illustrative applications --(i) biopharmaceutical lifecycle management across conventionally siloed therapeutic areas, and (ii) connecting clinical pathophysiology to molecular profiling for a rapidly evolving pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "As described previously, the nferX platform adeptly identifies well-known and emerging associations embedded in the biomedical literature using two key metrics 2 : local context score and global context score ( Figure 1A) . The local context score is based on two significant improvements over the traditional pointwise mutual information (PMI) 3 . First, we extend the PMIbased strength of association to biomedical concepts that can be constructed by a logical combination of proximal phrases, e.g. \"EGFR-positive\" AND \"non-small cell lung cancer\". This effectively makes the number of biomedical concepts that can be queried unbounded. Moreover, we extend the traditional PMI notion, which is unable to capture the word-distance between cooccurring terms, using \"exponential masking\" to meaningfully account for the distance between co-occurring terms, captured by \"score decay\" in nferX. Our experimental studies show several measures for which our local score method outscores traditional PMI metrics (unpublished results). To compute the global context score we use an unsupervised neural network with dependency parsing to generate over 300 million biomedical multi-word phrase vectors, and leverage word2vec 4 to compute the cosine distance between these phrase vectors is projected in a 300-dimensional space. Previous studies of word embeddings provide a heuristic to extend their unigram technique to specify multi-word terms apriori 4 , and cui2vec relies on a curated set of phrases with associated vectors 5 . However, our examination indicates that relying on such occurrence frequency or curated data is not as exhaustive as our approach for generating a complete list of biomedical terms of interest, in particular when there are many low frequency or emerging concepts (unpublished results). We have also devised a novel method to compute vectors \"on demand\" for very low frequency phrases, for which pre-computing vectors is exorbitantly expensive. As an application of how researchers can use the combination of local and global context to add credence to existing hypotheses and identify novel associations, nferX was used to investigate potential indications for the label expansion of esketamine, an NMDA receptor antagonist recently approved for treatment-resistant depression (TRD). A hypothesis-free analysis was performed using the platform to quantify associations between esketamine, its targets (NR2A, NR2B), and all possible indications {nferX link}. nferX automatically populated the synonyms for the key biomedical entities such as genes, as an \"expanded query\". The platform correctly recapitulated relationships between esketamine and well-known indications, such as treatment resistant depression (local score = 7) and neuropathic pain (local score = 5.3), but also identified novel associations such as neuro-oncogenesis (e.g. global score of 2.4 between 'astrogliomas' and 'NMDA receptors'; nferX link) ( Figure 1B) . This link to neuro-oncogenesis was subsequently confirmed 6 , approximately 3 months after our analysis was initially performed. Such a prospective validation adds credence to further interrogate esketamine for other emerging indications identified as having significant global score to NMDA receptors (e.g. neurogenic inflammation, global score = 2.4, local score = 0.9, nferX link).",
+            "cite_spans": [
+                {
+                    "start": 345,
+                    "end": 346,
+                    "text": "3",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 211,
+                    "end": 221,
+                    "text": "Figure 1A)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 2943,
+                    "end": 2953,
+                    "text": "Figure 1B)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": ""
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.03.020602 doi: bioRxiv preprint As another application, the nferX platform enabled the rapid, comprehensive literature-based and multi-omic profiling of ACE2 7 , the putative receptor of SARS-CoV2 (Figure 1C) . We found that tongue keratinocytes and olfactory epithelial cells of the nasal cavity are potentially novel ACE2expressing cell populations. Clinically this aligns with the known routes of transmission through droplet spread and viral attachment within oral/nasal mucosa 8, 9 . Also this may explain the altered sense of smell and taste in otherwise asymptomatic COVID-19+ individuals 8, 9 . Next the very high rates of viral pneumonitis in infected patients with ground glass infiltrates on chest imaging 10 are a logical sequelae of infection given the expression of ACE2 in type-2 pneumocytes, club cells and ciliated cells of the lung 7 . The copious ACE2 expression in various gastrointestinal (GI) cell types emphasizes the recent reports of diarrhea 11 and signs/symptoms of enteropathy that are seen clinically, and may also explain the occurrence of fecal shedding that persists postrecovery 12 . Applying nferX to identify incipient associations to ACE2 in the disease collection highlights diabetic renal disease, cardiorenal syndrome, and nephropathy hypertension (each with a global score of 3.3 to ACE2), as well as the enrichment sets of renal insufficiency, heart failure and kidney diseases {nferX link}. These emerging insights from nferX are consistent with diabetes mellitus and chronic kidney disease being identified as the leading mortality indicators for the elderly COVID-19+ patients 13 . This may also provide a pathophysiological rationale as to why some COVID patients experience complications like acute kidney injury 14 , proteinuria, hematuria, or myocarditis with associated rise in troponins 15 . Along these lines, it will be of interest to see if cases of SARS-CoV2 induced orchitis occurs in COVID-19 patients, given ACE2 expression in cells of the testes 7 , and the high nferX local score of 4.8 for the orchitis-infertility association {nferX link}.",
+            "cite_spans": [
+                {
+                    "start": 676,
+                    "end": 678,
+                    "text": "8,",
+                    "ref_id": null
+                },
+                {
+                    "start": 679,
+                    "end": 680,
+                    "text": "9",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 790,
+                    "end": 792,
+                    "text": "8,",
+                    "ref_id": null
+                },
+                {
+                    "start": 793,
+                    "end": 794,
+                    "text": "9",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1815,
+                    "end": 1817,
+                    "text": "13",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 2031,
+                    "end": 2033,
+                    "text": "15",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 391,
+                    "end": 402,
+                    "text": "(Figure 1C)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": ""
+        },
+        {
+            "text": "The nferX data science platform will help researchers generate insights via holistic triangulation of structured and unstructured data at an unprecedented scale. The full clinical potential of the unsupervised neural networks that power this platform will be realized when they are applied towards automated de-identification and synthesis of the unstructured physician notes that dominate the Electronic Health Records (EHRs). To enable such seamless real-world insight triangulation with the wealth of published biomedical knowledge, a privacy-preserving federated architecture that exports aggregate statistical inferences while retaining the primary de-identified data within the academic medical center's span of control is needed. Such a platform can truly propel clinical research and biopharmaceutical development into the digital era.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.03.020602 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Recapitulation and Retrospective Prediction of Biomedical Associations Using Temporally-enabled Word Embeddings",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/627513"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Quality-Based Knowledge Discovery from Medical Text on the Web",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Holzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yildirim",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Geier",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-M",
+                    "middle": [],
+                    "last": "Simonic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Intelligent Systems Reference Library",
+            "volume": "",
+            "issn": "",
+            "pages": "145--158",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-642-37688-7_7"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Distributed Representations of Words and Phrases and their Compositionality",
+            "authors": [
+                {
+                    "first": "Tomas",
+                    "middle": [],
+                    "last": "Mikolov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ilya",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kai",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Corrado",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Dean",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Clinical Concept Embeddings Learned from Massive Sources of Multimodal Medical Data",
+            "authors": [
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Beam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Benjamin",
+                    "middle": [],
+                    "last": "Kompa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Allen",
+                    "middle": [],
+                    "last": "Schmaltz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Inbar",
+                    "middle": [],
+                    "last": "Fried",
+                    "suffix": ""
+                },
+                {
+                    "first": "Griffin",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathan",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Palmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xu",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tianxi",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Isaac",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Kohane",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Dangerous liaisons as tumour cells form synapses with neurons",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Barria",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature",
+            "volume": "573",
+            "issn": "",
+            "pages": "499--501",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Knowledge synthesis from 100 million biomedical documents augments the deep expression profiling of coronavirus receptors",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Venkatakrishnan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.24.005702"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Anosmia, Hyposmia, and Dysgeusia Symptoms of Coronavirus Disease. American Academy of Otolaryngology-Head and Neck Surgery",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Aao-Hns",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Essentials for Radiologists on COVID-19: An Update-Radiology Scientific Expert Panel",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kanne",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Little",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chung",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Elicker",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Ketai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1148/radiol.2020200527"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "COVID-19: Gastrointestinal manifestations and potential fecal-oral transmission",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Gastroenterology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1053/j.gastro.2020.02.054"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Characteristics of pediatric SARS-CoV-2 infection and potential evidence for persistent fecal viral shedding",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41591-020-0817-4"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Covid-19 in Critically Ill Patients in the Seattle Region -Case Series",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bhatraju",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/nejmoa2004500"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Kidney disease is associated with in-hospital death of patients with COVID-19",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Kidney International",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.kint.2020.03.005"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Cardiac Involvement in a Patient With Coronavirus Disease 2019 (COVID-19)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Inciardi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Cardiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamacardio.2020.1096"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Illustrative applications of the nferX platform: Biopharma lifecycle management and clinical-molecular linkage. (A)Schematic diagram highlighting computation of literature-derived association scores. (B) A lifecycle management study of esketamine recapitulated well-known associations to neuropathic pain and treatment resistant depression, as well as an emerging association between the drug's target NMDA receptors and astrogliomas. The predicted astrogliomas association to NMDA receptors was prospectively validated by a subsequent study 6 . (C) Linking the emerging clinical pathophysiology of COVID-19 patients with organs expressing the ACE2 viral receptor.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

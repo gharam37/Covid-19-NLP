@@ -1,0 +1,1050 @@
+{
+    "paper_id": "d71ca9fa89e45d55933b8791b984c2b6f773f06d",
+    "metadata": {
+        "title": "Machine Learning Analysis of Chest CT Scan Images as a Complementary Digital Test of Coronavirus (COVID-19) Patients",
+        "authors": [
+            {
+                "first": "Dhurgham",
+                "middle": [],
+                "last": "Al-Karawi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical Analytica Ltd",
+                    "location": {
+                        "addrLine": "26A Castle Park Industrial Estate",
+                        "postCode": "CH6 5XA",
+                        "settlement": "Flint",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Shakir",
+                "middle": [],
+                "last": "Al-Zaidi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical Analytica Ltd",
+                    "location": {
+                        "addrLine": "26A Castle Park Industrial Estate",
+                        "postCode": "CH6 5XA",
+                        "settlement": "Flint",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Nisreen",
+                "middle": [],
+                "last": "Polus",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical Analytica Ltd",
+                    "location": {
+                        "addrLine": "26A Castle Park Industrial Estate",
+                        "postCode": "CH6 5XA",
+                        "settlement": "Flint",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Sabah",
+                "middle": [],
+                "last": "Jassim",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Buckingham",
+                    "location": {
+                        "postCode": "MK18 1EG",
+                        "settlement": "Buckingham",
+                        "country": "England, UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "This paper reports on the development and performance of machine learning schemes for the analysis of Chest CT Scan images of Coronavirus COVID-19 patients and demonstrates significant success in efficiently and automatically testing for COVID-19 infection. In particular, an innovative frequency domain algorithm, to be called FFT-Gabor scheme, will be shown to predict in almost real-time the state of the patient with an average accuracy of 95.37%, sensitivity 95.99% and specificity 94.76%. The FFT-Gabor scheme is adequately informative in that clinicians can visually examine the FFT-Gabor feature to support their final diagnostic. Keyword: COVID-19, CT Scan, Machine learning, Fast Fourier Transform, Gabor Filter.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Key Strengths. The proposed FFT-Gabor scheme is an automatic machine learning scheme that works in real time and achieves significantly high accuracy with very low false negative, and can provide supporting evidences of the predicted decision by visually displaying the final features upon which decision is made. This scheme will be most beneficial when used in addition to the RT-PCR swab test of non-symptomatic cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Over the past few months, many countries in different continents have been feeling the devastating effects of the novel Coronavirus \"SARS-CoV-2\" with the number of confirmed cases surpassing 1.6 million world-wide with nearly 100,000 deaths [1] . Currently, there is no proven drug treatment or vaccine available for this virus. As of April 2020, WHO has identified more than 60 vaccine candidates being investigated against the SARS-CoV-2 virus ( [2] , [3] ), but only 2 are undergoing clinical trials. As for Diagnostic testing for the SARS-CoV-2, almost . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 241,
+                    "end": 244,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 448,
+                    "end": 451,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 454,
+                    "end": 457,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063479 doi: medRxiv preprint all diagnostic testing is done using RT-PCR. Due to the asymptomatic and pre-symptomatic transmission nature of this virus, a growing demand for diagnostic testing is a serious challenge even for developed countries. Various serological tests have been developed and approved in some Asian, European countries and America [4] . The reliability of both types of tests and in particular in asymptomatic and pre-symptomatic patients has been brought to question due the number of reported false negatives. Therefore, radiology units in hospitals would have been naturally involved in assessing level of infection using their various scanning images (e.g. CT and Ultrasound). Ai, et al, manually examined Chest CT scan images of 1014 patients and demonstrated that such a scan provides a reliable tool for the diagnosis of COVID-19 infection [5] . More interestingly, they found that a number of patients had positive Chest CT findings despite having an initial negative PCR test thus confirming the diagnosis of COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 104,
+                    "end": 115,
+                    "text": "13.20063479",
+                    "ref_id": null
+                },
+                {
+                    "start": 460,
+                    "end": 463,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 976,
+                    "end": 979,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In [6] , Zhong J et al, independently created and made public another COVID-19 CT scan dataset, to foster the use of AI methods for screening and testing COVID-19 patients. They proposed a Deep learning scheme that used the ChestX-ray14 dataset [7] , to pretrain the DenseNet [8] , then used Transfer learning to train and test samples of their dataset. Their scheme achieved accuracy of 84.7%. Earlier, Xu X. et al, [9] developed another Deep Learning based scheme to screen for COVD-19 pneumonia in a multi-centre case study. This scheme adds more evidence to the viability of using AI and machine learning as a supplementary diagnostic method for frontline clinical doctors. They achieved an overall accuracy of 86.7% for three groups: COVID-19, Influenza-A viral pneumonia and healthy cases.",
+            "cite_spans": [
+                {
+                    "start": 3,
+                    "end": 6,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 245,
+                    "end": 248,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 276,
+                    "end": 279,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 417,
+                    "end": 420,
+                    "text": "[9]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper, a new approch based on texture analysis has been develped to distinguish between positive from negative cases using a dataset of COVID-19 Chest CT scan images. In section 2, we shall first describe the background to our approach and illustrate with examples the viability of our developed machine learning schemes. In section 3, we shall present and discus the results of our experimental tests on the dataset created and frequently updated by the authors of [6] to whom we are indebted for their dedication.",
+            "cite_spans": [
+                {
+                    "start": 474,
+                    "end": 477,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A computer-based system for categorising chest CT scans could contribute to improve performance of decision support systems for the diagnosis of COVID-19. Such a computerbased system benefits from an interdisciplinary technology that combines image processing methods and experts' knowledge for greatly, better accuracy of positive detection, hence greatly decreasing the false-negative rate and improving the true positive rate. Recent . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FFT-based Classification of COVID-19 CT Scan Images"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063479 doi: medRxiv preprint technology advances in computer vision and machine learning have led to the successful development of automated analysis software tools as an integral of diagnostic support systems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Ovarian Tumours by machine learning texture analysis schemes ( [10] , [11] , [12] , [13] ). The main innovative contribution of this paper is the Gabor filtering of the spectrum image of the Fast Fourier Transform [13] of COVID-19 CT scan images as the domain of texture analysis for effectively differentiating positive from negative cases. The rationale is that all detailed texture information of images is extractible from the frequencies around the centre of the spectrum.",
+            "cite_spans": [
+                {
+                    "start": 63,
+                    "end": 67,
+                    "text": "[10]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 70,
+                    "end": 74,
+                    "text": "[11]",
+                    "ref_id": null
+                },
+                {
+                    "start": 77,
+                    "end": 81,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 84,
+                    "end": 88,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Motivated by recent work, conducted by the first and last authors, on classifying Utrasound"
+        },
+        {
+            "text": "Fourier transform is a well-established mathematical tool that represents data functions/signals in terms of waveforms of different frequencies, and when applied to image data its frequency ranges are analysed in the same way as a prism analyses natural light into a rainbow. Higher frequency ranges are associated with image texture features. Human observers, including trained radiologists, might find it difficult to detect informative features from FFT spectrum images. However, a wealth of research on use of machine learning for image analysis provide strong evidences that FFT indeed incapsulate rich characterising texture information that discriminating power when used for classifying tissue/organ abnormality. There are many different known procedures to analyse the texture content of the FFT spectrum. However, the only texture analysis tool that can effectively determine the nature of the lines out of the central region in the FFT spectrum is the Gabor filter [14] , which is a band-pass spatial filter that determine specific frequency content in the image in chosen ranges of directions and scales in the region of analysis. Figure 1 illustrates the output of using the FFT-Gabor scheme as shown of filtering the Fourier spectrum image in 5 scales and 10 orientations. It is easy to visibly note the differences in the pattern displayed in each of the 50 small FFT-Gabor blocks between the positive and negative COVID-19 cases.",
+            "cite_spans": [
+                {
+                    "start": 976,
+                    "end": 980,
+                    "text": "[14]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1143,
+                    "end": 1151,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Motivated by recent work, conducted by the first and last authors, on classifying Utrasound"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Motivated by recent work, conducted by the first and last authors, on classifying Utrasound"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063479 doi: medRxiv preprint These observations were our strong motivation to investigate and design machine learning based schemes using extracted image texture features and test their performances on a sufficiently large dataset of CT scans in terms of distinguishing positive Covid-19 cases from negative ones. Automated FFT-based schemes works by (1) pre-process the image using adaptive winner filter for noise reduction and image quality improvement, followed by inversion, (2) obtain the FFT-spectrum, (3) select a texture type and extract the appropriate feature vector, and (4) train and test the performance of each scheme on a sufficiently large dataset of image, using the linear Support Vector Machine (SVM) classifier [13] . We choose not to use Deep Learning schemes that normally predict decision in a black-box manner, because we can provide convincing visible informative evidence to support clinical decisions.",
+            "cite_spans": [
+                {
+                    "start": 810,
+                    "end": 814,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In this study, chest CT-scan images of COVID-19 examined patients (275 positive and 195 negative) were downloaded from [6] . Since, the authors in [6] is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 119,
+                    "end": 122,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 147,
+                    "end": 150,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Result and Discussion"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063479 doi: medRxiv preprint clinical testing. If the results did not change significantly then wait for the next set, otherwise we retrain using a mix of old and new images.",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 85,
+                    "text": "13.20063479",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The left part of Figure 2 , below, illustrates the experimental protocol used to test the performance of different schemes when we used the initial set of 470 downloaded images, whereas the right side illustrates a prospective test-like experiment where we using 100 images downloaded from the same website after second round of image uploading. We first randomly selected 75 positive and 75 negative images , then 60% from the total of 150 images used for training the SVM classifier and use the remaining 40% of images to test the performance of the trained model counting the number of success and failure, after that repeat the process 30 times, then calculate the average of the accuracy, sensitivity and specificity. In order to reduce the chance of biasness we repeat the experiment 30 times then find the average of that to produce the accuracy, sensitivity and specificity as shown in Table 1 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 17,
+                    "end": 25,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 894,
+                    "end": 901,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pre-process & Feature Extraction"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063479 doi: medRxiv preprint we repeated the same experiments with other known texture features including but not limited to: Fractal dimension [13] , Gabor filter in the spatial domain, the Fast Fourier Geometric Features (but only using the length of the Minor Axis of the best binary ellipse fitted to the spectrum image post adaptive thresholding) [13] . The performances of few other tested texture features are comparable to, or slightly lower than, the lowest performing schemes in this list.",
+            "cite_spans": [
+                {
+                    "start": 222,
+                    "end": 226,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 430,
+                    "end": 434,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The results not only confirm superiority of the FFT-Gabor scheme among other texture features, it also compares very well with the results, obtained manually by highly experienced clinicians, published by Ai, et al [5] . These results compare well with the accuracy achieved by the deep learning scheme of [6] . Indeed all the schemes outperform the one in [6] when tested on the original 470 images, with the FFT-Gabor scheme resulting in 10% absolute increased accuracy. For the prospective test, all the schemes show no need to retrain the system at this stage. Although, the Deep learning scheme developed in [9] is designed for slightly different purpose of characterising COVID-19 pneumonia our schemes also outperform that model. To have a more credible comparison with the work in [9] we must use their dataset.",
+            "cite_spans": [
+                {
+                    "start": 215,
+                    "end": 218,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 306,
+                    "end": 309,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 357,
+                    "end": 360,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 613,
+                    "end": 616,
+                    "text": "[9]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 789,
+                    "end": 792,
+                    "text": "[9]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Despite the obvious potential of chest CT-Scan, leading radiologists and clinicians expressed concern about the risk of viral transmission during patient transport to the imaging department posing an added risk to the medical staff and other patients. Moreover, the extensive efforts is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063479 doi: medRxiv preprint needed to disinfect the instruments between patients have a slow-down effect on the process and bring to question its advantage as an efficient tool in the fight against the Virus. However, CT Scan may play a critical role in the diagnosis of asymptomatic and pre-symptomatic cases where PCR test is not reliable or conclusive enough. Hence, it is essential for clinicians to have as many tools as possible in order to differentiate between positive and negative COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 107,
+                    "text": "13.20063479 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Moreover, accurate identification is also important to determine the optimal care management for these patients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We have provided evidences in support of using automatic machine learning for texture analysis of Chest CT scans of suspected COVID-19 patients to complement existing RT-PCR lab testing. This could provide a reliable method of diagnosis in critical cases where the PCR test is not conclusive enough especially in pre-symptomatic patients. Since more samples are frequently uploaded, then we shall continue to upgrade our results by conducting more prospective experiments with new samples. It is also our intention is to conduct similar investigations if and when ultrasound lung scans become available in the future.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion and Future work"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Coronavirus disease 2019 (COVID-19) Situation Report -82",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Developing COVID-19 vaccines at pandemic speed",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Nicole",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Melanie",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Richard",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jane",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Transmission of 2019-nCoV infection from an asymptomatic contact in Germany",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rothe",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schunk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sothmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bretzel",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Froeschl",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wallrauch",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zimmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Thiel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Janke",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Guggemos",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Others",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "382",
+            "issn": "",
+            "pages": "970--971",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Centre for Health Security",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hopking",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Correlation of chest CT and RT-PCR testing in coronavirus disease 2019 (COVID-19) in China: a report of 1014 cases",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not peer-reviewed) The copyright holder for this preprint",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cc-By-Nc-Nd",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.13.20063479"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "COVID-CT-Dataset: a CT scan dataset about COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.13865"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Chestx-ray8: Hospital-scale chest x-ray database and benchmarks on weakly-supervised classification and localization of common thorax diseases",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bagheri",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Summers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "2097--2106",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Densely connected convolutional networks",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Der Maaten",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Weinberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "4700--4708",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Deep learning system to screen coronavirus disease 2019 pneumonia",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Others",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.09334"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "OC04. 04: A machine-learning algorithm to distinguish benign and malignant adnexal tumours from ultrasound images",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Al-Karawi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Landolfo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Al-Assam",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sayasneh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Timmerman",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bourne",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jassim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Ultrasound in Obstetrics & Gynecology",
+            "volume": "54",
+            "issn": "",
+            "pages": "9--10",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Prospective clinical evaluation of texture-based features analysis of ultrasound ovarian scans for distinguishing benign and malignant adnexal tumors",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jassim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Australasian Journal of Ultrasound in Medicine",
+            "volume": "22",
+            "issn": "",
+            "pages": "144--144",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "An automated technique for potential differentiation of ovarian mature teratomas from other benign tumours using neural networks classification of 2D ultrasound static images: a pilot study",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Mobile Multimedia/Image Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Texture Analysis based Machine Learning Algorithms For Ultrasound Ovarian Tumour Image Classification within Clinical Practices",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Image feature localization by multiple hypothesis testing of Gabor features",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ilonen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-K",
+                    "middle": [
+                        "A O"
+                    ],
+                    "last": "Kamarainen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "IEEE Transactions on Image Processing",
+            "volume": "17",
+            "issn": "",
+            "pages": "71--82",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not peer-reviewed) The copyright holder for this preprint",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cc-By-Nc-Nd",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.13.20063479"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Examples of FFT-Gabor processing of positive and negative CT scan cases.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "are frequently updating the image database by uploading batches of lung CT scans of newly examined patients, then we have decided to first publish the performance of our proposed schemes by training and testing the original 470 labelled samples using support vector machine (SVM) classifier, and each time there is a dataset update we select a randomly a 100 images from the new sets and test the performance of the existing classification model on the new 100 image akin to a prospective Positive COVID-19 Image Pre-processed image FFT Spectrum Image FFT-Gabor Filtered 5",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Experimental design and protocol.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "To justify and explain our choice of the FFT-Gabor feature representation of CT scan images,",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Classification result based on different texture features using SVM classifier.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

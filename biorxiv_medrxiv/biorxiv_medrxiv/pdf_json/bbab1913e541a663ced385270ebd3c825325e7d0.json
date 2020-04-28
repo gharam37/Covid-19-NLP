@@ -1,0 +1,1835 @@
+{
+    "paper_id": "bbab1913e541a663ced385270ebd3c825325e7d0",
+    "metadata": {
+        "title": "Comparing Metapopulation Dynamics of Infectious Diseases under Different Models of Human Movement",
+        "authors": [
+            {
+                "first": "Daniel",
+                "middle": [
+                    "T"
+                ],
+                "last": "Citron",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Washington",
+                    "location": {
+                        "settlement": "Seattle",
+                        "region": "WA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Carlos",
+                "middle": [
+                    "A"
+                ],
+                "last": "Guerra",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Andrew",
+                "middle": [
+                    "J"
+                ],
+                "last": "Dolgert",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Washington",
+                    "location": {
+                        "settlement": "Seattle",
+                        "region": "WA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Sean",
+                "middle": [
+                    "L"
+                ],
+                "last": "Wu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "settlement": "Berkeley, Berkeley",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "John",
+                "middle": [
+                    "M"
+                ],
+                "last": "Henry",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Washington",
+                    "location": {
+                        "settlement": "Seattle",
+                        "region": "WA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "H\u00e9ctor",
+                "middle": [
+                    "M"
+                ],
+                "last": "S\u00e1nchez",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "settlement": "Berkeley, Berkeley",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "C",
+                "middle": [
+                    "C"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "David",
+                "middle": [
+                    "L"
+                ],
+                "last": "Smith",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Washington",
+                    "location": {
+                        "settlement": "Seattle",
+                        "region": "WA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Newly available data sets present an exciting opportunity to investigate how human population movement contributes to the spread of infectious diseases across large geographical distances. It is now possible to construct realistic models of infectious disease dynamics for the purposes of understanding global-scale epidemics. Nevertheless, a remaining unanswered question is how best to leverage the new data to parameterize models of movement, and whether one's choice of movement model impacts modeled disease outcomes. We adapt three well-studied models of infectious disease dynamics, the SIR model; the SIS model; and the Ross-Macdonald model, to incorporate either of two candidate movement models. We describe the effect that the choice of movement model has on each disease model's results, finding that in all cases there are parameter regimes where choosing one movement model instead of another has a profound impact on epidemiological outcomes. We further demonstrate the importance of choosing an appropriate movement model using the applied case of malaria transmission and importation on Bioko Island, Equatorial Guinea, finding that one model produces intelligible predictions of R 0 while the other produces nonsensical results.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Mathematical modeling | Infectious disease dynamics | Human population movement | Malaria DT Citron developed the project and carried out the analysis. DL Smith provided guidance and context for the project. CA Guerra provided the data for building the Bioko Island model. SL Wu, JM Henry, HM S\u00e1nchez C, and D Dolgert discussed and reviewed the analysis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Mathematical models are important tools for understanding disease transmission, making it possible to estimate the size, timing, and impact of epidemics and the effectiveness of interventions. There have been many such mathematical models adapted and applied to study epidemics that spread across large geographical distances (1, 2) . Many such models are often motivated by recent pandemic illness events, such as SARS (3); Ebola virus disease (4); Zika fever (5) ; and the 2019 novel coronavirus (6) , which spread over large geographical ranges and across international borders. In each of these cases, long-distance travel of infected human hosts proved to be an important driver of the spread of infectious disease between geographically separated populations.",
+            "cite_spans": [
+                {
+                    "start": 326,
+                    "end": 329,
+                    "text": "(1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 330,
+                    "end": 332,
+                    "text": "2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 461,
+                    "end": 464,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 498,
+                    "end": 501,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Parameterizing realistic models of disease transmission occurring across wide geographical ranges is now possible because of the recent availability of large, highly detailed data sets describing human movement patterns (7) . Census data attempts to describe population migration that occurs between census years (8) . Traditional surveys of commuters (9, 10) , patients (11, 12) , or residents in disease-affected areas (13, 14) provide another description of recent travel activity. More recently, mobile phone service providers have shared privacy-protected data sets, showing how large numbers of users tend to move between cell phone towers (12, (15) (16) (17) (18) . Studies involving GPS trip loggers also track participants' movement activities (19) .",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 313,
+                    "end": 316,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 352,
+                    "end": 355,
+                    "text": "(9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 356,
+                    "end": 359,
+                    "text": "10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 371,
+                    "end": 375,
+                    "text": "(11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 376,
+                    "end": 379,
+                    "text": "12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 421,
+                    "end": 425,
+                    "text": "(13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 426,
+                    "end": 429,
+                    "text": "14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 646,
+                    "end": 650,
+                    "text": "(12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 651,
+                    "end": 655,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 656,
+                    "end": 660,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 661,
+                    "end": 665,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 666,
+                    "end": 670,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 753,
+                    "end": 757,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The new abundance of movement data provide an exciting new opportunity to use models to quantify how much human host movement affects epidemiological outcomes. Nevertheless, each method of data collected only provides a partial picture of true movement patterns. It remains an unanswered question how best to use the data to parameterize models representing host movement. One consideration is finding a statistical model that fits adequately well to the data, predicting the frequency of travel or flow volume between two locations. There are already many candidate movement kernel models, such as gravity and radiation models, which have been evaluated against data in a variety of different settings (13, 18, (20) (21) (22) . A fitted movement kernel, once it has been evaluated as sufficiently accurate, may then be used to calibrate the movement-related parameters of a mechanistic disease transmission model.",
+            "cite_spans": [
+                {
+                    "start": 703,
+                    "end": 707,
+                    "text": "(13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 708,
+                    "end": 711,
+                    "text": "18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 712,
+                    "end": 716,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 717,
+                    "end": 721,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 722,
+                    "end": 726,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "For the purposes of modeling movement together with infectious disease dynamics, however, an additional point of consideration is whether or not the details of the movement model-the rules which govern how hosts' movement patterns are represented-affect the model's quantitative behavior and subsequent predicted epidemiological outcomes. Two example classes of movement models which provide simple mechanistic representations of travel behavior are Eulerian movement models, which specify the rates at which hosts at one location travel to any other location, or Lagrangian movement models, which specify how frequently hosts travel away from home before returning (23) . Depending on the level of detail contained in the available data, one might be able to fit any number of candidate mechanistic movement models. There is precedent in calibrating different movement models using the same travel data, only to find that the disease dynamics have changed as a result (9) . Moving beyond the question of how to best fit a statistical model to that data set, the question becomes whether choosing one mechanistic movement model over another can affect epidemiological outcomes, and whether there are certain settings or parameter regimes where one type of movement model may be more accurate and appropriate.",
+            "cite_spans": [
+                {
+                    "start": 666,
+                    "end": 670,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 969,
+                    "end": 972,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the present analysis we explore these questions using compartmental metapopulation models which integrate together host movement and infectious disease dynamics. We use three infectious disease transmission models-the Susceptible-Infected-Recovered model; the Susceptible-Infected-Susceptible model; and the Ross-Macdonald model-which represent a suite of tools for modeling the transmission dynamics of a wide variety of pathogens. We adapt each of the disease transmission models to incorporate two mechanistic representations of movement: the first is an Eulerian movement model which we call the Flux model, and the second is a Lagrangian movement model which we call the Simple Trip model. We directly compare the Flux and Simple Trip models by setting parameters such that the total flux of travelers between each sub-population remains constant, thus emulating a case where one might have a single data set from which one could calibrate either movement model. We examine how disease model outcomes can change with different movement models for each transmission model. For all three transmission models, we find that the modeled quantities of interest relating to disease dynamics can differ dramatically depending on one's choice of movement model. We conclude by applying this analysis to a model of malaria transmission and importation on Bioko Island in Equatorial Guinea, and use intuition based on our prior analysis to frame our understanding for why the Flux model surprisingly fails to produce meaningful predictions of transmission intensity in that context.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Host movement models. We use metapopulation models to represent a network of geographically isolated sub-populations of hosts. Each sub-population occupies a site where local conditions may affect transmission intensity. Disease transmission is assumed to be completely local, such that hosts from different sub-populations come into contact with one another only if they travel to occupy the same location. We describe and compare two simple models of host movement, each of which represents a different set of rules governing how hosts move from one location to another. The \"Flux model\" is an Eulerian movement model which describes hosts as diffusing from one metapopulation to another (23):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where Ni counts the number of hosts currently located at site i. The total number of hosts remains constant over time",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Ni). The constant fi,j represents the rate at which hosts located at i travel to j, where fi,i = 0 for all i. Making an equilibrium assumption that the total number of residents at each site remains constant also constrains fi,j = fj,i, such that the fully specified Flux Model requires K(K \u2212 1)/2 parameters. At equilibrium, when the derivatives on the left hand side of Eq. 1 equal zero the set of populations at each location may be found by solving for the nontrivial null vector of the matrix F where Fi,j = fi,j + fj,i.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The \"Simple Trip model\" is a Lagrangian movement model which assigns home locations to each host and describes how hosts travel temporarily to other locations before returning home (23) . Unlike the Flux model, the Simple Trip model differentiates between the residents and the visitors currently located at the same site. Visitors are able to interact with residents at a given site, but they return home at fixed rates:",
+            "cite_spans": [
+                {
+                    "start": 181,
+                    "end": 185,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The notation in Eq. 2 has changed to account for hosts retaining memory of their home sites: a host from i who is currently located at j will be counted as belonging to the Ni,j population, and the number of hosts whose home is i remains constant over time, even if members visit other sites (Ni = K j=1 Ni,j). The constant \u03c6i,j represents the rate at which hosts whose home is i travel to j, while the constant \u03c4i,j is the rate at which hosts visiting j from i return home to i. Both \u03c6i,i = 0 and \u03c4i,i = 0 for all i. The fully specified Simple Trip model requires 2K(K \u2212 1) parameters, meaning that more information is required to parameterize this model than the Flux model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "At equilibrium, when the derivatives on the left hand side of Eq. 2 equal zero, the population Ni is distributed across the K metapopulation sites as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "We can use Eqs. 3 to define a \"Time at Risk Matrix\" \u03c8 where \u03c8i,j \u2261 N * i,j /Ni, the average number of individuals from i found at site j at equilibrium, or the fraction of time on average that hosts who live in site i spend in site j.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "To directly compare the quantitative behavior of both models, we will assume that at equilibrium the total number of hosts moving from one site to another is the same across both models. That is to say, the number of people traveling i \u2192 j in the Flux model is the same as the number of i residents traveling to j + the number of j resident travelers returning home from i in the Simple Trip model:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "It can be shown under these circumstances that the equilibrium populations in the Flux model N * i equal the equilibrium populations in the Simple Trip model. SIR Models. The next step is to incorporate both movement models into three compartmental models of disease transmission. The first such model is the SIR model, which describes a single outbreak of disease. For a single population, the deterministic ordinary differential equation SIR model is as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Combining the basic SIR model with the Flux movement model 1, we obtain an analogous set of 3K equations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The parameters \u03b2 and \u03b3 in Eq. 6 represent the transmission rate and recovery rate, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Combining the basic SIR model with the Simple Trip model 2, we obtain an analogous set of 3K 2 equations describing transmission between hosts while they are at their home location or while they are traveling:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Note that for both movement models we allow the parameter representing transmission intensity \u03b2i to vary across locations, not across individuals, a choice that reflects how transmission intensity reflects the contact network structure or other local conditions affecting transmission. \u03b3, by contrast, is held constant for all individuals regardless of location. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint SIS Models. Our second disease transmission model is the SIS model, which can be used to describe persistent endemic disease brought about by cycles of repeated infection. We adapt the SIS model to include either the Flux or Simple Trip models to describe movement between sub-populations. For a single population, the SIS model equation is as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Combining the basic SIS model with the Flux model (Eq. 1), we obtain a set of K equations for transmission in the ith site:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "fj,iIj [9] Combining the basic model with the Time at Risk model (Eq. 2), we obtain a set of K 2 equations among both residents at home and travelers who are away:",
+            "cite_spans": [
+                {
+                    "start": 7,
+                    "end": 10,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Again, in both movement models the transmission intensity \u03b2i varies across locations, not across individuals, and \u03b3 is held constant for all individuals in all locations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Ross-Macdonald Models. Our third disease model is the Ross-Macdonald model, which was developed to describe malaria transmission (24, 25) . The Ross-Macdonald model is similar to the SIS model, except it includes a vector population which serves as a mechanism of transmission from infected to susceptible human hosts. The Ross-Macdonald model tracks infection dynamics among human hosts (X) and vectors (Z). The basic Ross-Macdonald model is as follows:",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 133,
+                    "text": "(24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 134,
+                    "end": 137,
+                    "text": "25)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The first of Eqs. 11 describes how human hosts become infected through contact with infectious mosquitoes, while the second describes how mosquitoes become infected through contact with infectious humans. Analyzing Eq. 11 under equilibrium conditions, it is possible to solve for an expression for R0 as a function of prevalence (24, 25) :",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "(24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 334,
+                    "end": 337,
+                    "text": "25)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "As before, we adapt the basic Ross-Macdonald model by allowing human hosts to move from one metapopulation to another. At present we will hold the Ross-Macdonald model's parameters (r, a, b, c, g, n) to be constant across all sites, while the stable mosquito population supported by the local environment (Mi) is allowed to vary across all sites. Incorporating the Flux model into the metapopulation Ross-Macdonald model (23):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "We again perform a standard analysis of Eqs. 13 under equilibrium conditions and obtain an expression for R {i} 0",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "in each site as a function of prevalence in each site Xi:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "We also extend the basic Ross-Macdonald model by allowing human hosts to move from one metapopulation to another as described by the Simple Trip model. Following the analysis of (23) and (17, 26) , we simplify the analysis using the Time",
+            "cite_spans": [
+                {
+                    "start": 187,
+                    "end": 191,
+                    "text": "(17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 192,
+                    "end": 195,
+                    "text": "26)",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint at Risk matrix \u03c8 to rewrite the force of infection experienced by human hosts as a weighted average which combines local transmission and the average fraction time spent at risk in different locations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The expression \u03bai represents the fraction of infectious humans located at i, accounting for both local residents as well as visitors from other locations. From Eq. 15, and following the analysis of (17), we obtain an expression for R0 which reflects how the movement model alters transmission at each metapopulation site:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Short Travel Duration",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A B"
+        },
+        {
+            "text": "We numerically integrate Eqs. 6 and 7 to find the size of the residual population of susceptibles following the outbreak. We plot the residual population fraction in location 1 (S \u221e 1 /N1) as a function of transmission intensity in location 1 (\u03b21/\u03b3) while holding transmission intensity in location 2 (\u03b22/\u03b3) constant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "We explore four different parameter regimes defined by the transmission intensity of location 2 and the duration of travel. In all four parameter regimes there is a dramatic separation between the predicted outbreak sizes that depends on whether one uses the Flux (blue) or the Simple Trip (red) model. As long as residents of location 1 travel from a low to a high transmission environment (\u03b22 > \u03b21) the Simple Trip model's outbreak will be smaller and the residual population will be larger; the opposite is true when residents of location 1 travel from a high to a low transmission environment (\u03b22 < \u03b21). A: Short travel duration regime (\u03c6i = 1, \u03c4i,j = 10); high transmission in location 2 (\u03b22 = 2.5) B: Short travel duration regime (\u03c6i = 1, \u03c4i,j = 10); low transmission in location 2 (\u03b22 = 0.5) C: Long travel duration regime (\u03c6i = 0.01, \u03c4i,j = 0.1); high transmission in location 2 (\u03b22 = 2.5) D: Long travel duration regime (\u03c6i = 0.01, \u03c4i,j = 0.1); low transmission in location 2 (\u03b22 = 0.5) SIR models. We begin by directly comparing the predicted outcomes of the two versions of the SIR model with Flux and Simple Trip movement. We simulate epidemics in two coupled metapopulations of Ni = 500 human hosts by numerically integrating Eq. 6 and Eq. 7 and measuring the size of the outbreak. The population of susceptibles remaining after the outbreak has ended S\u221e quantifies the size of the outbreak and allows one to infer R0 (27) . Furthermore, S\u221e quantifies the population at risk in subsequent future epidemics, which is relevant for modeling seasonally recurring pathogens such as influenza (28) .",
+            "cite_spans": [
+                {
+                    "start": 1431,
+                    "end": 1435,
+                    "text": "(27)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1600,
+                    "end": 1604,
+                    "text": "(28)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "We set \u03b3 = 1 in all locations, hold \u03b22 constant, and measure the residual population S\u221e in location 1 as \u03b21 varies. We identify two transmission parameter regimes: \u03b22 > \u03b3, which is high enough to cause an outbreak in location 2, and \u03b22 < \u03b3, . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint which in isolation does not lead to an outbreak in location 2. We also define two travel parameter regimes, one where travel occurs frequently and lasts short periods of time (\u03c4i,j > \u03b3), and one where travel occurs infrequently and lasts long periods of time (\u03c4i,j < \u03b3). We specify the parameter values for \u03c6i,j and \u03c4i,j in each of these regimes for the Simple Trip model and use Eq. 4 to also parameterize the Flux model, such that we emulate using the same data inputs to parameterize both movement models. Figure 1 compares how the two SIR models with metapopulation movement behave in different parameter regimes. In all cases the outcomes are dramatically different, showing that SIR model predictions depend strongly on how host movement is represented in the metapopulation model. The two movement models do agree when transmission parameters are equal in both locations (\u03b21 = \u03b22), but there are large quantitative differences whenever there is some heterogeneity in the local transmission conditions across the different locations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 653,
+                    "end": 661,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "The major difference between the Flux and Simple Trip models is that the Simple Trip model constrains the amount of time that a traveler spends away. For example, the larger residual population for the Simple Trip model, seen in the left hand column of Figure 1 , follows from a limit on the amount of time that residents of population one spend in the high-transmission location 2. Another difference between the Flux and the Simple Trip models is that hosts in the Flux model have no home residence and continue to move freely between populations after the outbreak ends. As a result, as the system reaches equilibrium after the epidemic the fractions of susceptibles become constant across all locations. In contrast with the Simple Trip model, the Flux model effectively erases any evidence that the transmission intensity differed between the two locations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 253,
+                    "end": 261,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "SIS models. We next compare the respective behavior of the SIS Flux metapopulation model (Eq. 9) and the SIS Simple Trip metapopulation model (Eq. 10) for K = 2 metapopulations of Ni = 500 coupled together. Again, we set \u03b3 = 1 at all locations. The outcome of interest for the SIS model is now prevalence, which we find by numerically solving for the endemic equilbria in Eq. 9 and Eq. 10. We hold \u03b22 constant and solve for the prevalence in location 1 (I * 1 /N1 for the Flux model and (I * 1,1 + I * 1,2 )/N1 for the Simple Trip model) as a function of the transmission intensity in location 1 (\u03b21). We define two transmission parameter regimes: \u03b22 > \u03b3, which is high enough to sustain endemic transmission locally in site 2, and \u03b22 < \u03b3, which cannot locally sustain endemic transmission. We again define two travel parameter regimes, one where travel occurs frequently and over short periods of time (\u03c4i,j > \u03b3) and one where travel occurs infrequently and over long periods of time (\u03c4i,j < \u03b3). In each regime we specify travel rate parameter values for the Simple Trip model and use Eq. 4 to set parameters for the Flux model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fig. 1. Comparing SIR model results"
+        },
+        {
+            "text": "! i,j > \" Long Travel Duration ! i,j < \" # 2 /\" > 1 # 2 /\" < 1 D C",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Short Travel Duration"
+        },
+        {
+            "text": "We numerically solve Eqs. 9 and 10 for the endemic equilibrium prevalence. We plot the endemic prevalence in location 1 I * 1 /N1 as a function of transmission intensity in location 1 (\u03b21/\u03b3) while holding transmission intensity in location 2 (\u03b22/\u03b3) constant. We explore four different parameter regimes defined by the transmission intensity of location 2 and the duration of travel. When travel duration is short (upper row), the Flux (red) and Simple Trip (blue) models produce dramatically different relationships between transmission intensity and prevalence. When travel duration is long (lower row), the two movement models' results converge. Figure 2 shows the results from both the Simple Trip and Flux models in each of the four parameter regimes. In the short travel duration regime (2 A, B), as long as the transmission intensity differs between the two locations, there is a noticeable separation between the two movement models' predicted relationships between prevalence and local transmission intensity. In 2 B it is even the case that the apparent critical point, above which location 1 has sustained endemic disease, changes depending on which movement model is used.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 648,
+                    "end": 656,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 2. Comparing SIS model results"
+        },
+        {
+            "text": "The discrepancy in the short travel duration regime arises because the Simple Trip model imposes an extra constraint on the amount of time a traveler spends away from home. The flux model does not specify the amount of time spent away, and its movement rates (from Eq. 4 tend to overestimate the time spent away. The Simple Trip model endemic prevalence in Figure 2 A is suppressed compared to the Flux model endemic prevalence because the amount of time that travelers from location 1 spend at risk in the high transmission location 2 is constrained to be small. Similarly, the Simple Trip model endemic prevalence in 2 B is elevated because travelers spend less of their time at risk in the low transmission location 2. In the long travel duration regime (Figure 2, lower row) , however, if the trip time is longer than the disease infectious period there is more time for prevalence among travelers to location 2 to equilibrate with the prevalence among residents of location 2: in this parameter regime, the Flux model and Simple trip models converge, because the constraint on time spent away from home makes less of a difference.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 357,
+                    "end": 365,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 757,
+                    "end": 778,
+                    "text": "(Figure 2, lower row)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 2. Comparing SIS model results"
+        },
+        {
+            "text": "We examine the behavior of the Ross-Macdonald models with Flux and Simple Trip movement. We use the model to represent a malaria-causing pathogen with a mean infectious period of r \u22121 = 200 days. The outcome of interest in the Ross-Macdonald model is R0, which quantifies the local transmission intensity required to produce the prevalence. We compare the two movement models using K = 2 connected sub-populations of Ni = 500 human hosts by specifying prevalence and using Eqs. 14 and 16 to calculate R0 for the Flux and Simple Trip models, respectively. Again, we define two parameter regimes based on high (X = 0.25) versus low (X = 0.025) prevalence in location 2, and another pair of parameter regimes based on high frequency, short duration trips (\u03c6i = 1/360, \u03c4i,j = 1/10) versus low frequency, long duration trips (\u03c6i = 1/36000, \u03c4i,j = 1/1000). As before, Flux model parameters are defined from the Simple Trip model parameters using Eq. 4.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ross-Macdonald models."
+        },
+        {
+            "text": "! i,j > \" Long Travel Duration ! i,j < \" # 2 /$ 2 = 0.25 # 2 /$ 2 = 0.025 D C",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Short Travel Duration"
+        },
+        {
+            "text": "We numerically solve Eqs. 14 and 16 to find the relationship between prevalence in location 1 (X1/N1) and transmission intensity (R0). We plot the relationship between location 1 prevalence (X1/N1) as a function of transmission intensity in location 1 while holding prevalence constant (X2/N2) in location 2. Note that we plot prevalence on the y-axis and transmission intensity on the x-axis, to emphasize how the Ross-Macdonald model behaves similarly to the SIS model ( Figure 2) . We explore four different parameter regimes defined by the prevalence of location 2 and the duration of travel in relation to the average duration of infection (r \u22121 = 200 days). In the short travel duration regime, there is a large quantitative difference in the relationship between prevalence and R0 for the two different movement models. In the regime with short travel duration and high location 2 prevalence (upper left), using the Flux model would suggest low transmission (R . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 473,
+                    "end": 482,
+                    "text": "Figure 2)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 3. Comparing Ross-Macdonald model results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint location are different, there is a dramatic separation between the Flux and Simple Trip model results, particularly in the short travel duration regime (Figure 3 A, B) . If travel duration is long, however, the two models' predicted relationships between prevalence and R0 do converge towards one another. The relationships between prevalence and transmission intensity for the two Ross-Macdonald models are qualitatively similar to the one shown previously for the SIS model in Figure 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 296,
+                    "end": 311,
+                    "text": "(Figure 3 A, B)",
+                    "ref_id": null
+                },
+                {
+                    "start": 623,
+                    "end": 631,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 3. Comparing Ross-Macdonald model results"
+        },
+        {
+            "text": "In some parameter regimes R0 does appear to run negative, such as with the Flux model predictions in Figure 3 A. This occurs when incidence and, by consequence, prevalence among travelers to a higher transmission environment is too high for the model to reconcile the prevalence specified for each area. In this context, R0 < 0 has no meaningful real-world interpretation beyond indicating that the data are inconsistent with the chosen mechanistic model. (14) . Each pixel shows the mean estimated prevalence within a 1 \u00d7 1 km 2 area. B Travel \"prevalence\" map, reproduced with permission from (14) , where each pixel shows the probability that a resident leaves home during an eight week survey period. C Modeled rates of travel {\u03c6 i,k } for each of four example pixels, estimated from MIS data reporting recent travel. Arrows pointing off-island represent travel to Mainland EG. Arrow weights are proportional to rate of travel from origin pixel to each of the 7 destination regions, or the sum total rate of travel to all of the destination pixels within each region.",
+            "cite_spans": [
+                {
+                    "start": 456,
+                    "end": 460,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 595,
+                    "end": 599,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 101,
+                    "end": 109,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 3. Comparing Ross-Macdonald model results"
+        },
+        {
+            "text": "We further illustrate the quantitative disagreements between the Flux and Simple Trip models by applying the Ross-Macdonald models with host movement to the problem of estimating R0 in a real-world setting. Bioko Island is located in the Atlantic Ocean about 225km to the northwest of mainland Equatorial Guinea (EG) in Western Africa. From population data collected during a bednet mass-distribution campaign in 2018, human population count was 239,159 people, about 85% of whom lived in EG's capital city Malabo in the north (29) . During this sanitary census, however, there was a 12% absenteeism that needs to be accounted for. Following the recent efforts of an intensive malaria control and elimination program (Bioko Island Malaria Elimination Program, BIMEP), the average malaria parasite rate (PR, a measure of prevalence) in chhildren 2-14 years old has fallen from an average of 0.43 to 0.11 between 2004 and 2016, with further progress appearing to have stagnated in recent years since 2015 (30) . A recent analysis of data collected through malaria indicator surveys (MIS) (31-33) has used geostatistical techniques (34) to map the estimated prevalence of malaria (Figure 4 A) and the estimated probability of a resident leaving (Figure 4 B) across different locations on Bioko Island (14) . The analysis showed an elevated risk of infection among people who reported traveling recently (14) , a pattern corroborated by other studies (30, 35) . In particular, this suggests that travelers who had spent time in mainland EG, which still has an estimated mean prevalence of around 0.43 (36, 37) , are very likely to bring back infections with them that would contribute to the sustained endemic prevalence measured on Bioko Island. We can use the Ross-Macdonald model to infer local transmission intensity (R0) based on the known prevalence and travel behavior. We treat each of the pixels shown in the maps in Figure 4 as its own sub-population with its own local transmission environment, which allows the model to contain the spatial heterogeneity known from the data. We the population data to set the population Ni and the geospatial estimates to set prevalence Xi/Ni at each location. For the travel parameters we use trip destinations reported in the MIS (38) to fit a multinomial probability model of destination choice. Together with the travel frequency data (Figure 4 B) , we find a set of travel frequency parameters {\u03c6 i,k }, illustrated in Figure 4 C. We use MIS data on trip duration (38) to fit an exponential model of trip duration and find that travel within Bioko Island and to mainland equatorial had a mean duration of \u03c4 \u22121 i,BI = 21.2 and \u03c4 \u22121 i,EG = 10.3 days, respectively. (Further details may be found in the Supplementary Information.) The rate parameters fi,j for the Flux model were calculated using Eq. 4.",
+            "cite_spans": [
+                {
+                    "start": 527,
+                    "end": 531,
+                    "text": "(29)",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1003,
+                    "end": 1007,
+                    "text": "(30)",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1129,
+                    "end": 1133,
+                    "text": "(34)",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1298,
+                    "end": 1302,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1400,
+                    "end": 1404,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1447,
+                    "end": 1451,
+                    "text": "(30,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1452,
+                    "end": 1455,
+                    "text": "35)",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1597,
+                    "end": 1601,
+                    "text": "(36,",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1602,
+                    "end": 1605,
+                    "text": "37)",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 2273,
+                    "end": 2277,
+                    "text": "(38)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 2510,
+                    "end": 2514,
+                    "text": "(38)",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1177,
+                    "end": 1186,
+                    "text": "(Figure 4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1242,
+                    "end": 1251,
+                    "text": "(Figure 4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1922,
+                    "end": 1930,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2380,
+                    "end": 2392,
+                    "text": "(Figure 4 B)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2465,
+                    "end": 2473,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2746,
+                    "end": 2773,
+                    "text": "Supplementary Information.)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Malaria Modeling Example."
+        },
+        {
+            "text": "In this way, we construct a fully parameterized pair of Ross-Macdonald models with movement between sub-populations, from which we can infer the transmission intensity in each location on Bioko Island. Figure 5 A maps estimates of R 0,Flux calculated using the Flux model (Eq. 14). The dark pixels of the map represent areas where the R 0,Flux estimates are calculated to be less than 0. In these locations, the rate at which people become infected while traveling and return home with malaria infections is too high for the transmission model to reconcile local transmission intensity with local prevalence. We frame our understanding of these results in terms of the K = 2 sub-population example discussed previously for the Ross-Macdonald Model. Each sub-population on Bioko Island exists in a parameter regime where travel duration is short (\u03c4i,j > r) and the prevalence in the off-island travel destination is higher than the local prevalence. We recall the results shown in Figure 3 A, where we see how for low prevalence values the Flux model tends to underestimate R0 compared to the Simple Trip model. The Simple Trip model constrains the amount of time that travelers spend on mainland EG, and therefore reduces the number of people who return home from traveling with malaria infections. The Flux model does not include such a constraint, and in this parameter regime we see how in some locations the rate of imported infections is too high and forces the transmission intensity to be negative.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 202,
+                    "end": 210,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 980,
+                    "end": 988,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Malaria Modeling Example."
+        },
+        {
+            "text": "We have shown that models of infectious disease dynamics are sensitive to the choices that modelers make when including movement-mediated interactions between sub-populations. To do so, we have adapted each of three transmission models to include two types of movement between sub-populations. For all three transmission models we have identified parameter regimes where choosing to incorporate one movement model instead of the other will result in dramatically different results. Specifically, when there is a difference in transmission intensity between two interacting locations, and when mean travel duration is short compared to the mean duration of infection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We emphasize that in all instances we set movement parameters to match the total flux of individuals moving between each pair of sub-populations. In this way, we have emulated a situation where the modeler has a single movement data set and must choose which movement model to implement. The full impact of the choice of movement model became clear from the example of modeling malaria transmission and importation on Bioko Island: We calibrated each of the two movement models using the same data set and found that each movement model produced dramatically different results. The Flux model predicted R0 < 0, which has no meaningful interpretation beyond the Flux model being inconsistent with the data used to calibrate it. The Simple Trip model, by specifying the rate at which travelers return home, adds a constraint on the amount of time that travelers spend while away from home. As a consequence, when combined with a the Simple Trip model constrains the amount of risk experienced by travelers. The Flux model has no such constraint: as long as there are variations in the transmission intensity across different locations there will be significant differences between the two movement models' results.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The way that each of the movement models contributes to the infectious disease model results can lead to real confusion over the true relationship between transmission intensity and epidemiological outcomes. In some applications, as with the Bioko Island example, the purpose of the model is to infer transmission conditions which may be difficult to measure empirically based on more readily available prevalence or incidence measures. Returning to Figure 2 A, we can imagine trying to determine the transmission intensity \u03b21 based on a measured prevalence of 0.25. From the Flux model we infer \u03b21 < 1, which suggests that local transmission risk is low. From the Simple Trip model, however, we infer \u03b21 > 1, which suggests the opposite. A similar inconsistency is illustrated for the Ross-Macdonald model in Figure 3 , and appears again in the Bioko Island example in Figure 5 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 450,
+                    "end": 458,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 810,
+                    "end": 818,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 870,
+                    "end": 878,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "In the case of modeling malaria transmission and importation on Bioko Island we have shown how the Flux model is not suitable for producing accurate results. Despite this drawback, the Flux model remains an attractive option for creating a basic quantitative description of host movement in other epidemiological contexts. First, the model requires only K(K \u2212 1)/2 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054304 doi: medRxiv preprint parameters to specify completely. For this reason, parameterization is possible with relatively simple data sets which count the number of individuals moving from one each location to each other location over time. Unfortunately, data sets which record flux volumes do not necessarily lend themselves to parameterizing Simple Trip models, as they do not distinguish between the rates of leaving and returning home.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "For example, mobile phone call data records (CDRs) are a source of high-volume data sets for measuring the number of individuals who travel from one location to another. Often, for the sake of preserving subscriber privacy, CDRs are aggregated across individual users, time, and geographical area before becoming public. That is to say, publicly available CDR data sets count the number of mobile phones traveling from one service tower catchment area to another on a daily or weekly basis: these data sets do not record an individual's rate of leaving home or time spent while traveling away from home. The loss of individual identity from data sets has already been shown to impact the predicted outcome of disease models in other contexts (9) . While the limits and biases inherent to CDR data sets have been well-documented (39), the present study suggests an additional drawback when it comes to using CDR data sets for epidemiological modeling: because it is not clear that a Flux model is sufficient to produce accurate modeling results in some contexts, it is likewise not clear that flux data are sufficient to quantify travel behavior when building a movement model. This is not to say that CDR data or Flux models are useless, only that one needs to carefully consider the epidemiological context before incorporating a Flux model into a disease transmission model.",
+            "cite_spans": [
+                {
+                    "start": 742,
+                    "end": 745,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The present work is restricted to discussing only two very basic deterministic models of movement. In theory, one may imagine similarly comparing more detailed and complicated movement models, such as incorporating travel behavior with multiple stops; adding stochastic effects; or using agent-based models to incorporate movement behavior heterogeneity among the travelers. It remains to be seen the extent to which such additional model features might further affect the epidemiological outcomes of interest. In practice, however, the data required for calibrating such models may not be readily available, and using a Flux or Simple Trip description of travel behavior may be more practical. Even for such simple movement models there is a risk of misusing the travel data that are available to calibrate a movement model which cannot be reconciled with the data and produces outputs that are difficult or impossible to interpret.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Data and code supporting the analysis presented in the Malaria Modeling Example section, including Figures 3 and 4 , may be found at https://doi.org/10.6084/m9.figshare.12084831.v1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 99,
+                    "end": 114,
+                    "text": "Figures 3 and 4",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Data Availability"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The role of the airline transportation network in the prediction and predictability of global epidemics",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "V Colizza",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Barrat",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Barthelemy",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Pnas",
+            "volume": "103",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Large-scale spatial-transmission models of infectious disease",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Science",
+            "volume": "316",
+            "issn": "",
+            "pages": "1298--1301",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The hidden geometry of complex, network-driven contagion phenomena",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Brockmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Helbing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Science",
+            "volume": "342",
+            "issn": "",
+            "pages": "1337--1342",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Assessing the international spreading risk associated with the 2014 West African Ebola outbreak",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mfc Gomes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PLoS Curr",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Spread of Zika virus in the Americas. Proc. Natl. Acad. Sci. United States Am",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "114",
+            "issn": "",
+            "pages": "4334--4343",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The effect of travel restrictions on the spread of the 2019 novel coronavirus (COVID-19) outbreak. Sci",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chinazzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "9757",
+            "issn": "",
+            "pages": "1--12",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Human movement data for malaria control and elimination strategic planning",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dk Pindolia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Malar. J",
+            "volume": "",
+            "issn": "",
+            "pages": "1--16",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "International population movements and regional Plasmodium falciparum malaria elimination strategies",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Aj Tatem",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proc. Natl. Acad. Sci",
+            "volume": "107",
+            "issn": "",
+            "pages": "12222--12227",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Individual identity and movement networks for disease metapopulations",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mj Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Danon",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Vernon",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "House",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proc. Natl. Acad. Sci. United States Am",
+            "volume": "107",
+            "issn": "",
+            "pages": "8866--8870",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Multiscale mobility networks and the spatial spreading of infectious diseases",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Balcan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proc. Natl. Acad. Sci",
+            "volume": "106",
+            "issn": "",
+            "pages": "21484--21489",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Travel patterns and demographic characteristics of malaria cases in Swaziland",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Tejedor-Garavito",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Malar. J",
+            "volume": "16",
+            "issn": "",
+            "pages": "1--18",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Mapping imported malaria in Bangladesh using parasite genetic and human mobility data",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hh Chang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Mathematical models of human mobility of relevance to malaria transmission in",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Marshall",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Africa. Sci. Reports",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Human mobility patterns and malaria importation on Bioko Island",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ca Guerra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Travel risk, malaria importation and malaria transmission in",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Le Menach",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Zanzibar. Sci. Reports",
+            "volume": "1",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Quantifying the impact of human mobility on malaria",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wesolowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Science",
+            "volume": "338",
+            "issn": "",
+            "pages": "267--270",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Identifying malaria transmission foci for elimination using human mobility data",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nw Ruktanonchai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PLoS Comput. Biol",
+            "volume": "12",
+            "issn": "",
+            "pages": "1--19",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Utilizing general human movement models to predict the spread of emerging infectious diseases in resource poor settings",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mug Kraemer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Sci. Reports",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Characterizing and quantifying human movement patterns using GPS data loggers in an area approaching malaria elimination in rural southern Zambia",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Km Searle",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Royal Soc. Open Sci",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "A universal model for mobility and migration patterns",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Simini",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mc Gonz\u00e1lez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Maritan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Barab\u00e1si",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nature",
+            "volume": "484",
+            "issn": "",
+            "pages": "96--100",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Evaluating spatial interaction models for regional mobility in sub-Saharan Africa",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wesolowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wp O&apos;meara",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Eagle",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tatem",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Co Buckee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PLoS Comput. Biol",
+            "volume": "11",
+            "issn": "",
+            "pages": "1--16",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Comparison of alternative models of human movement and the spread of disease",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "On Bj\u00f8rnstad",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bt Grenfell",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Viboud",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "King",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "bioRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The effects of human movement on the persistence of vector-borne diseases",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cosner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "J. Theor. Biol",
+            "volume": "258",
+            "issn": "",
+            "pages": "550--560",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The population dynamics of malaria in The population dynamics of infectious diseases: theory and applications",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jl Aron",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "May",
+                    "suffix": ""
+                }
+            ],
+            "year": 1982,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "139--179",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Ross, Macdonald, and a theory for the dynamics and control of mosquito-transmitted pathogens",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dl Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "PLoS Pathog",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Parasite sources and sinks in a patched Ross-Macdonald malaria model with human and mosquito movement: Implications for control",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nw Ruktanonchai",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "De Leenheer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Math. Biosci",
+            "volume": "279",
+            "issn": "",
+            "pages": "90--101",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Modeling infectious diseases in humans and animals",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mj Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Inter-outbreak stability reflects the size of the susceptible pool and forecasts magnitudes of seasonal epidemics",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rypdal",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sugihara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Commun",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Bioko Island Malaria Control Project (BIMCP) & Equatorial Guinea Malaria Vaccine Initiative (EGMVI) Quarterly Progress Report and Annual Review",
+            "authors": [],
+            "year": 2018,
+            "venue": "Medical Care Development International (MCDI)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Trends in parasite prevalence following 13 years of malaria interventions on Bioko island",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cook",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Malar. J",
+            "volume": "17",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "The bioko island malaria control project malaria indicator survey (mis) 2015, (Medical Care Development International)",
+            "authors": [],
+            "year": 2015,
+            "venue": "Medical Care Development International (MCDI)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Bioko island malaria control project iii -malaria indicator survey (mis) 2016, (Medical Care Development International)",
+            "authors": [],
+            "year": 2016,
+            "venue": "Medical Care Development International (MCDI)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "The bioko island malaria control project malaria indicator survey (mis) 2017, (Medical Care Development International)",
+            "authors": [],
+            "year": 2017,
+            "venue": "Medical Care Development International (MCDI)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Spatio-temporal mapping of Madagascar's Malaria Indicator Survey results to assess Plasmodium falciparum endemicity trends between",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sy Kang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "BMC Medicine",
+            "volume": "16",
+            "issn": "",
+            "pages": "1--15",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Infection importation : a key challenge to malaria elimination on Bioko Island , Equatorial Guinea",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bradley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Malar. J",
+            "volume": "14",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Malaria prevalence in Bata district , Equatorial Guinea: a cross-sectional study",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ncogo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Malar. J",
+            "volume": "14",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "A new world malaria map: Plasmodium falciparum endemicity in 2010",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pw Gething",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Malar. J",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Characterising malaria connectivity using malaria indicator survey data",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ca Guerra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dt Citron",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Garc\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Malar. J",
+            "volume": "18",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Connecting mobility to infectious diseases: The promise and limits of mobile phone data",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wesolowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Co Buckee",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Eng\u00f8-Monsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Metcalf",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J. Infect. Dis",
+            "volume": "214",
+            "issn": "",
+            "pages": "414--420",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "A: Short travel duration regime (\u03c6i = 0.5, \u03c4i,j = 40); high transmission in location 2 (\u03b22 = 2.5). B: Short travel duration regime (\u03c6i = 0.5, \u03c4i,j = 40); low transmission in location 2 (\u03b22 = 0.5). C: Long travel duration regime, 9\u03c6i = 0.005, \u03c4i,j = 0.4); high transmission in location 2 (\u03b22 = 2.5). D: Long travel duration regime, 9\u03c6i = 0.005, \u03c4i,j = 0.4); low transmission in location 2 (\u03b22 = 0.5).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Flux < 1), whereas using the Simple Trip model would suggest high transmission (R {i} 0,ST < 1). In the long travel duration regime, the quantitative disagreement between the two movement models is less significant. A: Short travel duration regime (\u03c6i = 1/180, \u03c4i,j = 1/10); high prevalence in location 2 (X2/N2 = 0.25) B: Short travel duration regime (\u03c6i = 1/180, \u03c4i,j = 1/10); low prevalence in location 2 (X2/N2 = 0.025) C: Long travel duration regime (\u03c6i = 1/72000, \u03c4i,j = 1/4000); high prevalence in location 2 (X2/N2 = 0.25) D: Long travel duration regime (\u03c6i = 1/72000, \u03c4i,j = 1/4000); low prevalence in location 2 (X2/N2 = 0.025) Figure 3 illustrates how R0 in location 1 varies as a function of prevalence in location 1. As long as the prevalences in each Citron et al. PNAS | April 7, 2020 | vol. XXX | no. XX | 7",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Parameterizing Ross-Macdonald model from data A Prevalence (Parasite Rate, Xi/Ni) map, estimated from the MIS collected parasitemia measurements, reproduced with permission from",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "B maps estimates of R 0,ST calculated using the Simple Trip model (Eq. 16). In contrast with the Flux model, the R 0,ST estimates appear to be possible to interpret. Local transmission R 0,ST \u2265 1 along the northwest coast and around Riaba. R 0,ST \u2264 1 in many places in Malabo, suggesting that the sustained prevalence in this urban area may be attributable to travelers returning Modeled estimates of R0. All modeled estimates were generated using the same prevalence and travel data, illustrated inFigure 4. A: R0,Flux, calculated using the Flux model (Eq. 14) parameterized with the input data shown inFigure 4. Dark gray denotes pixels where the calculated local transmission is negative. Local transmission runs negative if, according to the Flux model, travelers are subject to too high transmission risk when on the mainland. B: R 0,ST , calculated using the Simple Trip model (Eq. 16) parameterized with the input data shown in Figure 4. Unlike the Flux model, the Simple Trip model constrains and restricts the time spent at risk on the mainland. Hence, there are no locations where transmission appears to run negative. C: Histograms comparing the distributions of R0,Flux and R 0,ST calculated across the island, with the inset showing the full negative range of the Flux model results. The Simple Trip model's range of values appears to be plausible, whereas the Flux model's range of values is uninterpretable and suggests that the model is invalid in this setting. from the mainland with imported infections. Figure 5 C compares the distributions of R 0,Flux and R 0,ST , further contrasting the two sets of predictions and further illustrating how the Flux model fails to produce meaningful results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF2": {
+            "text": "Citron et al.PNAS | April 7, 2020 | vol. XXX | no. XX | 9",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We acknowledge support from the Bill & Melinda Gates Foundation, Grant OPP1110495. Additionally, we thank the participants of Bioko Island who have taken part in the surveys from which the Bioko data were drawn, the BIMEP field surveyors and supervisors who collected these data, as well as the National Malaria Control Program and the Ministry of Health and Social Welfare of Equatorial Guinea, Marathon Oil, Nobel Energy and partners for their continued support in producing these data sets. Lastly, we would like to thank the following collaborators for their helpful insights and discussion: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS."
+        }
+    ]
+}

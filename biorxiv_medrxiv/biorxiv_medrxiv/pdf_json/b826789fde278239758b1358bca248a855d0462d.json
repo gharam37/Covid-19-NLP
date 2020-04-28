@@ -1,0 +1,1326 @@
+{
+    "paper_id": "b826789fde278239758b1358bca248a855d0462d",
+    "metadata": {
+        "title": "Analysis of COVID-19 spread in South Korea using the SIR model with time-dependent parameters and deep learning",
+        "authors": [
+            {
+                "first": "Hyeontae",
+                "middle": [],
+                "last": "Jo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Pohang University of Science and Technology",
+                    "location": {
+                        "country": "South Korea"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hwijae",
+                "middle": [],
+                "last": "Son",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Pohang University of Science and Technology",
+                    "location": {
+                        "country": "South Korea"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hyung",
+                "middle": [
+                    "Ju"
+                ],
+                "last": "Hwang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Pohang University of Science and Technology",
+                    "location": {
+                        "country": "South Korea"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Young",
+                "middle": [],
+                "last": "Jung",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Seoul National University Bundang Hospital",
+                    "location": {
+                        "settlement": "Seongnam",
+                        "country": "Korea"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Mathematical modeling is a process aimed at finding a mathematical description of a system and translating it into a relational expression. When a system is continuously changing over time (e.g., infectious diseases) differential equations, which may include parameters, are used for modeling the system. The process of finding those parameters that best fit the given data from the system is called an inverse problem. This study aims at analyzing the novel coronavirus infection (COVID-19) spread in South Korea using the susceptible-infectedrecovered (SIR) model. We collect the data from Korea Centers for Disease Control & Prevention (KCDC). We assume that each parameter in the SIR model is a function of time so that we can compute important parameters, such as the basic reproduction number (R0), more delicately. Using neural networks, we propose a method to find the best time-varying parameters and the solution for the model simultaneously. Moreover, using time-dependent parameters, we find that traditional numerical algorithms, such as the Runge-Kutta methods, can successfully approximate the SIR model while fitting the COVID-19 data, thus modeling the propagation patterns of COVID-19 more precisely.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Similar to the 1918 influenza pandemic (known as the \"Spanish Flu\") more than 100 years ago, the coronavirus disease 2019 (COVID-19) pandemic has been a major shock to the whole world. At the end of World War I, the 1918 influenza pandemic wreaked havoc on the whole world, killing more than 40 million people, more than 2% of the then world's population of 1.8 billion people. It is estimated that 16 million people died in India, which suffered the most damage, while in the US, the pandemic killed 5.2% of the entire population [1] . Additionally, it had a catastrophic impact on the world economy. For example, manufacturing production fell by an average of 18% in the US, since many people died or became sick, resulting in a devastating loss in the workforce, while the fears of infection caused a decrease in consumption and production. During the outbreak, preventive measures such as social distancing and wearing masks were recommended to curb the spread of the virus. However, the 1918 influenza pandemic exhibited an unusual bimodal peak in the US, lasting for almost two years. Thus, by analogy, we can infer that decreases in infection rates of COVID-19 do not guarantee continuity of the trend.",
+            "cite_spans": [
+                {
+                    "start": 531,
+                    "end": 534,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Nevertheless, the current status of the COVID-19 pandemic is worse than that of the 1918 influenza pandemic due to the increasingly entangled transportation network connecting the world and the global interdependency between economies that developed over decades of globalization. Even countries that have successfully imposed quarantine measures early, such as Taiwan and Hong Kong, cannot rule out the possibility of a COVID-19 re-outbreak. Therefore, governments and academia need to collect and analyze all COVID-19related data using big data technologies in real time to monitor the pandemic by region and time quantitatively. Moreover, the effects of environmental changes and policies should be evaluated promptly so that appropriate measures can be provided immediately according to the results.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The susceptible-infected-recovered (SIR) model is one of the simplest and powerful models that can be used to mathematically model infectious diseases. Together with its three main variables (S, I, R) the model is governed by two parameters that represent the transition rates between two variables, \u03b2 and \u03b3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Recently, there have been numerous works analyzing COVID-19. Some studies regarded the parameters as constants. For instance, [2] proposed a conceptual model of COVID-19 that includes individual behavioral reaction and government actions, while [3] reviewed the basic reproduction number (R0), one of the most important indicators, of COVID-19. Other studies, such as [4] , divided the phase manually and regarded the parameters as time-varying piece-wise constants. Moreover, [5, 6] considered the parameters as functions of time and proposed methods to approximate the time-varying parameters. Additionally, [7, 8] have shown that neural networks (NNs) with proper loss functions represent a powerful tool for solving forward-inverse problems. Most previous studies considered the parameters constants because of the complexity of the model. However, it has been reported that constant parameters cannot model the actual data precisely.",
+            "cite_spans": [
+                {
+                    "start": 126,
+                    "end": 129,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 245,
+                    "end": 248,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 368,
+                    "end": 371,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 477,
+                    "end": 480,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 481,
+                    "end": 483,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 610,
+                    "end": 613,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 614,
+                    "end": 616,
+                    "text": "8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This study analyzes the spread of COVID-19 in South Korea, using the SIR model. We regard the modeling problem as a forward-inverse problem, and approximate each variable (S, I, R) and parameter (\u03b2, \u03b3) in the model using deep learning. Moreover, to overcome the shortcomings of previous studies, we consider the parameters as functions of time, which allows us to compute the infection rate, recovery rate, and the time-dependent reproduction number, R T D . This approach is more interpretable, since \u03b2(t), \u03b3(t), R T D can be obtained as functions of time, as well as the overall dynamics of the actual data. Additionally, unlike other models, such as the growth model, we do not assume any distribution type for the modeling. In the traditional growth model, one considers the growth rate as a piecewise constant function to compute the effective reproduction number. However, this assumption is not realistic in many cases, as the reproduction number could dramatically change. In contrast, the time-dependent nature of our model makes it an appropriate solution for such problems. Furthermore, we provide numerical simulation results that guarantee the convergence of our NN approach. Finally, our methodology is applicable to many areas dealing with differential equations, and easy to implement without a deep understanding of the model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The time-dependent reproduction number, R T D is a metric of a pathogen's transmissibility [9] . R T D is an important measure for assessing whether current efforts are effective or additional intervention is needed [10] . This study establishes a more accurate reproduction number prediction model by adopting a deep learning approach for the SIR model with time-dependent parameters to evaluate the effectiveness of intervention in curbing the spread of COVID-19 in South Korea.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 94,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 216,
+                    "end": 220,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The remainder of this paper is organized as follows. Section 2 provides information about the data and the data sources. Section 3 gives a precise definition of the SIR model. Section 4 explains the deep NN (DNN) approach. Section 5 presents the simulation results using DNNs. Finally, section 6 discusses the findings and summarizes the conclusions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We collect the data from Korea Centers for Disease Control & Prevention (KCDC). The data consist of the cumulative number of tested people (T ), confirmed cases (I, or I pos ), negative cases (I neg ), and recovered or deceased cases (R) from February 7, 2020 to March 30, 2020 for South Korea and from March 5, 2020 to March 30, 2020 for the administrative provinces of Seoul, Busan, and Daegu.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "2 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063412 doi: medRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "We first introduce the SIR model. For a fixed time t \u2265 0, let S(t), I(t), R(t), and N (t) denote the numbers of susceptible, infected, and recovered (or removed) populations, and the sum of these three variables, respectively. Thus, we can write the SIR model as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": "where \u03b2 > 0 and 0 < \u03b3 < 1 denote the infection and the recovery rates, respectively. In general, we set the initial condition S(0), I(0), and R(0) as the first observation data, and for the analysis, we assume that the total number of population N is time-invariant, that is,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": ". In this study, We applied a scaled SIR model (divided by N for each variable S, I, and R) and time-varying 3 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063412 doi: medRxiv preprint parameters (\u03b2, \u03b3), with the final SIR model being as follows:",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063412",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": "For the observation data, we set I obs = ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SIR Model"
+        },
+        {
+            "text": "Deep learning is a non-linear function approximation method that uses DNNs. A DNN consists of one input layer, one output layer, and several hidden layers, with the adjacent layers connected by an affine transformation followed by a non-linear activation function. NNs were first introduced in [11] . Then, Cybenko [12] proved that an NN with a single hidden layer can approximate any continuous function under some conditions on the activation function. Additionally, Hornik-Stinchcombe-White [13] showed that a multilayer feedforward NN with a sigmoid activation function can approximate any measurable function. Later, Li [14] proved that an NN with one hidden layer can simultaneously approximate any measurable function and its partial derivatives on a compact set. Specifically, let z l i be the i th neuron in the l th layer. Then,",
+            "cite_spans": [
+                {
+                    "start": 294,
+                    "end": 298,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 315,
+                    "end": 319,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 494,
+                    "end": 498,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 625,
+                    "end": 629,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "where \u2022 m l : the number of neurons in l th layer",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "\u2022 \u03c3 l the activation function in l th layer 4 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063412 doi: medRxiv preprint \u2022 z l\u22121 k : k th neuron in (l \u2212 1) th layer",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "\u2022 w l+1 ji : the weights between i th neuron in l th layer and j th neuron in (l + 1) th layer \u2022 b l+1 j : the bias of j th neuron in l th layer",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "We constructed five NN models for S, I, R, \u03b2, and \u03b3, denoted by S net , I net , R net , \u03b2 net , and \u03b3 net , respectively. The concrete model structures are presented in Figure 6 . We applied similar training methods as introduced in [8] and [7] . ",
+            "cite_spans": [
+                {
+                    "start": 241,
+                    "end": 244,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 169,
+                    "end": 177,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Deep Learning: DNNs"
+        },
+        {
+            "text": "We conducted simulations for three provinces (Seoul, Busan, and Daegu) and South Korea, using the total population numbers N as shown in Table 1 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 144,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Simulation Result"
+        },
+        {
+            "text": "Busan Daegu Total N 9,776,000 3,429,000 2,465,000 51,470,000 5 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Seoul"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Seoul"
+        },
+        {
+            "text": "In this section, we provide the simulation results for five NN models: S net , I net , R net , \u03b2 net , and \u03b3 net and the corresponding relative errors |Observed value\u2212Network value| |Observed value| \u00d7 100(%) for S, I, R. For a more accurate evaluation of the model parameters, we also provide numerical solutions (Runge-Kutta of order 4, (RK4)) using the estimated parameters. For the RK4 method, we set h = 10 \u22123 (step size), with 26 observations used for Seoul, Busan, and Daegu, and 77 observations for South Korea. We remark that the observations are available on the KCDC homepage, http://www.cdc.go.kr/. In Figure 7 -10, Red lines denote S net , I net , R net values for each graph, Green lines denote the observations, and Blue lines denote the RK4 results with the parameter NN \u03b2 net , \u03b3 net . In Figure 11 -14, we provide the estimated time-dependent parameters \u03b2, and \u03b3 on the left, and the time-dependent reproduction number R T D on the right. Next, we summarize the overall trend by analyzing R T D (t). First, at t = 0 in South Korea, R T D = 1.0610 implies the spread of COVID-19, see Figure 11 . Starting from 18, February, R T D (t) increased dramatically (t = 11), and reached its peak Figure 12 , right). This indicates that no effective control of the spread of COVID-19 has been achieved. The average values of \u03b2 and \u03b3 were 0.0705, 0.0140, respectively. In the third case, Busan, on 5, March (t = 0), at the beginning of the observation, \u03b2 was 0.1300 ( Figure 9 , left bottom,) while R T D was 156.7965. This is because R(t), the recovery group, did not change in the initial stage, whereas \u03b3 was estimated to be 0.0008 due to the constraint \u03b3 > 0. On 8, March (t = 3), R T D was 0.0908 because of the change in R(t), reaching 0.5401 on 30, March (t = 25). We also provide two R T D plots by dividing the observation period into two periods in Figure 13 . The average values of \u03b2 and \u03b3 were 0.0253, 0.0670, respectively. In the final case, Daegu, similar to Busan, R T D was 521.9075 at the beginning of the observation on 5, March (t = 0). After 11, March (t = 6), the recovery rate \u03b3 began to increase faster than the infection rate \u03b2, with the R T D having the lowest value 0.1224 on 24, March (t = 19). After 24, March, R T D increased reaching 0.2409 on 30, March (t = 25), see Figure 14 . The average values of \u03b2 and \u03b3 were 0.0191, 0.0387, respectively. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 613,
+                    "end": 621,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 805,
+                    "end": 814,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 1100,
+                    "end": 1109,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 1204,
+                    "end": 1213,
+                    "text": "Figure 12",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1474,
+                    "end": 1482,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1865,
+                    "end": 1874,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF11"
+                },
+                {
+                    "start": 2304,
+                    "end": 2313,
+                    "text": "Figure 14",
+                    "ref_id": "FIGREF12"
+                }
+            ],
+            "section": "Seoul"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063412 doi: medRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "7"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063412 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063412",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "7"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "8"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063412 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063412",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "8"
+        },
+        {
+            "text": "Since R T D is the ratio of \u03b2(t), and \u03b3(t), R T D can have an unusually large value when \u03b3 is small compared to \u03b2. This situation is observed in the early stage of COVID-19 spread in South Korea (excluding Seoul and Busan,) such as the Shincheonji cult cases. However, following the computation of the basic reproduction number in [15] , we obtained the effective reproduction number R t in the usual range. In the SIR model, we approximated S \u223c 1, since S was large enough compared to I. Then, the differential equation 3.5 was 9 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 331,
+                    "end": 335,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063412 doi: medRxiv preprint approximated by",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063412",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "with the solution of this approximated equation being I(t) = I(0)e t 0 (\u03b2(s)\u2212\u03b3(s))ds , as in the growth model. Therefore, we can consider 1 t t 0 (\u03b2(s) \u2212 \u03b3(s))ds the growth rate, and compute the effective reproduction number by R t = 1 + ( 1 t t 0 (\u03b2(s) \u2212 \u03b3(s))ds)T [16, 17] , or R t = exp(( 1 t t 0 (\u03b2(s) \u2212 \u03b3(s))ds)T ) where T is the serial interval, as in Figure 15 . We used T = 4 following [18] . Using our time-dependent parameters \u03b2 net , and \u03b3 net , we found that traditional numerical algorithms, such as the Runge-Kutta methods, can successfully approximate the SIR model while fitting the COVID-19 data. Moreover, we find that the parameters \u03b2 net , and \u03b3 net are good enough to fit the model and the data, provided the convergence of the RK4 method to the solution.",
+            "cite_spans": [
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 271,
+                    "end": 274,
+                    "text": "17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 394,
+                    "end": 398,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 358,
+                    "end": 367,
+                    "text": "Figure 15",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "At present, 100 years after the Spanish flu, substantial amounts of information are exchanged in real time, with analysis results coming out in real time from all over the world, making the world a gigantic clinical trial. Therefore, it is important for governments to analyze the collected data more rigorously to obtain insights from them, and create sophisticated models that reflect real-time data to guide their policies and curb the COVID-19 spread.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "Unlike previous studies, this study was able to model the propagation patterns of COVID-19 more precisely.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063412 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "13.20063412 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Wikipedia contributors. Spanish flu -Wikipedia, the free encyclopedia",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A conceptual model for the coronavirus disease 2019 (covid-19) outbreak in wuhan, china with individual reaction and governmental action",
+            "authors": [
+                {
+                    "first": "Qianying",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shi",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daozhou",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yijun",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shu",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Salihu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maggie",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yongli",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weiming",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International journal of infectious diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The reproductive number of covid-19 is higher compared to sars coronavirus",
+            "authors": [
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Albert",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annelies",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joacim",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of travel medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Phase-adjusted estimation of the number of coronavirus disease 2019 cases in wuhan, china",
+            "authors": [
+                {
+                    "first": "Huwen",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zezhou",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yinqiao",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruijie",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chen",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoyue",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shuxian",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lhakpa",
+                    "middle": [],
+                    "last": "Tsamlag",
+                    "suffix": ""
+                },
+                {
+                    "first": "Meili",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jinyan",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell Discovery",
+            "volume": "6",
+            "issn": "1",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "A time-dependent sir model for covid-19",
+            "authors": [
+                {
+                    "first": "Yi-Cheng",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ping-En",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cheng-Shang",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.00122"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Estimation of the time-varying reproduction number of covid-19 outbreak in china",
+            "authors": [
+                {
+                    "first": "Chong",
+                    "middle": [],
+                    "last": "You",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuhao",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenjie",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiarui",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiushi",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Feng",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cheng",
+                    "middle": [],
+                    "last": "Heng Pang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuan",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhengchao",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiao-Hua",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations",
+            "authors": [
+                {
+                    "first": "Maziar",
+                    "middle": [],
+                    "last": "Raissi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paris",
+                    "middle": [],
+                    "last": "Perdikaris",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Karniadakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Computational Physics",
+            "volume": "378",
+            "issn": "",
+            "pages": "686--707",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Deep neural network approach to forward-inverse problems",
+            "authors": [
+                {
+                    "first": "Hyeontae",
+                    "middle": [],
+                    "last": "Jo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hwijae",
+                    "middle": [],
+                    "last": "Son",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ju",
+                    "middle": [],
+                    "last": "Hyung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eunheui",
+                    "middle": [],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1907.12925"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Estimation of time-dependent reproduction numbers for porcine reproductive and respiratory syndrome across different regions and production systems of the us",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Andr\u00e9ia",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Arruda",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Moh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kimberly",
+                    "middle": [],
+                    "last": "Alkhamis",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vanderwaal",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Robert",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andres M",
+                    "middle": [],
+                    "last": "Morrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Perez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Frontiers in veterinary science",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "The effective reproduction number as a prelude to statistical estimation of time-dependent epidemic trends",
+            "authors": [
+                {
+                    "first": "Hiroshi",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gerardo",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Mathematical and statistical estimation approaches in epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "103--121",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A logical calculus of the ideas immanent in nervous activity",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Warren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Walter",
+                    "middle": [],
+                    "last": "Mcculloch",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pitts",
+                    "suffix": ""
+                }
+            ],
+            "year": 1943,
+            "venue": "The bulletin of mathematical biophysics",
+            "volume": "5",
+            "issn": "4",
+            "pages": "115--133",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Approximation by superpositions of a sigmoidal function",
+            "authors": [
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Cybenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Mathematics of control, signals and systems",
+            "volume": "2",
+            "issn": "4",
+            "pages": "303--314",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Multilayer feedforward networks are universal approximators",
+            "authors": [
+                {
+                    "first": "Kurt",
+                    "middle": [],
+                    "last": "Hornik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maxwell",
+                    "middle": [],
+                    "last": "Stinchcombe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Halbert",
+                    "middle": [],
+                    "last": "White",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Neural networks",
+            "volume": "2",
+            "issn": "5",
+            "pages": "359--366",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Simultaneous approximations of multivariate functions and their derivatives by neural networks with one hidden layer",
+            "authors": [
+                {
+                    "first": "Xin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Neurocomputing",
+            "volume": "12",
+            "issn": "4",
+            "pages": "327--343",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "How generation intervals shape the relationship between growth rates and reproductive numbers",
+            "authors": [
+                {
+                    "first": "Jacco",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marc",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the Royal Society B: Biological Sciences",
+            "volume": "274",
+            "issn": "",
+            "pages": "599--604",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Infectious diseases of humans: dynamics and control",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Roy M Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert M",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "May",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "The epidemic behavior of the hepatitis c virus",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Oliver",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pybus",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sunetra",
+                    "middle": [],
+                    "last": "Michael A Charleston",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rambaut",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Edward",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paul H",
+                    "middle": [],
+                    "last": "Holmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Harvey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Science",
+            "volume": "292",
+            "issn": "5525",
+            "pages": "2323--2325",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Basic and effective reproduction numbers of covid-19 cases in south korea excluding sincheonji cases. medRxiv",
+            "authors": [
+                {
+                    "first": "Jeongeun",
+                    "middle": [],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hyunjung",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sung-Han",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiwon",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Namkug",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Left: Cumulative number of infected cases and recovered cases, Right: Cumulative number of negative cases and tested people Daily number of confirmed cases and cumulative number of recovered cases for Seoul, Busan, and Daegu",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Graphical description of the SIR models",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Pictorial description of the DNN architecture. The above network has three hidden layers, and each hidden layer consists of four neurons (nodes). Pairs (x, y) in nodes mean y th neuron in x th layer.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Forward-Inverse SIR model networks. Each network has one input node (time t), one output node (value), four hidden layers, and 256 nodes in each hidden layer. The hyperbolic tangent tanh(x) is used in the activation functions except for the last layers. The Softplus and Sigmoid functions are used in the last hidden layer to meet the constraints S, I, R, \u03b2 > 0, and 0 < \u03b3 < 1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "(R T D (t) = 124.7610) on 27, February (t = 20.3). After 13 March (t = 34.6), R T D fell below 1 again, signaling a decreasing trend in the spread of COVID-19 from an epidemiological viewpoint. However, it started increasing again from 18, March (t = 39.6), pointing out that the containment of COVID-19 cannot be realized without achieving herd immunity or developing therapeutics. From 27, February to 30, March, the average values of \u03b2 and \u03b3 were 0.1656, 0.0253, respectively. In the second case, Seoul, until 9, March (t = 4), \u03b2 reached 0.2306, while gamma reached only 0.0192, resulting in a maximum value of 12.0405 for R T D in this period. After 16 March (t = 11), R T D decreased to 3.1244 but increased again reaching 3.8255 on 30 March (t = 25, see",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "SIR-model target values and relative errors. From 7, February 2020 (t = 0) to 30, March 2020 (t = 61) in South Korea.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "SIR-model target values and relative errors. From 5, March 2020 (t = 0) to 30, March 2020 (t = 25), in Seoul.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "SIR-model target values and relative errors. From 5, March 2020 (t = 0) to 30 March 2020 (t = 25), in Busan.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "SIR-model target values and relative errors. From 5, March 2020 (t = 0) to 30, March 2020 (t = 25), in Daegu.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "SIR-model Parameter network values and R T D . From 7, February 2020 (t = 0) to 30, March 2020 (t = 61) in South Korea. We divided the range of R T D into 3 parts, right top (0 \u2264 t \u2264 9.0), left bottom (9.0 \u2264 t \u2264 35.6), and right bottom (35.6 \u2264 t.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "SIR-model Parameter network values and R T D . From 5, March 2020 (t = 0) to 30, March 2020 (t = 25), in Seoul.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "SIR-model Parameter network values and R T D . From 5 March 2020 (t = 0) to 30 March 2020 (t = 25), in Busan. We divide the range of R T D into 2 parts: left bottom (0 \u2264 t \u2264 3.0) and right bottom (3.0 \u2264 t).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "SIR-model Parameter network values and R T D . From 5, March 2020 (t = 0) to 30, March 2020 (t = 25), in Daegu. We divide the range of R T D into 2 parts: left bottom (0 \u2264 t \u2264 5.0) and right bottom (5.0 \u2264 t).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "The effective reproduction number.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Total population numbers for each province and South Korea.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

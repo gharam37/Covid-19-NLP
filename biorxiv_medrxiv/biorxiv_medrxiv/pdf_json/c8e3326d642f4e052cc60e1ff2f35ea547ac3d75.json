@@ -1,0 +1,1298 @@
+{
+    "paper_id": "c8e3326d642f4e052cc60e1ff2f35ea547ac3d75",
+    "metadata": {
+        "title": "Accurate Prediction of COVID-19 using Chest X-Ray Images through Deep Feature Learning model with SMOTE and Machine Learning Classifiers",
+        "authors": [
+            {
+                "first": "Rahul",
+                "middle": [],
+                "last": "Kumar",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ridhi",
+                "middle": [],
+                "last": "Arora",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": "rarora@cs.iitr.ac.in"
+            },
+            {
+                "first": "Vipul",
+                "middle": [],
+                "last": "Bansal",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Vinodh",
+                "middle": [
+                    "J"
+                ],
+                "last": "Sahayasheela",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kyoto University of Advanced Study",
+                    "location": {
+                        "settlement": "Kyoto",
+                        "country": "JAPAN"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Himanshu",
+                "middle": [],
+                "last": "Buckchash",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Javed",
+                "middle": [],
+                "last": "Imran",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Narayanan",
+                "middle": [],
+                "last": "Narayanan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of CyberJaya",
+                    "location": {
+                        "country": "MALAYSIA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ganesh",
+                "middle": [
+                    "N"
+                ],
+                "last": "Pandian",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kyoto University of Advanced Study",
+                    "location": {
+                        "settlement": "Kyoto",
+                        "country": "JAPAN"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Balasubramanian",
+                "middle": [],
+                "last": "Raman",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Roorkee",
+                    "location": {
+                        "country": "INDIA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "According to the World Health Organization (WHO), the coronavirus (COVID-19) pandemic is putting even the best healthcare systems across the world under tremendous pressure. The early detection of this type of virus will help in relieving the pressure of the healthcare systems. Chest X-rays has been playing a crucial role in the diagnosis of diseases like Pneumonia. As COVID-19 is a type of influenza, it is possible to diagnose using this imaging technique. With rapid development in the area of Machine Learning (ML) and Deep learning, there had been intelligent systems to classify between Pneumonia and Normal patients. This paper proposes the machine learning-based classification of the extracted deep feature using ResNet152 with COVID-19 and Pneumonia patients on chest X-ray images. SMOTE is used for balancing the imbalanced data points of COVID-19 and Normal patients. This non-invasive and early prediction of novel coronavirus (COVID-19) by analyzing chest X-rays can further be used to predict the spread of the virus in asymptomatic patients. The model is achieving an accuracy of 0.973 on Random Forest and 0.977 using XGBoost predictive classifiers. The establishment of such an approach will be useful to predict the outbreak early, which in turn can aid to control it effectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": ", commonly referred to as coronavirus disease-19 has emerged as a fatal SARS infection 1 over the past few months. With the place of origin being identified as Wuhan, China, the disease now stands as being declared 'pandemic' by the World Health Organization (WHO) [2] [3] [4] . The symptoms of the disease resemble a typical viral, respiratory infection with an incubation time of214days. However, as this disease progresses, the affected experiences shortness of breath, nausea culminating in pneumonia and multiple organ failure 3, 5 .",
+            "cite_spans": [
+                {
+                    "start": 265,
+                    "end": 268,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 269,
+                    "end": 272,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 532,
+                    "end": 534,
+                    "text": "3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 535,
+                    "end": 536,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Given the deadly and debilitating condition that it is, the entire world now is at high alert with thousands of cases being identified each day. Going by WHO statistics, as of now, there have been about 1.84 million identified cases with over 1, 13, 329 deaths 6 . Country-wise (top 10 India) statistical COVID-19 cases as of April 12, 2020, presented in Table 1 7 . According to WHO 8 , geographical statistics of the confirmed COVID-19 cases have registered as of April 12, 2020 as depicted in the Figure 1 . International travel history and close contact with the infected have been identified as the causes of the worldwide spread of the disease. An enormous amount of effort is being put into developing vaccines and drugs to help treat the infection 9, 10 . Speaking of India, the country currently stands at 9, 205 confirmed cases and 331 deaths. There has been a 21-day complete lockdown in India as a measure to prevent further transmission, but whether India is coping up with the disease or not continues to be a big question. While these small numbers of confirmed and deceased cases may bring in a sigh of relief, they also challenge the state of medical testing and diagnosis in India 11 . Whether these numbers are low or they are low because of insufficient testing remains unanswered 12 .",
+            "cite_spans": [
+                {
+                    "start": 261,
+                    "end": 262,
+                    "text": "6",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 384,
+                    "end": 385,
+                    "text": "8",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 355,
+                    "end": 362,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 500,
+                    "end": 508,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "In these times of emergency, researchers and scientists have come a long way in helping the society by indulging in scientific methods of identifying the virus inside humans through the technology of machine learning (ML) and deep learning(DL) algorithms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In recently, several classical image processing and machine or deep learning methods are used to automatically classify the diseases with digitized chest X-ray images 13, 14 . Class decomposition of the coronavirus disease-2019 (COVID-19) in non-COVID and COVID viral infection with X-ray scans regarded as one of the critical subjects of matter for diagnosing this highly infectious disease [15] [16] [17] . For eg., One of the chest X-ray slides pictorially represented as COVID-19, Regular, and Pneumonia patient in Figure 4 .",
+            "cite_spans": [
+                {
+                    "start": 171,
+                    "end": 173,
+                    "text": "14",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 392,
+                    "end": 396,
+                    "text": "[15]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 397,
+                    "end": 401,
+                    "text": "[16]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 402,
+                    "end": 406,
+                    "text": "[17]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 519,
+                    "end": 527,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Fast COVID-19 recognition can help control disease transmission and will help to monitor the progression of infectious disease. According to Tao et al. 18 , it seems that Chest CT is more prone to COVID-19 diagnosis with respect to the original reverse-transcription polymerase chain reaction (RT-PCR) that has been collected from swab samples from patients and reported an accuracy of 97.3% to classify COVID-19 viral highly infectious diseases. Convolution neural network (CNN) is one of the most popular algorithms that have shown high precision in the ability to interpret the COVID-19 classification with medical images like X-rays or CT images. Wang et al. 19 has proposed a COVID-19 classification technique by implementing the CNNs based on Inception Net over the pathogen-confirmed COVID-19, with 453 computed tomography (CT) images and reported an accuracy of 82.9%. Songet al 20 has implemented a multi-class classification to recognise the diseases (COVID-19 viral infection, non-COVID and bacterial pneumonia) with CT images (88 patients with COVID-19 infected, 86 non-COVID patients and 100 patients with bacterial pneumonia)by using a modified version of pre-trained ResNet-50 net-work, named as DRE-Net and reported an accuracy of 86% for bacterial pneumonia and viral pneumonia (COVID- 19) classification.",
+            "cite_spans": [
+                {
+                    "start": 152,
+                    "end": 154,
+                    "text": "18",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 663,
+                    "end": 665,
+                    "text": "19",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1303,
+                    "end": 1306,
+                    "text": "19)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In another study, Sethy et al. 21 used chest x-ray images to recognize COVID viral infection, firstly they have extracted deep features using CNN based on pre-trained ImageNETand at the last layer SVM were used in order to classify it. In addition, Wang et al. 16 presented multi-class classification, deep convolutional neural network architecture named as COVID-Net implemented over 16, 756 chest radiography images that have been scanned with 13,645 patient to classify the COVID-19 and non-COVID also with a safe and bacterial infected patient.",
+            "cite_spans": [
+                {
+                    "start": 31,
+                    "end": 33,
+                    "text": "21",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 261,
+                    "end": 263,
+                    "text": "16",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this section, the results for the proposed methodology is discussed. Table 2 depicts the results of the final classification metrics produced by the proposed methodology. As can be seen in the table, many potential classifiers are listed which have been utilized for the performance calculation of the classification task. It can be inferred that the metrics corresponding to the Random Forest (RF) classifier and the XGBoost (XGB) classifier outperformed from the rest indicating that they have a better understanding of the image features which were input to them.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 79,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "The corresponding performance metrics of RF and XGB in terms of Accuracy, Sensitivity, Specificity, F1-Score, and AUC are shown in Table 2 . It seems that XGBoost performed the best among all the classifiers with an accuracy of 97.7%, while Logistic Regression (LR), k-Nearest Neighbour (kNN),",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 131,
+                    "end": 138,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Study Population Characteristics:"
+        },
+        {
+            "text": "All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3/10"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity. Model Performance: Once the training of the model is performed, it becomes easy to further classify the features separately into 3 classes, namely, COVID-19, Pneumonia and Normal. In real-time, for example, if some random patient comes for screening, we can determine whether he/she has COVID or he/she is suffering from Pneumonia or Healthy using the proposed model by taking the chest X-ray and sending it to the proposed model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3/10"
+        },
+        {
+            "text": "To evaluate the efficiency of the proposed framework, confusion matrix is estimated, which gives a detailed understanding of the classification process in Figure 2 . The classification model's usefulness and productivity was measured using the traditional metrics of accuracy, precision, and recall. Precision is the calculation of the model's correct predictions all over all predictions. Corresponding graphs of the ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 155,
+                    "end": 163,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "3/10"
+        },
+        {
+            "text": "We instantiated our proposed methodology with two publicly available datasets: Chest X-Ray Images (Pneumonia) 1 Figure 4 . The number of the images used in the experiment from both the datasets are as depicted in Table 3 and Table 4 . Pre-processing of the Dataset It could be seen that all the acquired X-ray images are of variable shapes and sizes, which increases the difficulty in effective classification. In order to effectively perform classification tasks, image preprocessing is performed. There exist many automatic and semi-automatic techniques for detecting abnormality in the body of the patient, but the absence of reliable and precise techniques can cause ambiguities in the classification process. Keeping aforementioned challenges in the mind, ML based predictive classifiers are used for analyzing the chest X-ray images, which are further discussed in the following sections. X-ray images are taken with a low resolution which may have a variable height to width ratio. In order to facilitate training and testing of the deep networks, necessary pre-processing steps like image cropping and resizing is performed. In the proposed method, all input images are first converted to a standard size of 224 \u00d7 224 for a similar course of action in both the developed model.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 111,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 112,
+                    "end": 120,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 213,
+                    "end": 232,
+                    "text": "Table 3 and Table 4",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Concoction of Dataset"
+        },
+        {
+            "text": "The proposed framework for accurate prediction of COVID-19 using the chest X-ray images through deep feature learning model with SMOTE and machine learning classifiers consisted of the ResNet152 architecture for the training with later using the concerned features to classify the chest X-ray images using machine learning classifiers. The proposed framework is depicted in Figure 5 . A detailed description of the architecture is explained below.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 374,
+                    "end": 382,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Architecture"
+        },
+        {
+            "text": "\u2022 The X-ray images of COVID-19, Normal and Pneumonia infected patients were taken and resized into the size of 224x224.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Architecture"
+        },
+        {
+            "text": "\u2022 A ResNet152 22 model was trained for the classification of Pneumonia and Normal patients. ResNet is known to be a better deep learning architecture as it is relatively easy to optimize and can attain higher accuracy. Due to a large number of layers in the network architecture, it has high time complexity. This complexity can be reduced by utilizing a bottleneck design. Further, there is always a problem of vanishing gradient, which is resolved using the skip connections in the network. Finally, the last fully connected (FC) layer of the network is followed by a Logarithmic Softmax layer with Adam optimizer to optimize the neural network.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Architecture"
+        },
+        {
+            "text": "\u2022 After completion of the training process, the last three layers from the ResNet152 were replaced with a ReLU, an FC layer, and an output layer. Now with the tweaked network, the last FC layer gives 1024 as output. The input images are now passed through this modified network to obtain 1024 features for each image in the dataset.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Architecture"
+        },
+        {
+            "text": "\u2022 Now, in the dataset, the number of data points for one class is very less when compared to the other class corresponding to the COVID-19 patients. Therefore, to balance the imbalanced data points, we use synthetic minority oversampling technique (SMOTE) 23, 24 . This algorithm creates an equal number of samples for each class. The above method was incorporated to ensure the smooth working of many machine learning algorithms like Logistic Regression, Decision Tree, etc. which otherwise tends to be more biased towards a majority class. The algorithm mentioned above generates virtual data points between existing points of the minority class by using linear interpolation.",
+            "cite_spans": [
+                {
+                    "start": 256,
+                    "end": 259,
+                    "text": "23,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 260,
+                    "end": 262,
+                    "text": "24",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Architecture"
+        },
+        {
+            "text": "\u2022 After processing all the images and converting them into features and using SMOTE for intra-class variations, the next step involves fitting the dataset using different machine learning predictive classifiers. For this purpose, We have integrated Logistic Regression (LR) 25 , k-Nearest Neighbour (kNN) 26 , Decision Trees (DT) 27 , Random Forest (RF) 28 , Adaptive Boosting (AdaBoost) 29 , Naive Bayes (NB) 30 and XGBoost(XGB) 31 to classify the COVID-19, Normal, and Pneumonia (shown in the Table 2 ).",
+            "cite_spans": [
+                {
+                    "start": 274,
+                    "end": 276,
+                    "text": "25",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 305,
+                    "end": 307,
+                    "text": "26",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 330,
+                    "end": 332,
+                    "text": "27",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 354,
+                    "end": 356,
+                    "text": "28",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 388,
+                    "end": 390,
+                    "text": "29",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 410,
+                    "end": 412,
+                    "text": "30",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 430,
+                    "end": 432,
+                    "text": "31",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 495,
+                    "end": 502,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Architecture"
+        },
+        {
+            "text": "We have implemented the proposed classification system for COVID-19 diagnosis using Python 3.8 programming language with a processor of Intel R Core i5-8300H CPU @ 2.30GHz \u00d7 8 and RAM of 8 GB running on Windows 10 with NVIDIA Geforce GTX 1050 with 4GB Graphics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Setups"
+        },
+        {
+            "text": "To evaluate the efficacy of the model, the confusion matrix along with Area under Curve (AUC) 32 are estimated and gives an understanding of the proposed methodology and its potential for detailed classification. The classification model's usefulness and productivity were measured using the traditional metrics of accuracy, precision, and recall. Precision is the calculation of the model's correct predictions all over all predictions. The classification of COVID-19 patients and Normal or Pneumonia patients and between Normal patients and Pneumonia is termed as Accuracy, Sensitivity, Specificity, and F1-score are represented mathematically in terms of confusion matrix as given in Equations 1, 2, 3, and 4, respectively.",
+            "cite_spans": [
+                {
+                    "start": 94,
+                    "end": 96,
+                    "text": "32",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "Accuracy = T P + T N T P + FP + FN + T N (1) Sensitivity = T P T P + FN",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "(2)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "Speci f icity = T N T N + FP (3)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "where TP, TN, FP, and FN are True Positive, True Negative, False Positive, and False Negative, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "1993 C C Z weig",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation criteria:"
+        },
+        {
+            "text": "In this work, we have presented the use of ResNet152 and machine learning classifiers for the effective classification of COVID-19. The proposed methodology is trained on two publicly available datasets and has outperformed across all the classes. We also encompassed the SMOTE algorithm for balancing the intra-class variation among the datasets. With the SMOTE based features, machine learning algorithms are applied for final classification leading to the best result obtained by Random Forest with the Accuracy, Sensitivity, Specificity, F1-score and AUC of 0.973, 0.974, 0.986, 0.973, and 0.997 (for Random Forest) and 0.977, 0.977, 0.988, 0.977, and 0.998 (for XGBoost), respectively. Therefore, this approach of using X-ray images and computer-aided diagnosis can be used as a massive, faster and cost-effective way of screening. Also, it brings down the time for testing drastically. To make a clinically effective prediction of COVID-19, training with more massive datasets and testing in the field with a larger cohort can be immensely useful.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "World Health Organization; Naming the coronavirus disease (covid-19) and the virus that causes it",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Epidemiological and clinical characteristics of 99 cases of 2019 novel coronavirus pneumonia in wuhan, china: a descriptive study",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "507--513",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The continuing 2019-ncov epidemic threat of novel coronaviruses to global health-the latest 2019 novel coronavirus outbreak in wuhan, china",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "91",
+            "issn": "",
+            "pages": "264--266",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "World Health Organization; Director-General's opening remarks at the media briefing on COVID-19",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "World Health Organization",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Accessed on",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Q &amp; A On",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Coronaviruses",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "World Health Organization",
+            "authors": [],
+            "year": 2020,
+            "venue": "Coronavirus disease 2019 (COVID-19): situation report",
+            "volume": "72",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "COVID-19 CORONAVIRUS PANDEMIC. Accessed on",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "World Health Organization; Coronavirus disease 2019 (COVID-19) situation report -83. Accessed on",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "World Health Organization; Coronavirus disease (COVID-19) advice for the public",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Novel Coronavirus (2019-nCoV)",
+            "authors": [],
+            "year": 2019,
+            "venue": "Centers for Disease Control and Prevention",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "World Health Organization",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Accessed on",
+            "authors": [
+                {
+                    "first": "Coronavirus",
+                    "middle": [],
+                    "last": "Disease",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Chest x-rays image classification in medical image analysis",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Rahmat",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ismail",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Aliman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Applied Medical Informatics",
+            "volume": "40",
+            "issn": "",
+            "pages": "63--73",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Comparison of deep learning approaches for multi-label chest x-ray classification",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Baltruschat",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nickisch",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Grass",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Knopp",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Saalbach",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Scientific Reports",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Covid-resnet: A deep learning framework for screening of covid19 from radiographs",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Farooq",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hafeez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.14395"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Covid-net: A tailored deep convolutional neural network design for detection of covid-19 cases from chest radiography images",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.09871"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Artificial intelligence distinguishes covid-19 from community acquired pneumonia on chest ct",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Correlation of chest ct and rt-pcr testing in coronavirus disease 2019 (covid-19) in china: a report of 1014 cases",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "A deep learning algorithm using ct images to screen for corona virus disease (covid-19)",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Deep learning enables accurate diagnosis of novel coronavirus (covid-19) with ct images",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Detection of coronavirus disease (covid-19) based on deep features",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sethy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Behera",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "An empirical comparison and evaluation of minority oversampling techniques on a large number of imbalanced datasets",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kov\u00e1cs",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Applied Soft Computing",
+            "volume": "83",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Smote for learning from imbalanced data: progress and challenges, marking the 15-year anniversary",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Fern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Garcia",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Herrera",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Chawla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of artificial intelligence research",
+            "volume": "61",
+            "issn": "",
+            "pages": "863--905",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Applied logistic regression. john wiley & sons",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hosmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lemeshow",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "An introduction to kernel and nearest-neighbor non parametric regression",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Altman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "The American Statistician",
+            "volume": "46",
+            "issn": "",
+            "pages": "175--185",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Induction of decision trees",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Quinlan",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "Machine learning",
+            "volume": "1",
+            "issn": "",
+            "pages": "81--106",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Random forests",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Machine learning",
+            "volume": "45",
+            "issn": "",
+            "pages": "5--32",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Multi-class adaboost",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Rosset",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Statistics and its Interface",
+            "volume": "2",
+            "issn": "",
+            "pages": "349--360",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Naive (bayes) at forty: The independence assumption in information retrieval",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Lewis",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "European conference on machine learning",
+            "volume": "",
+            "issn": "",
+            "pages": "4--15",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Xgboost: A scalable tree boosting system",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Guestrin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining",
+            "volume": "",
+            "issn": "",
+            "pages": "785--794",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Receiver-operating characteristic (ROC) plots: a fundamental evaluation tool in clinical medicine",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Zweig",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Campbell",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Clin. chem",
+            "volume": "39",
+            "issn": "",
+            "pages": "561--577",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Countries, territories or areas with reported confirmed cases of COVID-19 as on April 12, 2020 8 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Confusion matrix of of the top two accuracy of the model obtained by respective classifiers (a) RF (b) XGB with respect to COVID-19, Normal , and Pneumonia patient chest x-ray images.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "ROC-AUC curve of the top two accuracy of the model obtained by respective classifiers (a) RF (b) XGB with respect to COVID-19, Normal , and Pneumonia patient chest x-ray images.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Examples of a) COVID-19 b) Normal , and c) Pneumonia, patient chest x-ray images.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The block diagram of the proposed model for an early diagnosis of COVID-19",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Country-wise (Top 10 & INDIA ) statistical COVID-19 cases as of April 12, 2020 7",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.13.20063461 doi: medRxiv preprint Decision Tree (DT), Adaboost and Naive Bayes (NB) has an accuracy of 96.6%, 94.7%, 93.1%, 97.3%, 92.1% and 88.9%, respectively.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Performance Metrics of the Respective Classifiers",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "DATASET 1: Number of images for each class in COVID-19 dataset",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "DATASET 2: Number of images for each class in Normal and Pneumonia patient dataset",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We acknowledge Consulate General of India, Osaka-Kobe for constant support and encouragement for this Bilateral India-Japan Artificial Intelligence (INJA-AI) module between the researchers of Indian Institute of Technology Roorkee (IITR), India and Kyoto University, Japan to better manage COVID-19 by non-invasive prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

@@ -1,0 +1,942 @@
+{
+    "paper_id": "390217dedaeec21be6b3818db8456eddda623500",
+    "metadata": {
+        "title": "Early prediction of mortality risk among severe COVID-19 patients using machine learning",
+        "authors": [
+            {
+                "first": "(",
+                "middle": [
+                    "Z L"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Y",
+                "middle": [
+                    "J"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "X",
+                "middle": [
+                    "M"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "W",
+                "middle": [
+                    "J"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "L",
+                "middle": [
+                    "J"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "X",
+                "middle": [
+                    "C"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Coronavirus disease 2019 caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) infection has been spreading globally. The number of deaths has increased with the increase in the number of infected patients. We aimed to develop a clinical model to predict the outcome of severe COVID-19 patients early.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Epidemiological, clinical, and first laboratory findings after admission of 183 severe COVID-19 patients (115 survivors and 68 nonsurvivors) from the Sino-French New City Branch of Tongji Hospital were used to develop the predictive models. Five machine learning approaches (logistic regression, partial least squares regression, elastic net, random forest, and bagged flexible discriminant analysis) were used to select the features and predict the patients' outcomes. The area under the receiver operating characteristic curve (AUROC) was applied to compare the models' performance. Sixty-four severe COVID-19 patients from the Optical Valley Branch of Tongji Hospital were used to externally validate the final predictive model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The baseline characteristics and laboratory tests were significantly different between the survivors and nonsurvivors. Four variables (age, high-sensitivity C-reactive protein level, lymphocyte count, and d-dimer level) were selected by all five models. Given the similar performance among the models, the logistic regression model was selected as the final predictive model because of its simplicity and interpretability. The AUROCs of the derivation and external validation sets were 0.895 and 0.881, respectively. The sensitivity and . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page4 / 24",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients specificity were 0.892 and 0.687 for the derivation set and 0.839 and 0.794 for the validation set, respectively, when using a probability of death of 50% as the cutoff. The individual risk score based on the four selected variables and the corresponding probability of death can serve as indexes to assess the mortality risk of COVID-19 patients. The predictive model is freely available at https://phenomics.fudan.edu.cn/risk_scores/.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Age, high-sensitivity C-reactive protein level, lymphocyte count, and d-dimer level of COVID-19 patients at admission are informative for the patients' outcomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) has emerged in December 2019 and has since spread to nearly 200 countries and territories and has infected more than 0.7 million people by the end of March 2020. 1 Approximately 36,000 people have died from coronavirus disease 2019 worldwide. 1 According to the WHO report, the crude fatality rate of COVID-19 varies from country to country. As of 31 March 2020, the highest fatality rate was observed in Italy (nearly 11%), followed by Spain (nearly 8%) and Iran (nearly 6%). 1 The fatality rate is also heterogeneous within a country. 2 In China, the highest rate was found in Wuhan (nearly 5%). [3] [4] [5] In most other provinces, the fatality rate was < 1%.",
+            "cite_spans": [
+                {
+                    "start": 542,
+                    "end": 543,
+                    "text": "1",
+                    "ref_id": null
+                },
+                {
+                    "start": 663,
+                    "end": 666,
+                    "text": "[3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 667,
+                    "end": 670,
+                    "text": "[4]",
+                    "ref_id": null
+                },
+                {
+                    "start": 671,
+                    "end": 674,
+                    "text": "[5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Epidemiological, clinical, and laboratory features are significantly different between survivors and nonsurvivors. 4, 5 For instance, the nonsurvivors are older than survivors.",
+            "cite_spans": [
+                {
+                    "start": 115,
+                    "end": 117,
+                    "text": "4,",
+                    "ref_id": null
+                },
+                {
+                    "start": 118,
+                    "end": 119,
+                    "text": "5",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Dyspnea, chest tightness, and disorder of consciousness are more common in deceased patients than in recovered patients. Concentrations of alanine aminotransferase, aspartate aminotransferase, creatinine, creatine kinase, lactate dehydrogenase, cardiac troponin I, Nterminal pro-brain natriuretic peptide, and d-dimer are markedly higher in nonsurvivors than in survivors. 4, 6, 7 Ascertaining the key factors that contribute to the patients' outcomes is critical for reducing mortality risk and fatality rate. However, these multilevel data may confuse the clinicians with regard to what features indeed impact the COVID-19 patients'",
+            "cite_spans": [
+                {
+                    "start": 373,
+                    "end": 375,
+                    "text": "4,",
+                    "ref_id": null
+                },
+                {
+                    "start": 376,
+                    "end": 378,
+                    "text": "6,",
+                    "ref_id": null
+                },
+                {
+                    "start": 379,
+                    "end": 380,
+                    "text": "7",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "outcomes. In the current study, we aimed to develop a clinical model to predict the mortality risk of severe COVID-19 patients based on epidemiological, clinical, and the first laboratory test data after admission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Page6 / 24"
+        },
+        {
+            "text": "In total, 256 severe laboratory-confirmed nonsurvivors) admitted to the Sino-French New City Branch of Tongji Hospital, Wuhan, between 28 January 2020 and 11 March 2020 were included. Tongji Hospital was urgently rebuilt and has been assigned by the Chinese government as a designated hospital for severely or critically ill patients with COVID-19. 4 We collected the epidemiological (e.g., age and sex), clinical (e.g., fever or not and computed tomography [CT] imaging features) and the first laboratory data after admission (e.g., the high-sensitivity C-reactive protein",
+            "cite_spans": [
+                {
+                    "start": 349,
+                    "end": 350,
+                    "text": "4",
+                    "ref_id": null
+                },
+                {
+                    "start": 458,
+                    "end": 462,
+                    "text": "[CT]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Study participants and covariate collection"
+        },
+        {
+            "text": "[hsCRP] level) from the patient's medical records ( Figure S1 ). For further details see Table   S1 . The values of biochemistry indexes tested more than three days after admission were excluded even if they were part of the first test. For values that were left or right truncated (e.g., d-dimer > 21 \u03bcg/mL), we used the values at the truncated point as the surrogates (e.g., using 21 \u03bcg/mL for those with d-dimer level > 21 \u03bcg/mL). As shown in Figure S2 , patients who were with >10% missing values, stayed in the hospital < 7 days, afflicted by a severe disease before admission (e.g., cancer, aplastic anemia, and uremia), were unconscious at admission, and were directly admitted to the intensive care unit (ICU) were excluded. Finally, 183 patients were included to construct the predictive models; among them, 115 recovered and were discharged, and 68 were died from COVID-19. This study was approved by the National Health Commission of China and Ethics Commission of Tongji Hospital (TJ-IRB20200402). Written informed consent was waived by the Ethics Commission of the designated hospital for emerging infectious diseases. 8",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 52,
+                    "end": 61,
+                    "text": "Figure S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 89,
+                    "end": 99,
+                    "text": "Table   S1",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 446,
+                    "end": 455,
+                    "text": "Figure S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Study participants and covariate collection"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Page7 / 24"
+        },
+        {
+            "text": "The development of the predictive model consisted of three main stages: 1) data preprocessing; 2) variable selection and model evaluation; and 3) external validation ( Figure   1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 168,
+                    "end": 178,
+                    "text": "Figure   1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Page7 / 24"
+        },
+        {
+            "text": "Covariates with >30% missing data were excluded. For pairs of highly correlated variables (correlation coefficient >0.9), we removed the variable with the higher missing rate. Variable with zero or near-zero variance were also excluded. A rule of thumb for detecting predictors with zero or near-zero variance is as follows: 1) the number of unique values divided by the sample size is small (set to 10% in our study); and 2) the ratio of the frequency of the most prevalent value to the frequency of the second most prevalent value is large (set to 20 here).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data preprocessing"
+        },
+        {
+            "text": "Non-normally distributed continuous variables were transformed using a Box-Cox transformation. Missing values were imputed using bagging trees. In total, 51 covariates were finally included.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data preprocessing"
+        },
+        {
+            "text": "Considering the potential linear and curvilinear relationships between the predictors and the outcome, we selected five machine learning models (logistic regression, partial least squares [PLS] regression, elastic net model, random forest, and bagged flexible discriminant analysis [FDA] ) to fit the data. Ten-fold cross validation and the areas under the receiver operating characteristic curves (AUROCs) were used to measure the models' performance. The selected tuning parameters and performance of the models based on the full data are shown in Table S2 . For logistic regression, we used stepwise backward to select the variables. The variable importance was assessed using the absolute value of the t-statistic. For PLS regression, the variable importance measure here was based on the weighted sums of the Page8 / 24",
+            "cite_spans": [
+                {
+                    "start": 188,
+                    "end": 193,
+                    "text": "[PLS]",
+                    "ref_id": null
+                },
+                {
+                    "start": 282,
+                    "end": 287,
+                    "text": "[FDA]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 550,
+                    "end": 558,
+                    "text": "Table S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Variable selection and model evaluation"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients absolute regression coefficients. The weights were a function of the reduction in the sums of squares across the number of PLS components and were computed separately for each outcome. Therefore, the contribution of a coefficient was weighted proportionally to the reduction in the sums of squares. For the elastic net model, the selected variables were those of coefficients that did not shrink to 0. For the random forest model, the prediction accuracy for the out-of-bag portion of the data was recorded for each tree. Then, the same procedure was performed after permuting each predictor variable. The difference between the two accuracies was then averaged across all the trees and normalized by the standard error. 9 For the bagged FDA model, a series of cutoffs were applied to the predictor data to predict the class. The AUROC, sensitivity, and specificity were computed for each cutoff. The trapezoidal rule was used to compute the AUROC, which was used as the measure of variable importance. 10 The top 20 most important variables selected by the five models are shown in Figure 2A -E. We chose the intersection set of these variables. Four variables were finally selected (age, hsCRP, lymphocyte count, and d-dimer). The five models were refitted using these four variables. The AUROC, sensitivity, and specificity, obtained from 10-fold cross validation were used to evaluate the models' performance.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1121,
+                    "end": 1130,
+                    "text": "Figure 2A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Variable selection and model evaluation"
+        },
+        {
+            "text": "In total, 64 severe laboratory-confirmed COVID-19 patients (33 survivors and 31 nonsurvivors) admitted to the Optical Valley Branch of Tongji Hospital, Wuhan, were included as the external validation set. We used the selected predictive model to predict the probability of death in these patients. The AUROC, sensitivity, and specificity were used to evaluate the model performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "External validation"
+        },
+        {
+            "text": "Cost curves of the predictive model . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "External validation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 Page9 / 24",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "External validation"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients Cost curve is a graphical technique for visualizing the performance (expected cost) of 2-class classifiers over a range of possible class distributions and cutoffs. Herein, we defined the cost of false negative was three times more than that of false positive. The cutoffs predicting the death were ranged from 0.1 to 0.9. The false negative rates and false positive rates were calculated by the confusion matrix of the predictive model using different cutoffs. We then visualized the curves between the normalized true positive rates and the normalized expected costs. 11 The normalized true positive rates can be calculated as:",
+            "cite_spans": [
+                {
+                    "start": 608,
+                    "end": 610,
+                    "text": "11",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "External validation"
+        },
+        {
+            "text": "and the normalized expected costs can be calculated as: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "External validation"
+        },
+        {
+            "text": "The covariates included in the predictive models are shown in Table 1 . In general, most characteristics were significantly different between the survivors and nonsurvivors. The nonsurvivors were more likely to be male and older than the survivors. The proportions of Page10 / 24",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 62,
+                    "end": 69,
+                    "text": "Table 1",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Demographics and baseline characteristics of survivors and nonsurvivors"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients basic conditions (e.g., diabetes and hypertension) were comparable between these two samples. For symptoms at disease onset, the nonsurvivors reported loss of appetite, dyspnea, and productive cough more often than the survivors. The laboratory test indexes were also significantly different between the deceased patients and those who recovered. For example, the white cell count was higher in the nonsurvivors than the survivors. Conversely, the lymphocyte count was nearly twice as high in the survivors than in the nonsurvivors. The nonsurvivors had more liver and kidney function injuries. Specifically, the concentrations of liver enzymes, urea, and creatinine were markedly higher in the nonsurvivors, whereas the albumin level and estimated glomerular filtration rate were lower in this sample. The levels of all the inflammatory factors were higher in the nonsurvivors than in the survivors. The circulating levels of hsCRP and d-dimer were more than 6-fold and nearly 3-fold higher in nonsurvivors than in survivors, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Demographics and baseline characteristics of survivors and nonsurvivors"
+        },
+        {
+            "text": "The process of model development is detailed in the Method section and in Figure 1 . The AUROC obtained from 10-fold cross validation was used to compare the performance of five selected predictive models ( Figure 2F ). Considering the minor differences between the AUROC of the logistic regression model (0.895) and that of the random forest (0.922) and",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 74,
+                    "end": 82,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 207,
+                    "end": 216,
+                    "text": "Figure 2F",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model development and External validation"
+        },
+        {
+            "text": "bagged FDA (0.899), we selected the logistic regression model as the final model because of its simplicity and high interpretability. The AUROCs of the logistic regression model based on age, hsCRP, lymphocyte count, and d-dimer, in combination and individually, are shown in Table S3 . The model performance significantly increased when using the four variables in combination ( Figure 3A ). The AUROC of the external validation set was 0.881, with a sensitivity of 0.839 and specificity of 0.794 for predicting death when using a probability of death of 50% as the cutoff ( Figure 3B ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 276,
+                    "end": 284,
+                    "text": "Table S3",
+                    "ref_id": null
+                },
+                {
+                    "start": 380,
+                    "end": 389,
+                    "text": "Figure 3A",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 576,
+                    "end": 585,
+                    "text": "Figure 3B",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Model development and External validation"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model development and External validation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20064329 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model development and External validation"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Page11 / 24"
+        },
+        {
+            "text": "As shown in Figure 4A , the death probability was curvilinearly associated with the normalized \u0732 \u0b3e",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 21,
+                    "text": "Figure 4A",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Cost curves of the predictive model"
+        },
+        {
+            "text": ". Figure 4B showed the cost curves with the cutoff ranged from 0.1 to 0.9.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 2,
+                    "end": 11,
+                    "text": "Figure 4B",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Cost curves of the predictive model"
+        },
+        {
+            "text": "When the death probability is <10% (i.e., normalized \u0732 \u0b3e <0.25), the lowest expected cost was observed using cutoff of 0.8. When the death probability increases to 25% (i.e., normalized \u0732 \u0b3e = 0.5), the lowest expected cost was observed with cutoff of 0.6. When the death probability reaches at nearly 50% (i.e., normalized \u0732 \u0b3e around at 0.75), the lowest expected cost was observed with cutoff of 0.2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cost curves of the predictive model"
+        },
+        {
+            "text": "The contributions of the selected variables were assessed using the logistic regression model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Development of risk scores and a web application"
+        },
+        {
+            "text": "The regression coefficients were calculated as the weight of each predictor. The risk score was therefore calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Development of risk scores and a web application"
+        },
+        {
+            "text": ", and \u07da denote the regression intercept, observed value and coefficients, respectively, of the i th predictor ( Figure   5A ). The probability of death can be calculated via",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 112,
+                    "end": 123,
+                    "text": "Figure   5A",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": ". Figure 5B shows that the risk scores in both the survivors and nonsurvivors are approximately normally distributed. A Sshaped correlation pattern between the risk scores and probability of death is shown in Figure   5C . The mortality risk exceeds 50% when the risk score is >0.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 2,
+                    "end": 11,
+                    "text": "Figure 5B",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 209,
+                    "end": 220,
+                    "text": "Figure   5C",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "To facilitate the application of our predictive model, we also developed an accompanying web tool (https://phenomics.fudan.edu.cn/risk_scores/). Readers can freely access this website and input the values of hsCRP, age, lymphocyte count, and d-dimer to predict the mortality risk and its 95% confidence interval of a COVID-19 patient.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page12 / 24",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients Discussion COVID-19 is currently a worldwide pandemic. [13] [14] [15] The number of laboratory-confirmed patients as well as the number of related deaths are continuously increasing. The fatality rate might further increase along with the increasing number of infected people, because even the most advanced healthcare systems are likely to be overwhelmed. 16, 17 The Chinese Centers for Disease Control and Prevention recently reported that out of more than 70,000 confirmed cases, most of them were classified as mild or moderate, and approximately 20% were classified as severe or critical. 18 Even if we assume that the fatality rate is 10% in severe and critically ill cases, 4 the number of COVID-19 induced deaths is considerable because of the enormous number of infected patients. Identifying the patients at high risk of death is critical for patient management and to reduce the fatality rate. In this clinical prediction modeling study, we took full advantage of the multifaceted data of COVID-19 patients at admission to predict their outcomes. Four variables (i.e., age, hsCRP, d-dimer, and lymphocyte count) were selected and used to fit a logistic regression model. The predictive performance of our model was acceptable in both the derivation set and the external validation set. We also developed a web tool to implement our predictive model. Clinicians can use this web tool to predict the mortality risk of COVID-19 patients early. For those patients with a relatively higher probability of death (e.g., >40%), more interventions could be adopted at an earlier stage by clinicians to reduce the mortality risk.",
+            "cite_spans": [
+                {
+                    "start": 93,
+                    "end": 97,
+                    "text": "[13]",
+                    "ref_id": null
+                },
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "[14]",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 107,
+                    "text": "[15]",
+                    "ref_id": null
+                },
+                {
+                    "start": 395,
+                    "end": 398,
+                    "text": "16,",
+                    "ref_id": null
+                },
+                {
+                    "start": 399,
+                    "end": 401,
+                    "text": "17",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "In a recent study, older age, d-dimer levels greater than 1 \u03bc g/mL, and a higher sequential organ failure assessment (SOFA) score at admission were reported to be associated with higher odds of in-hospital death. 3 The fatality rate was highly heterogeneous among patients of different ages. For instance, the overall COVID-19 case fatality rate in China was estimated as 0.32% in those aged <60 years old and substantially increased to 6.4% in those . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page13 / 24",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients aged \u2265 60 years old. 19 Among those aged 80 years old and older, this rate was as high as 13.4%. 19 Likewise, in Italy, the fatality rate increased from 0.3% among patients aged 30-39 years old to 20.2% among those aged \u2265 80 years old. 20 In 2019, approximately 23% of the Italian population was aged 65 years or older. This percentage may explain, in part, Italy's higher case-fatality rate compared with that of other countries. 20 In our study, age was selected as a key factor in all the predictive models. The age-dependent deterioration in immunological competence (e.g., B-cell and T-cell deficiencies), often referred to as \"immunosenescence\", and the excess production of type 2 cytokines could lead to a deficiency in the control of viral replication and more prolonged proinflammatory responses, potentially leading to a poor outcome. 21, 22 In this study, the deceased patients had persistent and more severe lymphopenia compared with recovered patients and the lymphocyte count was selected and incorporated into the predictive model. Defects in function of lymphocytes are age-dependent and are associated with inflammation levels. 23, 24 Additionally, hsCRP, the most commonly used inflammatory biomarker in the clinic, was selected for our predictive models. Patients with higher levels of hsCRP at admission were deemed to have higher levels of inflammation. In our study, we found that the hsCRP level was more than 6 times higher in the nonsurvivors than in the survivors. Although the levels of other inflammatory biomarkers, such as ferritin and the erythrocyte sedimentation rate, were also elevated in the nonsurvivors, they were not selected and incorporated in the predictive model. This omission might be explained by the higher missing rates of these covariates and their high correlation with hsCRP. Coagulation disorder, characterized by an elevated prothrombin time and d-dimer level, was also frequently observed among COVID-19 patients. 25, 26 In our study, the prothrombin time and d-dimer were significantly higher in the non-survivors than in the survivors. These higher values suggest an increased risk of . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 61,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 135,
+                    "end": 137,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 884,
+                    "end": 887,
+                    "text": "21,",
+                    "ref_id": null
+                },
+                {
+                    "start": 888,
+                    "end": 890,
+                    "text": "22",
+                    "ref_id": null
+                },
+                {
+                    "start": 1184,
+                    "end": 1187,
+                    "text": "23,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1188,
+                    "end": 1190,
+                    "text": "24",
+                    "ref_id": null
+                },
+                {
+                    "start": 2007,
+                    "end": 2010,
+                    "text": "25,",
+                    "ref_id": null
+                },
+                {
+                    "start": 2011,
+                    "end": 2013,
+                    "text": "26",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page14 / 24",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients disseminated intravascular coagulation, which was one of the frequently diagnosed complications among the later stage of the 25, 27 Our study has a number of strengths. First, to our knowledge, this is the first study for predicting the outcomes of severe COVID-19 patients based on comprehensive data. Second, to ensure the robustness of our predictive model, we enforced strict inclusion and exclusion criteria on the included participants and study data. Third, we used advanced modeling strategies to select features and to construct the predictive models. The final model is simple (it included only four variables) and highly interpretable (the model is a linear model, and the effects of the predictors are reflected by the regression coefficients). Moreover, we externally validated the final predictive model. Fourth, we developed an accompanying web tool to facilitate the application of our predictive model by clinicians. Our study also has limitations.",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 166,
+                    "text": "25,",
+                    "ref_id": null
+                },
+                {
+                    "start": 167,
+                    "end": 169,
+                    "text": "27",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "First, the predictive models were constructed based on a relatively small sample size; the interpretation of our findings might be limited. Second, due to the retrospective study design, not all the laboratory tests were performed in all the patients. Some of them might be deleted in the data preprocessing procedure and their roles might be underestimated in predicting patients' outcomes. Third, patients were sometimes transferred from other hospitals to the two branches of Tongji hospitals, although we excluded patients who did not meet the inclusion criteria. The values of the laboratory tests might be biased by prior antiviral treatment in these patients. Finally, the patients in the derivation set and the validation set were from Tongji Hospital, which is one of the hospitals with a high level of medical care in China. Some critically ill patients recovered here might die in other hospitals with suboptimal or typical levels of medical care. The cutoff for predicting death should be <50% (e.g., defining patients who have a >30% probability of death as high-risk patients) in these settings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page15 / 24",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients In summary, using available clinical data, we developed a robust machine learning model to predict the outcome of COVID-19 patients early. Our model and the accompanying web application are of importance for clinicians to identify patients at high risk of death and are therefore critical for the prevention and control of COVID-19. Competing interests: All authors have none competing interest to declare.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u202b\u0754\u202c"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20064329 doi: medRxiv preprint  2  1  .  O  p  a  l  S  M  ,  G  i  r  a  r  d  T  D  ,  E  l  y  E  W  .  T  h  e  i  m  m  u  n  o  p  a  t  h  o  g  e  n  e  s  i  s  o  f  s  e  p  s  i  s  i  n  e  l  d  e  r  l  y  p  a  t  i  e  n  t  s  .   C  l  i  n  i  c  a  l  i  n  f  e  c  t  i  o  u  s  d  i  s  e  a  s  e  s  :  a  n  o  f  f  i  c  i  a  l  p  u  b  l  i  c  a  t  i  o  n  o  f  t  h  e  I  n  f  e  c  t  i  o  u  s  D  i  s  e  a  s  e  s  S  o  c  i  e  t  y  o . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 135,
+                    "end": 597,
+                    "text": "preprint  2  1  .  O  p  a  l  S  M  ,  G  i  r  a  r  d  T  D  ,  E  l  y  E  W  .  T  h  e  i  m  m  u  n  o  p  a  t  h  o  g  e  n  e  s  i  s  o  f  s  e  p  s  i  s  i  n  e  l  d  e  r  l  y  p  a  t  i  e  n  t  s  .   C  l  i  n  i  c  a  l  i  n  f  e  c  t  i  o  u  s  d  i  s  e  a  s  e  s  :  a  n  o  f  f  i  c  i  a  l  p  u  b  l  i  c  a  t  i  o  n  o  f  t  h  e  I  n  f  e  c  t  i  o  u  s  D  i  s  e  a  s  e  s  S  o  c  i  e  t  y  o",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 Categorical variables were shown in frequency (%). Continuous variables following normal or approximately normal distribution were shown in mean \u00b1 standard deviation. Continuous variables not following normal distribution were shown in median (interquartile range).",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 Page23 / 24",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "Death prediction of COVID-19 patients terminal pro-brain natriuretic peptide; hsCRP, high-sensitivity C-reactive protein; CRE, creatinine; ALT, alanine aminotransferase; IL8, interleukin 8; LYM, lymphocyte count; IL6, . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contributors"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Contributors"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Death prediction of COVID-19 patients High sensitivity C reactive protein",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "ZL, TZ, XC, and CH conceived the study design. CH, QW, SL, XT, XL, and YS collected the data. ZL, YJ, XZ, KX, and OS performed the statistical analysis. ZL, CH, YJ, XZ, OS, KY, and XC wrote the manuscript. All authors provided critical revisions of the draft and approved the submitted draft. The corresponding author attests that all listed authors meet authorship criteria and that no others meeting the criteria have been omitted. XC is the guarantor. Funding This work was supported by the National Natural Science Foundation of China (grant number: 91846302, 81772170); the National Key Research and Development Program of China (grant numbers: 2017YFC0907000, 2017YFC0907500, 2019YFC1315804); Key Basic Research Grants from the Science and Technology Commission of Shanghai Municipality (grant number: 16JC1400500); and Shanghai Municipal Science and Technology Major Project (grant number: 2017SHZDZX01). Natural Science Foundation of Hubei (grant no. 2019CFB657).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Figure legends",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "The study flow chart. (Abbreviations: bagFDA, bagged flexible discriminant analysis; PLS, partial least squares; AUROC, area under the receiver operating characteristic curve) The top 20 important variables selected by five machine learning models (A-E) and the model performance based on the selected variables (F). (Abbreviations: NT-proBNP, N-",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The area under the receiver operating characteristic curve (AUROC) of the logistic regression model based on selected variables in the derivation set (A) and the external validation set (B).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The relationship between probability of death and the normalized probability (A) and the cost curves of the predictive models using different cutoffs (B).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "The formula to calculate the risk scores (A) and their distributions among survivors and nonsurvivors (B) and the corresponding probability of death (C).",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF4": {
+            "text": "The baseline characteristics and laboratory findings at admission included in the predictive models.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.the interval between date of first symptom and date of admission.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": ". https://doi.org/10.1101/2020.04.13.Death prediction of COVID-19 patients interleukin 6; WC, white cell count; eGFR, estimated glomerular filtration rate; ALP, alkaline phosphatase; RC, red cell count; TCH, total cholesterol; FIB, fibrinogen; PLT, platelet count; TB, total bilirubin; ALB, albumin; PT, prothrombin time; IL10, interleukin 10; IL2R, interleukin-2 receptor; FER, ferritin; LDH, lactate dehydrogenase; hscTnI, high-sensitivity cardiac troponin I; Mono, monocyte count; UA, uric acid; ESR, erythrocyte sedimentation rate; No.Com., number of basic conditions)",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": ". https://doi.org/10.1101/2020.04.13.Web App development. CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101 /2020 The performance of five classification models based on four selected variables (hsCRP, LYM, Age, and d-Dimer). FDA: Flexible discriminant analysis; PLS: Partial least squares.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

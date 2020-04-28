@@ -1,0 +1,926 @@
+{
+    "paper_id": "8e1b225c4338d0f10f610739c0a98a9f10f93526",
+    "metadata": {
+        "title": "Optimal Control applied to a SEIR model of 2019-nCoV with social distancing",
+        "authors": [
+            {
+                "first": "Abhishek",
+                "middle": [],
+                "last": "Mallela",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California Davis",
+                    "location": {
+                        "settlement": "Davis",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": "abhishek.mallela@gmail.com"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Does the implementation of social distancing measures have merit in controlling the spread of the novel coronavirus? In this study, we develop a mathematical model to explore the effects of social distancing on new disease infections. Mathematical analyses of our model indicate that successful eradication of the disease is strongly dependent on the chosen preventive measure. Numerical computations of the model solution demonstrate that the ability to flatten the curve becomes easier as social distancing is strictly enforced. Based on our model, we also formulate an optimal control problem and solve it using Pontryagin's Maximum Principle and an efficient numerical iterative method. Our numerical results of an optimal 2019-nCoV treatment protocol that yields a minimum disease burden from this disease indicates that social distancing is vitally important.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "models have explored a viable social distancing strategy using optimal control theory. In this study we develop an epidemiological model that assesses the value of social distancing strategies. Using our model, we also formulate an optimal control problem to identify the optimal treatment protocol that provides a minimum disease burden from the coronavirus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The paper is organized as follows: in Section 2, we formulate the SEIR model. In Section 3, we conduct mathematical analyses, including the formulation of the basic reproduction number and the stability analysis of the disease-free equilibrium. In Section 4, numerical computations of the model solution are performed to explore the effects of social distancing. In Section 5, we formulate an optimal control problem, provide a method of numerical computation, and discuss optimal control results. We summarize our findings with conclusion in Section 6.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "To address the key question of this study, we use the SEIR compartmental model framework, where S, E, I and R denote the susceptible, exposed, infected, and recovered populations respectively. A schematic diagram of the model is given in Fig. 1 . Upon introduction of the disease, individuals transition among these compartments. For the sake of simplicity, we assume that a recovered individual is no longer able to be infected. The incubation frequency of the virus is denoted by \u03b1 and the inverse of the average length of infection is given by \u03b3. The parameter \u03b2 is defined as the average rate of person-to-person contact times the infectivity (the probability per that an infected individual transmits the disease to a susceptible individual). We account for the effect of social distancing with the parameter \u03c3. Social distancing refers to the absence of large gatherings, avoidance of physical contact, and other efforts necessary to mitigate the spread of 2019-nCoV.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 238,
+                    "end": 244,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model Description"
+        },
+        {
+            "text": "Thus, we can write the model mathematically as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "where the total population is N (t) = S(t) + E(t) + I(t) + R(t).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "Using our model, we can compute the total number of new infections T N as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "where t f denotes the final time of the study period.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "The number of new infections is a major concern of 2019-nCoV epidemiology and treatment. Therefore, we take a simple approach and define the total disease burden for the fixed time interval, [0, t f ], as A 1 T N , where A 1 is a weighting coefficient.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "The variables in the model system (2.1) -(2.4) remain non-negative for all t \u2265 0 with nonnegative initial conditions, because dN dt = 0 implies that N is a non-negative constant (in order for the system to be biologically meaningful).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Analysis"
+        },
+        {
+            "text": "The basic reproduction number, R 0 , is defined as the effective number of secondary infections caused by a typical infected individual during his/her entire period of infectiousness, when he/she is introduced into a population consisting of susceptible individuals only. Here, we formulate R 0 using the next-generation matrix method [1, 9] . The model has a unique disease-free equilibrium (DFE): E 0 = (0, 0, 0, 0). For the next-generation method, we consider equations corresponding to the infectious compartments only (i.e. E and I). The non-negative matrix, F, corresponding to the new infections in the population, evaluated at the disease-free equilibrium E 0 , is given by:",
+            "cite_spans": [
+                {
+                    "start": 335,
+                    "end": 338,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 339,
+                    "end": 341,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "The nonsingular matrix, V, corresponding to the transfer of individuals in and out of compartments, is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "Then R 0 , which corresponds to the dominant eigenvalue of the matrix FV \u22121 , is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "Theorem 3.2.2. The DFE of (2.1) -(2.4) is globally asymptotically stable if R 0 < 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "Proof: Let I C denote the total number of infected individuals, i.e., I C = E + I. Then,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "where \u03b5 = (\u03c3\u03b2 \u2212 \u03b3). If R 0 < 1, then \u03b5 < 0. This implies that the solution curve I C (t) is bounded above by a solution that decays exponentially to zero if R 0 < 1. Therefore, if R 0 < 1 and (E, I) = (0, 0), then I C (t) decreases and eventually approaches zero as t \u2192 \u221e.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "Since E, I \u2265 0, both E and I approach zero in the limit as t \u2192 \u221e. This implies that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "approaches 0 as t \u2192 \u221e. Thus we have:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "Thus, we can conclude that lim t\u2192\u221e S(t) = 0. Hence, the disease-free equilibrium is globally asymptotically stable if R 0 < 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Reproduction Number"
+        },
+        {
+            "text": "We estimated the model parameters based on the literature survey [3, 5, 7] . The parameters used for our simulations are given in Table 1 . For our model predictions, we focus on the total new infections, T N . For the sake of demonstration, we compute the totals over a period of 200 days, i.e., t f = 200 days. Since we do not know the value for the weightage coefficient, for simplicity, we take A 1 = 1 for our model simulations.",
+            "cite_spans": [
+                {
+                    "start": 65,
+                    "end": 68,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 69,
+                    "end": 71,
+                    "text": "5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 72,
+                    "end": 74,
+                    "text": "7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 130,
+                    "end": 137,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Parameter Estimation"
+        },
+        {
+            "text": "In Fig. 2 , the trajectories of the exposed and infected subpopulations are shown as a function of time. By decreasing \u03c3 from 1 to 0.5, we can see the effect of flattening the curve as social distancing is increased. This is a natural consequence of the model because the effective contact rate is reduced (i.e. \u03c3\u03b2 is reduced). The base-case, in which the effective contact rate is unchanged (i.e. \u03c3 = 1), results in a peak population infection rate of 9% after just 44 days since the disease starts spreading. With \u03c3 = 0.75, the peak infection rate reduces to 6.3% after an additional 16 days, and \u03c3 = 0.5 results in an infection rate of only 2.6% nearly 46 days later. This shows that social distancing may play an important role, not only in reducing the prevalence of infection, but also in providing people more time to equip themselves with resources to combat the spread of the disease.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 9,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Effect of Social Distancing"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4"
+        },
+        {
+            "text": "In Fig. 3 , we see that for \u03c3 \u2208 [0, 0.3], there is a small number of new infections T N in the population compared to the number of infections for \u03c3 > 0.3. In this region, T N grows rapidly until the curve saturates (i.e. nearly the entire population is infected). Thus, the added value of enforcing social distancing for 100% of the population, corresponding to \u03c3 = 0, is insignificant when compared to the case \u03c3 = 0.3, where only 70% of the population obeys the protocol. Furthermore, there is only one new infection in the population when \u03c3 = 0.149, but nearly 90% of the population is infected when \u03c3 = 0.763. This behavior suggests that a recommendation for the value of \u03c3 would benefit from this analysis, by avoiding the extremes of the unit interval.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 9,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "4"
+        },
+        {
+            "text": "Thus, our numerical results suggest that there is a significant impact of social distancing on the outcome of a treatment program for this disease, thereby necessitating an optimal treatment protocol, which we discuss in the sections to follow.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4"
+        },
+        {
+            "text": "Our goal here is to find an optimal treatment strategy that will minimize the total disease burden, while minimizing the cost of implementing such a strategy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimal Control"
+        },
+        {
+            "text": "We introduce a time-dependent control \u03c3 = u(t), representing the effect of social distancing, in the model. This results in the following system:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "Note that for non-negative initial conditions and bounded Lebesgue-measurable controls, the state system admits non-negative bounded solutions [6] . The objective functional that we seek to minimize over a finite time horizon [0, t f ] is:",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "In (5.5), we assume the cost term is a quadratic function of the control [4, 6] . Here A 1 represents the balancing factor associated with the total number of new infections T N . The 5 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 76,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 77,
+                    "end": 79,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint balancing factor associated to the cost component u 2 is denoted by A 2 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "We consider the set of admissible (bounded) control functions given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "where t f denotes the final time of the study period and u is Lebesgue-measurable with upper bound u b . Thus, we seek an optimal control u * such that J(u * ) = min \u0393 J(u).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formulation"
+        },
+        {
+            "text": "The existence of the optimal control follows from standard results due to the structure of the state system and the uniform L \u221e bounds on the states and the controls [2] . To characterize the optimal control we use Pontryagin's Maximum Principle [8] , which allows us to utilize adjoint functions to transform the optimization problem into a problem of determining the pointwise minimum of the Hamiltonian, relative to u. The Hamiltonian is constructed from the functional (5.5), with the underlying state dynamics attached:",
+            "cite_spans": [
+                {
+                    "start": 166,
+                    "end": 169,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 246,
+                    "end": 249,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "where \u03bb 1 , \u03bb 2 , \u03bb 3 , \u03bb 4 are the adjoint variables associated to the states S, E, I, R.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "For our system of ODEs, we are able to use Pontryagin's Maximum Principle to obtain adjoint functions, which track the changes in our objective functional due to the state variables. The theorem below gives the ODE system and the boundary conditions for our adjoint functions and the corresponding characterization of an optimal control. The optimality system consists of our state and adjoint systems together with this control characterization, and we will solve this optimality system numerically to obtain the optimal control. The optimality system of equations results from taking the appropriate partial derivatives of (5.6) with respect to the associated state variable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "Theorem 5.2.1 There exists an optimal control u * and corresponding solution vector (S * , E * , I * , R * ) that minimizes J(u) over \u0393. Furthermore, there exist adjoint functions \u03bb 1 (t), \u03bb 2 (t), \u03bb 3 (t), \u03bb 4 (t) with transversality conditions",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "Also, the following characterization holds:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "Proof: Corollary 4.1 of [2] gives the existence of an optimal control due to the convexity of the integrand of (5.5) with respect to the control u, a priori boundedness of the state 6 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 24,
+                    "end": 27,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "solutions, and the Lipschitz property of the state system with respect to the state variables. Applying Pontryagin's Maximum Principle, we obtain the adjoint system",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "with zero final time conditions. To get the characterizations of the optimal control given by (5.7), we solve the equations on the interior of the control set \u2202H \u2202u = 0. Using the bounds on the control, we obtain the desired characterization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "The optimality system consists of the state system with the initial time conditions, the costate (adjoint) system with the terminal time conditions, and the control characterization. Due to a priori boundedness of the state and adjoint systems, we obtain the uniqueness of the optimal control for small final time t f . This small time condition is due to opposite time orientations of the state system and the adjoint system [4] .",
+            "cite_spans": [
+                {
+                    "start": 426,
+                    "end": 429,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "For the sake of completeness, we provide the adjoint functions here:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimality System"
+        },
+        {
+            "text": "We implement an iterative procedure to numerically solve the boundary value problem of the optimality system, consisting of eight ordinary differential equations comprising the state and adjoint equations, coupled with the control characterization. Numerical computation begins with an initial guess for the control and then uses a forward fourth-order Runge-Kutta scheme to solve the state equations over the time interval [0, t f ] partitioned into N subintervals. Using the resulting state values and the given final time values, the adjoint system is then solved backward in time (due to the transversality conditions), again using a fourth-order Runge-Kutta method. Then, the control is updated by using a convex combination of the previous control and the value from the characterization. This iterative process continues until convergence, which is set to occur when the relative error between all state variables, the adjoint functions, and the control function is less than a specified value \u03b4, i.e., when x (k) \u2212x (k\u22121)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "x (k)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "Step 2: While (\u03b4 x (k) \u2212 x (k) \u2212 x (k\u22121) < 0), perform Steps 3 to 5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "Step 3: Solve x forward in time (using a fourth-order Runge-Kutta scheme) according to its system of differential equations in the optimality system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "Step 4: Using the transversality condition \u03ba 4 = \u03ba(t f ) = 0 and the stored values for u, x, solve \u03ba backward in time (using a fourth-order Runge-Kutta scheme) according to its system of differential equations in the optimality system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "Step 5: Update u by entering the new x and \u03ba values into the characterization of the optimal control.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "To obtain meaningful optimal control profiles, reasonable estimation of the balancing factors A 1 and A 2 is important. To estimate these balancing factors, we first compute the median value of T N (\u2248 6, 816) from the region \u03c3 \u2208 [0, 1]. We discretized \u03c3 into 1, 001 values, with median value 0.5. In the balanced situation, we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "This implies A 2 /A 1 = 136.32. Hence we take A 1 = 1 and A 2 = 136.32.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method of Numerical Computations"
+        },
+        {
+            "text": "We performed all numerical computations in MATLAB R2019b [10]. The value of \u03b4 was set at 10 \u22123 for all computations. For the base-case (A 1 , A 2 ) = (1, 136.32), we obtain an optimal control u * that is identically zero for t \u2208 [0, t f ]. (Fig. 4) . From a mathematical point of view, this is perhaps not surprising since T N is linear in the control and hence the objective functional J(u) is a multiple of u. From a control standpoint, it is apparent that u * \u2261 0 corresponds to the enforcement of social distancing in the entire population for the duration of the study. Clearly, this measure may be considered extreme, and in some cases even logistically infeasible. However, it is a necessary step for the purpose of minimizing infection risk.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 240,
+                    "end": 248,
+                    "text": "(Fig. 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Numerical Results"
+        },
+        {
+            "text": "Recent months have shown that 2019-nCoV poses a dangerous risk to humans. In this study, we developed a SEIR model that incorporates social distancing as a preventive measure for disease spread. We conducted analyses of the model, including formulation of the basic reproduction number and stability of the disease-free equilibrium (defined as a state where the disease is eradicated). Our analyses show that social distancing play directly affects the basic reproduction number, and hence the stability of the disease-free equilibrium. Our model simulations demonstrate that the total disease burden from 2019-nCoV can be mitigated by flattening the curve with a carefully chosen value for the coefficient of social distancing. Hence, we also formulated an optimal control problem and identified an optimal preventive measure for the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "8 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint Our model has some limitations. In order to simplify the model, we have ignored the dynamics of age structure, disease mortality, and the presence of quarantined individuals. We assumed that all individuals in a given compartment are identically infectious, which might ignore potential effects caused due to population heterogeneity. Finally, further refinement of the objective functional is necessary in order to ensure a successful control protocol of 2019-nCoV.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint 12 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "On the Definition and the Computation of the Basic Reproduction Ratio R 0 in Models for Infectious Diseases in Heterogeneous Populations",
+            "authors": [
+                {
+                    "first": "Odo",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Johan",
+                    "middle": [],
+                    "last": "Andre",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Johan Aj",
+                    "middle": [],
+                    "last": "Metz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Journal of Mathematical Biology",
+            "volume": "28",
+            "issn": "4",
+            "pages": "365--382",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Deterministic and Stochastic Optimal Control",
+            "authors": [
+                {
+                    "first": "Wendell",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                },
+                {
+                    "first": "Raymond",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Rishel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The Incubation Period of Coronavirus Disease 2019 (COVID-19) from Publicly Reported Confirmed Cases: Estimation and Application",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stephen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyra",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qifang",
+                    "middle": [],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Forrest",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qulu",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hannah",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Meredith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nicholas",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Azman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Justin",
+                    "middle": [],
+                    "last": "Reich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lessler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Annals of Internal Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Optimal Control Applied to Biological Models",
+            "authors": [
+                {
+                    "first": "Suzanne",
+                    "middle": [],
+                    "last": "Lenhart",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Workman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "A Conceptual Model for the Coronavirus Disease 2019 (COVID-19) Outbreak in Wuhan, China with Individual Reaction and Governmental Action",
+            "authors": [
+                {
+                    "first": "Qianying",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shi",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daozhou",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yijun",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shu",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Salihu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maggie",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yongli",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weiming",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daihai",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "HIV-TB Co-Infection treatment: Modeling and Optimal Control Theory Perspectives",
+            "authors": [
+                {
+                    "first": "Abhishek",
+                    "middle": [],
+                    "last": "Mallela",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suzanne",
+                    "middle": [],
+                    "last": "Lenhart",
+                    "suffix": ""
+                },
+                {
+                    "first": "Naveen",
+                    "middle": [],
+                    "last": "Vaidya",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Computational and Applied Mathematics",
+            "volume": "307",
+            "issn": "",
+            "pages": "143--161",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Epidemic Analysis of COVID-19 in China by Dynamical Modeling. medRxiv",
+            "authors": [
+                {
+                    "first": "Liangrong",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wuyue",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dongyan",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Changjing",
+                    "middle": [],
+                    "last": "Zhuge",
+                    "suffix": ""
+                },
+                {
+                    "first": "Liu",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "The Mathematical Theory of Optimal Processes",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ls Pontryagin",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Boltyanskij",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Rv Gamkrelidze",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mishchenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 1962,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Reproduction Numbers and Sub-Threshold Endemic Equilibria for Compartmental Models of Disease Transmission",
+            "authors": [
+                {
+                    "first": "Pauline",
+                    "middle": [],
+                    "last": "Van Den Driessche",
+                    "suffix": ""
+                },
+                {
+                    "first": "James",
+                    "middle": [],
+                    "last": "Watmough",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Mathematical Biosciences",
+            "volume": "180",
+            "issn": "1-2",
+            "pages": "29--48",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Schematic diagram of the model. The box compartments represent groups of individuals and the arrows represent disease transmission, disease incubation, and disease progression. S = susceptible, E = exposed, I = infected, 2019-nCoV SEIR Model with Social Distancing. The cases \u03c3 = 1.0, 0.75, 0.5 are shown respectively by the curves in blue, red, and black. Trajectories for the exposed population are solid curves and trajectories for the infected populations are dotted curves. The effect of social distancing on flattening the curve is seen clearly.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Total new infections as a function of social distancing. The curve exhibits interesting behavior for \u03c3 \u2208 [0.149, 0.763]. Effect of including social distancing in the optimal control. Optimal control solution profile u * for A 1 = A 2 = 1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ". https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint [10] MATLAB: R2019b. The Mathworks, Inc.10 . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.10.20061069 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Model parameters",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The author would like to thank his advisor, Alan Hastings, for constructive suggestions that helped improve the paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgement"
+        }
+    ]
+}

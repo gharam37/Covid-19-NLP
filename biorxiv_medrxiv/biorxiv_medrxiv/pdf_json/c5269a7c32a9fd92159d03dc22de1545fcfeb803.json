@@ -1,0 +1,1771 @@
+{
+    "paper_id": "c5269a7c32a9fd92159d03dc22de1545fcfeb803",
+    "metadata": {
+        "title": "Explaining the \"Bomb-Like\" Dynamics of COVID-19 with Modeling and the Implications for Policy",
+        "authors": [
+            {
+                "first": "Gary",
+                "middle": [],
+                "last": "Lin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Alexandra",
+                "middle": [
+                    "T"
+                ],
+                "last": "Strauss",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Maxwell",
+                "middle": [],
+                "last": "Pinz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Diego",
+                "middle": [
+                    "A"
+                ],
+                "last": "Martinez",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Katie",
+                "middle": [
+                    "K"
+                ],
+                "last": "Tseng",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Emily",
+                "middle": [],
+                "last": "Schueller",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Ma",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Oliver",
+                "middle": [],
+                "last": "Gatalo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Yupeng",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Simon",
+                "middle": [
+                    "A"
+                ],
+                "last": "Levin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Princeton University",
+                    "location": {
+                        "settlement": "Princeton",
+                        "region": "NJ"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Eili",
+                "middle": [
+                    "Y"
+                ],
+                "last": "Klein",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "settlement": "Baltimore",
+                        "region": "MD"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Using a Bayesian approach to epidemiological compartmental modeling, we demonstrate the \"bomb-like\" behavior of exponential growth in COVID-19 cases can be explained by transmission of asymptomatic and mild cases that are typically unreported at the beginning of pandemic events due to lower prevalence of testing. We studied the exponential phase of the pandemic in Italy, Spain, and South Korea, and found the R0 to be 2.56 (95% CrI, 2.41-2.71), 3.23 (95% CrI, 3.06-3.4), and 2.36 (95% CrI, 2.22-2.5) if we use Bayesian priors that assume a large portion of cases are not detected. Weaker priors regarding the detection rate resulted in R0 values of 9.22 (95% CrI, 9.01-9.43), 9.14 (95% CrI, 8.99-9.29), and 8.06 (95% CrI, 7.82-8.3) and assumes nearly 90% of infected patients are identified. Given the mounting evidence that potentially large fractions of the population are asymptomatic, the weaker priors that generate the high R0 values to fit the data required assumptions about the epidemiology of COVID-19 that do not fit with the biology, particularly regarding the timeframe that people remain infectious. Our results suggest that models of transmission assuming a relatively lower R0 value that do not consider a large number of asymptomatic cases can result in misunderstanding of the underlying dynamics, leading to poor policy decisions and outcomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The spread of COVID-19 has become a global pandemic, with confirmed cases of the disease growing exponentially on every inhabited continent [1] . Despite the rising numbers of cases and deaths, there are still important questions about the dynamics of the spread of the disease. Understanding the transmission of COVID-19 is essential to developing policy to contain the spread of the disease. The most important question in understanding the dynamics is how to explain the \"bomb-like\" dynamics of the disease; in most countries/states/cities, the number of confirmed cases remained low for weeks and then suddenly exploded, with the number of confirmed cases exponentially increasing in a matter of days ( Figure 1 ). These dynamics have been consistent across Europe and many states in the United States. They are also characteristic of the early infection period in China. The major question is whether these dynamics are due to missed cases of asymptomatic/mild disease or extremely rapid spread of the disease.",
+            "cite_spans": [
+                {
+                    "start": 140,
+                    "end": 143,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 707,
+                    "end": 715,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Understanding the percentage of the population that is actually infected is critical for developing policies. As many countries have instituted extended shutdowns to try to contain the disease, there remain significant questions about the effectiveness of these policies in the short-and longterm. The most prominent countries to have contained or slowed the spread of disease include China, Singapore, Hong Kong, Taiwan, and South Korea [2] [3] [4] [5] [6] . Through comprehensive strategies such as early detection, extensive testing, shelter-in-place orders, and isolation of infected individuals (among other measures), these countries have demonstrated that a combination of control measures can effectively slow transmission from affected individuals whether they are severely sick or asymptomatically infected. In contrast, isolated measures like broad travel restrictions or enforced quarantine have proven less effective, as the ability to achieve \"zero risk\" through these measures are virtually unattainable in most contexts. Moreover, the effectiveness of these strategies are even more questionable in light of research showing asymptomatic and mildly symptomatic carriers as important vectors for community transmission of COVID-19 [7] [8] [9] [10] .",
+            "cite_spans": [
+                {
+                    "start": 438,
+                    "end": 441,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 442,
+                    "end": 445,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 446,
+                    "end": 449,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 450,
+                    "end": 453,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 454,
+                    "end": 457,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1246,
+                    "end": 1249,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1250,
+                    "end": 1253,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1254,
+                    "end": 1257,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1258,
+                    "end": 1262,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this analysis, we aim to elucidate the parameters related to transmission, specifically the reproductive number. In epidemiology, the reproductive number of a disease describes the average number of additional infections each infected individual contributes within a totally susceptible population. At the outset of a disease, or time 0, the reproductive number is R0. If R0 is greater than 1 the disease will spread; if it is less than 1 the disease will die out. Estimates for the R0 of COVID-19 range widely. Initial estimates suggested it was quite high [11, 12] , but most models that have been highly cited in the literature have assumed an R0 in the 2-3 range [13] [14] [15] [16] . Capturing the magnitude of this value is critical to understanding how fast the disease will spread, how much of the population will be infected, and how quickly they will become infected.",
+            "cite_spans": [
+                {
+                    "start": 561,
+                    "end": 565,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 566,
+                    "end": 569,
+                    "text": "12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 670,
+                    "end": 674,
+                    "text": "[13]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 675,
+                    "end": 679,
+                    "text": "[14]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 680,
+                    "end": 684,
+                    "text": "[15]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 685,
+                    "end": 689,
+                    "text": "[16]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In simplest terms, the reproductive number of a disease is a function of its transmission rate and the duration of infectious period. Transmission rate is a function of both the number of social contacts an individual has and the probability that a contact results in a transmission. Therefore, either a greater number of contacts or a higher probability per contact, such as when someone is shedding more virus or the virus is more transmissible, can increase the transmission rate. Thus, governments have opted for widespread quarantines (thereby reducing contacts) to reduce the transmission rate of COVID-19 regardless of its infectiousness. On the other hand, a long infectious period in one individual can result in a high number of resultant infections. Recovery, death, and isolation of an individual all result in a halt in that individual's ability to transmit a virus (though all such options are not equally desirable). A high transmission rate and short infectiousness period or vice versa can result in the same R0, but the implications for disease spread are different; a longer infectiousness period would result in a much later peak relative to a high transmission rate (though the number of infected people at the peak is comparable). Understanding the transmission patterns of COVID-19 can help policymakers predict critical moments in its progression, such as peak infection and the point when herd immunity has been reached and restrictions can be lifted or whether to worry about a second peak later.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Emerging evidence from China [10] , Germany [17] , Taiwan [18] , and Iceland [19] suggests a larger fraction of the population may actually be asymptomatically or mildly infected than previously thought. Even the first report of genomic differences in the virus from Washington State in the United States suggested there may have been widespread community transmission as early as late January [20] , which presumably generated asymptomatic or mild enough cases that they were missed. Given that the spread of the disease coincided with peak influenza season, it is reasonable to assume that a mild COVID-19 infection could have been misdiagnosed. In addition, data on the disease's effect on children have been almost entirely lacking in the numbers of cases and hospitalizations reported [21] . Evidence suggests they are likely getting infected at the same rate as adults, albeit with lesser severity [22, 23] , implying that, at a minimum, at least 15% of the population in many countries may be asymptomatic when infected; the numbers are likely much higher.",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 33,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 44,
+                    "end": 48,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 58,
+                    "end": 62,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 77,
+                    "end": 81,
+                    "text": "[19]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 394,
+                    "end": 398,
+                    "text": "[20]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 790,
+                    "end": 794,
+                    "text": "[21]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 904,
+                    "end": 908,
+                    "text": "[22,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 909,
+                    "end": 912,
+                    "text": "23]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Here we use a Bayesian approach to estimate the parameters of a disease transmission model of COVID-19 that includes both recognized and unrecognized infections. We examine the fit of the model to confirmed cases of COVID-19 across several countries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To estimate transmission dynamics, we adapted the Kermack and McKendrick compartmental model to the reported disease dynamics of COVID-19. Specifically, we assumed that, (i) there is an incubation period for susceptible individuals that become infected; and (ii) a fraction of individuals are asymptomatic or only have mild/moderate symptoms and would be missed in the official count of confirmed cases. The model is described by the following set of ordinary differential equations,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where S is the population of susceptible individuals and E are exposed individuals incubating the disease, and who eventually become infected. After the incubation period, 1/\u03bc, we assume individuals will either be asymptomatic or mildly infected and will not be detected, C, or will have moderate to severe symptoms, I, which would result in detection. The parameter \u03b8, . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "describes this unknown value. Finally, we assume that individuals will either recover, die, or remove themselves from transmission through self-quarantine until they recover at rate \u03b3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Our goal was to estimate the ranges of parameters that would fit the data of the beginning of an outbreak in a country, assuming that initially the effects of distancing and other measures to control the disease are largely absent and thus the data are largely representative of the transmission dynamics but that some proportion of the infected population is not observed. Data on outbreaks in Italy, Spain, and South Korea were obtained from the Center for Systems Science and Engineering at Johns Hopkins University [1] (Figure 1) . We fit the model to the observed data assuming that the first observed case was in the more severe group. We constrained our fit to the early part of the outbreak in each country, before widespread quarantines or extensive testing altered the path of the disease. For Italy this was from January 22, 2020 to March 20, 2020, for Spain this was from January 22, 2020 to March 30, 2020, and for South Korea this was from January 22, 2020 to March 5, 2020. To estimate the credibility of parameters, we used Monte Carlo (MC) to sample the parameter space with a uniform prior density with bounds and used acceptance and rejection sampling to approximate a posterior distribution of the parameters. The error between the results of the model yielding the expected number of observed cases and the observed number of cases is considered to be normally distributed with Norm (0, \u03c3). The variance ( 2 ) is estimated as the difference between the model with the optimal parameter set and the observed number of cases. Reported parameter estimates are the medians of the posterior distributions, and 95% credible intervals from quantiles of the posterior distribution. The goal of the Bayesian parameter estimation is to approximate a posterior probability density function of the parameter. MC sampling of the parameter space was based on the number of reported active cases, recoveries and deaths. Specifically, we fit projected cases in the I compartment to active cases (confirmed cases minus recovered cases and deaths) and the R compartment to the sum of recovered and deaths. While traditional unbiased curve-fitting methods yield a set of parameter estimations that capture observed data, they do not account for known prior belief on parameter ranges. A Bayesian approach to parameter estimation allows us to quantify the credibility of one set of model parameters. This approach is extremely powerful as it provides a range of credible parameters in which the model can fit the observed data. Parameter bounds were based on disease dynamics literature and expert judgement (Table 1) .",
+            "cite_spans": [
+                {
+                    "start": 519,
+                    "end": 522,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 523,
+                    "end": 533,
+                    "text": "(Figure 1)",
+                    "ref_id": null
+                },
+                {
+                    "start": 2609,
+                    "end": 2618,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Bayesian estimation of model parameters"
+        },
+        {
+            "text": "To assess the biological relevance of the parameters, we calculated the 0 of model, based on the dominant eigenvalue of the next generation matrix. The infection subsystem of the model can be described by equations (2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bayesian estimation of model parameters"
+        },
+        {
+            "text": "We use a linearization of the infection subsystem, similar to the formulation outlined by Diekmann et al. [24] , . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 106,
+                    "end": 110,
+                    "text": "[24]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian estimation of model parameters"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bayesian estimation of model parameters"
+        },
+        {
+            "text": "(3)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bayesian estimation of model parameters"
+        },
+        {
+            "text": "where the matrix represents the transmission matrix that captures the number of transmissions from the susceptible compartments. The matrix M represents the transition between compartments within the infection subsystem. Specifically, is equal to",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u0307= ( + )"
+        },
+        {
+            "text": "From this formulation, we can mathematically construct the next generation matrix , which is defined as = \u2212 \u22121 , which would equate to R0 is equal to the dominant eigenvalue of W (highlighted in red), which is equal to",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u0307= ( + )"
+        },
+        {
+            "text": "To assess fit, determine model parameter priors for the model fits, and provide context for the analysis, we conducted a search of all literature already published on the biology and transmission of COVID-19. The majority of this literature was on pre-print servers such as medRxiv, bioRxiv and SSRN's First Look (Table 1) , and most data estimates were reliant upon small studies with wide variability. From this literature, we found an estimate for the incubation period, defined as the time from exposure to onset of illness, of 4.8\u00b12.6 days [25] . The proportion of the population with no/mild/moderate symptoms was estimated to be as high as 85% of the population [26] . The infectiousness period, \u03b3, was estimated to be 4.9 days (95% CrI: 3.3 -5.9) based on the dynamics of earlier coronaviruses, though symptomatic and hospitalized cases likely have a longer recovery time than mild/asymptomatic cases [27] . Finally, we estimated the transmission rates, \u03b21 and \u03b22, based on calculations of the basic reproduction number, 0 , of COVID-19 and clearance estimates. Values for 0 in the literature range from 1.4 to 7.1 [11, [28] [29] [30] ; given these values we assumed that the transmission rate for \u03b2 was likely between 0.1 and 0.9.",
+            "cite_spans": [
+                {
+                    "start": 545,
+                    "end": 549,
+                    "text": "[25]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 669,
+                    "end": 673,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 909,
+                    "end": 913,
+                    "text": "[27]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1123,
+                    "end": 1127,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1128,
+                    "end": 1132,
+                    "text": "[28]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1133,
+                    "end": 1137,
+                    "text": "[29]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1138,
+                    "end": 1142,
+                    "text": "[30]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 313,
+                    "end": 322,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Biological Parameters"
+        },
+        {
+            "text": "We first fit the data assuming only that transmission from our unobserved group (\u03b21) was lower than from the symptomatic observed group (\u03b22), as mild/asymptomatic cases are likely to shed fewer viruses and thus be less transmissible. Thus, we constrained \u03b21 and \u03b22 to be between 0.1-0.5 and 0.5-0.9, respectively. We then refit the data by constraining our symptomatic fraction, \u03b8, to be 50% or less. The main results are presented as the fitted values and the relative relationship to the known biology. As the process is stochastic, we were interested in the local maxima obtained from this procedure to guide understanding of the parameters and to assess the ability of the model to fit actual data with biologically plausible values.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Biological Parameters"
+        },
+        {
+            "text": "Assuming a uniform prior with no constraint on the fraction of the population that was symptomatic, \u03b8, the parameter estimation from our MC sampling resulted in a posterior mean for the symptomatic rate of 0. Table 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 209,
+                    "end": 216,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The overall fit of the model to the data was generally better in the unconstrained case, in which only a small fraction of the population is missed due to unobserved asymptomatic/mild infection ( Figure 3 ). Variation between the two estimated scenarios was primarily governed by differences in the length of the infectiousness of the symptomatic group. In the high symptomatic case, the fit of the parameter produced mean infectiousness periods of 12-17 days, while in the constrained case the infectiousness period was estimated to be about 7 days.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 196,
+                    "end": 204,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "As COVID-19 spreads through the United States, questions remain as to the rate of disease spread, the extent of people infected, and the implications for policies regarding quarantines. We conducted this analysis to contribute to available disease models, which play an integral role in defining the policy choices of government officials. Accurate evidence that conforms to observed data is needed to aid those decisions. Our results suggest that there appear to be two dichotomies. The first assumes that most cases are discovered and the R0 of the disease is more than 8. The second assumes a lower R0, but a large fraction of the population is asymptomatically infected and excluded from official estimates of the disease spread. Given these scenarios, we . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint believe the more likely case is that a large fraction of the population is asymptomatically infected, and the only question is what percentage.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "If the proportion of individuals that are asymptomatically infected is actually higher than initially assumed, waiting for the emergence of observed cases to impose travel restrictions is not a productive policy, because (i) there are likely far more infected individuals than are observed, and (ii) due to the long dynamics of the incubation period, there is a large proportion of people who are already infected but not yet infectious. Evidence from China suggests that the observed data trail reported infections by about two weeks. In other words, despite dropping transmission dramatically between January 15 and January 25, the rate of newly confirmed cases did not begin to level off both country-wide and within each local city until two weeks later (Figure 4) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 758,
+                    "end": 768,
+                    "text": "(Figure 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Assuming a large fraction of the population is asymptomatically infected has important implications for policy because of herd immunity. While there have been some potential second cases, the vast majority of the evidence suggests that infected individuals develop immunity to circulating strains. As more of the population gains immunity, disease spread will slow. When transmissibility between contacts falls because of widespread immunity, the effective reproductive number is reduced, the disease spreads more slowly, and the threat posed by widespread numbers of infected individuals fades away. Such widespread immunity would allow restrictions to be lifted sooner, as most individuals would not pose a transmission risk to the general public and would abrogate the possibility of a second peak in the future. Understanding the potential risks requires serological surveys to be conducted as soon as possible in areas with high and low numbers of cases to understand how much the disease has been spreading and to inform better policies regarding quarantines.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Finally, the troubling implication of these results is that asymptomatic rates are estimated to be ~50%. Based on the fits from the model, this would suggest that the R0 of COVID-19 may be higher than 2.5. A high R0 combined with large numbers of asymptomatic and mildly infected individuals could account for the \"bomb-like\" dynamics of COVID-19. In New York City, the rate of confirmed cases has been doubling roughly every 2 days. This is faster even than Italy where the rate of doubling was approximately every three days. Recent data on mortality in the NYC region suggests that this rapid increase in cases is not just the effect of rapid increased testing, as the number of deaths is growing at a similar rate as the case load with an approximate two-week lag ( Figure 5 ). This mortality rate is, at least for the moment, substantially higher than the rate in Italy (Figure 6 ). This suggests that densely populated urban areas may facilitate more rapid spread of the disease and have even higher reproductive numbers. Given the strong connectivity between China and NYC, it is likely the first cases of COVID-19 arrived in NYC by late January, yet the first case was not observed until late February and there was no \"explosion\" until mid-March. This should be a cautionary tale to other cities that are not as connected to international travel as NYC or are in the Southern Hemisphere, where potential seasonal differences may have led to lower transmission rates in February and March [31] . Postponing policy action until the outbreak is well underway, as NYC and Italy did, is thus much less effective in containing the virus. Only by extensive and early restrictions can the bomb-like dynamics of the disease be averted. In South Korea, the dynamics initially appear similar, but the introduction of widespread testing likely led to the discovery of much larger numbers of less severe cases, which bent the curve. However, as the case of Hong Kong demonstrates, relaxing these policies before the disease has spread widely enough to provide herd immunity leads to rapid growth in cases within a couple of weeks [32] . Without a vaccine, cities and countries will need to manage the spread of the virus so that the number of hospitalized individuals will not exceed capacity. This is a difficult option but the only rational policy until more progress is made in vaccine development or therapeutics.",
+            "cite_spans": [
+                {
+                    "start": 1497,
+                    "end": 1501,
+                    "text": "[31]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 2126,
+                    "end": 2130,
+                    "text": "[32]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 770,
+                    "end": 778,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 875,
+                    "end": 884,
+                    "text": "(Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The explosive nature of COVID-19 disease dynamics is likely the result of large fractions of asymptomatic and mild cases leading to rapid and silent spread throughout the community. However, even this cannot explain the dynamics of disease spread alone in certain areas, such as NYC, without assuming that the reproductive number, or R0, is higher than the reported values based on severe symptomatic cases. . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Using Monte Carlo (MC) methods, we were able to generate 400 parameter samples from a prior distribution with acceptance-rejection sampling. In the figure, each set of sampled parameters of three countries, Italy, South Korea, and Spain, were generated which allow us to calculate the 0 , basic reproduction number, and display those values against the symptomatic rate ( ). The probability distribution for 0 and are displayed on the right and top, respectively. The size each point represents the relative inverse sum of square errors for each country, with larger sized points being a better fit. The ellipses encircle 95% of simulation runs for each scenario. The triangular points represent priors for that were bounded (constrained) between 0.01 -0.5, while the circular points represent priors (unconstrained) that were bounded between 0.01 -0.99.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 2."
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 2."
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . Figure 3 . Based on the 200 sets of parameters that were obtained from MC sampling, the severe infection outcomes are of each run for Italy are displayed in color, while the observed active cases are displayed in black. The left side show the MC sampling for priors for \u03b8 (symptomatic rate) that were bounded uniformly between 0.01-0.5 (constrained), while the right side represent priors that were bounded between 0.01 -0.99 (unconstrained). Although, unconstrained parameters have a better fit to observed data, the constrained priors may capture the true dynamics of cases which will result in a relatively steeper increase.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 78,
+                    "end": 86,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Figure 2."
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint Figure 4 . The confirmed cases by localities outside of Hubei, China are shown for January 22 nd , 2020 to March 30 th , 2020. We can see similar exponential increases in cases were observed after the population is rescaled with respect to population inside Hubei Province.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint Figure 5 . Confirmed cases and deaths in NYC. There appears to be a consistent lag, but similar rate of increase in deaths compared to cases, suggesting that the increase in confirmed cases is not due primarily to testing changes, but to actual disease dynamics.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint Figure 6 . Per capita death rate in NYC compared to Italy.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unconstrained Prior Constrained Prior"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.05.20054338 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unconstrained Prior Constrained Prior"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "An interactive web-based dashboard to track COVID-19 in real time",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Response to COVID-19 in Taiwan: Big Data Analytics, New Technology, and Proactive Testing",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Brook",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Lessons drawn from China and South Korea for managing COVID-19 epidemic: insights from a comparative modeling study",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Assessment of COVID-19 Mass Testing: The Case of South Korea",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Balilla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "SSRN",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Impact assessment of non-pharmaceutical interventions against COVID-19 and influenza in Hong Kong: an observational study",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Ali",
+                    "suffix": ""
+                },
+                {
+                    "first": "Twy",
+                    "middle": [],
+                    "last": "Ng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Real-time monitoring the transmission potential of COVID-19 in Singapore",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tariq",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Roosa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Estimating the Asymptomatic Proportion of 2019 Novel Coronavirus onboard the Princess Cruises Ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "High transmissibility of COVID-19 near symptom onset",
+            "authors": [
+                {
+                    "first": "H-Y",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "S-W",
+                    "middle": [],
+                    "last": "Jian",
+                    "suffix": ""
+                },
+                {
+                    "first": "D-P",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "High incidence of asymptomatic SARS-CoV-2 infection",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Presumed Asymptomatic Carrier Transmission of COVID-19",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Early in the epidemic: impact of preprints on global discourse about COVID-19 transmissibility",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Majumder",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Mandl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Glob Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ran",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int J Infect Dis",
+            "volume": "92",
+            "issn": "",
+            "pages": "214--217",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Estimation of the reproductive number of novel coronavirus (COVID-19) and the probable outbreak size on the Diamond Princess cruise ship: A data-driven analysis",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Diao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pei",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int J Infect Dis",
+            "volume": "93",
+            "issn": "",
+            "pages": "201--204",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pei",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Transmission of 2019-nCoV Infection from an Asymptomatic Contact in Germany",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rothe",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schunk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sothmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "970--971",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "A Locally Transmitted Case of SARS-CoV-2 Infection in Taiwan",
+            "authors": [
+                {
+                    "first": "Y-C",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C-H",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "C-F",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C-C",
+                    "middle": [],
+                    "last": "Chou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y-R",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "1070--1072",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Iceland lab's testing suggests 50% of coronavirus cases have no symptoms",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cnn Tj",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Cryptic transmission of novel coronavirus revealed by genomic epidemiology. Cryptic Transm",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bedford",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nov. Coronavirus Reveal. Genomic Epidemiol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Characteristics of and Important Lessons From the Coronavirus Disease 2019 (COVID-19) Outbreak in China: Summary of a Report of 72 314 Cases From the Chinese Center for Disease Control and Prevention",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgoogan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Epidemiological Characteristics of 2143 Pediatric Patients With 2019 Coronavirus Disease in China",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Mo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Pediatrics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "COVID-19 in children: the link in the transmission chain",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kelvin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Halperin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The construction of next-generation matrices for compartmental epidemic models",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jap",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "J R Soc Interface",
+            "volume": "7",
+            "issn": "",
+            "pages": "873--885",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Time-varying transmission dynamics of Novel Coronavirus Pneumonia in China",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Systems Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919787"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Characteristics and Associations with Severity in COVID-19 Patients: A Multicentre Cohort Study from Jiangsu Province",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ju",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. SSRN",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Epidemiology and Transmission of COVID-19 in Shenzhen China: Analysis of 391 cases and 1,286 of their close contacts",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.03.20028423"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Data-Based Analysis, Modelling and Forecasting of the COVID-19 outbreak",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Anastassopoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Russo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tsakris",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Siettos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Travel Med",
+            "volume": "27",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Covid-19 Outbreak Progression in Italian Regions: Approaching the Peak by March 29th",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Distante",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Piscitelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Miani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Will Coronavirus Pandemic Diminish by Summer?",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Bukhari",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jameel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Social Science Research Network",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Hong Kong records 48 new cases in biggest daily jump yet. 2020. Available at",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Projecting the transmission dynamics of SARS-CoV-2 through the post-pandemic period",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kissler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tedijanto",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Goldstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Grad",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.04.20031112"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "This work was funded by the Centers for Disease Control and Prevention (CDC) MInD-Healthcare Program (Grant Number 1U01CK000536). SL was supported by The National Science Foundation (CCF 1917819). DM was also supported by the Agency for Healthcare Research and Quality (AHRQ) Patient Safety Learning Laboratory program.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Korea, respectively. These results were positively correlated with R0 such that higher fractions of symptomatic individuals resulted in higher R0 values. The resulting values for the parameter estimates are shown in",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Parameters estimation from other literature",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "MC Priors and Parameter Estimation Fits of Model for Italy, Spain and South Korea Figure 1. Data from Center for Systems Science and Engineering [1] at Johns Hopkins Universty showing the active cases per million residents for the United States, Italy, Spain, Germany, France, and United Kingdom. The rate of exponential increase are observed for all six countries.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

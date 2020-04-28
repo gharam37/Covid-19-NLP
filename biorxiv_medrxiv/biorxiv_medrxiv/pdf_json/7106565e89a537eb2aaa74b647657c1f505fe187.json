@@ -1,0 +1,3647 @@
+{
+    "paper_id": "7106565e89a537eb2aaa74b647657c1f505fe187",
+    "metadata": {
+        "title": "Sample-Efficient Deep Learning for COVID-19 Diagnosis Based on CT Scans",
+        "authors": [
+            {
+                "first": "Xuehai",
+                "middle": [],
+                "last": "He",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Xingyi",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Shanghang",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Jinyu",
+                "middle": [],
+                "last": "Zhao",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Yichen",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Eric",
+                "middle": [],
+                "last": "Xing",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Pengtao",
+                "middle": [],
+                "last": "Xie",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Coronavirus disease 2019 (COVID-19) has infected more than 1.3 million individuals all over the world and caused more than 106,000 deaths. One major hurdle in controlling the spreading of this disease is the inefficiency and shortage of medical tests. There have been increasing efforts on developing deep learning methods to diagnose COVID-19 based on CT scans. However, these works are difficult to reproduce and adopt since the CT data used in their studies are not publicly available. Besides, these works require a large number of CTs to train accurate diagnosis models, which are difficult to obtain. In this paper, we aim to address these two problems. We build a publicly-available dataset containing hundreds of CT scans positive for COVID-19 and develop sample-efficient deep learning methods that can achieve high diagnosis accuracy of COVID-19 from CT scans even when the number of training CT images are limited. Specifically, we propose an Self-Trans approach, which synergistically integrates contrastive self-supervised learning with transfer learning to learn powerful and unbiased feature representations for reducing the risk of overfitting. Extensive experiments demonstrate the superior performance of our proposed Self-Trans approach compared with several state-of-the-art baselines. Our approach achieves an F1 of 0.85 and an AUC of 0.94 in diagnosing COVID-19 from CT scans, even though the number of training CTs is just a few hundred.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "C ORONAVIRUS disease 2019 (COVID-19) is an infectious disease that has infected more than 1.3 million individuals all over the world and caused more than 106,000 deaths 1 , as of April 11 in 2020. One major hurdle in controlling the spreading of this disease is the inefficiency and shortage of tests. The current tests are mostly based on reverse transcription polymerase chain reaction (RT-PCR). It takes 4-6 hours to obtain results, which is a long time compared with the rapid spreading rate of COVID-19. Besides inefficiency, RT-PCR test kits are in huge shortage. As a result, many infected cases cannot be timely identified and continue to infect others unconsciously.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "To mitigate the inefficiency and shortage of existing tests for COVID-19, many efforts have been devoted to searching for alternative testing methods. Several studies [1] have shown that computed tomography (CT) scans manifest clear radiological findings of COVID-19 patients and are promising in serving as a more efficient and accessible testing manner due to the wide availability of CT devices that can generate results at a fast speed. Further, to alleviate the burden of medical professionals in reading CT scans, several works [2] have developed deep learning methods that can automatically interpret CT images and predict whether the CTs are positive for COVID-19. While these works have shown promising results, they have two limitations. First, the CT scan datasets used in these works are not sharable to the public due to privacy concerns. Consequently, their results cannot be reproduced and the trained models cannot be used in other hospitals. Besides, the lack of opensourced annotated COVID-19 CT dataset greatly hinders the research and development of more advanced AI methods for more accurate CT-based testing of COVID-19. Second, these works require a large collection of CTs during model training to achieve performance that meets the clinical standard. Such a requirement is stringent in practice and may not be met by many hospitals, especially under the circumstances that medical professionals are highly occupied by taking care of COVID-19 patients and are unlikely to have time to collect and annotate a large number of COVID-19 CT scans.",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 170,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 534,
+                    "end": 537,
+                    "text": "[2]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "In this work, we aim to address these two problems by (1) building a publicly-available dataset containing hundreds of CT scans that are positive for COVID-19 and (2) developing sample-efficient deep learning methods that can achieve high diagnosis accuracy of COVID-19 from CT scans even when the number of training CT images are limited. We first collect the COVID19-CT dataset, which contains 349 CT images with clinical findings of 216 COVID-19 patient cases. The images are collected from medRxiv and bioRxiv papers about COVID-19. CTs containing COVID-19 abnormalities are selected by reading the figure captions in the papers. We manually remove artifacts in the original images, such as texts, numbers, arrows, etc. Figure 1 shows some examples of the COVID-19 CT scans. To our best knowledge, it is the largest COVID-19 CT dataset to date. And all the images are open to the public for research purpose. Given this dataset, we develop deep learning (DL) methods to perform CT-based diagnosis of COVID-19. Though largest among its kind, COVID19-CT is still limited in image number. DL models are data-hungry, which have high risk of overfitting when trained on smallsized dataset. To address this problem, we develop sampleefficient methods to train highly-performant DL model in spite of data deficiency. Specifically, we investigate two paradigms of learning approaches for mitigating data deficiency: transfer learning and self-supervised learning.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 724,
+                    "end": 732,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Transfer learning aims to leverage data-rich source-tasks to help with the learning of a data-deficient target task (CT-based diagnosis of COVID-19 in our case). One commonly used strategy is to learn a powerful visual feature extraction deep network by pretraining this network on large datasets in the source tasks and then adapt this pretrained network to the target task by finetuning the network weights on the smallsized dataset in the target task. While effective in general, transfer learning may be suboptimal due to the fact that the source data may have a large discrepancy with the target data in terms of visual appearance of images and class labels, which causes the feature extraction network biased to the source data and generalizes less well on the target data. We design different transferring strategies and perform a comprehensive study in the dimensions of source-target domain difference and neural architectures to investigate the effects of transfer learning for COVID-19 diagnosis and provide insightful findings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Based on these findings, we propose Self-Trans, a selfsupervised transfer learning approach where contrastive selfsupervised learning [3] is integrated into the transfer learning process to adjust the network weights pretrained on source data, so that the bias incurred by source data is reduced. In self-supervised learning (SSL), we construct auxiliary tasks on CT images where the supervised labels in these tasks are solely from the images themselves without using any human annotations. Then we adjust the network weights by solving these auxiliary tasks. In these auxiliary tasks, the input images are in the same domain as the data in the target task and no human-annotated labels are used. Therefore, the bias to source images and their class labels can be effectively reduced.",
+            "cite_spans": [
+                {
+                    "start": 134,
+                    "end": 137,
+                    "text": "[3]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Contributions of this paper are summarized as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Contributions"
+        },
+        {
+            "text": "\u2022 We propose a sample-efficient deep learning system to facilitate the diagnosis of COVID-19 based on CT scans.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Contributions"
+        },
+        {
+            "text": "Code will be open-sourced.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Contributions"
+        },
+        {
+            "text": "\u2022 To train and evaluate the system, we collect the COVID19-CT dataset 2 , which contains 349 positive CT scans with clinical findings of COVID-19, and 397 negative images without findings of COVID-19. To the best of our knowledge, this is the largest publicly-available CT dataset for COVID-19. \u2022 We design different transferring strategies and perform a comprehensive study to investigate the effects of transfer learning for COVID-19 diagnosis and provide insightful findings. \u2022 To learn from limited labeled data, we propose Self-Trans networks, which synergistically integrate contrastive selfsupervised learning with transfer learning to learn powerful and unbiased feature representations for reducing the risk of overfitting. \u2022 We perform extensive experiments to demonstrate the effectiveness of our proposed methods. It achieves an F1 score of 0.85, an AUC of 0.94, and an accuracy of 0.86 on the COVID19-CT dataset. The rest of the paper is organized as follows. Section 2 reviews related works. Section 3 and 4 present the dataset, methods, and experiments. Section 5 concludes the paper.",
+            "cite_spans": [
+                {
+                    "start": 295,
+                    "end": 296,
+                    "text": "\u2022",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Contributions"
+        },
+        {
+            "text": "Since the outbreak of COVID-19, there have been increasing efforts on developing deep learning methods to perform screening of COVID-19 based on medical images such as CT scans and chest X-rays. Wu [6] . Several works have also applied 3D deep learning models to screen COVID-19 based on chest CT images [7] , [8] . Yang et al. developed a deep learning based CT diagnosis system (DeepPneumonia) to assist clinicians to identify patients with COVID-19 [9] . Xu et al. developed a deep learning algorithm by modifying the inception transfer-learning model to provide clinical diagnosis ahead of the pathogenic test [10] . Shi et al. employed the \"VB-Net\" neural network to segment COVID-19 infection regions in CT scans [11] . Yu et al. constructed a system based on UNet++ for identification of COVID-19 from CT images [12] . Shen et al. proposed an infection-size-aware Random Forest (iSARF) method which can automatically categorize subjects into groups with different ranges of infected lesion sizes [13] .",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 197,
+                    "text": "Wu",
+                    "ref_id": null
+                },
+                {
+                    "start": 198,
+                    "end": 201,
+                    "text": "[6]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 304,
+                    "end": 307,
+                    "text": "[7]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 310,
+                    "end": 313,
+                    "text": "[8]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 452,
+                    "end": 455,
+                    "text": "[9]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 614,
+                    "end": 618,
+                    "text": "[10]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 719,
+                    "end": 723,
+                    "text": "[11]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 819,
+                    "end": 823,
+                    "text": "[12]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1003,
+                    "end": 1007,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Deep learning based diagnosis of COVID-19"
+        },
+        {
+            "text": "At present, few large-sized datasets with medical images on COVID-19 are publicly available due to privacy concerns and information blockade [14] . Existing datasets on COVID19 are mainly X-ray images [6] , [14] , [15] . The Italian Society of Medical and Interventional Radiology (SIRM) provides chest 2 https://github.com/UCSD-AI4H/COVID-CT . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 141,
+                    "end": 145,
+                    "text": "[14]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 201,
+                    "end": 204,
+                    "text": "[6]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 207,
+                    "end": 211,
+                    "text": "[14]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[15]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Datasets about COVID-19"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063941 doi: medRxiv preprint X-rays and CT images of 68 Italian COVID-19 cases [16] . Moore et al. released a dataset of axial and coronal CTs from 59 COVID-19 cases at Radiopaedia [17] . Other data sources provide medical images of no more than 10 patients [18] , [19] . To deal with the lack of large-sized and open-source datasets containing CT images of COVID-19 cases, we built the COVID19-CT dataset by collecting medical images from COVID-19 related medRxiv and bioRxiv papers. Our dataset contains 349 COVID-19 positive CT scans from 216 COVID-19 cases. To our best knowledge, it is the largest public COVID-19 CT collection to date.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063941",
+                    "ref_id": null
+                },
+                {
+                    "start": 195,
+                    "end": 199,
+                    "text": "[16]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 297,
+                    "end": 301,
+                    "text": "[17]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 374,
+                    "end": 378,
+                    "text": "[18]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 381,
+                    "end": 385,
+                    "text": "[19]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Datasets about COVID-19"
+        },
+        {
+            "text": "Transfer learning is normally performed by taking a standard neural architecture along with its pretrained weights on large-scale datasets such as ImageNet [20] , and then finetuning the weights on the target task. This idea has been successfully applied to visual recognition [21] as well as language comprehension [22] . In the medical domain, transfer learning has also been widely used in medical image classification and recognition tasks, such as tumor classification [23] , retinal diseases diagnosis [24] , pneumonia detection [25] , and skin lesion and cancer classification [26] , [27] . A recent study in [28] explores the properties of transfer learning for medical imaging tasks and finds that the standard large networks pretrained on ImageNet are often over-parameterized and may not be the optimal solution for medical image diagnosis. In this paper, we continue to investigate different strategies of transfer learning and integrate contrastive self-supervised learning into the transfer learning process to learn powerful and unbiased feature representations for reducing the risk of overfitting.",
+            "cite_spans": [
+                {
+                    "start": 156,
+                    "end": 160,
+                    "text": "[20]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 277,
+                    "end": 281,
+                    "text": "[21]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 316,
+                    "end": 320,
+                    "text": "[22]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 474,
+                    "end": 478,
+                    "text": "[23]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 508,
+                    "end": 512,
+                    "text": "[24]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 535,
+                    "end": 539,
+                    "text": "[25]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 584,
+                    "end": 588,
+                    "text": "[26]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 591,
+                    "end": 595,
+                    "text": "[27]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 616,
+                    "end": 620,
+                    "text": "[28]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Transfer learning"
+        },
+        {
+            "text": "Self-supervised learning (SSL) aims to learn meaningful representations of input data without using human annotations. It creates auxiliary tasks solely using the input data and forces deep networks to learn highly-effective latent features by solving these auxiliary tasks. Various strategies have been proposed to construct auxiliary tasks, based on temporal correspondence [29] , [30] , cross-modal consistency [31] , etc. Examples of auxiliary tasks include rotation prediction [32] , image inpainting [33] , automatic colorization [34] , context prediction [35] , etc. Some recent works study self-supervised representation learning based on instance discrimination [36] with contrastive learning. Oord et al. propose contrastive predictive coding (CPC) to extract useful representations from high-dimensional data [37] . Bachman et al. propose a selfsupervised representation learning approach based on maximizing mutual information between features extracted from multiple views of a shared context [38] . Most recently, Chen et al. present a simple framework for contrastive learning (SimCLR) [39] with larger batch sizes and extensive data augmentation [40] , which achieves results that are comparable with supervised learning. Momentum Contrast (MoCo) [41] , [42] expands the idea of contrastive learning with an additional dictionary and a momentum encoder. While previous methods concentrate on utilizing self-supervision to learn universal Chest Computed tomography (CT) images of patients infected with 2019-nCoV on admission to hospital. A, Chest CT scan obtained on February 2, 2020, from a 39-year-old man, showing bilateral ground glass opacities. B, Chest CT scan obtained on February 6, 2020, from a 45-year-old man, showing bilateral ground glass opacities. C, Chest CT scan taken on January 27, 2020, from a 48-year-old man (discharged after treatment on day 9), showing patchy shadows. D, Chest CT scan taken on January 23, 2020, from a 34year-old man (discharged after treatment on day 11), showing patchy shadows. representations regardless of labels, our Self-Trans instead aims to boost the performance of supervised transfer learning with self-supervised pretraining on unlabeled data. Inspired by [42] , [43] , we aim to leverage self-supervised learning for COVID-CT recognition for which there are limited COVID-19 samples but abundant unlabeled CTs.",
+            "cite_spans": [
+                {
+                    "start": 376,
+                    "end": 380,
+                    "text": "[29]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 383,
+                    "end": 387,
+                    "text": "[30]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 414,
+                    "end": 418,
+                    "text": "[31]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 482,
+                    "end": 486,
+                    "text": "[32]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 506,
+                    "end": 510,
+                    "text": "[33]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 536,
+                    "end": 540,
+                    "text": "[34]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 562,
+                    "end": 566,
+                    "text": "[35]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 671,
+                    "end": 675,
+                    "text": "[36]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 820,
+                    "end": 824,
+                    "text": "[37]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1006,
+                    "end": 1010,
+                    "text": "[38]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 1101,
+                    "end": 1105,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1162,
+                    "end": 1166,
+                    "text": "[40]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1263,
+                    "end": 1267,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1270,
+                    "end": 1274,
+                    "text": "[42]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 2227,
+                    "end": 2231,
+                    "text": "[42]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 2234,
+                    "end": 2238,
+                    "text": "[43]",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Self-supervised learning"
+        },
+        {
+            "text": "The lack of annotated CT scans about COVID-19 brings significant challenges for deep-learning-based diagnosis of COVID-19 using CT images. To address this problem, we build COVID19-CT, a dataset containing hundreds of CT images positive for COVID-19. Though the largest of its kind, COVID19-CT is still small, making deep learning models trained on this dataset prone to overfitting. To address this problem, we systematically investigate different transfer learning strategies and propose a new approach called Self-Trans, which synergistically integrates unsupervised in-domain selfsupervised learning with supervised out-of-domain transfer learning to learn effective and unbiased visual feature representations that are robust to overfitting. In the following subsections, we first introduce the COVID19-CT dataset that we built, then present transfer learning and the proposed Self-Trans approach for sample-efficient diagnosis of COVID-19 from CT scans.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. METHODS"
+        },
+        {
+            "text": "CT scans are promising in providing accurate, fast, and cheap screening and testing of COVID-19 [44] . To facilitate the diagnosis of COVID-19, we first build a publicly available COVID19-CT dataset, containing 349 CT scans that are positive for COVID-19 and 397 negative CT scans that are normal or contain other types of diseases. To build this dataset, we first collected 760 preprints about COVID-19 from medRxiv 3 and bioRxiv 4 , posted from Jan 19th to Mar 25th. Many of these preprints report patient cases of COVID-19 and some of them show CT scans in the reports. CT scans are associated with captions describing the clinical findings in the CTs. We used 3 https://www.medrxiv.org/ 4 https://www.biorxiv.org/ . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 96,
+                    "end": 100,
+                    "text": "[44]",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. COVID19-CT dataset"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063941 doi: medRxiv preprint PyMuPDF 5 to extract the low-level structure information from the PDF files of preprints and located all the embedded figures. The quality (including resolution, size, etc.) of figures is wellpreserved. From the structure information, we identified the captions associated with figures. Given these extracted figures and captions, we first manually selected all CT scans. Then for each CT scan, we read the associated caption to judge whether it is positive for COVID-19. If not able to judge from the caption, we located the text analyzing this figure in the preprint to make a final decision. For any figure that contains multiple CT scans as sub-figures, we manually split it into individual CTs, as shown in Figure 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 856,
+                    "end": 864,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "A. COVID19-CT dataset"
+        },
+        {
+            "text": "In the end, we obtain 349 CT scans labeled as being positive for COVID-19. These scans are from 143 patient cases. The average, maximum, and minimum number of CT scans that a patient has is 1.6, 16.0, and 1.0 respectively. These CT images have different sizes. The average, maximum and minimum height are 491, 1853, and 153 respectively. The average, maximum, and minimum width are 383, 1485, and 124 respectively. Figure 1 shows some examples of the COVID-19 CT scans.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 415,
+                    "end": 423,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "A. COVID19-CT dataset"
+        },
+        {
+            "text": "In addition to these COVID19-positive CTs, we also add 397 CTs that are negative for COVID-19. Among them, 202 negative CTs are selected from the PubMed Central (PMC) 6 search engine. The rest 195 come from MedPix 7 , which is a publicly-open online medical image database that contains CT scans with various diseases.",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 168,
+                    "text": "6",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. COVID19-CT dataset"
+        },
+        {
+            "text": "Given a target task (e.g., diagnosing COVID-19 from CT scans in our case) that has limited training data, transfer learning aims to leverage large-scale data and human-provided labels from other source tasks to learn expressive and generalizable feature representations to help with the learning of the target task. A commonly used approach [45] is to pretrain a deep neural network -which is used for feature extraction -on large datasets in the source tasks by fitting the humanannotated labels therein, then fine-tune this pretrained network on the target task. In our case, we can take a classic neural architecture such as ResNet [46] and its weights pretrained on large-scale image classification datasets such as ImageNet, then fine-tune it on the COVID19-CT dataset, with the goal of transferring the images and classes labels in ImageNet into our task for mitigate the deficiency of COVID-19 CTs. When applying this strategy, we should keep several caveats in mind. First, the image data in source tasks have a large domain discrepancy with COVID-19 CTs. For example, the ImageNet images mostly belong to categories in the general domain, such as cat, dog, chair, etc. whereas the images in our task are CTs. The visual appearance, size, resolution of ImageNet images are quite different from chest CTs. As a result, the visual representations learned on ImageNet may not be able to represent CT images well, which casts doubts on the transferability from other sources of images to COVID-19",
+            "cite_spans": [
+                {
+                    "start": 341,
+                    "end": 345,
+                    "text": "[45]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 635,
+                    "end": 639,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Transfer learning for CT-based COVID-19 diagnosis"
+        },
+        {
+            "text": "CTs. Second, the transferability across tasks depends on the neural architectures used for representation learning. Certain architectures facilitate transfer learning better than others.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Transfer learning for CT-based COVID-19 diagnosis"
+        },
+        {
+            "text": "In this work, we aim to perform a systematic study on how these factors affect the transferability from other image classification tasks to our task, and accordingly based on the study result, we design the optimal transfer learning strategy. To study the first factor -domain difference in data, we perform transfer learning on two datasets: one is ImageNet in the general domain; the other is the Lung Nodule Maligancy (LNM) dataset 8 in the CT domain. Compared with ImageNet, LNM has a smaller domain discrepancy with our dataset, but has a smaller number of images and the images are less diverse.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Transfer learning for CT-based COVID-19 diagnosis"
+        },
+        {
+            "text": "To study the second factor -neural architectures, we experiment different backbone networks, including VGG16 [47] , ResNet18 [46] , ResNet50 [46] , DenseNet-121 [48] , DenseNet-169 [48] , EfficientNet-b0 [49] , and EfficientNet-b1 [49] . We evaluate the efficacy of different transfer learning strategies with different pretrained datasets and network architectures via extensive experiments and provide insightful findings.",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 113,
+                    "text": "[47]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 125,
+                    "end": 129,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 141,
+                    "end": 145,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 161,
+                    "end": 165,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 181,
+                    "end": 185,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 204,
+                    "end": 208,
+                    "text": "[49]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 231,
+                    "end": 235,
+                    "text": "[49]",
+                    "ref_id": "BIBREF50"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Transfer learning for CT-based COVID-19 diagnosis"
+        },
+        {
+            "text": "Considering that our dataset is small and our task is binary classification, to study whether there is indeed overparametrization in the traditional ImageNet models when applied to COVID-19 diagnosis, in addition to these largesized architectures, we also design a light-weight architecture as shown in Figure 3 . The basic building block for this network is the combination of a 2d-convolution with an ReLU activation. The block repeats four times. There is an additional batch normalization layer in the first block and an average pooling layer after the third block. We refer to this network as CRNet, whose structure is as follows: (conv32-bn-relu), maxpool, (conv64-relu), maxpool, (conv128-relu), maxpool, global avgpool, and classification layer. The conv(n) represents a 2d convolutional layer with n output channels with a kernel size of 7\u00d77 and a stride of 1. The bn denotes a 2d batch normalization [50] layer. The relu stands for an ReLU layer. The maxpool stands for max pooling with a kernel size of 3\u00d73 and a stride of 2. The global avgpool is an average pooling layer with a kernel size of 2\u00d72 and a stride of 2. ",
+            "cite_spans": [
+                {
+                    "start": 910,
+                    "end": 914,
+                    "text": "[50]",
+                    "ref_id": "BIBREF51"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 303,
+                    "end": 311,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "B. Transfer learning for CT-based COVID-19 diagnosis"
+        },
+        {
+            "text": "Step 1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Self-supervised Pretrained"
+        },
+        {
+            "text": "Step 2 COVID-CT data Trying to fit the natural-domain class labels may cause the representations learned in the pretraining to be biased to these natural classes and less-well generalized to the COVID CTs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Self-supervised Pretrained"
+        },
+        {
+            "text": "To further solve this problem, we propose an Self-Trans approach, which integrates contrastive self-supervision [3] into the transfer learning process. Self-supervised learning (SSL) [36] , [39] , [41] , [42] is a learning paradigm which aims to capture the intrinsic patterns and properties of input data (e.g., CT images) without using human-provided labels. The basic idea of SSL is to construct some auxiliary tasks solely based on the data itself without using human-annotated labels and force the network to learn meaningful representations by performing the auxiliary tasks well. Typical selfsupervised learning approaches generally involve two aspects: constructing auxiliary tasks and defining loss functions. The auxiliary tasks are designed to encourage the model to learn meaningful representations of input data without utilizing human annotations. The loss functions are defined to measure the difference between a model's prediction and a fixed target, the similarities of sample pairs in a representation space (e.g., contrastive loss), or the difference between probability distributions (e.g., adversarial loss). In this work, we design the auxiliary tasks based on the contrastive loss [41] , [42] , [51] to provide self-supervision for the transfer learning process. To be specific, the auxiliary task is to judge whether two images created via random data augmentation are augments of the same original image. We build a large and consistent dictionary on-the-fly based on the contrastive loss to fulfill this auxiliary task. To fully explore the structure and information of the CT images, we apply Self-Trans on both external large-scale lung CT datasets and our collected COVID19-CT dataset. 1) Contrastive learning for self-supervision: Given an original image in the dataset, contrastive self-supervised learning (CSSL) [51] performs data augmentation of this image and obtains two augmented images: x q and x k , where the first one is referred to as query and the second one as key. Two networks f q (\u00b7; \u03b8 q ) and f k (\u00b7; \u03b8 k ), referred to as the query encoder and the key encoder and parameterized by weights \u03b8 q and \u03b8 k , are used to obtain latent representations -q = f q (x q ; \u03b8 q ) and k = f k (x k ; \u03b8 k ) -of the query and key images respectively. A query and a key belonging to the same image are labeled as a positive pair. A query and a key belonging to different images are labeled as a negative pair. The auxiliary task is: given a (query, key) pair, judging whether it is positive or negative.",
+            "cite_spans": [
+                {
+                    "start": 112,
+                    "end": 115,
+                    "text": "[3]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "[36]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 197,
+                    "end": 201,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 204,
+                    "end": 208,
+                    "text": "[42]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 1205,
+                    "end": 1209,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1212,
+                    "end": 1216,
+                    "text": "[42]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 1219,
+                    "end": 1223,
+                    "text": "[51]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 1846,
+                    "end": 1850,
+                    "text": "[51]",
+                    "ref_id": "BIBREF52"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Self-supervised Pretrained"
+        },
+        {
+            "text": "Implementation-wise, CSSL uses a queue to store a set of keys {k i } from different images. Given a new pair (q j , k j ) obtained from a new image, a contrastive loss can be defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Self-supervised Pretrained"
+        },
+        {
+            "text": "where \u03c4 is an annealing parameter. The weights in the encoders are learned by minimizing losses of such a form.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Self-supervised Pretrained"
+        },
+        {
+            "text": "Existing methods adopt various mechanisms to preserve and sample key vectors [37] , [39] , [51] , [52] . A Siamese-like solution is to use the same network f k = f q on x k and x f simultaneously. Extreme large mini-batch (batch-size up to 8192 [39] ) is required to learn discriminative features from contrasting. This method is straightforward but incredibly expensive in terms of computational resources. Another option is to store the representations of historical keys in a negative key dictionary D k = {k i }, called memory bank [36] . At each iteration, a mini-batch of keys are sampled from the memory bank instead of using f k . The current mini-batch of queries are updated to the memory bank for replacement. This design inherently gets rid of large batch-size with an extended buffer pool. However, the key sampling step involves inconsistency for training the encoder.",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 81,
+                    "text": "[37]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 84,
+                    "end": 88,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "[51]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "[52]",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 245,
+                    "end": 249,
+                    "text": "[39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 536,
+                    "end": 540,
+                    "text": "[36]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "2) Momentum encoder with queue-structured dictionary:"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2) Momentum encoder with queue-structured dictionary:"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063941 doi: medRxiv preprint Momentum Contrastive (MoCo) [41] learning tolerates and integrates from both. A queue-structured key dictionary with fixed length replaces the memory bank. According to the firstin-first-out (FIFO) nature of the queue, the oldest key minibatch will serve as the negative keys and be replaced by the new queries. This mechanism prevents irregular sampling of negative sampling.",
+            "cite_spans": [
+                {
+                    "start": 172,
+                    "end": 176,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "2) Momentum encoder with queue-structured dictionary:"
+        },
+        {
+            "text": "Another essential component of this model is that, we neither update the key encoder with back-propagation nor blindly copy the query encoder to the key encoder, but keep a running average of the key encoder f k [41] , [53] . It can also be called a momentum encoder. The updating rule of \u03b8 k and \u03b8 q can be formulated as",
+            "cite_spans": [
+                {
+                    "start": 212,
+                    "end": 216,
+                    "text": "[41]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 219,
+                    "end": 223,
+                    "text": "[53]",
+                    "ref_id": "BIBREF54"
+                }
+            ],
+            "ref_spans": [],
+            "section": "2) Momentum encoder with queue-structured dictionary:"
+        },
+        {
+            "text": "In the equation, m = 0.999 is the momentum coefficient and \u03b1 is the learning rate of query encoder. Only \u03b8 q is updated through back-propagation, whereas \u03b8 k maintains a weighted average of the past states. As suggested in Figure 4 , we adopt the self-supervised learning prior to supervised training on the COVID-CT data, as a kind of weight initialization. This mechanism has proved in experiments that it can further improve the model's performance in our CT classification task. The detailed algorithm of Self-Trans is shown in Algorithm 1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 223,
+                    "end": 231,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "2) Momentum encoder with queue-structured dictionary:"
+        },
+        {
+            "text": "To demonstrate the efficacy of our proposed approach and investigate the effects of transfer learning and self-supervised learning, we extensively evaluate the randomly initialized networks, ImageNet transferred networks, and our proposed Self-Trans networks. In the following subsections, we will introduce the datasets, experimental settings, and results for these three series of approaches. Please note that the ablation study is included in the Results subsection for each series of approaches.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. EXPERIMENTS"
+        },
+        {
+            "text": "Our collected COVID19-CT dataset consists of 349 COVID-19 CTs and 397 Non-COVID-19 CTs. The CT images were resized to 224 \u00d7 224. We split the dataset into a training set, a validation set, and a test set by patient IDs with a ratio of 0.6: 0.15: 0.25. Table I shows the statistics of the three sets.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 252,
+                    "end": 259,
+                    "text": "Table I",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "A. Datasets"
+        },
+        {
+            "text": "In addition to our COVID-19 CT dataset, we also include images from the Lung Nodule Analysis (LUNA) [54] database as a source of additional unlabeled CT data. It is originally designed for lung nodule detection and segmentation. From the total 888 CT scans, we randomly select 500 subjects and from each we extract two CT slices that contain annotated Algorithm 1 Algorithm of Self-Trans Input: batch sizes N S , N L , temperature \u03c4 , LUNA dataset D L , COVID-CT dataset D C , model f pretrained on Ima-geNet dataset, dictionary Q as a queue of K keys, augmentation operator a, a from the same family of augmentations Initialize encoder networks for query f q and keys f k :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Datasets"
+        },
+        {
+            "text": "Compute F1, accuracy, AUC return F1, accuracy, AUC lesions or lung shadow. These images are not included in the COVID19-CT dataset as negative examples but are served as unlabeled images for self-supervised learning.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Datasets"
+        },
+        {
+            "text": "The models are implemented in PyTorch. Batch normalization [55] is used through all models. Binary cross-entropy serves as the loss function. The networks are trained with four GTX 1080Ti GPUs using data parallelism. Hyperparameters are tuned on the validation set. Data augmentation is implemented to further improve generalization. For each image in our COVID19-CT dataset, we apply different random affine transformations including random cropping with a scale of 0.5 and horizontal flip. Color jittering is also applied with random contrast and random brightness with a factor of 0.2.",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 63,
+                    "text": "[55]",
+                    "ref_id": "BIBREF55"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Experimental Settings"
+        },
+        {
+            "text": "We evaluate our approaches using five metrics: (1) Accuracy, which measures the percentage of diagnostic predictions that match exactly with the ground-truth; (2) Precision, which is the fraction of true positives among the predicted positives;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Experimental Settings"
+        },
+        {
+            "text": "(3) Recall, which is the fraction of the total number of true positives that are predicted as positive; (4) F1-score, which is the harmonic mean of precision and recall; (5) AUC, which is the area under the receiver operating characteristic curve . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Experimental Settings"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063941 doi: medRxiv preprint showing how false positive rate increases as true positive rate increases. For all five metrics, the higher, the better.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Experimental Settings"
+        },
+        {
+            "text": "To demonstrate the efficacy of our proposed approach and investigate the effects of transfer learning and self-supervised learning, we first experiment on the randomly initialized networks with different backbones as baselines. The backbone networks include VGG-16 [47] , ResNet-18 [46] , ResNet-50 [46] , DenseNet-121 [48] , DenseNet-169 [48] , EfficientNet-b0 [49] , EfficientNet-b1 [49] , and our proposed CRNet.",
+            "cite_spans": [
+                {
+                    "start": 265,
+                    "end": 269,
+                    "text": "[47]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 282,
+                    "end": 286,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 299,
+                    "end": 303,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 319,
+                    "end": 323,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 339,
+                    "end": 343,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 362,
+                    "end": 366,
+                    "text": "[49]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 385,
+                    "end": 389,
+                    "text": "[49]",
+                    "ref_id": "BIBREF50"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Evaluations on Randomly Initialized Networks"
+        },
+        {
+            "text": "1) Implementation Details: For classifiers trained from scratch, the Adam [56] optimizer is used with an initial learning rate of 0.0001 and a mini-batch size of 16. The cosine annealing scheduler is applied on the optimizer with a period of 10 to adjust the learning rate across the training process. We train our models with 50 epochs. We initialize the weights with Kaiming Initialization [57] .",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 78,
+                    "text": "[56]",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 392,
+                    "end": 396,
+                    "text": "[57]",
+                    "ref_id": "BIBREF57"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Evaluations on Randomly Initialized Networks"
+        },
+        {
+            "text": "2) Results: Table III shows the evaluation results (columns marked with \"Rand.\") for neural networks trained with random initialization. Comparing ResNet-18 with ResNet-50 and comparing DenseNet-121 with DenseNet-169, we can see that deeper networks generally yield higher classification performance. The performance also benefits a lot from more sophisticated network structure like residual connection [46] and dense connection [48] . Table II shows the number of weight parameters in different networks. The CRNet has a much smaller number of parameters but the performance is on par with or better than more sophisticated architectures such as ResNet-50.",
+            "cite_spans": [
+                {
+                    "start": 404,
+                    "end": 408,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 430,
+                    "end": 434,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 21,
+                    "text": "Table III",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 437,
+                    "end": 445,
+                    "text": "Table II",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "C. Evaluations on Randomly Initialized Networks"
+        },
+        {
+            "text": "After evaluating the randomly-initialized networks, we thoroughly investigate the performance of networks pretrained on large-scale datasets, including ImageNet and the Lung Nodule Maligancy (LNM) dataset, with different backbones, including VGG-16, ResNet-18, ResNet-50, DenseNet-121, DenseNet-169, EfficientNet-b0, EfficientNet-b1, and CRNet.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Evaluations on Large-Scale Dataset Transferred Networks"
+        },
+        {
+            "text": "The results of transfer learning from ImageNet are shown in Table III (columns marked with \"Trans.\"), where we first train the networks from scratch on ImageNet and then finetune them on the COVID19-CT dataset. Comparing these results with those achieved by randomly initialized networks (columns marked with \"Rand.\" in Table III) , we can see pretraining on ImageNet significantly improves classification performance. This demonstrates the effectiveness of transfer learning, which leverages large-scale images and their class labels in source tasks to help with the learning of the target task. In certain cases, the benefits of transfer learning are highly significant. For example, for VGG16, when trained with random initialization, it performs the poorest. Transfer learning helps it to improve accuracy by 10% (absolute improvement), F1 by 8% (absolute), and AUC by 8% (absolute), exceeding the performance of networks (e.g., ResNet) that have more sophisticated architectures designed for preventing overfitting, even when these networks are pretrained as well.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 60,
+                    "end": 69,
+                    "text": "Table III",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 320,
+                    "end": 330,
+                    "text": "Table III)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "D. Evaluations on Large-Scale Dataset Transferred Networks"
+        },
+        {
+            "text": "We observe that for CRNet which is a small-sized network, the effect of transfer learning is marginal. This is probably because a small-sized network is more robust to overfitting, therefore it has a smaller need of using transfer learning for combating overfitting. On the contrary, for large-sized neural architectures such as VGG-16, initialization with pretrained weights makes a huge difference. The reason is that large-sized networks are more prone to overfitting, especially considering that our dataset is fairly small. Under such circumstances, transfer learning has a better chance to play its value. Table IV shows the performance of the DenseNet-169 backbone with weights (1) randomly initialized, (2) pretrained on ImageNet, (3) pretrained on LMN, and (4) pretrained first on ImageNet, then on LMN. From this table, we make the following observations. First, transfer learning on either ImageNet or LMN improves performance, which further demonstrates the efficacy of transfer learning. Second, the performance of the network pretrained on ImageNet has no significant difference with that pretrained on LMN (the former has slightly better accuracy but worse F1). The two datasets have both advantages and disadvantages. ImageNet has more images and more classes than LMN, which enables learning more powerful and generalizable feature representations. The downside of ImageNet is that its images have a large domain discrepancy with the CTs in COVID19-CT whereas the images in LMN are all CTs. The advantages and disadvantages of these two datasets make them similar in providing transfer learning values. Pretraining first on ImageNet then on LMN achieves better performance than just pretraining on ImageNet. This shows that using data with complementary properties (e.g., size, domain similarity) can generate a synergistic effect in transfer learning.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 612,
+                    "end": 620,
+                    "text": "Table IV",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "D. Evaluations on Large-Scale Dataset Transferred Networks"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Evaluations on Large-Scale Dataset Transferred Networks"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 13.20063941 doi: medRxiv preprint ",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "13.20063941",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Evaluations on Large-Scale Dataset Transferred Networks"
+        },
+        {
+            "text": "In this section, we evaluate the performance of our proposed Self-Trans networks, and compare them with networks pretrained on large-scale datasets. Given the weights pretrained on other datasets, we leverage contrastive self-supervised learning (CSSL) to further train these weights on CT images in our COVID19-CT dataset. Note that in this step, the labels of these CT images are not utilized. CSSL is only performed on the CTs themselves. After CSSL training, we fine-tune the weights on both the CTs and the class labels by optimizing the classification loss. 1) Self-supervised baselines: To address the effectiveness of self-supervision, we also establish a baseline model with self-supervised auxiliary task. In this paper, we select the image rotation prediction [32] as auxiliary task in multi-task learning scheme. For each training image x, we randomly rotate it with angle \u03c6 \u2208 {0 \u2022 , 90 \u2022 , 180 \u2022 , 270 \u2022 }. A 4-way rotation prediction classifier and CT classification classifier share the same feature extractor. Losses for both tasks are added together and model is jointly trained. We do not rotate samples at test time.",
+            "cite_spans": [
+                {
+                    "start": 771,
+                    "end": 775,
+                    "text": "[32]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "2) Additional Experimental Settings: Following the same setting in MoCo, we added a 2-layer multi-layer perceptron (MLP) head with 2048 hidden units. The size of the dynamic dictionary was set to 512. Stochastic gradient descent (SGD) was used as the optimizer for self-supervised learning (SSL), with a minibatch size of 128, a weight decay of 0.0001, a momentum of 0.9, and an initial learning rate of 0.015. The learning rate was adjusted by the cosine learning rate scheduler. The training was conducted on 4 GPUs with data parallelism. We carefully design data augmentation methods to serve as the pretext tasks for the Self-Trans methods. Specifically, we utilize data augmentation including random horizontal flip, random cropping with a size of 0.2 in area, random color jittering such as random brightness with a ratio of 0.4, random contrast of 0.4, random saturation of 0.4, random hue of 0.1, Gaussian blur, and random gray-scale conversion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "3) Results: Table V shows the results of Self-Trans when applied to ResNet-50 and DenseNet-169. As can be seen from this table, Self-Trans achieves much better performance than vanilla transfer learning (Trans). The possible reason is that the weights learned by transfer learning may be biased to the images and class labels in the source tasks and generalize less well on the target task. SSL can help to reduce this bias by adjusting the weights using the data of the target task and without using any labels. 4) Ablation Studies: To fully understand the effects of selfsupervised learning, we conduct the following ablation studies.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 19,
+                    "text": "Table V",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "\u2022 Method 1: Randomly initialize weights. Perform SSL on the COVID19-CT dataset without using COVID/Non-COVID labels. Then fine-tune on COVID19-CT using labels. \u2022 Method 2: Pretrain on ImageNet. Perform SSL on COVID19-CT without using labels and with pretrained weights. Then fine-tune on COVID19-CT using labels. \u2022 Method 3: Pretrain on ImageNet. Perform SSL on the LUNA dataset without using labels of LUNA. Then finetune on COVID19-CT using labels. \u2022 Method 4: Pretrain on ImageNet. Perform the auxiliary task of rotation predication as SSL baseline. Jointly learn rotation prediction and COVID19-CT classification. \u2022 Self-Trans: Pretrain on ImageNet. Perform SSL on LUNA without using labels of LUNA. Then perform SSL on COVID-CT without using labels of COVID-CT, and finally fine-tune on COVID19-CT using labels. Table VI shows the results in different ablation study settings, conducted on ResNet-50 and DenseNet-169 backbones. From this table, we observe the following. First, Method 2 which performs SSL on top of transfer learning works much better than Method 1 which performs SSL without using transfer learning. This demonstrates that it is more effective to apply SSL on pretrained weights instead of from scratch. Second, Method 2 which performs SSL on COVID19-CT (without using labels) largely outperforms Method 3 which performs SSL on LUNA. This implies that it is more effective to apply SSL directly on the data in the target task than on external data. Third, comparing Method 3 and Self-Trans, it is further confirmed that performing SSL directly on the data of the target task achieves better performance (by Self-Trans). Forth, Method 4 with an SSL auxiliary task beats the vanilla transfer learning counterpart, but do not surpass the SSL model with contrastive learning in Method 2 and Self-Trans. Such experimental results not only illustrate the effectiveness of SSL, but also provide concrete evidence that CSSL has stronger feature representation learning capabilities than traditional SSL methods. Fifth, Self-Trans performs slightly better than Method 2, which demonstrates that performing . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 817,
+                    "end": 825,
+                    "text": "Table VI",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063941 doi: medRxiv preprint SSL on external data is also helpful, though not as useful as performing SSL directly on target-task's data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "Another thing that we are interested in investigating is: given the weights of the feature extractor learned by SSL, when finetuning the overall classification network on the COVID19-CT images and labels, should we just fine-tune the final classifier layer or fine-tune the weights of the feature extractor as well? Table VII shows the results on two backbones: ResNet-50 and DenseNet-169, where \"frozen\" denotes that the weights of the feature extractor are not fine-tuned during the finetuning process and \"unfrozen\" denotes that these weights are fine-tuned together with those in the final classification layer. As can be seen, fine-tuning feature extraction weights yields much better performance. This is because using class labels to fine-tune these weights can make the extracted features more discriminative and hence more effective in distinguishing COVID-19 CTs from Non-COVID-19 CTs. Figure 5 shows the Grad-CAM [58] visualizations for DenseNet-169 trained from baseline methods and our proposed Self-Trans. By comparing Column (3) with Column (5), we notice that the DenseNet-169 model trained with random initialization erroneously focuses on some image edges and corners that are not related to COVID-19. In contrast, transfer learning methods generally lead to more accurate diseaserelated visual localization. By comparing Column (5) with Column (7), we can see that our proposed Self-Trans method can have even better localization of the disease region than the ImageNet pretrained method.",
+            "cite_spans": [
+                {
+                    "start": 924,
+                    "end": 928,
+                    "text": "[58]",
+                    "ref_id": "BIBREF58"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 316,
+                    "end": 325,
+                    "text": "Table VII",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 896,
+                    "end": 904,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "E. Evaluation of Self-Trans"
+        },
+        {
+            "text": "In this paper, we study how to develop sample-efficient deep learning methods to accurately diagnose COVID-19 from CT scans. To facilitate the open research in this area, we build COVID19-CT, a dataset containing 349 CT scans positive for COVID-19. To our best knowledge, it is the largest COVID19-CT dataset that is publicly available to date. Though the largest, it still incurs a high risk of overfitting for data-hungry deep learning models. To reduce this risk, we develop data efficient methods that are able to mitigate data deficiency. We propose Self-Trans, a self-supervised transfer learning approach that learns expressive and unbiased visual feature representations that are robust to overfitting. Through extensive experiments, we demonstrate the effectiveness of our methods. is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.13.20063941 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. CONCLUSIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Chest ct findings in coronavirus disease-19 (covid-19): relationship to duration of infection",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bernheim",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Fayad",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Diao",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Grad-CAM visualizations for DenseNet-169. From left to right: Column (1) are original images with COVID-19; Column (2-3) are Grad-CAM visualizations for the model trained with random initialization",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fig",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Column (4-5) are Grad-CAM visualizations for ImageNet pretrained model; Column (6-7) are Grad-CAM visualizations for Self-Trans model",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Rapid ai development cycle for the coronavirus (covid-19) pandemic: Initial results for automated detection & patient monitoring using deep learning ct image analysis",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Gozes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frid-Adar",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Greenspan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Browning",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bernheim",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Siegel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.05037"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "A simple framework for contrastive learning of visual representations",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kornblith",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Norouzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.05709"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Deep learning system to screen coronavirus disease 2019 pneumonia",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.09334"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Deep learning-based detection for covid-19 from chest ct using weak label",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Can ai help in screening viral and covid-19 pneumonia?",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Chowdhury",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Rahman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khandakar",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mazhar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kadir",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Mahbub",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Islam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Al-Emadi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.13145"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Rapid ai development cycle for the coronavirus (covid-19) pandemic: Initial results for automated detection & patient monitoring using deep learning ct image analysis",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Gozes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frid-Adar",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Greenspan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Browning",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bernheim",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Siegel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.05037"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Artificial intelligence distinguishes covid-19 from community acquired pneumonia on chest ct",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Deep learning enables accurate diagnosis of novel coronavirus (covid-19) with ct images",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jie",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A deep learning algorithm using ct images to screen for corona virus disease",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Lung infection quantification of covid-19 in ct images with deep learning",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shan+",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao+",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.04655"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Deep learning-based model for detecting",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "novel coronavirus pneumonia on high-resolution computed tomography: a prospective study",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Large-scale screening of covid-19 from community acquired pneumonia using infection size-aware classification",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sui",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.09860"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Covid-19 image data collection",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Morrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.11597"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Covid-19 chest x-ray database",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Covid-19 database",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Covid-19",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Eurorad",
+            "authors": [],
+            "year": 2020,
+            "venue": "Coronacases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Imagenet: A large-scale hierarchical image database",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Socher",
+                    "suffix": ""
+                },
+                {
+                    "first": "L.-J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fei-Fei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "CVPR",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Faster r-cnn: Towards real-time object detection with region proposal networks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Girshick",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "91--99",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Bert: Pre-training of deep bidirectional transformers for language understanding",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Devlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-W",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Toutanova",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1810.04805"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Digital mammographic tumor classification using transfer learning from deep convolutional neural networks",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Huynh",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Giger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Medical Imaging",
+            "volume": "3",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Transfusion: Understanding transfer learning for medical imaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Raghu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kleinberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "3342--3352",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "A novel transfer learning based approach for pneumonia detection in chest x-ray images",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Chouhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khamparia",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Tiwari",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Moreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dama\u0161evi\u010dius",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "H C"
+                    ],
+                    "last": "De Albuquerque",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Applied Sciences",
+            "volume": "10",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Low quality dermal image classification using transfer learning",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Elmahdy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Abdeldayem",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Yassine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE EMBS International Conference on Biomedical & Health Informatics (BHI)",
+            "volume": "",
+            "issn": "",
+            "pages": "373--376",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Dermatologist-level classification of skin cancer with deep neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Esteva",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kuprel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Novoa",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ko",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Swetter",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Blau",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Thrun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nature",
+            "volume": "542",
+            "issn": "7639",
+            "pages": "115--118",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Transfusion: Understanding transfer learning for medical imaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Raghu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kleinberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "3342--3352",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Jointtask self-supervised learning for temporal correspondence",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mello",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kautz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-H",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "317--327",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Learning correspondence from the cycle-consistency of time",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Jabri",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Efros",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "2566--2576",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Reinforced cross-modal matching and self-supervised imitation learning for vision-language navigation",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Celikyilmaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-F",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "6629--6638",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Unsupervised representation learning by predicting image rotations",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gidaris",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Komodakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1803.07728"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Context encoders: Feature learning by inpainting",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pathak",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Krahenbuhl",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Donahue",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Darrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Efros",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "2536--2544",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Colorful image colorization",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Isola",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Efros",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "European conference on computer vision",
+            "volume": "",
+            "issn": "",
+            "pages": "649--666",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Improvements to context based self-supervised learning",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "Nathan"
+                    ],
+                    "last": "Mundhenk",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "9339--9348",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Unsupervised feature learning via non-parametric instance discrimination",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "3733--3742",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Representation learning with contrastive predictive coding",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Oord",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Vinyals",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1807.03748"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Learning representations by maximizing mutual information across views",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bachman",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hjelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Buchwalter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "15509--15519",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "A simple framework for contrastive learning of visual representations",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kornblith",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Norouzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.05709"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Rethinking data augmentation: Self-supervision and self-distillation",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1910.05872"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Momentum contrast for unsupervised visual representation learning",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Girshick",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1911.05722"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Improved baselines with momentum contrastive learning",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Girshick",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.04297"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Patchit: Self-supervised network weight initialization for fine-grained recognition",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sudowe",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Leibe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "BMVC",
+            "volume": "1",
+            "issn": "",
+            "pages": "24--25",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Covid-ct-dataset: A ct scan dataset about covid-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.13865"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Rich feature hierarchies for accurate object detection and semantic segmentation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Girshick",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Donahue",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Darrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Malik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "580--587",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Very deep convolutional networks for large-scale image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Simonyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zisserman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1409.1556"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Densely connected convolutional networks",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Der Maaten",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Weinberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "4700--4708",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Efficientnet: Rethinking model scaling for convolutional neural networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Le",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1905.11946"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Batch normalization: Accelerating deep network training by reducing internal covariate shift",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ioffe",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1502.03167"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Dimensionality reduction by learning an invariant mapping",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hadsell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chopra",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lecun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "2006 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR'06)",
+            "volume": "2",
+            "issn": "",
+            "pages": "1735--1742",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Learning deep representations by mutual information estimation and maximization",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hjelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Fedorov",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lavoie-Marchildon",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Grewal",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bachman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Trischler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1808.06670"
+                ]
+            }
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tarvainen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Valpola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "NIPS",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Batch normalization: Accelerating deep network training by reducing internal covariate shift",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ioffe",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the 32nd International Conference on Machine Learning",
+            "volume": "37",
+            "issn": "",
+            "pages": "7--09",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Adam: A method for stochastic optimization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kingma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "International Conference on Learning Representations",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Delving deep into rectifiers: Surpassing human-level performance on imagenet classification",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the IEEE international conference on computer vision",
+            "volume": "",
+            "issn": "",
+            "pages": "1026--1034",
+            "other_ids": {}
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "Grad-cam: Visual explanations from deep networks via gradient-based localization",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Selvaraju",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cogswell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Vedantam",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Parikh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Batra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE international conference on computer vision",
+            "volume": "",
+            "issn": "",
+            "pages": "618--626",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Examples of CT scans that are positive for COVID-19",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "When building the COVID19-CT dataset, for any figure that contains multiple CT scans as sub-figures, we manually split it into individual CTs",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "CRNet architecture. Please zoom to view better C. Contrastive self-supervised learning for CT-based COVID-19 diagnosis As discussed in the above section, while the popular transfer learning methods, which pretrain the model on large-scale datasets and fine-tune it on the target dataset, are helpful in 8 https://www.kaggle.com/kmader/lungnodemalignancy",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Framework and training pipeline of Self-Trans. Please zoom to view better improving the performance on the target task, there are two concerns about the transferability of the source data. First, the source data has a large domain shift from the target data. For example, the images in ImageNet are mostly in the natural image domain while the images in COVID-19 diagnosis tasks are from the medical domain. Second, in transfer learning, pretraining is conducted by fitting the class labels in the source domain and these classes are largely different from those in the target task. For example, the classes in ImageNet are mostly about non-medical concepts such as dog, cat, desk, etc. while the labels in our target task are COVID and Non-COVID.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "et al. established an earlyscreening model based on multiple CNN models to classify CT scans of patients with COVID-19 [4]. Wang et al. proposed a 3D deep CNN (DeCoVNet) to detect COVID-19 [5] using chest CT slices. Chowdhury et al. employed CNN to identify COVID-19 patients based on chest x-ray images",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "SPLIT",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "OF PARAMETER NUMBERS",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "OF DENSENET-169 WITH DIFFERENT WEIGHTS",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "OF SELF-TRANS IN THE ABLATION STUDIES",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "WITH THE WEIGHTS OF THE FEATURE EXTRACTOR FROZEN AND UNFROZEN",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "ImageNet Pretrained Self-Trans (1) (2) (3) (4) (5) (6) (7)",
+            "cite_spans": [
+                {
+                    "start": 31,
+                    "end": 34,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Random Init."
+        }
+    ]
+}

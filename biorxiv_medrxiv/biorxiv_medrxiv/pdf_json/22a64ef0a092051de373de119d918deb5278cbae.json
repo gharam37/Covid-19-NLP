@@ -1,0 +1,1904 @@
+{
+    "paper_id": "22a64ef0a092051de373de119d918deb5278cbae",
+    "metadata": {
+        "title": "Simple model for Covid-19 epidemics - back-casting in China and forecasting in the US",
+        "authors": [
+            {
+                "first": "Slav",
+                "middle": [
+                    "W"
+                ],
+                "last": "Hermanowicz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "postCode": "94720",
+                        "settlement": "Berkeley",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": "hermanowicz@ce.berkeley.edu"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "for systematic evaluation of the logistic model to predict epidemic growth. We sequentially estimated sets of model parameters (maximum number of cases K, growth rate r, and half-time t0) and the epidemic \"end time\" t95 (defined as the time when the number of cases, predicted or actual, reached 95% of the maximum). The estimates of these parameters were done for sequences of reported cases growing daily (back-casting for China and forecasting for the US). In both countries, the estimates of K grew very much in time during the exponential and nearly exponential phases making longer term forecasting not reliable. For the US, the current estimate of the maximum number of cases K is about 265,000 but it is very likely that it will grow in the future. However, running estimates of the \"end time\" t95 were in a much smaller interval for China (60 -70 days vs. the actual value of 67). For the US, the values estimated from the data sequences going back two weeks from now range from 70 to 80 days. If the behavior of the US epidemic is similar to the previous Chinese development, the number of reported cases could reach a maximum around April (2020) \"A mathematical model for simulating the transmission of Wuhan novel Coronavirus.\" bioRxiv,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In our previous recent work (Hermanowicz 2020) , we used a simple logistic model to analyze the evolution of data on Covid-19 cases as reported in mainland China by the National Health Commission of the People's Republic of China (NHC 2020) . This initial analysis was done in three phases in near-real time (up to Jan. 30, Feb. 3, and Feb 6) . The analysis resulted in a sequence of continually updated forecasts of the epidemic dynamics. Although the predicted maximum numbers of cases increased as new data became available, they systematically underestimated final reported numbers (even without accounting for a major change in reporting criteria in China on February 12 resulting in a large surge of new reported cases). However, the successive predicted dynamics of the epidemic were remarkably close to the final real-world outcome. We explore this issue further in this work where we use the full reported dataset for mainland China for systematic back-casting of the epidemic. At the same time, when this work is being conducted, in the US we are experiencing a fast developing Covid-19 epidemic that in some aspects is similar to China but with a delay. We use the experience from our analysis of the situation in China to forecast further evolution of coronavirus cases in the United States. Obviously, our predictions are based on the data currently available. These predictions do not account for any possible other secondary sources of infection, changes of diagnostics or reporting, or virus mutation.",
+            "cite_spans": [
+                {
+                    "start": 28,
+                    "end": 46,
+                    "text": "(Hermanowicz 2020)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 230,
+                    "end": 240,
+                    "text": "(NHC 2020)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 308,
+                    "end": 323,
+                    "text": "(up to Jan. 30,",
+                    "ref_id": null
+                },
+                {
+                    "start": 324,
+                    "end": 331,
+                    "text": "Feb. 3,",
+                    "ref_id": null
+                },
+                {
+                    "start": 332,
+                    "end": 342,
+                    "text": "and Feb 6)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Modelling the epidemics and infection dynamics is very important and numerous results have been recently reported for worldwide Covid-19 outbreak (Chen, Rui et al. 2020 , Chen, Cheng et al. 2020 , Hui, Azhar et al. 2020 , Li, Guan et al. 2020 , Liu, Hu et al. 2020 , Liu, Hewings et al. 2020 , Roosa, Lee et al. 2020 , Shen, Peng et al. 2020 , Zhao, Lin et al. 2020 , Zhou, Hong et al. 2020 , Ziff and Ziff 2020 . Many reported models are complicated, incorporate tentative assumptions and need parameters estimates that are not reliable as underscored by Fong and coworkers (Fong, Li et al. 2020) .",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 168,
+                    "text": "Covid-19 outbreak (Chen, Rui et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 169,
+                    "end": 194,
+                    "text": ", Chen, Cheng et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 195,
+                    "end": 219,
+                    "text": ", Hui, Azhar et al. 2020",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 220,
+                    "end": 242,
+                    "text": ", Li, Guan et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 243,
+                    "end": 264,
+                    "text": ", Liu, Hu et al. 2020",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 265,
+                    "end": 291,
+                    "text": ", Liu, Hewings et al. 2020",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 292,
+                    "end": 316,
+                    "text": ", Roosa, Lee et al. 2020",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 317,
+                    "end": 341,
+                    "text": ", Shen, Peng et al. 2020",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 342,
+                    "end": 365,
+                    "text": ", Zhao, Lin et al. 2020",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 366,
+                    "end": 390,
+                    "text": ", Zhou, Hong et al. 2020",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 391,
+                    "end": 411,
+                    "text": ", Ziff and Ziff 2020",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 575,
+                    "end": 597,
+                    "text": "(Fong, Li et al. 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this work, we present the results of fitting a very simple logistic model to the available data and a forecast of new infections. In contrast to other models, the logistic model does not include any external assumptions and is derived completely from available data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The logistic model is one of the simplest used in population dynamics and has been used specifically for epidemics for a long time (Bailey 1950 , Cockburn 1960 , Mansfield and Hensley 1960 , Jowett, Browning et al. 1974 , Waggoner and Aylor 2000 , Koopman 2004 , Bangert, Molyneux et al. 2017 . In our earlier analysis of the developing epidemic in China, we used a discrete version of the model due to its uncomplicated structure and easy calculations.",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 143,
+                    "text": "(Bailey 1950",
+                    "ref_id": null
+                },
+                {
+                    "start": 144,
+                    "end": 159,
+                    "text": ", Cockburn 1960",
+                    "ref_id": null
+                },
+                {
+                    "start": 160,
+                    "end": 188,
+                    "text": ", Mansfield and Hensley 1960",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 189,
+                    "end": 219,
+                    "text": ", Jowett, Browning et al. 1974",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 220,
+                    "end": 245,
+                    "text": ", Waggoner and Aylor 2000",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 246,
+                    "end": 260,
+                    "text": ", Koopman 2004",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 261,
+                    "end": 292,
+                    "text": ", Bangert, Molyneux et al. 2017",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "In discrete time, more appropriate to daily reported infection cases, the logistic model becomes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "where P(t) and P(t+1) are populations (cases) on consecutive days, R0 * is the growth rate (basic reproduction number in epidemiology) at the beginning of the logistic growth, and K is the limiting population (maximum cases).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "However, expressing the growth of population P in continuous time t allows to formulate the model as an ordinary first-order differential equation describing dynamic evolution of the population P (in our case the number of infected individuals) being controlled by the growth rate r and maximum cases K due to limited growth. In continuous time t, the change of P is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "Initially, the growth of P is close to exponential since the term (1 \u2212 \u2044 ) is almost one. When P becomes larger (commensurate with K) the growth rate slows down with",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "becoming an effective instantaneous growth rate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "The solution to Eq. (2) is the well-known sigmoidal function (logistic function)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "where t0 is the time when the population reaches one-half of the maximum value P(t0) = \u00bd K.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "Using a differential version of the model is more convenient since a closed-form solution exists and allows for direct estimation of three model parameters: K, r, and t0. The logistic model may be adequate for the analysis of mainland China and the US as a whole since at this time each country can be treated as a unit where a vast majority of cases occurred without any significant \"import\" or \"export\" of cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Logistic Model and its Application"
+        },
+        {
+            "text": "For China, we used data reported daily by the National Health Commission of the People's Republic of China (NHC 2020) up to March 13, 2020 (day 87 from the outbreak) when only 11 new cases were reportedless than 2\uf0d710 -4 of total case number, effectively ending the epidemic on the national level. There is a considerable controversy as to the exact date of the outbreak with most reports pointing to mid-December (Li, Guan et al. 2020 , Wang, Horby et al. 2020 while one analysis suggest multiple sources of original infection ). Initially, the outbreak was not recognized and number of confirmed cases is not fully known (Wu, Hao et al. 2020) . In our analysis, we adopted December 17, 2019 as the best estimate of the outbreak following the work of Zhang and co-workers . In addition, in the initial stages of the epidemic the reported numbers of cases may severely underestimate the actual numbers due to asymptomatic carriers (Zhao, Musa et al. 2020 ). More accurate numbers can be only estimated after the epidemic (Wu and McGoogan 2020) .",
+            "cite_spans": [
+                {
+                    "start": 413,
+                    "end": 434,
+                    "text": "(Li, Guan et al. 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 435,
+                    "end": 460,
+                    "text": ", Wang, Horby et al. 2020",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 622,
+                    "end": 643,
+                    "text": "(Wu, Hao et al. 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 930,
+                    "end": 953,
+                    "text": "(Zhao, Musa et al. 2020",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1020,
+                    "end": 1042,
+                    "text": "(Wu and McGoogan 2020)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "The data from China are show in Figure 1 and in the Appendix. As seen in this figure, the cumulative number of cases grew in a sigmoidal fashion. On February 12, 2020 (day 57) the reporting criteria were changed resulting in a one-day increase of about 15,000 cases. We analyzed the subsequent data with this jump and also ignoring it. The logistic model turned out to be quite robust. While the numerical estimates of the maximum number of cases K was significantly affected by the inclusion or exclusion the jump, the dynamics of the model was much less impacted (see further discussion). In this work, we decided to report the results with the jump as parsing data of new and cumulative cases past day 57 is very unreliable.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 32,
+                    "end": 40,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data Analysis"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 In the US, there are numerous agencies tracking the Covid-19 cases at different administrative levels in accordance with multi-tiered structure of the US government. For this reason, we relied on web-based data aggregators (mostly at state level) following daily updates (Covid-19 2020).",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "We used January 21, 2020 as the start of the epidemic in the US (day 1) since on that day the first non-repatriated Covid-19 case was reported. It should be noted that like in China the number of cases in the initial stages is underreported due to the same factors (asymptomatic carriers, initial administrative confusion, limited testing). Despite these problems, the data used in this work are the best currently available. The current evolution of the epidemic in the US is presented in Figure 1 and in the Appendix. Despite smaller population, the number of cases in the US at the time of writing already exceeds that of China. Reasons for such higher numbers are outside the scope of this analysis.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 490,
+                    "end": 498,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "Both, China and the US data are also plotted in the semi-log format (??) to underscore exponential growth of the epidemic in the initial stagesstraight line on these plots. In China, exponential growth occurred from day 30 till day 42 as shown in ?? and ?? by the dashed lines. After day 42 (January 28), the number of cases still increased but the rate of growth was . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 becoming lower and the line representing the cumulative cases deviated from the exponential curve. This feature was also clearly recognized in a previous report (Zhao, Lin et al. 2020 ).",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 264,
+                    "end": 286,
+                    "text": "(Zhao, Lin et al. 2020",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "In the US, exponential growth occurred for a longer period and only very recently (March 27 -30) perhaps starts to deviate from the exponential curve.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Analysis"
+        },
+        {
+            "text": "For each dataset of reported cumulative case numbers (China and the US), we estimated three parameters of the logistic model (maximum case number K, growth rate r, half-time t0) fitting model predictions to the data. We use a custom nonlinear curve fitting procedure employing the Levenberg-Marquardt method for minimization of the residual sum of squares. Similarly to our previous work (Hermanowicz 2020), we estimated model parameters sequentially from datasets growing day after day.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Estimates and Results"
+        },
+        {
+            "text": "For China, the first dataset contained 5 days from day 38 through 42. The next estimate used 6 days from day 38 through 43. This process was repeated until day 87 when the entire China dataset was used. For the US, the first dataset contained also 5 days from day 43 through 47. The last day of the available sequence for the US was day 70 (March 30, 2020). All resulting estimates are show in the Appendix. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Estimates and Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 In case of China, where the epidemic growth has essentially ended, the sequential estimation process (back-casting) simulated near-real time analysis of the dynamics. In the US, where we are still in the substantial growth phase, the sequential estimates are indeed performed in nearreal time. In addition to three model parameters, for each day we also estimated predicted time for the epidemic to end. For this purpose. we chose arbitrarily time when the predicted number of cases reach 95% of the predicted maximum K. This time, t95 was calculated from Eq. (4) by setting P(t) = 0.95 K and is also shown in the Appendix. Figure 3 shows the development of sequential estimates of the maximum predicted cases K for China and Figure 4 presents the corresponding \"ending times\" t95. As reported earlier (Hermanowicz 2020) for actual near-real time analysis, estimates of predicted maximum cases K depended very heavily on the length of the dataset used for estimation. As examples, Figure 5 shows a few logistic curves corresponding to selected model parameter estimates on specific days for China. As seen in this figure, the initial estimates (close to the exponential phase) were below 20,000 but they grew to about 100,000 as more data became available and was used for estimate refinement. Obviously, the estimate of K obtained from the full dataset (up to day 87) matches closely the actual reported number of cases (80,780 vs. 80,807) but it should be noted that the estimates of K from day 65 (more than 20 days in advance) converged very closely to the actual maximum. Figure 5 for China and Figure 6 for the US)",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 1524,
+                    "end": 1543,
+                    "text": "(80,780 vs. 80,807)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 727,
+                    "end": 735,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 829,
+                    "end": 837,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1084,
+                    "end": 1092,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1680,
+                    "end": 1688,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1703,
+                    "end": 1711,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model Estimates and Results"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "China"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 Due to a change in reporting criteria in China on day 57 (February 12), there was a major increase in the number of reported cases that could not be incorporated in the model. As mentioned before, we decided to use all data (with the jump) in any subsequent analysis. The immediate result was a very large increase in the estimated maximum cases K (Figure 3 ), approximately doubling it from about 50,000 on day 56 to about 99,400 on day 59. This big increase underscores again the sensitivity of the logistic model to data quality. However, the model is also robust in a longer term as the K estimates quickly converged toward their ultimate values.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 471,
+                    "end": 480,
+                    "text": "(Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "China"
+        },
+        {
+            "text": "Similarly, there was also a significant jump in the estimates of t95 (see Figure 4 ) due to the jump in the case numbers. However, it is remarkable that the estimates of the \"end time\" t95 were much more constrained and much closer to the actual value. Even as early as three weeks before the end of the epidemic the estimates of the \"end time\" were between 60 and 70 days, very close to the final value of 67 days.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 74,
+                    "end": 82,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "China"
+        },
+        {
+            "text": "Unlike China, the epidemic in the US is still at the growth phase, perhaps deviating slightly from the exponential growth. Thus, the available dataset is much smaller and the logistic model estimates are burdened with much larger uncertainty. Currently available estimates of the . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "United States"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 maximum cases K are also shown in Figure 3 . They exhibit very large variations increasing from approximately 1,100 on day 47 to approximately 265,000 on day 70 without any sign of leveling off. This large variation is not unexpected since the nearly exponential growth does not contain sufficient information on the actual maximum. In other words, the derivative dP/dt in Eq. (2) is dominated by the term r P while (1-P/K) \uf0bb 1. This behavior is also seen in the examples of predicted logistic curves for selected sets of estimated parameters K, r, t0 ( Figure 6 ).",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 157,
+                    "end": 165,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 677,
+                    "end": 685,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "United States"
+        },
+        {
+            "text": "The sequential estimates of the \"end time\" t95 are plotted in Figure 4 . They also tend to increase in time with the increasing number of reported cases but unlike the estimates of K (and similarly to the Chinese case) it varies in a much smaller interval -70 to 80 days in the past two weeks, If the behavior of the US epidemic is similar to the Chinese case, we could expect further leveling off of t95 at slightly above 80 days. If this bold prediction will hold, we could see the end of the epidemic growth around 80 -85 days after its origin, around April 10 to 14. Of course, the end here is defined as the cessation of new cases and not the complete recovery of the infected patients. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 62,
+                    "end": 70,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "United States"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "United States"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "United States"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 Note: Each row contains estimates of the logistic model K, r, t0 and the 95% end time t95 estimated from recorded number of cases for the period starting on day 38 and ending on the day in Column 1.",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "United States"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "United States"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "United States"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Forecasting the Wuhan coronavirus (2019-nCoV) epidemics using a simple (simplistic) model -update",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hermanowicz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.02.04.20020461"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Evaluating the secondary transmission pattern and epidemic prediction of the COVID-19 in metropolitan areas of China",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Long",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.06.20032177"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The continuing 2019-nCoV epidemic threat of novel coronaviruses to global health &#x2014; The latest 2019 novel coronavirus outbreak in Wuhan, China",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hui",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Azhar",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Madani",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ntoumi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kock",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Dar",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ippolito",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Mchugh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Memish",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Drosten",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zumla",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Petersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "91",
+            "issn": "",
+            "pages": "264--266",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Transmissibility of 2019-nCoV London",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Report 2: Estimating the potential total number of novel Coronavirus cases in Wuhan City",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "NONLINEAR DISEASE PROGRESS CURVES",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jowett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Browning",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Haning",
+                    "suffix": ""
+                }
+            ],
+            "year": 1974,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Modeling infection transmission",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Koopman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Annual Review of Public Health",
+            "volume": "25",
+            "issn": "",
+            "pages": "303--326",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Epidemiological characteristics of novel coronavirus infection: A statistical analysis of publicly available case data",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kobayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.26.20018754"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Transmission dynamics of 2019 novel coronavirus (2019-nCoV)",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Rong",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919787"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Modeling the situation of COVID-19 and effects of different containment strategies in China with dynamic differential equations and parameters estimation",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "J D"
+                    ],
+                    "last": "Hewings",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.09.20033498"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "THE LOGISTIC PROCESS -TABLES OF THE STOCHASTIC EPIDEMIC CURVE AND APPLICATIONS",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Mansfield",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hensley",
+                    "suffix": ""
+                }
+            ],
+            "year": 1960,
+            "venue": "Journal of the Royal Statistical Society Series B-Statistical Methodology",
+            "volume": "22",
+            "issn": "2",
+            "pages": "332--337",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "National Health Commission of the People's Republic of China",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nhc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The Extent of Transmission of Novel Coronavirus in Wuhan, China, 2020",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kobayashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Short-term Forecasts of the COVID-19 Epidemic in Guangdong and Zhejiang",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Roosa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kirpich",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rothenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Hyman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Modelling the epidemic trend of the 2019 novel coronavirus outbreak in China",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.23.916726"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Epidemiology: A science of patterns",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Waggoner",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Aylor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Annual Review of Phytopathology",
+            "volume": "38",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Real-time tentative assessment of the epidemiological characteristics of novel coronavirus infections in Wuhan, China, as at 22",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Characteristics of and Important Lessons From the Coronavirus Disease 2019 (COVID-19) Outbreak in China: Summary of a Report of 72 314 Cases From the Chinese Center for Disease Control and Prevention",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgoogan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "MRCA time and epidemic dynamics of the 2019 novel coronavirus",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919688"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Origin time and epidemic dynamics of the 2019 novel coronavirus",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919688"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.23.916395"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Estimating the Unreported Number of Novel Coronavirus (2019-nCoV) Cases in China in the First Half of",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ran",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Forecasting the Worldwide Spread of COVID-19 based on Logistic Model and SEIR Model",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Long",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.26.20044289"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Fractal kinetics of COVID-19 pandemic",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Ziff",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ziff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.02.16.20023820"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Evolution of reported cases in China and the US. (Solid points show data used to fit exponential functionsdashed lines)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Exponential growth of epidemics (seeFigure 1for notes)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "of data period (Estimation day) Sequential estimates of K (solid data points show days for which logistic model predictions are shown in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Sequential estimates of \"end time\" t95 (see notes inFigure 3)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Examples of model predictions for China for selected parameter estimates on specific days",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ". https://doi.org/10.1101/2020.03.Figure 6 Examples of model predictions for the US for selected parameter estimates on specific days. CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.03.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "2 Number of cases in the US",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "3 Sequential estimates of logistic model for ChinaEnd day Maximum K Rate rMid-time t0 End time t95",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "4 Sequential estimates of logistic model for the US End day Maximum K Rate r Mid-time t0 End time t95 47",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

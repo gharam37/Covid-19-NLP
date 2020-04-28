@@ -1,0 +1,2341 @@
+{
+    "paper_id": "64dc33172e117661b2b2dcd252a92df929c98a60",
+    "metadata": {
+        "title": "Prospects for detecting early warning signals in discrete event sequence data: application to epidemiological incidence data",
+        "authors": [
+            {
+                "first": "Emma",
+                "middle": [],
+                "last": "Southall",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "EPSRC & MRC Centre for Doctoral Training in Mathematics for Real-World Systems",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Michael",
+                "middle": [
+                    "J"
+                ],
+                "last": "Tildesley",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Louise",
+                "middle": [],
+                "last": "Dyson",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Early warning signals (EWS) identify systems approaching a critical transition, where the system undergoes a sudden change in state. For example, monitoring changes in variance or autocorrelation offers a computationally inexpensive method which can be used in real-time to assess when an infectious disease transitions to elimination. EWS have a promising potential to not only be used to monitor infectious diseases, but also to inform control policies to aid disease elimination. Previously, potential EWS have been identified for prevalence data, however the prevalence of a disease is often not known directly. In this work we identify EWS for incidence data, the standard data type collected by the Centers for Disease Control and Prevention (CDC) or World Health Organization (WHO). We show, through several examples, that EWS calculated on simulated incidence time series data exhibit vastly different behaviours to those previously studied on prevalence data. In particular, the variance displays a decreasing trend on the approach to disease elimination, contrary to that expected from critical slowing down theory; this could lead to unreliable indicators of elimination when calculated on real-world data. We derive analytical predictions which can be generalised for many epidemiological systems, and we support our theory with simulated studies of disease incidence. Additionally, we explore EWS calculated on the rate of incidence over time, a property which can be extracted directly from incidence data. We find that although incidence might not exhibit typical critical slowing down properties before a critical transition, the rate of incidence does, presenting a promising new data type for the application of statistical indicators.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The threat posed by infectious diseases has a huge impact on our global society. It is therefore critical to monitor infectious diseases as new data become available during control campaigns. One obstacle in observing disease emergence or elimination is understanding what influences noise in the data and how this fluctuates when near to zero cases. The standard data type collected is the number of new cases per day/month/year but mathematical modellers often focus on data such as the total number of infectious people, due to its analytical properties. We have developed a methodology to monitor the standard type of data to inform whether a disease is approaching emergence or disease elimination. We have shown computationally how : bioRxiv preprint 453 Model 1 & 2, exhibits a near perfect ability to identify the increasing trend.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "An AUC score of 0 demonstrates that the time series trend is instead decreasing and 455 as such it doesn't correspond to the predetermined prediction. A perfectly diagnosed 456 decreasing indicator when compared to the null model will result in zero sensitivity 457 under these conditions and an AUC score of 0. Fig. 3 highlights which indicators are in 458 some cases increasing (AUC close to one), decreasing (AUC close to zero) or are poor 459",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 312,
+                    "end": 318,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "One of the greatest challenges in society today is the burden of infectious diseases, 2 affecting public health and economic stability all over the world. Infectious diseases 3 disproportionately affect individuals in poverty, with millions of those suffering daily 4 from diseases that are considered eradicable. The potential for eradicating diseases such 5 as polio, guinea worm, measles, mumps or rubella is immense (International Task Force 6 for Disease Elimination, [31] ). Even where effective vaccines or treatments exist, disease it was later abandoned in 1969 due to funding shortages and drug resistance [26] , 10 leading to re-emergence of disease in Europe [27] . Assessing when a disease is close 11 enough to elimination to die out without further intervention, thus prompting the end 12 of a control campaign, is a problem of global economic importance. If campaigns are 13 stopped prematurely it can result in disease resurgence and subsequently put control 14 efforts back by decades. Conversely, the threat posed by newly emerging diseases such 15 as SARs, Ebola or the recent corona-virus outbreak COVID-2019 strains available 16 resources, places restrictions on global movement and disrupts the worlds most 17 vulnerable societies. Identifying which newly-emerging diseases will present a global 18 threat, and which will never cause a widespread epidemic is of critical importance. 19 To overcome the challenges identifying disease elimination or emergence, numerous 20 studies have suggested the use of early warning signals (EWS) [3] [4] [5] [6] [7] [8] . EWS are statistics 21 that may be derived from data that change in a predictable way on the approach to a 22 critical threshold. In epidemiology this threshold is commonly described as the point at 23 which the basic reproduction number, R 0 , passes through R 0 = 1. A system with R 0 24 increasing through 1 describes an emerging or endemic disease whereas R 0 decreasing 25 through 1 results in disease elimination. We seek to find EWS to identify when a 26 disease is approaching such a transition. We may identify such statistics using critical 27 slowing down (CSD) theory, which indicates the imminent approach of a threshold, 28 arising from increasing recovery times of perturbations as a system approaches a critical 29 transition [1, 2] . This increase in recovery time occurs because, as the stability of a 30 steady state changes, such as from a disease free state to emergence or from endemic 31 state to elimination, the dominant eigenvalue of the steady state passes through zero. 32 Since the eigenvalue also determines the relaxation time of the system, this recovery 33 time therefore increases as we approach a critical transition. 34 EWS offer the ability to anticipate a critical transition indirectly in real world noisy 35 time series data, by observing, for example, increasing variance or autocorrelation in the 36 fluctuations around the steady-state [2, 9] . Statistical indicators offer a computationally 37 inexpensive and efficient method for assessing the status of an infectious disease, 38 presenting a simple mechanism for disease surveillance and monitoring of control 39 policies. 40 The development of EWS is an active area of research in many fields, identifying the 41 statistical signatures of abrupt shifts in many dynamical systems. Studies have applied 42 EWS to historical data or laboratory experiments where a tipping point is 43 known [1, 13, 23] ; developed methods for using spatial variation [17, 18] , explored the 44 effects of detrending [8, 15] using the ensemble of multiple EWS [12, 13, 30] ; and datasets known to be going through a critical transition: from climate systems to stock 48 markets, to applications with ecological field data [16, 22, 23] . These studies observed 49 unexpected characteristic traits of common EWS, such as identifying a decreasing trend 50 in variance or standard deviation, leading to a discussion on the robustness of indicators. 51 It is therefore highly important to understand analytically how EWS are expected to 52 change on the approach to a critical transition for different data types to avoid any 53 misleading results. 54 The initial development of EWS in epidemiology focused on prevalence data, 55 producing analytical solutions and numerically testing the capabilities for statistical 56 indicators of emergence and elimination of infectious diseases [5] [6] [7] [8] . Analysis of 57 computer simulations of well-studied epidemiological systems have highlighted 58 challenges such as seasonality [6] or detrending of epidemiological time series data [8] .",
+            "cite_spans": [
+                {
+                    "start": 86,
+                    "end": 87,
+                    "text": "2",
+                    "ref_id": null
+                },
+                {
+                    "start": 175,
+                    "end": 176,
+                    "text": "3",
+                    "ref_id": null
+                },
+                {
+                    "start": 473,
+                    "end": 477,
+                    "text": "[31]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 616,
+                    "end": 620,
+                    "text": "[26]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 671,
+                    "end": 675,
+                    "text": "[27]",
+                    "ref_id": null
+                },
+                {
+                    "start": 712,
+                    "end": 714,
+                    "text": "11",
+                    "ref_id": null
+                },
+                {
+                    "start": 1065,
+                    "end": 1067,
+                    "text": "15",
+                    "ref_id": null
+                },
+                {
+                    "start": 1148,
+                    "end": 1150,
+                    "text": "16",
+                    "ref_id": null
+                },
+                {
+                    "start": 1230,
+                    "end": 1232,
+                    "text": "17",
+                    "ref_id": null
+                },
+                {
+                    "start": 1319,
+                    "end": 1321,
+                    "text": "18",
+                    "ref_id": null
+                },
+                {
+                    "start": 1556,
+                    "end": 1559,
+                    "text": "[3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1560,
+                    "end": 1563,
+                    "text": "[4]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1564,
+                    "end": 1567,
+                    "text": "[5]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1568,
+                    "end": 1571,
+                    "text": "[6]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1572,
+                    "end": 1575,
+                    "text": "[7]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1576,
+                    "end": 1579,
+                    "text": "[8]",
+                    "ref_id": null
+                },
+                {
+                    "start": 2132,
+                    "end": 2134,
+                    "text": "27",
+                    "ref_id": null
+                },
+                {
+                    "start": 2323,
+                    "end": 2326,
+                    "text": "[1,",
+                    "ref_id": null
+                },
+                {
+                    "start": 2327,
+                    "end": 2329,
+                    "text": "2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 2579,
+                    "end": 2581,
+                    "text": "32",
+                    "ref_id": null
+                },
+                {
+                    "start": 2734,
+                    "end": 2736,
+                    "text": "34",
+                    "ref_id": null
+                },
+                {
+                    "start": 2960,
+                    "end": 2963,
+                    "text": "[2,",
+                    "ref_id": null
+                },
+                {
+                    "start": 2964,
+                    "end": 2966,
+                    "text": "9]",
+                    "ref_id": null
+                },
+                {
+                    "start": 3103,
+                    "end": 3105,
+                    "text": "38",
+                    "ref_id": null
+                },
+                {
+                    "start": 3200,
+                    "end": 3202,
+                    "text": "40",
+                    "ref_id": null
+                },
+                {
+                    "start": 3465,
+                    "end": 3468,
+                    "text": "[1,",
+                    "ref_id": null
+                },
+                {
+                    "start": 3469,
+                    "end": 3472,
+                    "text": "13,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 3473,
+                    "end": 3476,
+                    "text": "23]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 3525,
+                    "end": 3529,
+                    "text": "[17,",
+                    "ref_id": null
+                },
+                {
+                    "start": 3530,
+                    "end": 3533,
+                    "text": "18]",
+                    "ref_id": null
+                },
+                {
+                    "start": 3574,
+                    "end": 3577,
+                    "text": "[8,",
+                    "ref_id": null
+                },
+                {
+                    "start": 3578,
+                    "end": 3581,
+                    "text": "15]",
+                    "ref_id": null
+                },
+                {
+                    "start": 3617,
+                    "end": 3621,
+                    "text": "[12,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 3622,
+                    "end": 3625,
+                    "text": "13,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 3626,
+                    "end": 3629,
+                    "text": "30]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 3779,
+                    "end": 3783,
+                    "text": "[16,",
+                    "ref_id": null
+                },
+                {
+                    "start": 3784,
+                    "end": 3787,
+                    "text": "22,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 3788,
+                    "end": 3791,
+                    "text": "23]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 4002,
+                    "end": 4004,
+                    "text": "51",
+                    "ref_id": null
+                },
+                {
+                    "start": 4201,
+                    "end": 4203,
+                    "text": "54",
+                    "ref_id": null
+                },
+                {
+                    "start": 4279,
+                    "end": 4281,
+                    "text": "55",
+                    "ref_id": null
+                },
+                {
+                    "start": 4436,
+                    "end": 4439,
+                    "text": "[5]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 4440,
+                    "end": 4443,
+                    "text": "[6]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 4444,
+                    "end": 4447,
+                    "text": "[7]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 4448,
+                    "end": 4451,
+                    "text": "[8]",
+                    "ref_id": null
+                },
+                {
+                    "start": 4581,
+                    "end": 4584,
+                    "text": "[6]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 4635,
+                    "end": 4638,
+                    "text": "[8]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "However epidemiological data is typically collected in the form of the number of new 60 infectious cases (incidence data) over a certain period of time (weekly/monthly/yearly). 61 Generally, the exact date of infection or recovery of an individual is not known and 62 therefore the exact number of infectious individuals at each point in time (the 63 prevalence data that has been analysed) is unknown.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "59"
+        },
+        {
+            "text": "Simulation-based studies exploring incidence-type data have suggested that the 65 potential for emergence of an infectious disease can be informed by statistical 66 signatures [3, 4] . These studies represent the first attempts to understand the robustness 67 of some indicators when used with disease emergence incidence data, subject to 68 underreporting and time aggregation. Both studies find that EWS do precede disease 69 emergence even when reporting is low. When the numerical performance of 10 EWS are 70 compared, Brett et al. find that the mean and variance perform well unless incidence is 71 subject to a highly overdispersed reporting error and they compare these results with 72 previously studied prevalence results. Theoretical predictions are given for prevalence 73 data, however the analytical behaviour of incidence is not explored.",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 179,
+                    "text": "[3,",
+                    "ref_id": null
+                },
+                {
+                    "start": 180,
+                    "end": 182,
+                    "text": "4]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "64"
+        },
+        {
+            "text": "O'Dea et al. [4] incorporate an observation model into a Birth-Death-Immigration 75 (BDI) process to present an analytical study of EWS of disease emergence. This model 76 allows prediction of the behaviour of EWS for dynamics captured by a BDI process but 77 is not suitable for diseases with population-level immunity. O'Dea et al. additionally 78 conducted an investigation into reporting errors in incidence-type data by recording the 79 removal of individuals (\"death\" component in the BDI process). They describe the 80 probability of a case being reported with either a Binomial or Negative Binomial 81 distribution, allowing for over and under-reporting. In contrast to Brett et al., they 82 conclude that the mean, variance and coefficient of variation (CV) are poor indicators 83 since they are sensitive to reporting errors and insensitive to differences between 84 transmission and recovery rates.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 16,
+                    "text": "[4]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 678,
+                    "end": 691,
+                    "text": "Brett et al.,",
+                    "ref_id": null
+                },
+                {
+                    "start": 692,
+                    "end": 699,
+                    "text": "they 82",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "74"
+        },
+        {
+            "text": "In this paper, we advance the current literature to describe generalised signatures of 86 statistical indicators for incidence data, on the approach to a threshold, highlighting the 87 differences between EWS descriptors of incidence and prevalence. Strikingly, our results 88 demonstrate that although EWS of emergence exhibit an increasing variance, a trait demonstrate that variance instead decreases on the approach to a disease elimination 91 transition. We find that although incidence data does not undergo the transcritical 92 bifurcation traditionally considered by CSD theory, nevertheless time series trends are 93 still a valuable tool to predict disease elimination. The discrepancy between prevalence 94 and incidence on the one hand, and elimination and emergence on the other, could lead 95 to potential problems in detecting thresholds if the differences are not clearly 96 understood. 97 We introduce an analytical theory from stochastic processes to address why variance 98 in incidence decreases for disease elimination. We study multiple other indicators of disease elimination predicted by this theory, and compare their responses with 100 stochastic simulations. We also consider the rate of incidence as a measurement that 101 can be extracted from incidence data. Notably, we find that on the approach to a 102 critical transition the rate of incidence exhibits typical CSD signatures which 103 correspond with prevalence data, such as an increasing variance. We present a broad 104 analytical framework for EWS of incidence and rate of incidence for a variety of 105 different disease systems. We explore more intricate systems where elimination is driven 106 by different factors to understand the robustness of this theory. This simple generalised 107 result can be applied to many infectious diseases undergoing emergence or elimination, 108 a promising development for EWS of infectious diseases.",
+            "cite_spans": [
+                {
+                    "start": 903,
+                    "end": 905,
+                    "text": "97",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "85"
+        },
+        {
+            "text": "In this paper we focus on the application of EWS to disease elimination where there is a 111 limited understanding on how time series statistics of incidence data behaves on the 112 approach towards this threshold. We consider two simple models, where disease 113 elimination is forced with different mechanisms, to explore how EWS of disease 114 elimination behave for prevalence and incidence data. To demonstrate the broadness of 115 our results, we additionally present a comparative case study to the analytical results (SDEs) that describe the analytical behaviour of prevalence in these systems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "110"
+        },
+        {
+            "text": "Derivations of the analytical results and calculations of each statistic can be found in 123 the supporting text (S1 Appendix). We present our analysis for incidence data and 124 derive the corresponding statistical indicators. We exploit the well known fact that a 125 counting process can be described by a Poisson process. We apply this result to the 126 field of EWS to incorporate statistical signatures of a Poisson distributed variable to 127 describe the behaviour of the number of new infectious cases in epidemiology. 128 We verify our analytical results for prevalence and incidence with simulated studies, 129 and compare the contrasting results between prevalence and incidence. We measure the 130 change in trend of multiple statistical indicators using the Kendall's Tau score which 131 gives an indication of an increasing or decreasing trend. We begin with a simple example of a system that is approaching elimination from an 135 existing endemic state of I. We consider an SIS model where the effective contact rate 136 \u03b2 acts as the control parameter. Effective reduction of \u03b2 can be induced by public 137 health campaigns (such as washing hands or improving food hygiene) and through 138 social distancing (such as school closure). By decreasing \u03b2(t) in time, it slowly forces",
+            "cite_spans": [
+                {
+                    "start": 528,
+                    "end": 531,
+                    "text": "128",
+                    "ref_id": null
+                },
+                {
+                    "start": 798,
+                    "end": 801,
+                    "text": "131",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "122"
+        },
+        {
+            "text": "\u03b3 through the critical transition at R 0 = 1. The model transitions are shown in 140 the following schematic with transition probabilities given in Table 1,   141 where \u03b2(t) changes slowly in time, given by, can be separated using 144 the linear noise approximation [28] . The corresponding SDE for \u03b6 defined for the SIS is 145 given by [8],",
+            "cite_spans": [
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[28]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 148,
+                    "end": 162,
+                    "text": "Table 1,   141",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "122"
+        },
+        {
+            "text": "Model 2: SIS with increasing vaccination coverage (births and deaths) 147 We consider an SIS model where a proportion of susceptible individuals are vaccinated 148 and gain immunity to the disease. By increasing the proportion of individuals ",
+            "cite_spans": [
+                {
+                    "start": 70,
+                    "end": 73,
+                    "text": "147",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "122"
+        },
+        {
+            "text": "to push the system through the critical transition at R 0 = 1. We interpret the dynamics 157 of the fluctuations of these SDEs with a two-dimensional Fokker-Planck Equation (see 158 supplementary text S1 Appendix and Table 1 for transition rates ),",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 217,
+                    "end": 224,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "122"
+        },
+        {
+            "text": "where \u03b6 1 defines the fluctuations about the susceptibles (\u03c8 = S N ) and \u03b6 2 defines the 160 fluctuations about the infecteds (\u03c6 = I N ), and,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "122"
+        },
+        {
+            "text": "In both cases it is assumed that the fluctuations can be separated linearly from the 162 steady state. Many statistics of this system can be described by the covariance matrix 163 \u0398, given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "122"
+        },
+        {
+            "text": "In particular, the variance of the fluctuations about the infectious steady state is 165 given by \u0398 22 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "122"
+        },
+        {
+            "text": "Finally we consider the SIS model with external infection which has been used to 168 investigate EWS in prevalence and in incidence [4, 5] . We demonstrate how our 169 analytical results compare for this system, and illustrate differences when applied to and we consider the model in a stochastic formulation, with transition probabilities 175 given in Table 1 . Disease emergence is driven by increasing the effective contact rate 176 \u03b2(t) over time, that slowly increases R 0 through the critical transition at R 0 = 1,",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 84,
+                    "text": "168",
+                    "ref_id": null
+                },
+                {
+                    "start": 132,
+                    "end": 135,
+                    "text": "[4,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 136,
+                    "end": 138,
+                    "text": "5]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 353,
+                    "end": 360,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Model 3: SIS with external force of infection and increasing transmission 167"
+        },
+        {
+            "text": "The fluctuations, \u03b6 about the steady state are an extension of those in Model 1 to 178 include the external force of infection and satisfy, found in the supplementary text (S1 Appendix).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 3: SIS with external force of infection and increasing transmission 167"
+        },
+        {
+            "text": "One limitation of this methodology is its inability to extend to other systems. This 186 derivation would need to be computed again for each specific example. In particular, if 187 one wanted to consider a simpler system with no external forcing, by setting \u03bd = 0, it 188 would make this result redundant -prompting our study for generic EWS that can 189 describe all systems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "185"
+        },
+        {
+            "text": "A counting process can be used as a generalised theory to understand the dynamics of 192 the number of new events over a period of time. In particular, a diverse range of data 193 types can be described by a counting process and this motivates us to characterise how 194 statistics of such processes behave on the approach to a critical transition. Incidence 195 (the number of new cases, N t ) is a counting process, which is known to be described by 196 a non-homogeneous Poisson process",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "191"
+        },
+        {
+            "text": "where the integral approximation holds for \u2206t sufficiently small. In the supporting 198 text (S2 Fig) we demonstrate that for our parameters, this approximation works well for 199 \u2206t up to 3. We can derive EWS in disease incidence aggregated over a time interval \u2206t 200 (e.g. daily, weekly, biweekly cases) using the well-known central moments of the Poisson 201 distribution:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 97,
+                    "end": 101,
+                    "text": "Fig)",
+                    "ref_id": null
+                }
+            ],
+            "section": "191"
+        },
+        {
+            "text": "Prior work from O'Dea et al. [4] has also incorporated under-reporting using a 203 negative binomial distribution; this can be included in this model when the rate \u03bb(t) is 204 gamma distributed. ",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 32,
+                    "text": "[4]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "191"
+        },
+        {
+            "text": "A common form of this force of infection is, The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.02.021576 doi: bioRxiv preprint ways such as an external force of infection (Model 3), \u03bb(t) = \u03b2(t)S(t)I(t) N + \u03bdS(t), that is 211 typically used to describe zoonotic spillover events or as an approximation for human 212 migration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "191"
+        },
+        {
+            "text": "Rate of Incidence Theory 214 We consider the rate of incidence (or the rate of the Poisson process) \u03bb(t) = T (I + 1|I), 215 which can be described dynamically with an SDE. Our analyses shows that the critical 216 transition of the rate of the Poisson process corresponds to prevalence models (e.g. at 217 R 0 = 1) and importantly exhibits behaviours predicted by CSD. 218 We investigate here calculating statistics on the rate of incidence (RoI) and its 219 potential to be used as an EWS for disease transitions. In particular, by considering the time 227 derivative of \u03bb t we can conclude that the fixed points of the rate of incidence can be 228 described by the transcritical bifurcation at R 0 = 1. We find that the stability of the 229 fixed points of \u03bb t also correspond to those of I, as expected. 230 We describe the fluctuations, \u03c9, about the steady state of \u03bb t = \u03b2(N \u2212I)I N using the 231 linear noise approximation (LNA). We are interested in statistics calculated on the 232 fluctuations about the rate of incidence, to develop new indicators of disease elimination. 233 We derive the resulting analytical solution for \u03c9 using Ito's Change of variable formulae 234 (details in supporting text: S1 Appendix) to approximate \u03c9 with the following Gaussian 235 process:",
+            "cite_spans": [
+                {
+                    "start": 25,
+                    "end": 28,
+                    "text": "214",
+                    "ref_id": null
+                },
+                {
+                    "start": 368,
+                    "end": 371,
+                    "text": "218",
+                    "ref_id": null
+                },
+                {
+                    "start": 806,
+                    "end": 809,
+                    "text": "230",
+                    "ref_id": null
+                },
+                {
+                    "start": 1080,
+                    "end": 1083,
+                    "text": "233",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "213"
+        },
+        {
+            "text": "In particular, the changing behaviour of the variance of the rate of incidence as the 237 system approaches disease elimination can be calculated from the SDE Eqn, 25,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "213"
+        },
+        {
+            "text": "Model 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "213"
+        },
+        {
+            "text": "If we consider models where there is population-level immunity, then \u03bb t = \u03b2SI N and we 240 can no longer reduce the dimension of incoming transitions using S = N \u2212 I. This can 241 be seen in Model 2 (SIS with increasing rate of vaccination), in particular the prevalence 242 analysis of these systems presented in the Methods Section results in a multivariable 243 Fokker-Plank Equation.",
+            "cite_spans": [
+                {
+                    "start": 362,
+                    "end": 365,
+                    "text": "243",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "239"
+        },
+        {
+            "text": "244 However, we can similarly describe the fluctuations, \u03c9, about the steady state of 245 \u03bb t = \u03b2SI N using the linear noise approximation (LNA) as in Model 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "239"
+        },
+        {
+            "text": "We again use Ito's Change of variable formulae for the multivariable system (which 247 will depend on \u03b6 1 and \u03b6 2 ) to approximate \u03c9. This leads to an SDE equation which 248 depends on the description of \u03b6 1 and \u03b6 2 (eqn. 9). In particular, we are interested in 249 statistics of the rate of incidence, such as the variance, which can be simplified in terms 250 of the original covariance matrix \u0398 (eqn. 12) and mean-field equations of infectious (\u03c6) 251 and susceptible (\u03c8) individuals, Following, we can describe the fluctuations about the rate of incidence (\u03c9) using the 258 LNA. In particular,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "239"
+        },
+        {
+            "text": "As previously, we can derive statistics of \u03c9 from the solution of this SDE. In 260 particular, since the SDE is linear in \u03c9 then we can describe \u03c9 as a Gaussian variable 261 with mean zero and variance given by the solution to the following ODE, was reduced from \u03b2 0 = 1 to 0, slowly forcing R 0 = 5 to 0. In Model 2, the rate of 269 vaccination was increased from p 0 = 0 to 1, slowly forcing R 0 = 5 to 0. In Model 3, the 270 transmission parameter \u03b2 was increased from \u03b2 0 = 0.12 to 0.24 so that the basic 271 reproduction number increases from R 0 \u2248 0.6 to \u2248 1.2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "239"
+        },
+        {
+            "text": "A drawback of using the rate of incidence (RoI) as a measure of disease elimination, 273 is the need to develop methods to extract this rate from incidence data. In our 274 simulation study, we calculate the RoI in two ways. Firstly, using simulations of (1)). We illustrate how 292 EWS change over time, and how accurate the theory is to predicting these trends. In 293 particular, we are interested in the trends over time and whether these time series 294 properties of EWS are the same for prevalence and incidence data.",
+            "cite_spans": [
+                {
+                    "start": 455,
+                    "end": 458,
+                    "text": "294",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "272"
+        },
+        {
+            "text": "The Kendall-tau score gives a measure of an increasing or decreasing trend of each 296 statistic over the time series ( where N is the number of time points). We use the 297 measure to evaluate whether a statistic corresponds to an increasing or decreasing trend 298 and compare this for different data types (prevalence, incidence and RoI). The 299 Kendall-tau score is defined as [25] ,",
+            "cite_spans": [
+                {
+                    "start": 346,
+                    "end": 349,
+                    "text": "299",
+                    "ref_id": null
+                },
+                {
+                    "start": 382,
+                    "end": 386,
+                    "text": "[25]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "295"
+        },
+        {
+            "text": "where two points in the time series (t 1 , x t1 ) and (t 2 , x t2 ) with t 1 < t 2 are said to be a 301 concordant pair if x t1 < x t2 , and a discordant pair if x t1 > x t2 . If the two points are 302 equal (x t1 = x t2 ) then the pair is neither concordant or discordant. 303 We calculate each statistic on a moving window (size 50) for each detrended 304 simulation, and then evaluate the Kendall-tau score. We compare the Kendall-tau scores 305 calculated on simulations going through a critical transition with null simulations, and 306 we then calculate receiver operating characteristic (ROC) curves by considering the null 307 model to be negative and the other models to be positive. We compare the performance 308 of each model statistic using the area under the curve (AUC). Good statistics have an 309 AUC close to 1 or 0 since this indicates the statistic is far from picking by chance.",
+            "cite_spans": [
+                {
+                    "start": 274,
+                    "end": 277,
+                    "text": "303",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "295"
+        },
+        {
+            "text": "Variance 312",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "311"
+        },
+        {
+            "text": "Variance is one of the most intuitive statistical indicators. As a system approaches a 313 critical transition the time taken to recover from small perturbations increases, as 314 described by Critical Slowing Down theory. This can be observed in the fluctuations 315 about the steady state, which on the approach to a critical transition take longer to 316 return and consequently vary far more, defining the increasing nature of variance as an 317 early warning signal. 318 We evaluate analytical solutions of the variance in prevalence using the derived SDE 319 for each model (Model 1: Eqn.4, Model 2: Eqn.9, Model 3: Eqn.15). We compare this 320 to theoretical solutions of the variance in incidence, using the transition rates for each 321 model (Table 1) to compute the rate of the Poisson process \u03bb. Figure 1 We observe that variance in prevalence simulations (Figure 1 a(ii) , b(ii) and c(ii)) 335 increases on the approach to the critical transition, as predicted by critical slowing 336 down. In comparison the variance in incidence decreases before the critical transition 337 for all disease elimination models (Model 1 Fig. 1 a(i) and Model 2 Fig. 1 b(i) ) and 338 increases similarly to prevalence for the disease emergence model (Model 4 Fig. 1 c(i) ). 339 This is contradictory to the theory of critical slowing down theory which predicts that 340 derivations from the steady state values return increasingly slowly on the approach to a 341 transition.",
+            "cite_spans": [
+                {
+                    "start": 472,
+                    "end": 475,
+                    "text": "318",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 752,
+                    "end": 761,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 808,
+                    "end": 816,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 868,
+                    "end": 883,
+                    "text": "(Figure 1 a(ii)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1133,
+                    "end": 1144,
+                    "text": "Fig. 1 a(i)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1157,
+                    "end": 1168,
+                    "text": "Fig. 1 b(i)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1254,
+                    "end": 1265,
+                    "text": "Fig. 1 c(i)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "311"
+        },
+        {
+            "text": "As expected by our Poisson process analysis, the variance of this system should be 343 the same as the mean of the system. Therefore for disease elimination models, we 344 should expect a decreasing variance (along with a decreasing mean) when calculated on 345 incidence data, in contrast to an increasing variance with prevalence data. Likewise 346 with disease emergence models we expect an increasing variance to correspond to the 347 increasing mean. This demonstrates that our analysis of incidence has successfully 348 predicted the time-varying variance for these different systems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "342"
+        },
+        {
+            "text": "Rate of incidence 350 We have observed that incidence data does not approach a critical transition as 351 described by critical slowing down theory. Consequently we demonstrated in Figure 1 352 that the variance of incidence does not necessarily increase on the approach to a critical 353 transition. A new approach for working with incidence-type data is to consider the rate 354 of incidence, \u03bb(t) = T (I + 1|I), which for each model we have derived the dynamical The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.02.021576 doi: bioRxiv preprint Variance (RoI) 357 The analytical variance in the rate of incidence is presented in Fig. 2 (orange line) . We 358 find that the theoretical analysis supports the simulation studies and provides us with 359 an understanding of how statistical indicators calculated in RoI data change on the 360 approach to a critical transition. We observe an increasing variance in the rate of 361 incidence before a critical transition; a time series trend which if exhibited in real-world 362 data could be used to anticipate disease tipping points. 363 We present results calculated in RoI simulations using the two methods: \"true\" and 364 \"approximated\" RoI, in Fig. 2 . The first method uses prevalence data (\"true\", purple 365 line) and corresponds well with the analytical solution (orange line) for all models and 366 the latter method (smoothing incidence data \"approximated\", blue line) fits particularly 367 well for Model 3 (Fig. 2(c) ). However it does not follow as closely to some time-varying 368 properties of the variance for Model 1 & 2 ( Fig. 2(a) and (b) ) respectively. Although increasing variance on the approach to the critical transition. In particular, 371 \"approximated\" RoI can be implemented in practice from incidence type data (blue line), 372 captures this property in all models.",
+            "cite_spans": [
+                {
+                    "start": 18,
+                    "end": 21,
+                    "text": "350",
+                    "ref_id": null
+                },
+                {
+                    "start": 623,
+                    "end": 626,
+                    "text": "357",
+                    "ref_id": null
+                },
+                {
+                    "start": 1144,
+                    "end": 1147,
+                    "text": "363",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 181,
+                    "end": 189,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 692,
+                    "end": 712,
+                    "text": "Fig. 2 (orange line)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1258,
+                    "end": 1264,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1528,
+                    "end": 1538,
+                    "text": "(Fig. 2(c)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1650,
+                    "end": 1667,
+                    "text": "Fig. 2(a) and (b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "349"
+        },
+        {
+            "text": "In Fig. 2(a) and (b) we observe that the analytical prediction fits well with the 374 stochastic simulations of \u03b2SI N (purple line) for Model 1 and Model 2 respectively. This 375 demonstrates that this theory approximates the behaviour of the system well. Indeed, 376 we observe that approximating the rate of incidence by smoothing Gillespie simulations 377 of new cases and then calculating the variance of this quantity (\"approximated\" RoI) 378 predicts a similar increasing behaviour before the critical transition, shown in Fig. 2 (a) 379 (blue line). This corresponds to the same peak as the analytical prediction and \"true\" 380 simulations. However, it fails to capture the magnitude of the behaviour earlier on in 381 the dynamics.",
+            "cite_spans": [
+                {
+                    "start": 444,
+                    "end": 447,
+                    "text": "378",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 12,
+                    "text": "Fig. 2(a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 529,
+                    "end": 535,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "373"
+        },
+        {
+            "text": "An area that still needs to be addressed with this methodology of smoothing new 383 case data is determining a suitable window size. This could result to misleading EWS 384 when used in practice. In the supporting text S1 Fig, we demonstrate that if the disease 385 is approaching elimination at a slower rate, both methods (\"true\" and \"approximated\") 386 converge to the analytical solution. We chose parameters such that Model 1 approaches 387 disease elimination at the same rate as Model 3 approaches disease emergence (R 0 388 changes from 1.2 to 0, \u03b2 {1} 0 = 0.24). As the system changes slowly enough then the 389 system will be approximately ergodic, such that the moving average resembles the mean 390 incidence. Thus the \"approximated\" method will be closer to the \"true\" solution. In 391 comparison, the faster a system changes over time, will correspond to a wider range in 392 incidence cases across the moving window. Resulting in a lower mean over the window 393 which can be seen in Fig. 2(a),(b) ; although the statistic will be more pronounced at 394 the threshold. 395 We find that for Model 2 (Fig. 2(b) ) the general trend of the variance is less 396 pronounced at the critical transition than observed for Model 1. We observe that the 397 analytical solution (Fig. 2(b) orange line) and true stochastic simulations (Fig. 2(b) 398 purple) only slightly increase before the critical transition, implying this trend would be 399 difficult to detect in real-world data. In particular, the Kendall-tau score which can be 400 an indication of an increasing trend, is negative (decreasing, \u03c4 = \u22121) for Model 2, 401 whilst for Model 1 and 3 we find that \u03c4 = 0.987 and \u03c4 = 1 respectively. Although, we 402 observe that the \"approximated\" simulations of the rate of incidence (Fig. 2(b) blue 403 line) exhibit similar properties as Model 1. We observe that the early stage dynamics of 404 this method have not predicted the expected behaviour of the analytical solution. It can 405 be noted that R 0 decreases at the same rate as Model 1, suggesting that this can be a 406 result of the approximation when R 0 is not slowly changing. Due to this approximation, 407 it can be observed that the variance of new cases does therefore increase before the The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.02.021576 doi: bioRxiv preprint critical transition (blue line).",
+            "cite_spans": [
+                {
+                    "start": 1084,
+                    "end": 1087,
+                    "text": "395",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 222,
+                    "end": 229,
+                    "text": "Fig, we",
+                    "ref_id": null
+                },
+                {
+                    "start": 999,
+                    "end": 1012,
+                    "text": "Fig. 2(a),(b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1113,
+                    "end": 1123,
+                    "text": "(Fig. 2(b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1281,
+                    "end": 1291,
+                    "text": "(Fig. 2(b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1337,
+                    "end": 1347,
+                    "text": "(Fig. 2(b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1788,
+                    "end": 1798,
+                    "text": "(Fig. 2(b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "382"
+        },
+        {
+            "text": "In Fig. 2(c) we observe that both measurements of the variance of \u03bb t calculated on 410 stochastic simulations of Model 3 have closely followed the analytical solution of 411 variance. As expected the true stochastic simulations (Fig. 2(c) purple line) follow 412 closely to the theory, supporting that this derivation of \u03c9 is correct. More interestingly, 413 calculating the variance of the rate of incidence directly from simulations of new cases 414 (N t , Fig. 2(c) blue line) has performed far better than when presented in Model 1 (Fig. 415  2(a) ). For Model 3, we observe that the variance of the rate of incidence increases 416 before the critical threshold, where the infectious disease emerges with outbreaking 417 dynamics similar to prevalence for this model. We further found that the early 418 dynamics of the \"approximated\" RoI simulations represent the true behaviour of the 419 variance. This result may be due to R 0 increasing more slowly in Model 3 than the rate 420 it decreases at in Model 1, satisfying the ergodic condition. In this section, we investigate the potential of identifying an epidemiological transition 423 using five commonly implemented early-warning signals: variance, coefficient of 424 variation (CV), skewness, kurtosis and lag-1 autocorrelation (AC(1)). Exploration of 425 each EWS follows similarly to variance, as analysed above theoretically and numerically 426 for prevalence, incidence and rate of incidence. In the supporting text, time series analyses for these indicators (S1 Appendix).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 12,
+                    "text": "Fig. 2(c)",
+                    "ref_id": null
+                },
+                {
+                    "start": 229,
+                    "end": 239,
+                    "text": "(Fig. 2(c)",
+                    "ref_id": null
+                },
+                {
+                    "start": 460,
+                    "end": 469,
+                    "text": "Fig. 2(c)",
+                    "ref_id": null
+                },
+                {
+                    "start": 537,
+                    "end": 552,
+                    "text": "(Fig. 415  2(a)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "409"
+        },
+        {
+            "text": "Here, we quantify these time series trends for each statistical indicator using the 431 Kendall-Tau score as a measure of an overall increasing or decreasing trend. We present 432 in Fig. 3 the predictive power of each statistical indicator using its time-changing trend 433 to classify simulations as either extinct (Ext simulations), emerging (Emg simulations) 434 or null simulations (Fix simulations). We calculate the area under the ROC curve 435 (AUC) by comparing the Kendall-tau score calculated over each time series up to two 436 end points: before the critical transition (t 1 ) and after the critical transition (t 2 ) which 437 gives an overall score of the true/false positive rate.",
+            "cite_spans": [
+                {
+                    "start": 84,
+                    "end": 87,
+                    "text": "431",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 183,
+                    "end": 189,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF22"
+                }
+            ],
+            "section": "430"
+        },
+        {
+            "text": "The AUC score gives a predictive measure between different indicators, which we use 439 to assess their performances. The closer the AUC is to 0.5 signifies the worst the 440 statistic's performance at anticipating a critical transition. This is analogous with 441 randomly selecting simulations that are the null and disease elimination (Model 1, Fig. 442 3(a)) or disease emergence (Model 3, Fig. 3(b) ). In particular, skewness is a poor 443 indicator because of its inability to identify disease elimination with any type of disease 444 data it is applied to (rate of incidence, incidence and prevalence). Identifying emergence 445 with skewness in prevalence or RoI data (red and orange bars respectively) is also very 446 poor and its predictive ability is only slightly increased with incidence (green bars).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 348,
+                    "end": 356,
+                    "text": "Fig. 442",
+                    "ref_id": null
+                },
+                {
+                    "start": 394,
+                    "end": 403,
+                    "text": "Fig. 3(b)",
+                    "ref_id": "FIGREF22"
+                }
+            ],
+            "section": "438"
+        },
+        {
+            "text": "A score close to 1 indicates nearly perfect sensitivity and specificity. For each EWS, 448 we assume that an increasing trend represents a disease going through a critical 449 transition. As a result a AUC score of 1 informs us that the indicator is increasing and 450 that it is possible to identify all Ext/Emg simulations when compared to the null 451 simulations by its increasing trend. Notably, in Fig. 3 coefficient of variation calculated 452 on all types of disease data (rate of incidence, incidence and prevalence) and for both For each ROC curve, we measured the AUC which is an indication of how predictive each indicator is by its ability to distinguish between elimination simulations and the null model. A score closer to 0.5 signifies the worst performance (random diagnosis). We evaluate the Kendall-tau score up to before the critical transition (t 1 = 390) and after the critical transition (t 2 = 450), which gives an indication if the EWS is increasing or decreasing. A score of 1 demonstrates that it is possible to identify all Ext simulations when compared to null simulations by its increasing trend (i.e. perfect sensitivity, true positive rate). A score of 0 means that there is zero sensitivity and instead the simulations are decreasing. indicators (AUC close to 0.5). In particular, as discussed in the previous section, 460 variance always increases prior to disease emergence ( Fig. 3(b) ). However, for disease 461 elimination (Model 1: Fig. 3 (a) and Model 2: S11 Fig) results are substantially different 462 when we compare variance calculated in rate of incidence and prevalence (orange and red 463 bars respectively) with incidence (green bars). For RoI and prevalence data types, the 464 statistical signature is an increasing variance with an AUC near 1. This is in contrast to 465 the latter where the trend is decreasing with an AUC near 0. However, the results for 466 variance (both increasing and decreasing) are highly predictive (|AU C \u2212 0.5| \u2248 0.5).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 404,
+                    "end": 410,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 1411,
+                    "end": 1420,
+                    "text": "Fig. 3(b)",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 1471,
+                    "end": 1477,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 1499,
+                    "end": 1511,
+                    "text": "Fig) results",
+                    "ref_id": null
+                }
+            ],
+            "section": "447"
+        },
+        {
+            "text": "Thus, if a system is not known or there is difficultly in determining the type of data, 468 incorrect conclusions could be drawn when interpreting the time series trend.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "467"
+        },
+        {
+            "text": "While studies for EWS on incidence-type data have been growing in recent years, 471 theoretical exploration of how these indicators change on the approach to a critical 472 transition have been neglected. In this paper, we have shown that the typical trends of 473 EWS that precede a critical transition are exhibited in prevalence-type data but do not 474 always exist in incidence-type data. In particular, we have focused our investigation on 475 the trend of variance over time as an infectious disease system approaches a tipping 476 point.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "470"
+        },
+        {
+            "text": "Prior work has shown that variance in incidence increases on the approach towards 478 disease emergence. However, our work highlights that this property is not a result from 479 critical slowing down theory as first expected. We have shown it is a consequence of the 480 counting process that can approximate incidence-type data. As such, we demonstrated 481 that the variance in incidence is expected to follow the mean in incidence. In particular, 482 the variance will increase on the approach to disease emergence, but will notably 483 decrease before a disease elimination threshold. We applied these findings to two 484 systems of disease elimination and verified that variance of incidence exhibits a 485 decreasing trend on the approach, following the behaviour of the mean and 486 contradicting critical slowing down theory.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "477"
+        },
+        {
+            "text": "Therefore, it is highly recommended to understand analytically how EWS change on 488 the approach to a critical transition in order to avoid misleading results. The 489 generalised theory of a counting process can be applied to many other systems outside 490 of the scope of epidemiology where we would expect a decreasing variance preceding a 491 critical transition. Potential applications include the observation of animals through 492 camera traps, disease surveillance sampling in wildlife or movements in stock prices, 493 which are all examples of incidence-type data. Notably, a substantial number of studies 494 on ecosystem data, climate data and financial data have observed inconsistencies in 495 statistical indicators [16, 22, 23, 29] . Although we found the Poisson process to be 496 overdispersed in the context of epidemiology, it provides a broad framework which can 497 be extended to many other infectious disease systems using the incoming transition 498 probabilities into the infectious class. 499 We proposed extracting the rate of incidence (RoI) or intensity of Poisson process 500 from incidence-type data to illustrate that to utilising CSD, such as observing an 501 increasing variance, requires suitable data which undergoes a bifurcation. In particular, 502 we have shown that the critical threshold in the RoI corresponds with that of 503 prevalence; and as expected we demonstrated that the trend in variance in RoI does 504 increase before an imminent epidemiological transition. 505 We applied five early warning signals to simulated datasets comprising of the three 506 discussed types: prevalence, incidence and rate of incidence. The simulated data we 507 have investigated represents perfect reporting or the \"best case scenario\". Often is the 508 case that there is underreporting that may reduce the detectability of signals in 509 real-world data. The work we have presented here can be extended to include a gamma 510 distributed intensity \u03bb. Using a gamma distributed rate of incidence will account for 511 reporting errors as described by O'Dea et al.",
+            "cite_spans": [
+                {
+                    "start": 732,
+                    "end": 736,
+                    "text": "[16,",
+                    "ref_id": null
+                },
+                {
+                    "start": 737,
+                    "end": 740,
+                    "text": "22,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 741,
+                    "end": 744,
+                    "text": "23,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 745,
+                    "end": 748,
+                    "text": "29]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1017,
+                    "end": 1020,
+                    "text": "499",
+                    "ref_id": null
+                },
+                {
+                    "start": 1514,
+                    "end": 1517,
+                    "text": "505",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "487"
+        },
+        {
+            "text": "Overall, our study suggests that a robust indicator is one that shares a highly 513 predictive time series trait (|AU C \u2212 0.5| \u2248 0.5) amongst all three data types, even with 514 inconsistent trends (increasing or decreasing). Therefore, we suggest that variance and 515 coefficient of variation are overall good indicators due to their high predictive power in 516 all cases. Coefficient of variation is a robust indicator for disease elimination since the 517 trend is similar between different types of data ( Fig. 3 (a) ) and S11 Fig. However   518 discrepancies are demonstrated when considering opposite disease thresholds as shown 519 with disease emergence (Fig. 3(b) ) which has a decreasing trend for CV and performs 520 less well with disease prevalence data.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 512,
+                    "end": 522,
+                    "text": "Fig. 3 (a)",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 533,
+                    "end": 551,
+                    "text": "Fig. However   518",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 664,
+                    "end": 674,
+                    "text": "(Fig. 3(b)",
+                    "ref_id": "FIGREF22"
+                }
+            ],
+            "section": "512"
+        },
+        {
+            "text": "However, we found that kurtosis and AC(1) are not robust indicators. Although 522 kurtosis and AC(1) have a predictive trend with prevalence data, this is not typically 523 the data which is readily available. In particular, kurtosis is highly predictive (with a 524 decreasing trend) in prevalence data on the approach to disease elimination ( Fig. 3(a) ) 525 and fairly predictive with an decreasing trend in the case of prevalence with emergence 526 (Fig. 3(b) ); it is a poor indicator for all other types of data. Likewise, although AC(1) 527 has a clear increasing trend for prevalence data elimination systems ( Fig. 3(a) , S11 Fig) , 528 it is less predictive trend for incidence and RoI data. Additionally, the trend is not 529 distinct for any datasets when considering an emergence transition, therefore there is a 530 potential for this indicator to be used incorrectly. In the cases where an EWS is poor in 531 some types of data but good for others could lead to misleading judgements of systems, 532 and therefore are not robust.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 345,
+                    "end": 354,
+                    "text": "Fig. 3(a)",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 453,
+                    "end": 463,
+                    "text": "(Fig. 3(b)",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 619,
+                    "end": 628,
+                    "text": "Fig. 3(a)",
+                    "ref_id": "FIGREF22"
+                },
+                {
+                    "start": 635,
+                    "end": 639,
+                    "text": "Fig)",
+                    "ref_id": null
+                }
+            ],
+            "section": "521"
+        },
+        {
+            "text": "These findings support prior work on prevalence and initial work from O'Dea et al. 534 and Brett et al. with incidence-type data. Our analytical exploration of incidence has 535 indicated a new data source, RoI, which can be extracted from incidence timeseries. A 536 potential powerful tool would be to compute variance and CV indicators with different 537 types of data (incidence, rate of incidence and prevalence) and ensemble these. An 538 ensemble or combination of multiple statistical indicators was suggested by Drake & 539 Griffen [13] and has been applied to case studies with the same data-type and a 540 combination of EWS by Kefi et al. [30] to help interpret between different critical 541 transitions and also has successfully detected transitions using an ensemble of different 542 time series data [12] . This suggests a potential approach to achieve a single metric from 543 a combination of indicators calculated on multiple timeseries data with different trends, 544 such as we have observed with incidence and RoI, to achieve a more pronounced 545 indication of disease transitions. 546 Additionally, further work would be to include a heterogeneous ensemble as 547 suggested by O'Dea et al. [4] , whereby all parameters are sampled randomly for each 548 realisation rather than being equal. This will lead to more realistic results, as each 549 parameter sample represents time series data from different locations, as suggested by 550 studies on spatial statistics, a promising method for addressing limited data [8, 17, 18] . 551 Comparatively, we have shown here that computing the statistics on a homogeneous 552 ensemble although unrealistic, it returns exact stochastic behaviours of the system and 553 we used this to verify the simulated study with the theory.",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 86,
+                    "text": "534",
+                    "ref_id": null
+                },
+                {
+                    "start": 521,
+                    "end": 532,
+                    "text": "Drake & 539",
+                    "ref_id": null
+                },
+                {
+                    "start": 541,
+                    "end": 545,
+                    "text": "[13]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 651,
+                    "end": 655,
+                    "text": "[30]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 816,
+                    "end": 820,
+                    "text": "[12]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1105,
+                    "end": 1108,
+                    "text": "546",
+                    "ref_id": null
+                },
+                {
+                    "start": 1214,
+                    "end": 1217,
+                    "text": "[4]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1541,
+                    "end": 1544,
+                    "text": "17,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1545,
+                    "end": 1548,
+                    "text": "18]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "533"
+        },
+        {
+            "text": "In conclusion, there is a tremendous potential for using early warning signals to 555 provide evidence on our progress towards elimination and inform public health policies. 556 We have indicated that by monitoring simple statistics over time it is possible to 557 observe disease emergence and elimination, which with further development offers a 558 promising solution for an automated system that can update time series statistics in 559 real-time as new data becomes available. This would be particularly useful for emerging 560 diseases where EWS could be used to prompt early detection and help aid rapid The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.02.021576 doi: bioRxiv preprint responses. The focus of our paper has provided insight on how statistics behave for 562 different types of infectious disease data, where we considered suitable data which could 563 be incorporated into such monitoring system. We have researched the resemblance of 564 observed time series results between different data types, a necessary exploration for the 565 development of EWS before they can impact decision making. We reported that some 566 indicators traits are inconsistent across all data types and some EWS differ significantly 567 between disease thresholds: elimination and emergence. Knowledge of the type of data 568 which has been collected is imperative to avoid misleading judgements in response to 569 time series trends. Our work has provided analytical evidence to understand why results 570 differ, improving our ability to monitor EWS for infectious disease transitions. ",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 177,
+                    "text": "556",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "554"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Early-warning signals for critical 593",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Van",
+                    "middle": [],
+                    "last": "Nes",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Rietkerk",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sugihara",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Anticipating epidemic transitions with imperfect data. PLoS computational 596 biology",
+            "authors": [],
+            "year": 2018,
+            "venue": "",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Disentangling reporting and disease transmission",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "O&apos;dea",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "598",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Theoretical Ecology",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Theory of early warning signals of disease emergenceand 600 leading indicators of elimination. Theoretical Ecology",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "O&apos;regan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "6",
+            "issn": "",
+            "pages": "333--57",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Forecasting infectious disease 602 emergence subject to seasonal forcing",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "O&apos;dea",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Theoretical Biology and Medical",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Leading indicators of mosquito-borne disease 605 elimination. Theoretical ecology",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "O&apos;regan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lillie",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "269--86",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The problem of detrending 607",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Dessavre",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Southall",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tildesley",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dyson",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "when analysing potential indicators of disease elimination",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Rising variance: a leading indicator of ecological 610 transition. Ecology letters",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Carpenter",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brock",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Early warnings of regime shifts: a 613 whole-ecosystem experiment",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Carpenter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Pace",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Batt",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brock",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cline",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Coloso",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hodgson 612",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Kitchell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Seekell",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Science",
+            "volume": "332",
+            "issn": "6033",
+            "pages": "1079--82",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "climate tipping points from critical slowing down: comparing methods to improve 616 robustness",
+            "authors": [],
+            "year": null,
+            "venue": "Philosophical Transactions of the Royal Society A: Mathematical",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Including trait-based early warning signals helps predict 619 population collapse",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Clements",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ozgul",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature communications",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Early warning signals of extinction in deteriorating 621 environments",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Griffen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Nature",
+            "volume": "467",
+            "issn": "7314",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Statistical indicators and state-space 623",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hefley",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tyre",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Blankenship",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Methods for detecting early 627",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Livina",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Seekell",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Van Nes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scheffer",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Early warning signals of ecological transitions: 637 methods for spatial patterns",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scheffer",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Van Nes",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Dakos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PloS one",
+            "volume": "9",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Catastrophic regime shifts in ecosystems: linking 639",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scheffer",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Carpenter",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Trends in ecology & evolution",
+            "authors": [],
+            "year": 2003,
+            "venue": "",
+            "volume": "18",
+            "issn": "",
+            "pages": "648--56",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Factors influencing the 641",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Clements",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Drake",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Griffiths",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ozgul",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "How one might miss early warning 644 signals of critical transitions in time series data: A systematic study of two major 645 currency pairs",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Ciamarra",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cheong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "PloS one",
+            "volume": "13",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Critical slowing down as an early warning 647 signal for financial crises",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diks",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hommes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Empirical Economics",
+            "volume": "57",
+            "issn": "4",
+            "pages": "1201--1228",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Early warnings of 650 regime shifts: a whole-ecosystem experiment",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Carpenter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Pace",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Batt",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brock",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cline",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Coloso",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hodgson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Kitchell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Seekell",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Science",
+            "volume": "332",
+            "issn": "6033",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "M Modeling infectious diseases in humans and 653 animals",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "A New Measure of Rank Correlation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kendall",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Some lessons for the future 657 from the Global Malaria Eradication Programme (1955-1969)",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "N\u00e1jera",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez-Silva",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Alonso",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "PLoS medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Malaria resurgence: a systematic review and assessment of its causes. 661 Malaria journal",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Moonen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Stochastic processes in physics and chemistry",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Van Kampen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Lack of critical slowing down 665 suggests that financial meltdowns are not critical transitions, yet rising variability 666 could signal systemic risk",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Guttal",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Raghavendra",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Goel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Hoarau",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "PloS one",
+            "volume": "",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Early warning signals also 668 precede non-catastrophic transitions",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "K\u00e9fi",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Dakos",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scheffer",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Van Nes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rietkerk",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Oikos",
+            "volume": "122",
+            "issn": "5",
+            "pages": "641--649",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Recommendations of the international task force 670 for disease eradication",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Holloway B",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Goodman R",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Morbidity and mortality weekly report",
+            "volume": "42",
+            "issn": "16",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "ongoing challenge. For example, after the establishment of the 8 Global Malaria Eradication Program in 1955 by the World Health Organisation (WHO) 9",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "89 associated with CSD and supporting results from Brett et al. and O'Dea et al., we 90",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "116 for emerging diseases by O'Dea et al. 117 In this section we review the following models: SIS model 118 (Susceptible-Infected-Susceptible model, see for example Keeling & Rohani [24]); SIS 119 model with vaccination and SIS model with external force of infection. For each model 120 that we have chosen to investigate, we derive the stochastic differential equations121",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "T (S \u2212 1, I + 1|S, I) \u03b20SI N Recovery T (S + 1, I \u2212 1|S, I) \u03b3I Incoming to S (non-vaccinated) T (S + 1, I|S, I) \u00b5N (1 \u2212 p(t)) Removal from I T (S, I \u2212 1|S, I) \u00b5I Removal from S T (S I|Sfix the population such that N = S + I. Previously work has shown that the 143 fluctuations, \u03b6, about the prevalence steady state, \u03c6(t) = I(t) N",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "vaccinated p(t), this control will reduce the effective reproduction number as the 150 susceptible populations is depleting. Births and deaths are considered to allow for a 151 non-zero steady state of I initially, and to ensure that the susceptible population does 152 not decrease to zero. By increasing the proportion of individuals vaccinated p(t), the153 system is pushed away from this steady state. The remaining (unvaccinated) individuals 154 enter the susceptible component as shown below, gradually increase the proportion of vaccinated individuals over time by, 156",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "model, in addition to the underlying SIS dynamics, susceptible individuals 172 can be infected by an external force of infection (governed by parameter \u03bd) that does 173 not depend on the level of infection, shown in the schematic below,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Without under-reporting the rate of new cases is given by the incoming transition 206 probabilities to the infectious state, 207 \u03bb(t) = T (I + 1|I).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "so that \u03bb(t) depends on the prevalence of infection, I(t). For Model 1, \u03b2(t) is a function 209 of time whereas in Model 2 \u03b2(t) = \u03b2 0 is fixed. Infection can also be increased in other 210",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Below we present our analytical results describing statistical indicators for each221 model. These theoretical solutions can be used to derive time-varying indicators for the 222 fluctuations of the rate of incidence. Full derivations of the analytical work are given in 223 the supporting text: S1 Appendix. Model 1 (SIS with decreasing transmission rate), we describe the 226 change in the rate of incidence as \u03bb t = \u03b2 (N \u2212I)I N .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "external force of infection into the SIS model is a direct extension of 254 the Model 1 analysis on the rate of incidence. Incoming transitions into the infectious 255 class increases from T (I + 1|I) = \u03b2 (N \u2212I)I N to \u03b2 (N \u2212I)I N + \u03bd(N \u2212 I), the case which is 256 observed in Model 3 (SIS with external force of infection and increasing transmission). 257",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "275 prevalence and taking the product \u03b2(t)SI N . This method, although unrealistic as it 276 requires knowledge of prevalence (I), demonstrates the accuracy of the analytical 277 results, as it is the \"true\" definition of RoI. An alternative method uses the Poisson 278property of incidence, illustrating that the rate of incidence \u03bb(t) also corresponds to the 279",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "280smoothing the Gillespie output of incidence (N t ) on a rolling window, giving the 281 approximated mean number of new cases for each realisation (we refer to this method as 282 \"approximated\" RoI). We can then calculate statistics of the fluctuations of the rate of 283 incidence over multiple realisations of this smoothed time series.284 For each model, we also perform simulations where the disease has not fully gone 285 through a critical transition (null model) which we refer to as Fix simulations. This null 286 model has no control mechanism and the disease fluctuates about the fixed endemic 287 steady state, at R 0 = 5 (Model 1 & 2) and R 0 = 0.5 (Model 3).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Before calculating the time changing statistics, we detrend each simulation by 289 removing the mean over all realisations of that setting (Ext, Emg or Fix). We are 290 interested in five common statistical indicators: variance (V), coefficient of variation 291 (CV), skewness (SK), kurtosis (K) and autocorrelation lag-1 (AC",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "presents the 322 simulated statistics for both prevalence and incidence theories of elimination and 323 emergence, where we have plotted the variance between multiple homogeneous 324 simulations at each time point (described in supporting text: S3 Fig).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "Our prediction for the variance is similar to the stochastic simulations with a slight 326 underdispersion in the incidence simulations (Figure 1a(i), b(i) and c(i)), since the 327 theory (rate of Poisson process, green line) is higher than that of the variance in the 328 fluctuations of the simulations (blue line). We note that our solution for Model 3 (Fig. 329 1) follows the gradient of the stochastic simulations more closely. Since the analytical 330 solution by O'Dea et al. (orange line) is evaluated at the steady state then the result 331 diverges at the critical transition. It can be shown that for larger values of \u03b2 0 , O'Dea et 332 al. results fit closer to the stochastic simulation, although the general trend of variance 333 for both approaches follows the simulations.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "Comparing predictions to simulations for variance. For each model (Model 1: SIS decreasing transmission; Model 2: SIS increasing vaccination; Model 3: SIS increasing transmission, emergence) we calculate the variance between 500 homogeneous realisations at every time step (daily). Each figure shows: Poisson process distribution (green line); dynamic predictions (red line) and Gillespie simulations (Ext: Model 1 and 2 and Emg: Model 3, blue line). The last model also shows the dynamical prediction from O'Dea et al. which was derived for this specific system (orange line).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF18": {
+            "text": "369 the early dynamics are misrepresented for Models 1 and 2, all time series indicate an370",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "Variance calculated on the rate of incidence For each model (Model 1: SIS decreasing transmission; Model 2: SIS increasing vaccination; Model 3: SIS increasing transmission, emergence) we calculate the variance on the rate of incidence. between 50 homogeneous realisations at every time step (daily). Each figure shows: dynamic solution (orange line); rate calculated from Gillespie simulations of incidence after smoothing (light blue line) and Gillespie simulations prevalence multiplied by time-varying susceptible and effective contact rate (\u03bb = \u03b2SI N , purple line).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "427 trends for each indicator are presented for each dataset and model (S3 Fig: variance, S4 428 Fig: CV, S5 Fig: Skewness, S6 Fig: kurtosis, S7 Fig: AC(1)), along with analytical 429",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF22": {
+            "text": "AUC scores for different EWS. We compare the performance of 5 common statistical indicators for Model 1 (a) for disease elimination and Model 3 (b) for disease emergence.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": ". Comparing predictions to simulations for variance.578 S4 Fig. Comparing predictions to simulations for coefficient of variation. 579 S5 Fig. Comparing predictions to simulations for skewness. 580 S6 Fig. Comparing predictions to simulations for kurtosis. 581 S7 Fig. Comparing predictions to simulations for autocorrelation lag 1. 582 S8 Fig. Evaluating the MSE between theoretical prediction and 583 simulations for different window sizes. 584 S9 Fig. ROC curves for indicators V, CV and AC(1). 585 S10 Fig. ROC curves for indicators Skewness and Kurtosis. 586 S11 Fig. AUC scores for different EWS (Model 2).",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "process, where an immigration event approximates the external force of infection; birth 181 events give new infections and the death component is analogous with recovery events. 182 O'Dea et al. derive statistics for incidence data by monitoring the number of individuals 183 recovering (e.g. the transition rate T (I \u2212 1|I) = \u03b3I). Results from this study can be",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": ")",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Table notes: values in braces directs to the model number which was implemented at that value. Parameters without braces are shared amongst all models. mean incidence over time. Therefore, our second method evaluates RoI by linearly",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

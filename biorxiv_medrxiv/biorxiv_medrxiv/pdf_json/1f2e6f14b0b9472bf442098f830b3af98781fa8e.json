@@ -1,0 +1,2501 @@
+{
+    "paper_id": "1f2e6f14b0b9472bf442098f830b3af98781fa8e",
+    "metadata": {
+        "title": "GraphDTA: Predicting drug-target binding affinity with graph neural networks",
+        "authors": [
+            {
+                "first": "Thin",
+                "middle": [],
+                "last": "Nguyen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Deakin University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Hang",
+                "middle": [],
+                "last": "Le",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Nha Trang University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Thomas",
+                "middle": [
+                    "P"
+                ],
+                "last": "Quinn",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Deakin University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Thuc",
+                "middle": [],
+                "last": "Le",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of South",
+                    "location": {
+                        "country": "Australia"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Svetha",
+                "middle": [],
+                "last": "Venkatesh",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Deakin University",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The development of new drugs is costly, time consuming, and often accompanied with safety issues. Drug repurposing can avoid the expensive and lengthy process of drug development by finding new uses for already approved drugs. In order to repurpose drugs effectively, it is useful to know which proteins are targeted by which drugs. Computational models that estimate the interaction strength of new drug-target pairs have the potential to expedite drug repurposing. Several models have been proposed for this task. However, these models represent the drugs as strings, which is not a natural way to represent molecules. We propose a new model called GraphDTA that represents drugs as graphs and uses graph neural networks to predict drug-target affinity. We show that graph neural networks not only predict drug-target affinity better than non-deep learning models, but also outperform competing deep learning methods. Our results confirm that deep learning models are appropriate for drug-target binding affinity prediction, and that representing drugs as graphs can lead to further improvements. Availability of data and materials: The proposed models are implemented in Python. Related data, pre-trained models, and source code are publicly available at https://github.com/thinng/GraphDTA. All scripts and data needed to reproduce the post-hoc statistical analysis are available from https://doi.org/10.5281/zenodo.3603523.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "there is a strong motivation to build computational models that can estimate the interaction strength of new drug-target pairs based on previous drug-target experiments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Several computational approaches have been proposed for drug-target affinity (DTA) prediction [11, 12, 13] . One approach uses collaborative filtering. For example, the SimBoost model uses the affinity similarities among drugs and among targets to build new features. These features are then used as input in a gradient boosting machine to predict the binding affinity for unknown drug-target pairs [14] . Alternatively, the similarities could come from others sources (rather than the training data affinities). For example, kernel-based methods use kernels built from molecular descriptors of the drugs and targets within a regularized least squares regression (RLS) framework [15, 16] . To speed up model training, the KronRLS model computes a pairwise kernel K from the Kronecker product of the drug-by-drug and protein-by-protein kernels [15, 16] (for which any similarity measure can be used).",
+            "cite_spans": [
+                {
+                    "start": 94,
+                    "end": 98,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 99,
+                    "end": 102,
+                    "text": "12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 103,
+                    "end": 106,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 399,
+                    "end": 403,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 679,
+                    "end": 683,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 684,
+                    "end": 687,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 843,
+                    "end": 847,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 848,
+                    "end": 851,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Another approach uses neural networks trained on 1D representations of the drug and protein sequences. For example, the DeepDTA model uses 1D representations and layers of 1D convolutions (with pooling) to capture predictive patterns within the data [17] . The final convolution layers are then concatenated, passed through a number of hidden layers, and regressed with the drug-target affinity scores. The WideDTA model is an extension of DeepDTA in which the sequences of the drugs and proteins are first summarized as higher-order features [18] . For example, the drugs are represented by the most common sub-structures (the Ligand Maximum Common Substructures (LMCS) [19] ), while the proteins are represented by the most conserved sub-sequences (the Protein Domain profiles or Motifs (PDM) from PROSITE [20] ). While WideDTA [18] and DeepDTA [17] learn a latent feature vector for each protein, the PADME model [21] uses fixed-rule descriptors to represent proteins, and performs similarly to DeepDTA [17] .",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 254,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 543,
+                    "end": 547,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 671,
+                    "end": 675,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 808,
+                    "end": 812,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 830,
+                    "end": 834,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 847,
+                    "end": 851,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 916,
+                    "end": 920,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1006,
+                    "end": 1010,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The deep learning models are among the best performers in DTA prediction [22] . Though, these models represent the drugs as strings, which are not a natural way to represent molecules. When using strings, the structural information of the molecule is lost, which could impair the predictive power of a model as well as the functional relevance of the learned latent space. Already, graph convolutional networks have been used in computational drug discovery, including interaction prediction, synthesis prediction, de novo molecular design, and quantitative structure prediction [23, 24, 25, 26, 27, 22] . However, graph neural networks have not been used for DTA prediction. Of these, [22, 27] are closest to our work, but while they aim at binary prediction, ours is at predicting a continuous value of binding (affinity). Also, in [22] , the input is a drug descriptor (single input) while our model takes a drug descriptor and a sequence as input (dual input).",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 77,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 579,
+                    "end": 583,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 584,
+                    "end": 587,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 588,
+                    "end": 591,
+                    "text": "25,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 592,
+                    "end": 595,
+                    "text": "26,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 596,
+                    "end": 599,
+                    "text": "27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 600,
+                    "end": 603,
+                    "text": "22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 686,
+                    "end": 690,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 691,
+                    "end": 694,
+                    "text": "27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 834,
+                    "end": 838,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In this article, we propose GraphDTA, a new neural network architecture capable of directly modelling drugs as molecular graphs, and show that this approach outperforms state-of-the-art deep learning models on two drug-target affinity prediction benchmarks. The approach is based on the solution we submitted to the IDG-DREAM Drug-Kinase Binding Prediction Challenge 1 , where we were among the Top Ten Performers from 530 registered participants 2 . In order to better understand how our graph-based model works, we performed a multivariable statistical analysis of the model's latent space. We identified correlations between hidden node activations and domain-specific drug annotations, such as the number of aliphatic OH groups, which suggests that our graph neural network can automatically assign importance to welldefined chemical features without any prior knowledge. We also examine the model's performance and find that a handful of drugs contribute disproportionately to the total prediction error, and that these drugs are inliers (i.e., not outliers) in an ordination of the model's latent space. Taken together, our results suggest that graph neural networks are highly accurate, abstract meaningful concepts, and yet fail in predictable ways. We conclude with a discussion about how these insights can feedback into the research cycle.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "We propose a novel deep learning model called GraphDTA for drug-target affinity (DTA) prediction. We frame the DTA prediction problem as a regression task where the input is a drug-target pair and the output is a continuous measurement of binding affinity for that pair. Existing methods represent the input drugs and proteins as 1D sequences. Our approach is different; we represent the drugs as molecular graphs so that the model can directly capture the bonds among atoms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of GraphDTA"
+        },
+        {
+            "text": "2.3 Drug representation SMILES (Simplified Molecular Input Line Entry System) was invented to represent molecules to be readable by computers [28] , enabling several efficient applications, including fast retrieval and substructure searching. From the SMILES code, drug descriptors like the number of heavy atoms or valence electrons can be inferred and readily used as features for affinity prediction. One could also view the SMILES code as a string. Then, one could featurize the strings with natural language processing (NLP) techniques, or use them directly in a convolutional neural network (CNN).",
+            "cite_spans": [
+                {
+                    "start": 142,
+                    "end": 146,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graph representation of drug compounds"
+        },
+        {
+            "text": "Instead, we view drug compounds as a graph of the interactions between atoms, and build our model around this conceptualization. To describe a node in the graph, we use a set of atomic features adapted from DeepChem [29] . Here, each node is a multi-dimensional binary feature vector expressing five pieces of information: the atom symbol, the number of adjacent atoms, the number of adjacent hydrogens, the implicit value of the atom, and whether the atom is in an aromatic structure [29] . We convert the SMILES code to its corresponding molecular graph and extract atomic features using the open-source chemical informatics software RDKit [30] . It takes a drug-target pair as the input data, and the pair's affinity as the output data. It works in 3 stages. First, the SMILES code of a drug is converted into a molecular graph, and a deep learning algorithm learns a graph representation. Meanwhile, the protein sequence is encoded and embedded, and several 1D convolutional layers learn a sequence representation. Finally, the two representation vectors are concatenated and passed through several fully connected layers to estimate the output drug-target affinity value.",
+            "cite_spans": [
+                {
+                    "start": 216,
+                    "end": 220,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 485,
+                    "end": 489,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 642,
+                    "end": 646,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graph representation of drug compounds"
+        },
+        {
+            "text": "Having the drug compounds represented as graphs, the task now is to design an algorithm that learns effectively from graphical data. The recent success of CNN in computer vision, speech recognition, and natural language processing has encouraged research into graph convolution. A number of works have been proposed to handle two main challenges in generalizing CNN to graphs: (1) the formation of receptive fields in graphs whose data points are not arranged as Euclidean grids, and (2) the pooling operation to down-sample a graph. These new models are called graph neural networks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Deep learning on molecular graphs"
+        },
+        {
+            "text": "In this work, we propose a new DTA prediction model based on a combination of graph neural networks and conventional CNN. Figure 1 shows a schematic of the model. For the proteins, we use a string of ASCII characters and apply several 1D CNN layers over the text to learn a sequence representation vector. Specifically, the protein sequence is first categorically encoded, then an embedding layer is added to the sequence where each (encoded) character is represented by a 128-dimensional vector. Next, three 1D convolutional layers are used to learn different levels of abstract features from the input. Finally, a max pooling layer is applied to get a representation vector of the input protein sequence. This approach is similar to the existing baseline models. For the drugs, we use the molecular graphs and trial 4 graph neural network variants, including GCN [31] , GAT [32], GIN [33] , and a combined GAT-GCN architecture, all of which we describe below.",
+            "cite_spans": [
+                {
+                    "start": 865,
+                    "end": 869,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 886,
+                    "end": 890,
+                    "text": "[33]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 122,
+                    "end": 130,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Deep learning on molecular graphs"
+        },
+        {
+            "text": "In this work, we focus on predicting a continuous value indicating the level of interaction of a drug and a protein sequence. Each drug is encoded as a graph and each protein is represented as a string of characters. To this aim, we make use of GCN model [31] for learning on graph representation of drugs. Note that, however, the original GCN is designed for semi-supervised node classification problem, i.e., the model learns the node-level feature vectors. For our goal, to estimate the drug-protein interaction, a graph-level representation of each drug is required. Common techniques to aggregate the whole graph feature from learned node features include Sum, Average, and Max Pooling. In our experiments, the use of Max Pooling layer in GCN-based GraphDTA usually results in better performance compared to that of the remaining.",
+            "cite_spans": [
+                {
+                    "start": 255,
+                    "end": 259,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 1: GCN-based graph representation learning"
+        },
+        {
+            "text": "Formally, denote a graph for a given drug as G = (V, E), where V is the set of N nodes each is represented by a C-dimensional vector and E is the set of edges represented as an adjacency matrix A. A multi-layer graph convolutional network (GCN) takes as input a node feature matrix X \u2208 R N \u00d7C (N = |V |, C: the number of features per node) and an adjacency matrix A \u2208 R N \u00d7N ; then produces a node-level output Z \u2208 R N \u00d7F (F : the number of output features per node). A propagation rule can be written in the normalized form for stability, as in [31] :",
+            "cite_spans": [
+                {
+                    "start": 546,
+                    "end": 550,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 1: GCN-based graph representation learning"
+        },
+        {
+            "text": "where\u00c3 = A + I N is the adjacency matrix of the undirected graph with added selfconnections,D ii = i\u00c3 ii ; H (l) \u2208 R N \u00d7C is the matrix of activations in the l th layer, H (0) = X, \u03c3 is an activation function, and W is learnable parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variant 1: GCN-based graph representation learning"
+        },
+        {
+            "text": ". CC-BY 4.0 International license is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the author/funder. It . https://doi.org/10.1101/684662 doi: bioRxiv preprint A layer-wise convolution operation can be approximated, as in [31] :",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "where \u0398 \u2208 R C\u00d7F (F : the number of filters or feature maps) is the matrix of filter parameters. Note that, however, the GCN model learns node-level outputs Z \u2208 R N \u00d7F . To make the GCN applicable to the task of learning a representation vector of the whole graph, we add a global max pooling layer right after the last GCN layer. In our GCNbased model, we use three consecutive GCN layers, each activated by a ReLU function. Then a global max pooling layer is added to obtain the graph representation vector.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "Unlike graph convolution, the graph attention network (GAT) [32] proposes an attentionbased architecture to learn hidden representations of nodes in a graph by applying a self-attention mechanism. The building block of a GAT architecture is a graph attention layer. The GAT layer takes the set of nodes of a graph as input, and applies a linear transformation to every node by a weigh matrix W. For each input node i in the graph, the attention coefficients between i and its first-order neighbors are computed as",
+            "cite_spans": [
+                {
+                    "start": 60,
+                    "end": 64,
+                    "text": "[32]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 2: GAT-based graph representation learning"
+        },
+        {
+            "text": "This value indicates the importance of node j to node i. These attention coefficients are then normalized by applying a soft-max function, then used to compute the output features for nodes as \u03c3(",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variant 2: GAT-based graph representation learning"
+        },
+        {
+            "text": "where \u03c3(.) is a non-linear activation function and \u03b1 ij are the normalized attention coefficients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variant 2: GAT-based graph representation learning"
+        },
+        {
+            "text": "In our model, the GAT-based graph learning architecture includes two GAT layers, activated by a ReLU function, then followed a global max pooling layer to obtain the graph representation vector. For the first GAT layer, multi-head-attentions are applied with the number of heads set to 10, and the number of output features set to the number of input features. The number of output features of the second GAT is set to 128.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variant 2: GAT-based graph representation learning"
+        },
+        {
+            "text": "The graph isomorphism network (GIN) [33] is newer method that supposedly achieves maximum discriminative power among graph neural networks. Specifically, GIN uses a multi-layer perceptron (MLP) model to update the node features as",
+            "cite_spans": [
+                {
+                    "start": 36,
+                    "end": 40,
+                    "text": "[33]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 3: Graph Isomorphism Network (GIN)"
+        },
+        {
+            "text": "where is either a learnable parameter or a fixed scalar, x is the node feature vector, and B(i) is the set of nodes neighboring i. [17] Smith-Waterman Pubchem-Sim 0.790 0.608 DeepDTA [17] Smith-Waterman 1D 0.886 0.420 DeepDTA [17] 1D Pubchem-Sim 0.835 0.419 KronRLS [15, 16] Smith-Waterman Pubchem-Sim 0.871 0.379",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 135,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 226,
+                    "end": 230,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 271,
+                    "end": 274,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 3: Graph Isomorphism Network (GIN)"
+        },
+        {
+            "text": "SimBoost [14] Smith-Waterman Pubchem-Sim 0.872 0.282 DeepDTA [17] 1D 1D 0.878 0.261 WideDTA [18] 1D In our model, the GIN-based graph neural net consists of five GIN layers, each followed by a batch normalization layer. Finally, a global max pooling layer is added to obtain the graph representation vector.",
+            "cite_spans": [
+                {
+                    "start": 9,
+                    "end": 13,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 61,
+                    "end": 65,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 92,
+                    "end": 96,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variant 3: Graph Isomorphism Network (GIN)"
+        },
+        {
+            "text": "We also investigate a combined GAT-GCN model. Here, the graph neural network begins with a GAT layer that takes the graph as input, then passes a convolved feature matrix to the subsequent GCN layer. Each layer is activated by a ReLU function. The final graph representation vector is then computed by concatenating the global max pooling and global mean pooling layers from the GCN layer output.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variant 4: GAT-GCN combined graph neural network"
+        },
+        {
+            "text": "To compare our model with the state-of-the-art DeepDTA [17] and WideDTA [18] models, we use the same 2 datasets from the [17, 18] benchmarks:",
+            "cite_spans": [
+                {
+                    "start": 55,
+                    "end": 59,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 72,
+                    "end": 76,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 121,
+                    "end": 125,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 126,
+                    "end": 129,
+                    "text": "18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Benchmark"
+        },
+        {
+            "text": "\u2022 Davis contains the binding affinities for all pairs of 72 drugs and 442 targets, measured as K d constants and ranging from 5.0 to 10.8 [34] .",
+            "cite_spans": [
+                {
+                    "start": 138,
+                    "end": 142,
+                    "text": "[34]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Benchmark"
+        },
+        {
+            "text": "\u2022 Kiba contains the binding affinities for 2,116 drugs and 229 targets, measured as KIBA scores and ranging from 0.0 to 17.2 [35] .",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 129,
+                    "text": "[35]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Benchmark"
+        },
+        {
+            "text": "To make the comparison as fair as possible, we use the exact same train/test data splits from [17, 18] ",
+            "cite_spans": [
+                {
+                    "start": 94,
+                    "end": 98,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 99,
+                    "end": 102,
+                    "text": "18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Benchmark"
+        },
+        {
+            "text": "The activation of nodes within layers of a deep neural network are called latent variables, and can be analyzed directly to understand how a model's performance relates to domain knowledge [36] . We obtained the 128 latent variables from the graph neural network layer, and analyzed them directly through a redundancy analysis. This multivariable statistical method allows us to measure the percent of the total variance within the latent variables that can be explained by an external data source. In our case, the external data source is a matrix of 38 molecular JoeLib features/descriptors [37] for each drug (available from ChemMine Tools [38] ). We also compare the value of the principal components from these latent variables with the per-drug test set error. Here, the per-drug (or per-protein) error refers to the median of the absolute error between the predicted DTA and the ground-truth DTA for all test set pairs containing that drug (or that protein). For these analyses, we focus on the GIN model [33] (because of its superior performance) and the Kiba dataset [35] (because of its larger drug catalog). The copyright holder for this preprint (which was not peer-reviewed) is the author/funder. It . https://doi.org/10.1101/684662 doi: bioRxiv preprint Figure 2 : The left panel of the figure shows a redundancy analysis triplot for the 128 drug latent variables regressed with 38 JoeLib molecular descriptors [37] . The blue dots represent drugs, the yellow dots represent latent variables (with the top 6 labelled explicitly), and the arrows represent molecular descriptors (with the top 5 labelled explicitly). The right panel of the figure shows the activation of two latent variables plotted against the number of aliphatic OH groups in that drug. These results suggest that the graph convolutional network can abstract known molecular descriptors without any prior knowledge.",
+            "cite_spans": [
+                {
+                    "start": 189,
+                    "end": 193,
+                    "text": "[36]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 593,
+                    "end": 597,
+                    "text": "[37]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 643,
+                    "end": 647,
+                    "text": "[38]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1012,
+                    "end": 1016,
+                    "text": "[33]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 1076,
+                    "end": 1080,
+                    "text": "[35]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1425,
+                    "end": 1429,
+                    "text": "[37]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1268,
+                    "end": 1276,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model interpretation"
+        },
+        {
+            "text": "3.1 Graphical models outperform the state-of-the-art Table 1 compares the performance of 4 variant GraphDTA models with the existing baseline models for the Davis dataset. Here, all 4 variants had the lowest MSE. The best variant had an MSE of 0.229 which is 12.3% lower than the best baseline of 0.261. The improvement is less obvious according to the CI metric, where only 2 of the 4 variants had the highest CI. The best CI for a baseline model was 0.886. By comparison, the GAT and GIN models achieved a CI of 0.892 and 0.893, respectively. Table 2 compares the performance of the GraphDTA models with the existing baseline models for the Kiba dataset. Here, 3 of the 4 variants had the lowest MSE and the highest CI, including GIN, GCN, and GAT-GCN. Of note, the best MSE here is 0.139, which is 22.3% lower than the best baseline. Of all variants tested, GIN is the only one that had the best performance for both datasets and for both performance measures. For this reason, we focus on the GIN in all post-hoc statistical analyses.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 53,
+                    "end": 60,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 545,
+                    "end": 552,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the author/funder. It . https://doi.org/10.1101/684662 doi: bioRxiv preprint Figure 3 : This figure shows the median of the absolute error for each drug, sorted in increasing order, for the Davis and Kiba test sets. Here, we see that the errors are not distributed evenly across the drugs. It is harder to predict the target affinities for some drugs than others.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 209,
+                    "end": 217,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "9"
+        },
+        {
+            "text": "A graph neural network works by abstracting the molecular graph of each drug into a new feature vector of latent variables. In our model, there are 128 latent variables which together characterise the structural properties of the drug. Since the latent variables are learned during the DTA prediction task, we assume that they represent graphical features that contribute meaningfully to DTA.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical models discover known drug properties"
+        },
+        {
+            "text": "Unfortunately, it is not straightforward to determine the molecular sub-structures to which each latent variable corresponds. However, we can regress the learned latent space with a matrix of known molecular descriptors to look for overlap. Figure 2 shows a redundancy analysis of the 128 latent variables regressed with 38 molecular descriptors [37] (available from ChemMine Tools [38] ). From this, we find that 20.19% of the latent space is explained by the known descriptors, with the \"Number of aliphatic OH groups\" contributing most to the explained variance. Indeed, two latent variables correlate strongly with this descriptor: hidden nodes V58 and V14 both tend to have high activation when the number of aliphatic OH groups is large. This finding provides some insight into how the graphical model might \"see\" the drugs as a set of molecular sub-structures, though most of the latent space is orthogonal to the known molecular descriptors.",
+            "cite_spans": [
+                {
+                    "start": 346,
+                    "end": 350,
+                    "text": "[37]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 382,
+                    "end": 386,
+                    "text": "[38]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 241,
+                    "end": 249,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Graphical models discover known drug properties"
+        },
+        {
+            "text": "Although the GraphDTA model outperforms its competitors, we wanted to know more about why its predictions sometimes failed. For this, we averaged the prediction error for each drug (and each protein), for both the Davis and Kiba test sets. Figures 3 and Here, we see that the errors are not distributed evenly across the proteins. It is harder to predict the target affinities for some proteins than others. 4 show the median of the absolute error (MAE) for affinity prediction, sorted from smallest to largest. Interestingly, we see that a handful of drugs (and a handful of proteins) contribute disproportionately to the overall error. Of note, CHEMBL1779202 (an ALK inhibitor), CHEMBL1765740 (a PDK1 inhibitor) and the protein CSNK1E all had an MAE above 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A few drugs contribute disproportionately to total error"
+        },
+        {
+            "text": "We examined the latent space with regard to the prediction error, but could not find any obvious pattern that separated hard-to-predict drugs from easy-to-predict drugs. The only trend we could find is that the easy-to-predict drugs are more likely to appear as outliers in a PCA of the latent space. Supplemental Figure 5 shows the median errors plotted against the first 6 principal components, where we see that the hard-topredict drugs usually appear close to the origin. We interpret this to mean that drugs with unique molecular sub-structures are always easy to predict. On the other hand, the hard-to-predict drugs tend to lack unique structures, though this is apparently true for many easy-to-predict drugs too.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 314,
+                    "end": 322,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "A few drugs contribute disproportionately to total error"
+        },
+        {
+            "text": "Knowing how a model works and when a model fails can feedback into the research cycle. In the post-hoc statistical analysis of our model, we find that a graph neural network can learn the importance of known molecular descriptors without any prior knowledge. However, most of the learned latent variables remain unexplained by the available descriptors. Yet, the model's performance implies that these learned representations are useful in affinity prediction. This suggests that there are both similarities and differences in how machines \"see\" chemicals versus how human experts see them.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model interpretation and the research cycle"
+        },
+        {
+            "text": "Understanding this distinction may further improve model performance or reveal new mechanisms behind drug-target interactions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model interpretation and the research cycle"
+        },
+        {
+            "text": "Meanwhile, the distribution of the test set errors suggest that there are \"problem drugs\" (and \"problem proteins\") for which prediction is especially difficult. One could action this insight either by collecting more training data for these drugs (or proteins), or by using domain-knowledge to engineer features that complement the molecular graphs. Indeed, knowing that the PCA outliers are the easiest to predict suggests that some additional feature input may be needed to differentiate between drugs that lack distinct molecular sub-graphs. Although 2D graphs contain more information than 1D strings, our model still neglects the stereochemistry of the molecules. Future experiments could test whether representing drugs in 3D (or proteins in 2D) further improves model performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model interpretation and the research cycle"
+        },
+        {
+            "text": "We test GraphDTA with four graph neural network variants, including GCN, GAT, GIN, and a combined GAT-GCN architecture, for the task of drug-affinity prediction. We benchmark the performance of these models on the Davis and Kiba datasets. We find GraphDTA performs well for two separate benchmark datasets and for two key performance metrics. In a post-hoc statistical analysis of our model, we find that GraphDTA can learn the importance of known molecular descriptors without any prior knowledge. We also examine the model's performance and find that a handful of drugs contribute disproportionately to the total prediction error. Although we focus on drugtarget affinity prediction, our GraphDTA model is a generic solution for any similar problem where either data input can be represented as a graph. It is tempting to also represent proteins in 3D due to the fact that 3D characteristics of drug molecules helps improve the performance of predicting drug-target binding affinity. However, there is a serious lack of 3D structures for proteins in both training and testing sets, to keep the evaluation fair with the previous work, we have to use 1D representation for proteins. So future work includes using 3D representation for proteins as well when they are available.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary and Future Work"
+        },
+        {
+            "text": "Ethics approval and consent to participate Not applicable. The copyright holder for this preprint (which was not peer-reviewed) is the author/funder. It . https://doi.org/10.1101/684662 doi: bioRxiv preprint Figure 5 : This figure shows the per-drug median errors plotted against the first 6 principal components, where we see that the hard-to-predict drugs usually appear close to the origin. We interpret this to mean that drugs with unique molecular sub-structures are always easy to predict.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 208,
+                    "end": 216,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Declarations"
+        },
+        {
+            "text": ". CC-BY 4.0 International license is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the author/funder. It . https://doi.org/10.1101/684662 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "17"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "New drugs cost US $2.6 billion to develop",
+            "authors": [
+                {
+                    "first": "Asher",
+                    "middle": [],
+                    "last": "Mullard",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nature Reviews Drug Discovery",
+            "volume": "13",
+            "issn": "12",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Drug repositioning: identifying and developing new uses for existing drugs",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ted",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karl",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Ashburn",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Thor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Nature Reviews Drug Discovery",
+            "volume": "3",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Pharmacogenetics in drug discovery and development: a translational perspective",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Allen D Roses",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Nature Reviews Drug Discovery",
+            "volume": "7",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Overcoming drug development bottlenecks with repurposing: old drugs learn new tricks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Stephen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Strittmatter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nature Medicine",
+            "volume": "20",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "A SARS-CoV-2-human protein-protein interaction map reveals drug targets and potential drug-repurposing. bioRxiv",
+            "authors": [
+                {
+                    "first": "David",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Gordon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gwendolyn",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Jang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mehdi",
+                    "middle": [],
+                    "last": "Bouhaddou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiewei",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kirsten",
+                    "middle": [],
+                    "last": "Obernier",
+                    "suffix": ""
+                },
+                {
+                    "first": "J O&apos;",
+                    "middle": [],
+                    "last": "Matthew",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Meara",
+                    "suffix": ""
+                },
+                {
+                    "first": "Danielle",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tia",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Swaney",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruth",
+                    "middle": [],
+                    "last": "Tummino",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Huttenhain",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.22.002386"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Protein kinases-the major drug targets of the twenty-first century?",
+            "authors": [
+                {
+                    "first": "Philip",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Nature Reviews Drug Discovery",
+            "volume": "1",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Protein kinase inhibitors: Insights into drug design from structure",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jane",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Noble",
+                    "suffix": ""
+                },
+                {
+                    "first": "Louise N Johnson",
+                    "middle": [],
+                    "last": "Endicott",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Science",
+            "volume": "303",
+            "issn": "5665",
+            "pages": "1800--1805",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Frequent substructure-based approaches for classifying chemical compounds",
+            "authors": [
+                {
+                    "first": "Mukund",
+                    "middle": [],
+                    "last": "Deshpande",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michihiro",
+                    "middle": [],
+                    "last": "Kuramochi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nikil",
+                    "middle": [],
+                    "last": "Wale",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Karypis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "IEEE Transactions on Knowledge and Data Engineering",
+            "volume": "17",
+            "issn": "8",
+            "pages": "1036--1050",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The protein kinase complement of the human genome",
+            "authors": [
+                {
+                    "first": "Gerard",
+                    "middle": [],
+                    "last": "Manning",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ricardo",
+                    "middle": [],
+                    "last": "Whyte",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tony",
+                    "middle": [],
+                    "last": "Martinez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sucha",
+                    "middle": [],
+                    "last": "Hunter",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sudarsanam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Science",
+            "volume": "298",
+            "issn": "5600",
+            "pages": "1912--1934",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Maximizing diversity from a kinase screen: identification of novel and selective pan-Trk inhibitors for chronic pain",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shawn",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Stachel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Darrell",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Sanders",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mike",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Henze",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hua-Poo",
+                    "middle": [],
+                    "last": "Rudd",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yiwei",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kausik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Melissa",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nanda",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Egbertson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kristen",
+                    "middle": [
+                        "Lg"
+                    ],
+                    "last": "Manley",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Journal of Medicinal Chemistry",
+            "volume": "57",
+            "issn": "13",
+            "pages": "5800--5816",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A machine learning-based method to improve docking scoring functions and its application to drug repurposing",
+            "authors": [
+                {
+                    "first": "Nina",
+                    "middle": [],
+                    "last": "Sarah L Kinnings",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tonge",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Richard",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "Jackson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Philip",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bourne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Chemical Information and Modeling",
+            "volume": "51",
+            "issn": "2",
+            "pages": "408--419",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Drug discovery in the age of systems biology: the rise of computational approaches for data integration",
+            "authors": [
+                {
+                    "first": "Murat",
+                    "middle": [],
+                    "last": "Iskar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Georg",
+                    "middle": [],
+                    "last": "Zeller",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xing-Ming",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peer",
+                    "middle": [],
+                    "last": "Vera Van Noort",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bork",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Current Opinion in Biotechnology",
+            "volume": "23",
+            "issn": "4",
+            "pages": "609--616",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The Drug Repurposing Hub: a next-generation drug library and information resource",
+            "authors": [
+                {
+                    "first": "Joshua",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Steven M Corsello",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zihan",
+                    "middle": [],
+                    "last": "Bittker",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joshua",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [],
+                    "last": "Gould",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jodi",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mccarren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stephen",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hirschman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anita",
+                    "middle": [],
+                    "last": "Johnston",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bang",
+                    "middle": [],
+                    "last": "Vrcic",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mariya",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nature Medicine",
+            "volume": "23",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "SimBoost: a read-across approach for predicting drug-target binding affinities using gradient boosting machines",
+            "authors": [
+                {
+                    "first": "Tong",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marten",
+                    "middle": [],
+                    "last": "Heidemeyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fuqiang",
+                    "middle": [],
+                    "last": "Ban",
+                    "suffix": ""
+                },
+                {
+                    "first": "Artem",
+                    "middle": [],
+                    "last": "Cherkasov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martin",
+                    "middle": [],
+                    "last": "Ester",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Cheminformatics",
+            "volume": "9",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Computational-experimental approach to drug-target interaction mapping: a case study on kinase inhibitors",
+            "authors": [
+                {
+                    "first": "Anna",
+                    "middle": [],
+                    "last": "Cichonska",
+                    "suffix": ""
+                },
+                {
+                    "first": "Balaguru",
+                    "middle": [],
+                    "last": "Ravikumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elina",
+                    "middle": [],
+                    "last": "Parri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanna",
+                    "middle": [],
+                    "last": "Timonen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tapio",
+                    "middle": [],
+                    "last": "Pahikkala",
+                    "suffix": ""
+                },
+                {
+                    "first": "Antti",
+                    "middle": [],
+                    "last": "Airola",
+                    "suffix": ""
+                },
+                {
+                    "first": "Krister",
+                    "middle": [],
+                    "last": "Wennerberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Juho",
+                    "middle": [],
+                    "last": "Rousu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tero",
+                    "middle": [],
+                    "last": "Aittokallio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "PLoS Computational Biology",
+            "volume": "13",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Learning with multiple pairwise kernels for drug bioactivity prediction",
+            "authors": [
+                {
+                    "first": "Anna",
+                    "middle": [],
+                    "last": "Cichonska",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tapio",
+                    "middle": [],
+                    "last": "Pahikkala",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sandor",
+                    "middle": [],
+                    "last": "Szedmak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Heli",
+                    "middle": [],
+                    "last": "Julkunen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Antti",
+                    "middle": [],
+                    "last": "Airola",
+                    "suffix": ""
+                },
+                {
+                    "first": "Markus",
+                    "middle": [],
+                    "last": "Heinonen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tero",
+                    "middle": [],
+                    "last": "Aittokallio",
+                    "suffix": ""
+                },
+                {
+                    "first": "Juho",
+                    "middle": [],
+                    "last": "Rousu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "13",
+            "pages": "509--518",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "DeepDTA: deep drug-target binding affinity prediction",
+            "authors": [
+                {
+                    "first": "Hakime",
+                    "middle": [],
+                    "last": "\u00d6zt\u00fcrk",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arzucan",
+                    "middle": [],
+                    "last": "\u00d6zg\u00fcr",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elif",
+                    "middle": [],
+                    "last": "Ozkirimli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "17",
+            "pages": "821--829",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "WideDTA: prediction of drug-target binding affinity",
+            "authors": [
+                {
+                    "first": "Hakime",
+                    "middle": [],
+                    "last": "\u00d6zt\u00fcrk",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elif",
+                    "middle": [],
+                    "last": "Ozkirimli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arzucan",
+                    "middle": [],
+                    "last": "\u00d6zg\u00fcr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Linguistic measures of chemical diversity and the 'keywords' of molecular collections",
+            "authors": [
+                {
+                    "first": "Micha\u0142",
+                    "middle": [],
+                    "last": "Wo\u017aniak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Agnieszka",
+                    "middle": [],
+                    "last": "Wo\u0142os",
+                    "suffix": ""
+                },
+                {
+                    "first": "Urszula",
+                    "middle": [],
+                    "last": "Modrzyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rafa\u0142",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jan",
+                    "middle": [],
+                    "last": "G\u00f3rski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Micha\u0142",
+                    "middle": [],
+                    "last": "Winkowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sara",
+                    "middle": [],
+                    "last": "Bajczyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Szymku\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bartosz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maciej",
+                    "middle": [],
+                    "last": "Grzybowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Eder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Scientific Reports",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "PROSITE, a protein domain database for functional characterization and annotation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Christian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lorenzo",
+                    "middle": [],
+                    "last": "Sigrist",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edouard",
+                    "middle": [
+                        "De"
+                    ],
+                    "last": "Cerutti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Petra",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Castro",
+                    "suffix": ""
+                },
+                {
+                    "first": "Virginie",
+                    "middle": [],
+                    "last": "Langendijk-Genevaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amos",
+                    "middle": [],
+                    "last": "Bulliard",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nicolas",
+                    "middle": [],
+                    "last": "Bairoch",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hulo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Nucleic Acids Research",
+            "volume": "38",
+            "issn": "suppl_1",
+            "pages": "161--166",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "PADME: A deep learning-based framework for drug-target interaction prediction",
+            "authors": [
+                {
+                    "first": "Qingyuan",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Evgenia",
+                    "middle": [],
+                    "last": "Dueva",
+                    "suffix": ""
+                },
+                {
+                    "first": "Artem",
+                    "middle": [],
+                    "last": "Cherkasov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martin",
+                    "middle": [],
+                    "last": "Ester",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1807.09741"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Large-scale comparison of machine learning methods for drug target prediction on ChEMBL",
+            "authors": [
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "Mayr",
+                    "suffix": ""
+                },
+                {
+                    "first": "G\u00fcnter",
+                    "middle": [],
+                    "last": "Klambauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Unterthiner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marvin",
+                    "middle": [],
+                    "last": "Steijaert",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "J\u00f6rg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hugo",
+                    "middle": [],
+                    "last": "Wegner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Djork-Arn\u00e9",
+                    "middle": [],
+                    "last": "Ceulemans",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sepp",
+                    "middle": [],
+                    "last": "Clevert",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hochreiter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Chemical Science",
+            "volume": "9",
+            "issn": "24",
+            "pages": "5441--5451",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Chemi-Net: A molecular graph convolutional network for accurate drug property prediction",
+            "authors": [
+                {
+                    "first": "Ke",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiangyan",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jun",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Haoming",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junqiu",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hua",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yax",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Florian",
+                    "middle": [],
+                    "last": "Boulnois",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "International Journal of Molecular Sciences",
+            "volume": "20",
+            "issn": "14",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Convolutional neural network based on SMILES representation of compounds for detecting chemical motif",
+            "authors": [
+                {
+                    "first": "Maya",
+                    "middle": [],
+                    "last": "Hirohara",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yutaka",
+                    "middle": [],
+                    "last": "Saito",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuki",
+                    "middle": [],
+                    "last": "Koda",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kengo",
+                    "middle": [],
+                    "last": "Sato",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yasubumi",
+                    "middle": [],
+                    "last": "Sakakibara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "BMC Bioinformatics",
+            "volume": "19",
+            "issn": "19",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Molecular graph convolutions: moving beyond fingerprints",
+            "authors": [
+                {
+                    "first": "Steven",
+                    "middle": [],
+                    "last": "Kearnes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Mccloskey",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marc",
+                    "middle": [],
+                    "last": "Berndl",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vijay",
+                    "middle": [],
+                    "last": "Pande",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Computer-Aided Molecular Design",
+            "volume": "30",
+            "issn": "8",
+            "pages": "595--608",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Graph convolutional networks for computational drug development and discovery",
+            "authors": [
+                {
+                    "first": "Mengying",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sendong",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Coryandar",
+                    "middle": [],
+                    "last": "Gilvary",
+                    "suffix": ""
+                },
+                {
+                    "first": "Olivier",
+                    "middle": [],
+                    "last": "Elemento",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiayu",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fei",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Briefings in Bioinformatics",
+            "volume": "06",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Large-scale learnable graph convolutional networks",
+            "authors": [
+                {
+                    "first": "Hongyang",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhengyang",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shuiwang",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proc. of SIGKDD Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "1416--1424",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "SMILES, a chemical language and information system. 1. introduction to methodology and encoding rules",
+            "authors": [
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Weininger",
+                    "suffix": ""
+                }
+            ],
+            "year": 1988,
+            "venue": "Journal of Chemical Information and Computer Sciences",
+            "volume": "28",
+            "issn": "1",
+            "pages": "31--36",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Deep Learning for the Life Sciences: Applying Deep Learning to Genomics",
+            "authors": [
+                {
+                    "first": "Bharath",
+                    "middle": [],
+                    "last": "Ramsundar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Eastman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [],
+                    "last": "Walters",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vijay",
+                    "middle": [],
+                    "last": "Pande",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "RDKit: Open-source cheminformatics",
+            "authors": [
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Landrum",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Semi-supervised classification with graph convolutional networks",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Max",
+                    "middle": [],
+                    "last": "Kipf",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Welling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proc. of ICLR",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "How powerful are graph neural networks?",
+            "authors": [
+                {
+                    "first": "Keyulu",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weihua",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jure",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stefanie",
+                    "middle": [],
+                    "last": "Jegelka",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proc. of ICLR",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Comprehensive analysis of kinase inhibitor selectivity",
+            "authors": [
+                {
+                    "first": "Jeremy",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Mindy I Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanna",
+                    "middle": [],
+                    "last": "Hunt",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pietro",
+                    "middle": [],
+                    "last": "Herrgard",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lisa",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ciceri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gabriel",
+                    "middle": [],
+                    "last": "Wodicka",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Pallares",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hocker",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Daniel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Treiber",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zarrinkar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nature Biotechnology",
+            "volume": "29",
+            "issn": "11",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Making sense of large-scale kinase inhibitor bioactivity data sets: a comparative and integrative analysis",
+            "authors": [
+                {
+                    "first": "Jing",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Agnieszka",
+                    "middle": [],
+                    "last": "Szwajda",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sushil",
+                    "middle": [],
+                    "last": "Shakyawar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Petteri",
+                    "middle": [],
+                    "last": "Hintsanen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Krister",
+                    "middle": [],
+                    "last": "Wennerberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tero",
+                    "middle": [],
+                    "last": "Aittokallio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Journal of Chemical Information and Modeling",
+            "volume": "54",
+            "issn": "3",
+            "pages": "735--743",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Deep in the Bowel: Highly Interpretable Neural Encoder-Decoder Networks Predict Gut Metabolites from Gut Microbiome",
+            "authors": [
+                {
+                    "first": "Vuong",
+                    "middle": [],
+                    "last": "Le",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Quinn",
+                    "suffix": ""
+                },
+                {
+                    "first": "Truyen",
+                    "middle": [],
+                    "last": "Tran",
+                    "suffix": ""
+                },
+                {
+                    "first": "Svetha",
+                    "middle": [],
+                    "last": "Venkatesh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Feature selection for descriptor based classification models. 2. Human intestinal absorption (HIA)",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "J\u00f6rg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Holger",
+                    "middle": [],
+                    "last": "Wegner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "Fr\u00f6hlich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Journal of Chemical Information and Computer Sciences",
+            "volume": "44",
+            "issn": "3",
+            "pages": "931--939",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "ChemMine tools: an online service for analyzing and clustering small molecules",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Tyler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yiqun",
+                    "middle": [],
+                    "last": "Backman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Girke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nucleic Acids Research",
+            "volume": "39",
+            "issn": "suppl_2",
+            "pages": "486--491",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "This figure shows the GraphDTA architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "This figure shows the median of the absolute error for each protein, sorted in increasing order, for the Davis and Kiba test sets.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "SV conceived the idea of this work. TN, HL, TL, SV refined the idea. TN, HL designed and performed the experiments. TPQ interpreted the model. TN, HL, TPQ, TL drafted the manuscript. All authors revised the manuscript and approved the final version.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Prediction performance on the Davis dataset, sorted by MSE.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Prediction performance on the Kiba dataset, sorted by MSE.Index (CI, the larger the better). For all baseline methods, we report the performance metrics as originally published in[17,18].",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Not applicable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "The authors declare that they have no competing interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Competing interests"
+        }
+    ]
+}

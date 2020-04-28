@@ -1,0 +1,1006 @@
+{
+    "paper_id": "74963c370ebb91ba4a308e0eed2ff83310fe96f6",
+    "metadata": {
+        "title": "Real-time detection of COVID-19 epicenters within the United States using a network of smart thermometers",
+        "authors": [
+            {
+                "first": "S",
+                "middle": [
+                    "D"
+                ],
+                "last": "Chamberlain",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kinsa, Inc",
+                    "location": {
+                        "postCode": "94105",
+                        "settlement": "San Francisco",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "I",
+                "middle": [],
+                "last": "Singh",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kinsa, Inc",
+                    "location": {
+                        "postCode": "94105",
+                        "settlement": "San Francisco",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "C",
+                "middle": [],
+                "last": "Ariza",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kinsa, Inc",
+                    "location": {
+                        "postCode": "94105",
+                        "settlement": "San Francisco",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "A",
+                "middle": [],
+                "last": "Daitch",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kinsa, Inc",
+                    "location": {
+                        "postCode": "94105",
+                        "settlement": "San Francisco",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "P",
+                "middle": [],
+                "last": "Philips",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kinsa, Inc",
+                    "location": {
+                        "postCode": "94105",
+                        "settlement": "San Francisco",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "B",
+                "middle": [
+                    "D"
+                ],
+                "last": "Dalziel",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Oregon State University",
+                    "location": {
+                        "postCode": "97331",
+                        "settlement": "Corvallis",
+                        "region": "OR",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Affiliations",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Containing outbreaks of infectious disease requires rapid identification of transmission hotspots, as the COVID-19 pandemic demonstrates. Focusing limited public health resources on transmission hotspots can contain spread, thus reducing morbidity and mortality, but rapid data on community-level disease dynamics is often unavailable. Here, we demonstrate an approach to identify anomalously elevated levels of influenza-like illness (ILI) in real-time, at the scale of US counties. Leveraging data from a geospatial network of thermometers encompassing more than one million users across the US, we identify anomalies by generating accurate, county-specific forecasts of seasonal ILI from a point prior to a potential outbreak and comparing real-time data to these expectations. Anomalies are strongly correlated with COVID-19 case counts and may provide an early-warning system to locate outbreak epicenters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Epidemic dynamics of the coronavirus disease (COVID-19) have varied widely across the globe, since the outbreak emerged from Wuhan, China in December 2019 (1) . Countries with proactive management and widespread testing have more effectively limited spread (i.e. 'flattening the curve'), whereas countries with limited response, such as the United States, have experienced steeper growth rates in cases (2) . Syndromic monitoring systems-collecting information about symptoms often prior to, or instead of, interaction with the formal healthcare system-have played a pivotal role in successfully mitigating COVID-19 spread in countries such as Taiwan and South Korea (3) . Rapid syndromic detection also played a role in curtailing the [2014] [2015] [2016] Ebola Outbreak in West Africa (4) , where speed of detection was important in reducing outbreak intensity (5) .",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 158,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 403,
+                    "end": 406,
+                    "text": "(2)",
+                    "ref_id": null
+                },
+                {
+                    "start": 667,
+                    "end": 670,
+                    "text": "(3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 736,
+                    "end": 742,
+                    "text": "[2014]",
+                    "ref_id": null
+                },
+                {
+                    "start": 743,
+                    "end": 749,
+                    "text": "[2015]",
+                    "ref_id": null
+                },
+                {
+                    "start": 750,
+                    "end": 756,
+                    "text": "[2016]",
+                    "ref_id": null
+                },
+                {
+                    "start": 787,
+                    "end": 790,
+                    "text": "(4)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 863,
+                    "end": 866,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "Networks of geolocated, user-generated physiological measurements hold the potential for improved tracking and prediction of outbreak epicenters (6, 7) . Data from these networks are typically less specific, but more sensitive, than formal surveillance, and are often available more rapidly, because formal surveillance is constrained by testing speed (5) and/or time for record aggregation (8). Data from syndromic monitoring networks can be physiologically grounded in disease processes (e.g. fever), in contrast with internet-based proxies, such as search engine logs, that are often used as a substitute for real-time syndromic data (9) . Physiological data from connected devices, such as thermometer data, or elevated heart-rate data (10) , are thus a potentially valuable resource for outbreak response, and, at present, may be able to detect COVID-19 symptoms in the absence of widespread and rapid testing in the US.",
+            "cite_spans": [
+                {
+                    "start": 145,
+                    "end": 148,
+                    "text": "(6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 149,
+                    "end": 151,
+                    "text": "7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 352,
+                    "end": 355,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 637,
+                    "end": 640,
+                    "text": "(9)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 740,
+                    "end": 744,
+                    "text": "(10)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint Here, we outline a method to identify illness incidence anomalies using a geospatial network of smart thermometers, where county-scale anomalies are flagged in real-time. We then use the method to identify COVID-19 outbreaks in the continental United States. Our anomaly detection method follows three core steps: 1) Generate county-specific forecasts of influenza-like illness (ILI) from a time point prior to a potential outbreak, 2) compare real-time thermometer-derived ILI to forecast expectations when new data is aggregated daily, and 3) flag anomalous ILI values by evaluating the probability that the current signal is driven by regular seasonal influenza. In this case, we flag ILI values that exceed the 97.5% percentile of expected influenza trajectories.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "We track real-time ILI and create ILI forecasts using data collected from a network of smartphone-connected personal thermometers managed by Kinsa, Inc. We track ILI in the network by classifying users with elevated temperature readings over multiple days as having influenza-like illness (see Methods). This sensor network records the temperature and approximate geo-location when a user takes their temperature (e.g. during an illness episode).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "These recordings store temperature readings, via Kinsa's smartphone app, and locations are logged via GPS location or IP address. Readings are aggregated to county-scale ILI and anonymized. The temperature readings are used to construct an ILI signal that is highly correlated to Center for Disease Control and Prevention (CDC) ILI nationally (r > 0.95) and across CDC regions (r range 0.70-0.94), and these signals have been demonstrated to improve regional ILI surveillance and forecasting (6, 7) . We construct the ILI signal at the county-scale, allowing identification of anomalous ILI incidence at the scale of individual cities. More information on constructing illness incidence from the thermometer network can be found in the Supplemental Methods.",
+            "cite_spans": [
+                {
+                    "start": 492,
+                    "end": 495,
+                    "text": "(6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 496,
+                    "end": 498,
+                    "text": "7)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint 5 Our forecast builds upon the findings that individual cities have predictable, distinct epidemic intensity patterns governed by both population size and climate (11, 12) . As population size and climate change relatively slowly from year-to-year, this allows the use of the county-specific, daily network data to learn the typical seasonal flu transmission patterns of a region. From this we construct local ILI forecasts that form the basis for real-time anomaly detection. Following (13), we estimate a county's daily reproductive number (R t ), the average number of secondary cases that each infected individual would infect if the conditions remained as they were, at time t by solving the following equation:",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 145,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 307,
+                    "end": 311,
+                    "text": "(11,",
+                    "ref_id": null
+                },
+                {
+                    "start": 312,
+                    "end": 315,
+                    "text": "12)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "where I t is Kinsa-derived ILI incidence, and w k is the infectivity profile for influenza, representing the probability that an individual who becomes infected on day t acquired the infection from an individual who became infected on day t-k. We approximate w k by a gamma distribution with a mean of 2.5 and variance of 0.7 days (14) . The summation term in equation (1) . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 331,
+                    "end": 335,
+                    "text": "(14)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint 6 We compare the real-time ILI to these influenza trajectories to identify localized anomalies, daily. We flag anomalous ILI when the daily, real-time data exceeds the 97.5% percentile of the expected influenza forecast ensemble. We define anomaly incidence as the difference between the real-time thermometer ILI and the 97.5% percentile drawn from the influenza forecast ensemble. To validate this method, we apply our approach to detect COVID-19 anomalies by forecasting expected influenza starting on March 1 st , 2020, before widespread outbreaks were underway (2). We assess detection quality by comparing anomaly fever counts to state-and county-level COVID-19 confirmed cases aggregated from a variety of government sources (15) .",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 145,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 876,
+                    "end": 880,
+                    "text": "(15)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "Anomaly fever counts are calculated from cumulative anomaly incidence multiplied by the estimated user base of a region.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "The skill of the ILI forecast in the anomaly detection system compares favorably with the Carnegie Mellon (CMU) Epicast and Stat models (16) at CDC region and national scales (Fig.   1A ). To calculate these forecast error rates, we compare CMU forecasts to CDC ILI, while comparing anomaly detection forecasts to thermometer-based ILI, given that these models are trained on different data sources. In contrast to other ILI forecasts, our models do not need to be initialized with now-cast predictions, (i.e. inferred initial conditions) as thermometer-based ILI, upon which the model is trained, is available in real-time. Additionally, our forecast errors do not appear to increase much past the 5-week forecast horizon, suggesting the ILI forecasts in the anomaly detection system are stable at long-time horizons (Fig. 1A) . Forecast error rates display seasonality, where forecasting errors are higher in winter months during periods of increased illness incidence, and lower in the spring and summer (Fig. S1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 175,
+                    "end": 185,
+                    "text": "(Fig.   1A",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 818,
+                    "end": 827,
+                    "text": "(Fig. 1A)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1007,
+                    "end": 1015,
+                    "text": "(Fig. S1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint Our detected anomalies correlate strongly to positive COVID-19 cases at both county (Fig. 1B) and state scales (Fig. 1C) , validating this method for the rapid detection of COVID-related illness anomalies. Specifically, we find significant correlations between total confirmed COVID-19 cases and total fever anomalies at the county (Fig. 1B: r = 0 .54, P < 0.0001) and state scales ( Fig. 1C : r = 0.55, P < 0.0001). We restrict this analysis to counties with at least one confirmed COVID-19 case, given that a lack of confirmed cases could be due to either true COVID-19 patterns or an absence of testing and reporting. We do not observe anomalous fevers in three states where COVID-19 cases are confirmed; Minnesota, Wisconsin, and South Dakota. Countylevel total anomalous fevers also correspond to the spatial distribution of major known outbreak centers, with hotspots in the Seattle Area, San Francisco Bay Area, New York Metro Area, and Florida (Fig. 1D ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 228,
+                    "end": 237,
+                    "text": "(Fig. 1B)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 255,
+                    "end": 264,
+                    "text": "(Fig. 1C)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 476,
+                    "end": 491,
+                    "text": "(Fig. 1B: r = 0",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 528,
+                    "end": 535,
+                    "text": "Fig. 1C",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1096,
+                    "end": 1104,
+                    "text": "(Fig. 1D",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Main Text"
+        },
+        {
+            "text": "We provide an example for how this method is applied in real-time for Brooklyn, NY, USA (Fig.   1E ). Here, we forecast expected influenza trends from March 1 st , 2020 before large-scale outbreaks were occurring in the New York Metro Area (2), and we observe a strong divergence from expected influenza trajectories (Fig. 1E) . However, we also observe an inflection back toward declining ILI shortly after social distancing efforts were enacted (Fig. 1E) , beginning with school closures on March 16 th and a later 'stay-at-home' order on March 20 th , 2020. We observe even sharper declines in ILI post-social distancing in Santa Clara, CA, where a 'shelterin-place' order was enacted on March 16 th , 2020 (Fig. 1F) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 88,
+                    "end": 98,
+                    "text": "(Fig.   1E",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 317,
+                    "end": 326,
+                    "text": "(Fig. 1E)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 447,
+                    "end": 456,
+                    "text": "(Fig. 1E)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 710,
+                    "end": 719,
+                    "text": "(Fig. 1F)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint an . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint 9 Our estimates of anomaly incidence are likely impacted by social distancing in these cases, as distancing should also reduce influenza transmission. We are thus likely underestimating anomaly incidence after social distancing is enacted, given that our model assumes typical seasonal influenza transmission patterns. We therefore explore the sensitivity of our method by reducing R t values used in the influenza forecast for all days after social distancing efforts were implemented. In Brooklyn NY ( Fig. 2A) , dropping future R t values by 25% reduces the trajectory of seasonal influenza, leading to an increased magnitude of anomaly incidence ( Fig.   2A ). In Santa Clara County, without accounting for social distancing we observe only a short period of detected anomalies, where real-time ILI falls below the expected range of seasonal influenza (Fig. 1F) . Here, reducing R t following the 'shelter-in-place' order leads to additional anomaly detections post-social distancing (Fig. 2B) . Similarly, following school closures in Miami-Dade County, real-time ILI values fell below anomalous levels by late March (Fig. S2) , though accounting for reduced influenza transmission leads to more anomaly detections (Fig.   2C ). In these case examples, we assumed R reduced by 25% given social distancing directives.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 648,
+                    "end": 656,
+                    "text": "Fig. 2A)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 796,
+                    "end": 805,
+                    "text": "Fig.   2A",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1000,
+                    "end": 1009,
+                    "text": "(Fig. 1F)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1132,
+                    "end": 1141,
+                    "text": "(Fig. 2B)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1266,
+                    "end": 1275,
+                    "text": "(Fig. S2)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1364,
+                    "end": 1374,
+                    "text": "(Fig.   2C",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Main Text"
+        },
+        {
+            "text": "While the true value cannot be estimated at present, it likely varies with both policy implementation and adherence. These findings suggest social distancing plays an important role in the quality of anomaly detection, and future research should address the impact of social distancing on influenza transmission rates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint of . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint 11 Working in synergy with the formal healthcare system, high-throughput signals from distributed syndromic monitoring networks, such as we describe here, could play a decisive role in managing local outbreaks, and alter the trajectories of pandemics. These networks may be of particular use for situations where rapid testing and isolation are key to pandemic control (3, 4) , such as the current COVID-19 outbreak, where the absence of widespread and rapid testing have led to a massive growth in cases worldwide.",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 146,
+                    "text": "11",
+                    "ref_id": null
+                },
+                {
+                    "start": 513,
+                    "end": 516,
+                    "text": "(3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 517,
+                    "end": 519,
+                    "text": "4)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Main Text"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "COVID-19) -Situation Report -51",
+            "authors": [],
+            "year": 2019,
+            "venue": "World Health Organization",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Response to COVID-19 in Taiwan: Big data analytics, new technology, and proactive testing",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Brook",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.3151"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Ebola surveillance -Guinea",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mcnamara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "MMWR supplements",
+            "volume": "65",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The role of rapid diagnositics in managing Ebola epidemics",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Nouvellet",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Garske",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Mills",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nedjati-Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Hinsley",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Blake",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Van Kerkhove",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Jombart",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nature",
+            "volume": "528",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A smartphone-driven thermometer application for real-time population-and individual-level influenza surveillance",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Koehler",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Polgreen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Clinical Infectious Diseases",
+            "volume": "67",
+            "issn": "",
+            "pages": "388--397",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Improving state-level influenza surveillance by incorporating real-time smartphone-connected thermometer readings across different geographic domains",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Peterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pilewski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Polgreen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Open Forum Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Accurate estimation of influenza epidemics using Google search data and ARGO",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Santillana",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kou",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "112",
+            "issn": "",
+            "pages": "14473--14478",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Harnessing wearable device data to improve state-level real-time surveillance of influenza-like illness in the USA: a population-based study. The Lancet Digital Health",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Radin",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Wineinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Topol",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Steinhubl",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Urbanization and humidity shape the intensity of influenza epidemics in US cities",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Grenfell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Science",
+            "volume": "6410",
+            "issn": "",
+            "pages": "75--79",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Human mobility patterns predict divergent epidemic dynamics among cities",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Dalziel",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pourbohloul",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Ellner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the Royal Society B: Biological Sciences",
+            "volume": "280",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A new framework and software to estimate time-varying reproductive numbers during epidemics",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "American Journal of Epidemiology",
+            "volume": "178",
+            "issn": "",
+            "pages": "1505--1512",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Time lines of infection and disease in human influenza: A review of volunteer challenge studies",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Valleron",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "American Journal of Epidemiology",
+            "volume": "167",
+            "issn": "",
+            "pages": "775--785",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity. is the (which was not peer-reviewed) The copyright holder for this preprint",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.06.20039909"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Model comparisons (A) at CDC region and national scales between the expected influenza and Carnegie Mellon forecasts. Correlations between detected fever anomalies and total confirmed COVID-19 cases at the (B) county-and (C) state-scale. These comparisons were made across 1321 counties with at least one confirmed case. (D) Map of anomalous fever estimates on March 24 th , 2020, where anomalous fevers are estimated from cumulative anomaly incidence multiplied by the county user base. Anomaly incidence detections in (E) Brooklyn, NY, USA and (F) Santa Clara, CA, USA where school closures and shelter-in-place orders were implemented. Here, the blue line and shaded area are the median expected influenza forecast and 2.5-97.5 th percentile of the forecast ensemble, respectively.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Influence of social distancing-based reductions of influenza transmissivity (R t ) on anomaly detection in (A) Brooklyn, New York, (B) Santa Clara, California, and (C) Miami, Florida. Reductions of influenza R t by 25% cause additional anomaly detections in Santa Clara and Miami and increase the magnitude anomaly incidence detections in Brooklyn.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "thus represents \"effective incidence\" assumed to be experienced by a susceptible individual on day t. For each county, we estimate the median R t for each day-of-year by first calculating daily R t for back to August 1, 2016. We then forecast ILI forward from March 1 st , 2020, by using the median R t corresponding to day t, to estimate I t+1 and forward propagate these predictions 12weeks (84 days) ahead. We generate an ensemble of 100 influenza predictions by inserting Gaussian noise into the starting values of effective incidence at the point of prediction. The scale of noise varies across regions, determined from the residual ILI after detrending the past time series using a two-week centered, rolling mean. See Methods for more detail on the nation-wide and region-specific implementations of this approach.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The anomaly detection and forecasting code can be accessed on GitHub, and all examples here are reproducible (https://github.com/kinsahealth/therm_anomaly_detection). We thank C. Jessica Metcalf for her input on an initial draft of this manuscript. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "Author Contributions SDC conceived and implemented the anomaly detection approach with feedback from BDD and PP. IS conceived of and designed the Kinsa products, including its use as syndromic early warning and monitoring systems. PP, CA, AD, and SDC designed and managed the real-time illness signal and geospatial platform. SDC wrote the manuscript with feedback from all authors.Competing Interests SDC, IS, PP, AD and CA are employees of and shareholders in Kinsa, Inc.IS conceived of and designed Kinsa products to track the spread of infectious disease. BDD has no competing financial interests. All authors have completed the ICMJE uniform disclosure form at www.icmje.org/coi_disclosure.pdf . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        },
+        {
+            "text": "This work is not a clinical trial and is instead a population-level observational study, where all user information is anonymized. More specifically, this study uses aggregated temperature readings to estimate the prevalence of influenza-like illness at the scale of United States counties.Raw measures are temperature, time of reading, and approximate geolocation from smart thermometer readings, where user information is anonymized and aggregated to whole population influenza-like illness at the scale of US counties. It therefore does not use individual, private or personally identifiable information. Given the nature of this data, it does not require IRB review.. CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20039909 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ethics Statement"
+        }
+    ]
+}

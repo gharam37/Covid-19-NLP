@@ -1,0 +1,2051 @@
+{
+    "paper_id": "975310567e0a03b1f00ed0ca13b4dfe9f28a4ce9",
+    "metadata": {
+        "title": "Early Stage Prediction of US County Vulnerability to the COVID-19 Pandemic",
+        "authors": [
+            {
+                "first": "Mihir",
+                "middle": [],
+                "last": "Mehta",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Penn State University",
+                    "location": {
+                        "postCode": "16802",
+                        "settlement": "University Park",
+                        "region": "PA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Juxihong",
+                "middle": [],
+                "last": "Julaiti",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Penn State University",
+                    "location": {
+                        "postCode": "16802",
+                        "settlement": "University Park",
+                        "region": "PA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Paul",
+                "middle": [],
+                "last": "Griffin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Purdue University",
+                    "location": {
+                        "postCode": "47907",
+                        "settlement": "West Lafayette",
+                        "region": "IN"
+                    }
+                },
+                "email": "griff200@purdue.edu"
+            },
+            {
+                "first": "Soundar",
+                "middle": [],
+                "last": "Kumara",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Penn State University",
+                    "location": {
+                        "postCode": "16802",
+                        "settlement": "University Park",
+                        "region": "PA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The rapid spread of COVID-19 means that government and health services providers have little time to plan and design effective response policies. It is therefore important to rapidly provide accurate predictions of how vulnerable geographic regions such as counties are to the spread.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Objective: Developing county level prediction around near future disease movement for Main Outcome(s) and Measure(s): We developed a 3-stage model to quantify, firstly the probability of COVID-19 occurrence for unaffected counties using XGBoost classifier and secondly, the number of potential occurrences of a county via XGBoost regression. Thirdly, these results are combined to compute the county level risk. This risk is then used as an estimated after-five-day-vulnerability of the county.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Results: Using data from March 14-31, 2020, the model shows a sensitivity over 71.5% and specificity over 94%.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "We found that population, population density, percentage of people aged 70 or greater and prevalence of comorbidities play an important role in predicting COVID-19 occurrences. We found a positive association between affected and urban counties as well as less vulnerable and rural counties. The developed model can be used for",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The continued spread of confirmed cases of COVID-19, absence of a vaccine, limited resources for testing and assisting people with confirmed cases have presented a great challenge for our public health and healthcare provider systems. To this point, nonpharmaceutical interventions such as social distancing are the only effective mitigation measures. The rapid spread of the disease means that government and health services have very little time to plan and design effective response policies such as resource and workforce planning. Accurately predicting the near future COVID-19 spread at sufficient granularity would provide these organization with better information and time to appropriately plan and respond.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We have developed a three-stage machine learning model to estimate COVID-19 spread outcomes at the US county level. In the first stage, we estimate the probability that a county has at least one confirmed COVID-19 case. In the second stage, we estimate the number of COVID-19 occurrences given that county has at least one case. Finally, we combine the results from the two stages to estimate those counties that have the greatest and least vulnerability for changes in disease prevalence for the next five-day period.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There has been significant epidemiological work for previous coronavirus pandemics such as MERS and SARS. 1 For example, Badawi et al. 2 performed systematic analysis of prevalence of comorbidities in MERS using data from 12 studies and found that diabetes and hypertension were present in 50% of the cases. Matsuyama et al. 3 systematically reviewed studies involving laboratory confirmed MERS cases to measure both the risk of admission to the Intensive Care Unit (ICU) and death. They compared risks by age, gender and underlying comorbidities. Park et al. 4 reviewed characteristics and associated risks factors of MERS. Bauch et al. 5 surveyed SARS modeling literature focused on understanding the basic epidemiology of the disease and evaluating control strategies. Surveyed SARS models varied in the terms of population studied and geographical characteristics. 6, 7 Different designs were used for SARS modeling consisting of deterministic compartmental models 7 , stochastic compartmental models 6 , a combination of stochastic and deterministic compartmental models 8 , discrete-time models 9 , logistics curve fitting models 10 , contact network models 11 and likelihood-based models. 12 Studies associated with risk factors for SARS 13 and MERS 3,14-20 have found an association between comorbidities and infected cases.",
+            "cite_spans": [
+                {
+                    "start": 135,
+                    "end": 136,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 325,
+                    "end": 326,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 560,
+                    "end": 561,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 638,
+                    "end": 639,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 869,
+                    "end": 871,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 872,
+                    "end": 873,
+                    "text": "7",
+                    "ref_id": null
+                },
+                {
+                    "start": 1101,
+                    "end": 1102,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1196,
+                    "end": 1198,
+                    "text": "12",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1245,
+                    "end": 1247,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "MERS and SARS epidemiological modeling has been done at different granularities such as the country 21, 22 , specific region 23 , and case clusters. 6 Given the much broader reach of COVID-19 compared to MERS and SARS, it is very important to predict at a sufficiently high level of granularity. This is particularly important since previous studies have shown that there is considerable heterogeneity in space, transmissibility and susceptibility. 5 Our approach is developed at county level with inclusion of a variety of health statistics, demographics and geographical features of counties. Further, we use publicly available data so that any organization could use the model. To the best of our knowledge, no work has been done to predict near future infection risk at the county level using the combination of health statistics, demographics and geographical features of counties.",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 103,
+                    "text": "21,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 104,
+                    "end": 106,
+                    "text": "22",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 149,
+                    "end": 150,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 449,
+                    "end": 450,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We performed an epidemiological study at the US county level using publicly available data to develop a machine learning predictive model. Data analysis was performed from February 15, 2020, to April 3, 2020. The study was reviewed by the Penn State Integrated Research Ethics Board and deemed exempt because it was a deidentified, secondary data analysis. This study followed the Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) reporting guideline. 24",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Design and Population"
+        },
+        {
+            "text": "We used US Census data to obtain county level population statistics for age, gender and density . 25 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 100,
+                    "text": "25",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data Sources"
+        },
+        {
+            "text": "There are three primary outcomes for our predictive model: i) the probability that a county has at least one confirmed case of COVID-19, which we define as a positive instance, ii) the number of . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outcomes"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint confirmed COVID-19 cases within a county, which we define as occurrences, and iii) vulnerability of the county.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outcomes"
+        },
+        {
+            "text": "Previous studies have shown angiotensin-converting enzyme 2 (ACE2) facilitates the infection of COVID-19 [35] [36] [37] , and that patients with diabetes, hypertension and cardiovascular diseases have an increased expression of ACE2. 35 County population factors such as density, age, and sex have a significant impact on the spread of an epidemic. 38 Cancer and chronic respiratory diseases have also been shown to increase mortality risk for COVID-19. 39 The dataset used for our three-stage model contains correlated variables. For example, diabetes and hypertension prevalence, cancer crude rate and old population. Additionally, the underlying relationship between variables was assumed to be non-linear. For such cases the literature supports 40-47 using gradient tree boosting and deep learning methods for better prediction results.",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 109,
+                    "text": "[35]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 110,
+                    "end": 114,
+                    "text": "[36]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 115,
+                    "end": 119,
+                    "text": "[37]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 234,
+                    "end": 236,
+                    "text": "35",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 349,
+                    "end": 351,
+                    "text": "38",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 454,
+                    "end": 456,
+                    "text": "39",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Covariates"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Covariates"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Covariates"
+        },
+        {
+            "text": "In order to predict COVID-19 outcomes, we divided the problem into three stages. In the first stage, we formulated a binary classification problem that included both positive and negative instances. We developed an XGBoost 48 classifier model to learn from the data. We divided the dataset into training and testing in 80-20 proportions for each class. We tuned the hyperparameters of the model using the Hyopt package.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Developing the Prediction Model"
+        },
+        {
+            "text": "In the second stage, we formulated an XGBoost regression model that included data only for positive instances with number of occurrences as the response. As in the case for the first stage, we divided data into training and testing sets in 80-20 proportions and used the Hyopt package for hyperparameter tuning.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Developing the Prediction Model"
+        },
+        {
+            "text": "In the last stage, we combined results from the first two stages and calculated the expected occurrences for counties as a measure of county vulnerability. For the calculation of expected occurrences, we multiplied the probability of county belonging to the positive instances derived using the classification model, with potential occurrences the same county will have if it becomes a positive instance derived using the regression model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Developing the Prediction Model"
+        },
+        {
+            "text": "Area under the receiver operating characteristic curve (AUC) and accuracy are used as the criteria to evaluate the classification model (the first stage of the model). The root mean . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluating the Prediction Model"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint squared error (RMSE) is used as the criteria to evaluate the regression model (the second stage of the model). The final stage of the model-vulnerability was assessed by examining the sensitivity and specificity of the prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluating the Prediction Model"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluating the Prediction Model"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluating the Prediction Model"
+        },
+        {
+            "text": "The variable importance for the overlapping predictors between the final classification and regression models for March 16 th is shown in Figure 1 . Total population (TOT_POP) was the most important variable for both the classification and regression models. Other important variables included population density, longitude, hypertension prevalence, chronic respiratory mortality rate, cancer crude rate, and diabetes prevalence. Latitude (we use this to identify neighboring counties and the presence or absence of positive class in the neighborhood) and percentage of populations older than 70 years were found to be the least important features of those considered, though still played a role. Table 2) is given by percentage of counties that had no confirmed cases but were identified as being among the 5% most vulnerable had at least one confirmed COVID-19 case five days later. The specificity (Table 3) is given by the percentage . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 138,
+                    "end": 146,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 697,
+                    "end": 705,
+                    "text": "Table 2)",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 901,
+                    "end": 910,
+                    "text": "(Table 3)",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint of counties identified as being among the 10% least vulnerable with no confirmed cases that still had no confirmed cases five days later.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The dataset is comprised of 37% urban and 63% rural counties based on the urban and rural county definition for year 2013. 49 In order to determine if there is an association between urbanicity and vulnerability, we performed a set of one-sided t-tests. The null hypothesis -the 10% least vulnerable counties would have the same proportion of rural counties as the actual proportion of rural counties in the dataset -was rejected for every day from March 14 th to March 26 th . Additionally, the null hypothesis -the actual positive instances counties would the same proportion of urban counties as the actual proportion of urban counties in the dataset -was also rejected for every day over the analysis period. It can therefore be concluded that there is a positive association between urban and most vulnerable counties as well as rural and least vulnerable counties. The continuous decreasing trend in the confidence interval of the urban counties proportion estimate within actual positive instance counties can be used to infer that COVID-19 is propagating from urban counties to rural counties.",
+            "cite_spans": [
+                {
+                    "start": 123,
+                    "end": 125,
+                    "text": "49",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "We developed a three-stage machine learning model using publicly available data to predict the five-day vulnerability of a US county. The model estimates the likelihood and impact that a county with no documented COVID-19 cases will have within a five-day period and using them, vulnerability prediction for a county is made. Using data from March 14 th to Marth 31 st , 2020, the model showed a sensitivity over 71.5% and specificity over 94%. We found a positive association between affected counties and urban counties as well as top 10% least vulnerable counties and rural counties. Further, counties with higher population density, a greater percentage of 70 years of above age people, higher diabetes, cardiac illness and respiratory diseases prevalence are more vulnerable to COVID-19 than their counterparts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our model serves multiple purposes. First, it can help in identifying potentially vulnerable counties. This prediction would be a vital component in managing COVID-19 spread by providing vulnerability information based on the likelihood and magnitude of change within five days. That can help health organizations to plan effectively for management of hospital resources and workforce, rapid response teams, and COVID testing kits and testing locations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In addition, there are multiple counties with limited testing facilities, and with current swab-based testing, it takes multiple days to get the results. Thus, occurrences associated with each county fluctuate rapidly daily.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "There are multiple limitations to our work. First, there are several predictors that we did not include in the model that have known associations with COVID-19. However, one of our goals was to make sure that any organization could use our model by only including data that is publicly available. Second, our analysis (Table e2) found that there is an increasing trend for the coefficient of variation (CV) for occurrences associated with positive instances counties.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 318,
+                    "end": 328,
+                    "text": "(Table e2)",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint Note that CV is a proxy for economic inequality. 50-53 Hence, there is a bias in the response variable, which can reduce the accuracy of the prediction. As testing facilities improve in terms of numbers and efficiency, this bias would be minimized and would be reflected in the model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Given this point, it would useful to look at top riskiest and top safest counties predicted by MJK model and examine for potential data discrepancies. Finally, additional feature engineering and stacking methods can be utilized to enhance the prediction capabilities of existing models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our work uses open source programming and publicly available data. We will make the full dataset, sample modeling and result outputs available with instructions for use soon on: https://github.com/mihirpsu/covid_19",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Funding: There was no funding provided for any of the authors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Economics in the Time of COVID-19: A New EBook",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Baldwin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Mauro",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Di",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Prevalence of comorbidities in the Middle East respiratory syndrome coronavirus (MERS-CoV): a systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Badawi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ryoo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2016.06.015"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Clinical determinants of the severity of Middle East respiratory syndrome (MERS): A systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Matsuyama",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kutsuna",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hayakawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ohmagari",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12889-016-3881-4"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "MERS transmission and risk factors: A systematic review",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "BMC Public Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12889-018-5484-8"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Dynamically modeling SARS and other newly emerging respiratory illnesses: Past, present, and future",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Bauch",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Lloyd-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Coffee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Galvani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1097/01.ede.0000181633.80269.4c"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Transmission dynamics of the etiological agent of SARS in Hong Kong: Impact of public health interventions",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fraser",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Donnelly",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.1086478"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Transmission dynamics and control of severe acute respiratory syndrome",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.1086616"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A simple approximate mathematical model to predict the number of severe acute respiratory syndrome cases and deaths",
+            "authors": [
+                {
+                    "first": "Bck",
+                    "middle": [],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Awp",
+                    "middle": [],
+                    "last": "Pak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of Epidemiology and Community Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/jech.57.10.831"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Severe Acute Respiratory Syndrome Epidemic in Asia. Emerging Infectious Diseases",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3201/eid0912.030382"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Transmission of severe acute respiratory syndrome in dynamical small-world networks",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Masuda",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Konno",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Aihara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Nonlinear, and Soft Matter Physics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1103/PhysRevE.69.031917"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Different epidemic curves for severe acute respiratory syndrome reveal similar impacts of control measures",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Teunis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "American Journal of Epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/aje/kwh255"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A family cluster of middle east respiratory syndrome coronavirus infections related to a likely unrecognized asymptomatic or mild case",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Omrani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Matin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Haddad",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Al-Nakhli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Memish",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Albarrak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2013.07.001"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Community Case Clusters of Middle East Respiratory Syndrome Coronavirus in Hafr Al-Batin, Kingdom of Saudi Arabia: A Descriptive Genomic study",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Memish",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cotten",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Watson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2014.03.1372"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Presentation and outcome of Middle East respiratory syndrome in Saudi intensive care unit patients. Critical Care",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Almekhlafi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Albarrak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Mandourah",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s13054-016-1303-8"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Risk factors for primary middle east respiratory syndrome coronavirus illness in humans, Saudi Arabia",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Alraddadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Watson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Almarashi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3201/eid2201.151340"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Clinical and epidemiologic characteristics of spreaders of middle east respiratory syndrome coronavirus during the 2015 outbreak in Korea",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Choe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Korean Medical Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3346/jkms.2017.32.5.74419"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Recovery from the Middle East respiratory syndrome is associated with antibody and T cell responses",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Alshukairi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Baharoon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Science Immunology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/sciimmunol.aan5393"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Clinical aspects and outcomes of 70 patients with Middle East respiratory syndrome coronavirus infection: A single-center experience in Saudi Arabia",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Saad",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Omrani",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Baig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2014.09.003"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Epidemiological investigation of MERS-CoV spread in a single hospital in South Korea",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Ryu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Eurosurveillance",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2807/1560-7917.ES2015.20.25.21169"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Fatality risks for nosocomial outbreaks of Middle East respiratory syndrome coronavirus in the Middle East and South Korea. Archives of Virology",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sha",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s00705-016-3062-x23"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: Guidelines for reporting observational studies",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Fenimore",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Castillo-Garsow",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castillo-Chavez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hong",
+                    "middle": [],
+                    "last": "Sars Outbreaks In Ontario",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kong",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Singapore ; Von Elm",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Altman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Egger",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pocock",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "G\u00f8tzsche",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Vandenbroucke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of Theoretical Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0022-5193(03)00228-524"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Annual Resident Population Estimates, Estimated Components of Resident Population Change, and Rates of the Components of Resident Population Change for States and Counties",
+            "authors": [
+                {
+                    "first": "U",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Bureau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "County Level Population Density",
+            "authors": [
+                {
+                    "first": "Aff",
+                    "middle": [],
+                    "last": "Website",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Database: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence -U.S. Cancer Statistics Public Use Research Database with Puerto Rico",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Atlanta",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cdc",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gov",
+                    "suffix": ""
+                }
+            ],
+            "year": 1929,
+            "venue": "Centers for Disease Control and Prevention UD of H and HS",
+            "volume": "27",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1465-3362.2012.00432.x28"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "United States Chronic Respiratory Disease Mortality Rates by County 1980-2014 | GHDx",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Accessed April 3, 2020. 34. NYTimes. NYtimes/covid-19-data: An ongoing repository of data on coronavirus cases and deaths in the U",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "33",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Are patients with hypertension and diabetes mellitus at increased risk for COVID-19 infection? The Lancet Respiratory Medicine",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Karakiulakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Roth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "30116--30124",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s2213-2600(20"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Two Things About COVID-19 Might Need Attention",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.20944/preprints202002.0315.v1"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "COVID-19-New Insights on a Rapidly Changing Epidemic",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Del Rio",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Malani",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "JAMA",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.3072"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Spread of infectious disease modeling and analysis of different factors on spread of infectious disease based on cellular automata",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "International Journal of Environmental Research and Public Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/ijerph16234683"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Preliminary Estimates of the Prevalence of Selected Underlying Health Conditions Among Patients with Coronavirus Disease 2019 -United States",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chow",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Fleming-Dutra",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gierke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "MMWR Morbidity and Mortality Weekly Report",
+            "volume": "69",
+            "issn": "13",
+            "pages": "382--386",
+            "other_ids": {
+                "DOI": [
+                    "10.15585/mmwr.mm6913e2"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Greedy function approximation: A gradient boosting machine",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Friedman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Annals of Statistics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2307/2699986"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Predicting clicks: Estimating the click-through rate for new ads",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Richardson",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dominowska",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ragno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "16th International World Wide Web Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/1242572.1242643"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Application of XGBoost algorithm in hourly PM2.5 concentration prediction",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IOP Conference Series: Earth and Environmental Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1088/1755-1315/113/1/012127"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Probability Analysis of Hypertension-Related Symptoms Based on XGBoost and Clustering Algorithm",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Applied Sciences",
+            "volume": "9",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/app9061215"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Deep learning for healthcare: Review, opportunities and challenges",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Miotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Dudley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Briefings in Bioinformatics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bib/bbx044"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Using Deep Learning for Energy Expenditure Estimation with wearable sensors",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pande",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mohapatra",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Han",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "17th International Conference on E-Health Networking",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/HealthCom.2015.7454554"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Deep Neural Networks for Acoustic Modeling in Speech Recognition. Ieee Signal Processing Magazine",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hinton",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/MSP.2012.220559747"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "A Critical Review for Developing Accurate and Dynamic Predictive Models Using Machine Learning Methods in Medicine and Health Care",
+            "authors": [
+                {
+                    "first": "Alanazi",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Abdullah",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Qureshi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Medical Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10916-017-0715-6"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "XGBoost : A Scalable Tree Boosting System",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "NCHS urban-rural classification scheme for counties. Vital and Health Statistics, Series 2: Data Evaluation and Methods Research",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Ingram",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Franco",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "Champernowne DG, Cowell FA. Economic Inequality and Income Distribution",
+            "volume": "50",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Income Distribution: Includes CD",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Campano",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Salvatore",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/0195300912.001.0001"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Policy Impacts on Inequality. Welfare Based Measures of Inequality. The Atkinson Index. EASYPol. 2006. 53. Coefficient of variation -Wikipedia",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Bell\u00f9",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Liberati",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "shows a map of the USA with the predicted probability of being a positive instance for each county in the USA as a color gradient. County level statistics can be viewed by moving the cursor of the county of interest. The example of New York County as of March 14 th is shown in the Figure 2. Accuracy and AUC for the first stage model is shown in Table 1. Predictions of the model for all US counties are consistent over the 18 days with little variation in AUC and accuracy values. Similarly, RMSE for the second stage model for all US counties is presented in Table e1. The sensitivities and specificities for the vulnerability predictions for the three-stage model trained on data from March 14 th to March 26 th are shown in Tables 2 and 3. The values are given for each day. The sensitivity (",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Variable Importance for the Classification and Regression ModelsAbbreviations: TOT_POP: total population Pop_den_pernile: population density Hyper_per: hypertension percentage CRD_MR: chronic respirator mortality rate diab_perc: diabetes percentage CRUDE_RATE: cancer crude rate old_per: percentage of population aged 70 and above",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "County",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ",26 We obtained county level data for diagnosed adult diabetics percentage and cancer crude rate statistics from the Center for Disease Control and Prevention (CDC). 27,28 We used county level hypertension estimates and chronic respiratory disease mortality rates from the Global Heath Data Exchange (GHDx) 29,30 , provided by the Institute for Health Metrics and Evaluation. We obtained the centroids for each county from ArcGIS. 31 Finally, we obtained US Census Cartographic Boundary files for each county in JSON format 32 and county level COVID-19 daily occurrences data (confirmed cases) from NYTimes GitHub page. 33,34",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "XGBoost Classification Training and Testing Detailsauthor/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Sensitivity of the three-stage Model",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Specificity of the three-stage Modelauthor/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint. https://doi.org/10.1101/2020.04.06.20055285 doi: medRxiv preprint Supplementary Materials:",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "XGBoost Regression Training and Testing Details Table e2:Table e2: COVID-19 Daily Positive Occurences Descriptive Statistics Supplementary Results: Table e3: Samples of Counties from the Top 5% Riskiest Counties with Negative Instances Table e4: Samples of Counties from the Top 10% Safest Counties",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "XGBoost Regression Training and Testing Details",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "COVID-19 Daily Positive Occurences Descriptive Statistics",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "shows a sample list of negative instance counties as of March 14 th . The 3-stage model predicted them in the top 5% riskiest counties additional to infected counties. All these sample counties were identified as positive instances on March 19 th . Similarly,Table e4shows a sample list of negative instance counties as of March 14 th . The 3-stage model predicted them as top 10% safest counties. All these sample counties continued to be negative instances on March 19 th as shown in the table.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Samples of Counties from the Top 5% Riskiest Counties with Negative Instances",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "Samples of Counties from the Top 10% Safest Counties",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,2110 @@
+{
+    "paper_id": "4a9b8339e4848f1167074f91a27411a2d8c46609",
+    "metadata": {
+        "title": "Quantifying the effect of quarantine control in Covid-19 infectious spread using machine learning",
+        "authors": [
+            {
+                "first": "Raj",
+                "middle": [],
+                "last": "Dandekar",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Massachusetts Institute of Technology",
+                    "location": {
+                        "postCode": "02139",
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "George",
+                "middle": [],
+                "last": "Barbastathis",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Massachusetts Institute of Technology",
+                    "location": {
+                        "postCode": "02139",
+                        "settlement": "Cambridge",
+                        "region": "MA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "The Coronavirus respiratory disease 2019 originating from the virus \"SARS-CoV-2\" (Chan et al. 2020; CDC 2020) has led to a global pandemic, leading to 823, 626 confirmed global cases in more than 200 countries as of April 1, 2020 (WHO 2020). As the disease began to spread beyond its apparent origin in Wuhan, the responses of local and national governments varied considerably. The evolution of infections has been similarly diverse, in some cases appearing to be contained and in others reaching catastrophic proportions. In Hubei province itself, starting at the end of January, more than 10 million residents were quarantined by shutting down public transport systems, train and airport stations, and imposing police controls on pedestrian traffic. Subsequently, similar policies were applied nation-wide in China. By the end of March, the rate of infections was reportedly receding (Cyranoski 2020) . Taiwan, Hong Kong, and Singapore managed to maintain fairly low infection rates throughout, even though a second wave of infections is appearing in Singapore, perhaps due to incoming repatriates (Lin & Wang 2020) . South Korea, Iran, Italy, and Spain experienced acute initial increases, but then adopted drastic generalized quarantine. This did result in apparent recession of the spread in South Korea, whereas in the other three countries the effect of the policies is not yet clear. In the United States, where both the onset of widespread infections and government responses were comparatively delayed, infection growth currently appears to be explosive. As of April 2 2020, the United States has the highest number of infected cases (\u223c 227k) globally. Given the available data by country and world-wide, there is an urgent need to use data driven approaches to quantitatively estimate and compare the role of the quarantine policy measures implemented in several countries in curtailing spread of the disease.",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 99,
+                    "text": "(Chan et al. 2020;",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 100,
+                    "end": 109,
+                    "text": "CDC 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 887,
+                    "end": 903,
+                    "text": "(Cyranoski 2020)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1101,
+                    "end": 1118,
+                    "text": "(Lin & Wang 2020)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Existing models analyzing the role of travel restrictions in the spread of Covid-19 either used parameters based on prior knowledge of SARS/MERS coronavirus epidemiology and not derived independently from the Covid-19 data (Chinazzi et al. 2020 ), or were not implemented on a global scale (Kraemer et al. 2020) . In this paper, we propose augmenting a first principles-derived epidemiological model with a data-driven module, implemented as a neural network. We leverage this model to analyze and compare the role of quarantine control policies employed in Wuhan, Italy, South Korea and USA, in controlling the virus effective reproduction number R t Read et al. 2020; Tang et al. 2020; Li et al. 2020a; Wu & Leung 2020; Kucharski et al. 2020; Ferguson et al. 2020) . In the original model, known as SEIR (Fang et al. 2006; Saito et al. 2013; Smirnova et al. 2019) , the population is divided into the susceptible S, exposed E, infected I and recovered R groups, and their relative growths and competition are represented as a set of coupled ordinary differential equations. The simpler SIR model does not account for the exposed population E. These models cannot capture the largescale effects of more granular interactions, such as the population's response to social distancing and quarantine policies. This is where data come in: in our approach, a neural network added as a non linear function approximator (Rackauckas et al. 2020) informs the infected variable I in the SIR model. This neural network encodes information about the quarantine strength function in the locale where the model is implemented. The neural network is trained from publicly available infection and population data for Covid-19 for a specific region under study; details are in the Materials and Methods section. Thus, our proposed model is globally applicable and interpretable with parameters learnt from the current Covid-19 data, and does not rely upon data from previous epidemics like SARS/MERS.",
+            "cite_spans": [
+                {
+                    "start": 223,
+                    "end": 244,
+                    "text": "(Chinazzi et al. 2020",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 290,
+                    "end": 311,
+                    "text": "(Kraemer et al. 2020)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 652,
+                    "end": 669,
+                    "text": "Read et al. 2020;",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 670,
+                    "end": 687,
+                    "text": "Tang et al. 2020;",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 688,
+                    "end": 704,
+                    "text": "Li et al. 2020a;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 705,
+                    "end": 721,
+                    "text": "Wu & Leung 2020;",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 722,
+                    "end": 744,
+                    "text": "Kucharski et al. 2020;",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 745,
+                    "end": 766,
+                    "text": "Ferguson et al. 2020)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 806,
+                    "end": 824,
+                    "text": "(Fang et al. 2006;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 825,
+                    "end": 843,
+                    "text": "Saito et al. 2013;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 844,
+                    "end": 865,
+                    "text": "Smirnova et al. 2019)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1413,
+                    "end": 1437,
+                    "text": "(Rackauckas et al. 2020)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Since neural networks can be used to approximate nonlinear functions with a finite set of parameters, they serve as a powerful tool to approximate quarantine effects in combination with the analytical epidemiological models. The downside is that the internal workings of a neural network are difficult to interpret. The recently emerging field of Physics-Informed Neural Networks (Raissi et al. 2019 ) exploits conservation principles, SIR in our case, to mitigate overfitting and other related machine learning risks.",
+            "cite_spans": [
+                {
+                    "start": 380,
+                    "end": 399,
+                    "text": "(Raissi et al. 2019",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "All four regions that we applied our model to have developed infected and exposed populations that are sufficiently large to train our models. The first three are comparable in terms of population (11 million, 60 million and 52 million, respectively) and almost complete isolation from inbound travel while the USA has a much larger population (327 million), with increasing travel restrictions since mid March 2020. Leveraging the insights gained through reliable prediction and estimation in Wuhan, South Korea and Italy, we make forecasting predictions regarding the infection spread in the USA; thus making our model informative for quarantine and social distancing policy guidelines and regulations. is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed) Figure 1 shows results from the classical SEIR and SIR models applied to Wuhan data. Neither model can recover the stagnation seen in the actual infected number, about 30 days post the detection of the 500 th infected case in Wuhan, i.e. 24 th January, 2020. The neural network model trained to include quarantine, on the other hand, does predict this stagnation; see below.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 806,
+                    "end": 814,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Figures 2-7 show results of our neural network models trained to include quarantine effects in the Wuhan, Italy, and South Korea regions, and respective predictions for the evolution of infections for approximately one month past the end of training. We use two parameters to quantify the results: the effective reproduction number R t and the . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.03.20052084 doi: medRxiv preprint We trained the models using data starting from the dates when the 500 th infection was recorded in each region: 24 th January, 27 th February, and 22 nd February for Wuhan, Italy and South Korea, respectively; and up to about a month thereafter. The respective models, superimposed over the actual recorded data, are in Figures 2a, 4a and 6a, generally showing good agreement. The respective forecasts are in Figures 3, 5 and 7. As can be seen, the model with quarantine control included is able to capture the plateau in the infected case count, as opposed to the standard SIR and SEIR models shown in Figure   . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 710,
+                    "end": 720,
+                    "text": "Figure   .",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed) 1. In the case of Wuhan, because the onset was earliest, our forecast can be compared with recorded infection data in the period March 3 rd till March 24 th , also showing good agreement with the actual observations of infection stagnation leading to R t < 1 during that period (Cyranoski 2020) .",
+            "cite_spans": [
+                {
+                    "start": 379,
+                    "end": 395,
+                    "text": "(Cyranoski 2020)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In the case of the US, similarly to the other regions, i.e. starting when the 500 th infection was recorded on March 8 th , we trained the model till the latest available data, i.e till 1 April 2020. The infected case count estimated by our model shows a good match with the actual data ( Figure 8a ). Forecasting results for Q(t), R t for a period of 1 month following the current US policy are in Figure 9 . In Figure 10a we forecast the number of infections the US would experience starting from 1 st April if the US were to follow its current quarantine policy as opposed to gradually adjust to adopting the respective quarantine models learnt from the more reliable Wuhan, Italy and South Korea data. We arbitrarily set the adjustment period to 17 days; i.e till 17 April 2020. Figure 10b shows the effective quarantine rates Q(t) obtained from (4.17) that would apply to the US during the respective adjustment period. Details are in the Materials & Methods section.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 289,
+                    "end": 298,
+                    "text": "Figure 8a",
+                    "ref_id": null
+                },
+                {
+                    "start": 399,
+                    "end": 407,
+                    "text": "Figure 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 413,
+                    "end": 423,
+                    "text": "Figure 10a",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 783,
+                    "end": 793,
+                    "text": "Figure 10b",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The results show a generally strong correlation between strengthening of the quarantine controls, i.e. increasing Q(t) as learnt by the neural network model; actions taken by the regions' respective governments; and decrease of the effective reproduction number R t . For example, in Italy, government restrictions reportedly (Ghiglione et al. 2020) tightened during the week preceding mid March, which is also when our model shows a sharp increase in Q(t) and corresponding decrease in R t (figures 4b, c). For Wuhan and South Korea, similar cusps in government interventions took place earlier, in the weeks leading to and after the end of January (Cyranoski 2020) and February, respectively (Normille 2020) . These cusps were also captured well by our model (Figures 2b, c and  6b , c, respectively). Even for the USA, Q(t) shows a stagnation till 20 March 2020, after which it shows a sharp increase accompanied with a decrease in R t (Figures 8b, c) , which is in alignment with the ramping up of government policies and quarantine interventions post mid March in the worst affected states like New York, New Jersey, California, and Michigan. is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed)",
+            "cite_spans": [
+                {
+                    "start": 326,
+                    "end": 349,
+                    "text": "(Ghiglione et al. 2020)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 650,
+                    "end": 666,
+                    "text": "(Cyranoski 2020)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 694,
+                    "end": 709,
+                    "text": "(Normille 2020)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 761,
+                    "end": 783,
+                    "text": "(Figures 2b, c and  6b",
+                    "ref_id": null
+                },
+                {
+                    "start": 939,
+                    "end": 954,
+                    "text": "(Figures 8b, c)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.03.20052084 doi: medRxiv preprint A comparative analysis of the quarantine strength function Q(t) learned by the neural network for different countries reveals that Wuhan had the highest magnitude and South Korea had the highest growth rate of Q(t). This can be attributed to the stringent government interventions and strict public health measures including immediate isolation and quarantine impositions in Wuhan and South Korea. This eventually resulted in the halting of infection spread and a corresponding R t < 1 within a month for Wuhan ( Figure  2c ) and within 20 days for South Korea (figure 6c) after the first signs of a pandemic were recognized.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 620,
+                    "end": 630,
+                    "text": "Figure  2c",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "It is reported that the infected case count stagnated nation-wide in China by the beginning of March (Cyranoski 2020 ) and in South Korea by the end of March (Fisher & Sang-Hun 2020) ; which eventually led to a stagnation in the quarantine interventions employed in these countries. This is in general qualitative agreement with our forecasting results which show a plateau in Q(t) and R t at R t < 1: Figures 3a,b and 7a ,b. In Italy, as of March 20 th , I(t) is appearing to be linear (Figure 4a) , which is consistent with lower rates of infections being actually reported (Horowitz & Kirkpatrick 2020) and can be taken as a precursor to stagnation. It is also consistent with adoption of strict movement restrictions by the government shortly before the March 20 th date. We forecast that, for Italy, R t will drop below 1 and Q(t), R t both will stagnate between mid to end of April 2020 (Figure 5a , b) indicating halting of the spread of infection.",
+            "cite_spans": [
+                {
+                    "start": 101,
+                    "end": 116,
+                    "text": "(Cyranoski 2020",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 158,
+                    "end": 182,
+                    "text": "(Fisher & Sang-Hun 2020)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 402,
+                    "end": 421,
+                    "text": "Figures 3a,b and 7a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 487,
+                    "end": 498,
+                    "text": "(Figure 4a)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 893,
+                    "end": 903,
+                    "text": "(Figure 5a",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Owing to the relaxed quarantine and isolation policies in the US in its initial stages post the infection spread, our model converges to Q(t) \u2248 0.4 \u2212 0.6 ( Figure 8b ) which is the smallest compared to other regions. Even though the effective R t is still greater than 1 as of April 1 2020 (Figure 8c ), its growth has started to show a decreasing trend and we expect the infection to start showing stagnation with R t < 1 by 20 April 2020 if the current US policies continue without change (Figures 9b, 10a ). This will be accompanied by a continuous ramp up of quarantine policies (Figure 9a ). At its peak, we forecast the infected count to reach approximately 600,000 before stagnation, again assuming no change in US policies. Our mixed model analysis for USA, employing Q(t) learnt from the models of Wuhan, Italy and South Korea in the USA model starting from 1 April 2020, reveals that stronger quarantine policies (Figure 10b ) might lead to an accelerated plateauing in the infected case count, as shown in Figure 10a , and subsequently smaller infected case count. On the other hand, in agreement with National Institute of Allergy and Infectious Diseases estimates (Miller 2020) , we forecast that relaxing or abandoning the quarantine policies gradually over the period of the next 17 days may well lead to \u223c 1 million infections without any stagnation in the infected case count (Figure 10a ) by mid April 2020.",
+            "cite_spans": [
+                {
+                    "start": 1177,
+                    "end": 1190,
+                    "text": "(Miller 2020)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 156,
+                    "end": 165,
+                    "text": "Figure 8b",
+                    "ref_id": null
+                },
+                {
+                    "start": 290,
+                    "end": 300,
+                    "text": "(Figure 8c",
+                    "ref_id": null
+                },
+                {
+                    "start": 491,
+                    "end": 507,
+                    "text": "(Figures 9b, 10a",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 583,
+                    "end": 593,
+                    "text": "(Figure 9a",
+                    "ref_id": null
+                },
+                {
+                    "start": 923,
+                    "end": 934,
+                    "text": "(Figure 10b",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1017,
+                    "end": 1027,
+                    "text": "Figure 10a",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1393,
+                    "end": 1404,
+                    "text": "(Figure 10a",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The classic SEIR epidemiological model has been employed in a number of prior studies, such as the SARS outbreak Fang et al. (2006) ; Saito et al. (2013) ; Smirnova et al. (2019) as well as the Covid outbreak Read et al. (2020) ; Tang et al. (2020) ; Wu & Leung (2020) . The entire population is divided into four sub-populations: susceptible S; exposed E; infected I; and recovered R. The sub-populations' evolution is governed by the following system of four coupled nonlinear ordinary differential equations (Smirnova et al. 2019; Wang et al. 2020) . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 113,
+                    "end": 131,
+                    "text": "Fang et al. (2006)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 134,
+                    "end": 153,
+                    "text": "Saito et al. (2013)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 156,
+                    "end": 178,
+                    "text": "Smirnova et al. (2019)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 209,
+                    "end": 227,
+                    "text": "Read et al. (2020)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 230,
+                    "end": 248,
+                    "text": "Tang et al. (2020)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 251,
+                    "end": 268,
+                    "text": "Wu & Leung (2020)",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 511,
+                    "end": 533,
+                    "text": "(Smirnova et al. 2019;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 534,
+                    "end": 551,
+                    "text": "Wang et al. 2020)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 65,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "Here, \u03b2, \u03c3 and \u03b3 are the exposure, infection and recovery rates, respectively, and are assumed to be constant in time. The total population N = S(t) + E(t) + I(t) + R(t) is seen to remain constant as well; that is, births and deaths are neglected. The recovered population is to be interpreted as those who can no longer infect others; so it also includes individuals deceased due to the infection. The possibility of recovered individuals to become reinfected is accounted for by SEIS models (Mukhopadhyay & Bhattacharyya 2008 ), but we do not use this model here, as the reinfection rate for Covid-19 survivors is considered to be negligible as of now. The simpler SIR model neglects exposure, assuming instead direct transition from susceptible to infected; it is described by three coupled nonlinear ordinary differential equations as",
+            "cite_spans": [
+                {
+                    "start": 493,
+                    "end": 527,
+                    "text": "(Mukhopadhyay & Bhattacharyya 2008",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "(4.7)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "Here, \u03b2 is the infection rate. The reproduction number R t in the SEIR and SIR models is defined as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "(4.8)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "An important assumption of the SEIR and SIR models is homogeneous mixing among the subpopulations. Therefore, they cannot account for social distancing or mass quarantine effects. Additional assumptions are uniform susceptibility and disease progress for every individual; and that no spreading occurs through animals or other non-human means. Alternatively, the models may be interpreted as quantifying the statistical expectations on the respective mean populations, while deviations from the model's assumptions contribute to statistical fluctuations around the means. We applied both SEIR and SIR models to the case of Wuhan only. The results are shown in Figure 1 and verify that these models fail to predict the early arrest of infectious spread due to quarantine policies. Initial conditions The starting point t = 0 was the day at which 500 infected cases were detected, i.e., I(t = 0) = 500. The initial number of susceptible individuals was S(t = 0) = 11 million, Wuhan's population. The initial exposed population was assumed to be E(t = 0) = 20 \u00d7 I(t = 0) in accordance with (Read et al. 2020; Wang et al. 2020) and the number of recovered individuals was set to a very small value R(t = 0) \u2248 10. Parameter estimation The time resolved data for the infected, I data and recovered, . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 1087,
+                    "end": 1105,
+                    "text": "(Read et al. 2020;",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1106,
+                    "end": 1123,
+                    "text": "Wang et al. 2020)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 660,
+                    "end": 668,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.03.20052084 doi: medRxiv preprint R data case count for Covid-19 was obtained from Chinese National Health Commission. The optimal values of the parameters \u03b2, \u03b3 in the SIR model and \u03b2, \u03c3, \u03b3 in the SEIR model were obtained by performing a local adjoint sensitivity analysis (Cao et al. 2003; Rackauckas et al. 2019) of the ODE problems in these models, by minimizing the mean square error loss function L(\u03b2, \u03c3, \u03b3) defined as L(\u03b2, \u03c3, \u03b3) = log(I(t)) \u2212 log(I data (t)) 2 + log(R(t)) \u2212 log(R data (t)) 2 (4.9)",
+            "cite_spans": [
+                {
+                    "start": 346,
+                    "end": 363,
+                    "text": "(Cao et al. 2003;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 364,
+                    "end": 387,
+                    "text": "Rackauckas et al. 2019)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "The minimization procedure was performed using the ADAM optimizer (Kingma & Ba 2014) for 500 \u223c 1000 iterations. The optimum values were used to produce figure 1.",
+            "cite_spans": [
+                {
+                    "start": 66,
+                    "end": 84,
+                    "text": "(Kingma & Ba 2014)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 1: Without quarantine control"
+        },
+        {
+            "text": "To study the effect of quarantine control globally, we start with the SIR epidemiological model. This choice is to minimize the number of free parameters in the model and avoid overfitting. To include quarantine control in the modelling, we augment the SIR model by introducing a time varying quarantine strength term Q(t) and a quarantined population",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "Thus, the new effective reproduction rate becomes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "(4.10)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "Since Q(t) does not follow from first principles and is highly dependent on local quarantine policies, we devised a neural network-based approach to approximate it. Recently, it has been shown that neural networks can be used as function approximators to recover unknown constitutive relationships in a system of coupled ordinary differential equations (Rackauckas et al. 2020 (Rackauckas et al. , 2019 . Following this principle, we represent Q(t) as a n layer-deep neural network with weights W 1 , W 2 . . . W n , activation function r and the input vector U = (S(t), I(t), R(t), T (t)) as Q(t) = r (W n r (W n\u22121 . . . r (W 1 U ))) \u2261 NN(W, U ) (4.11)",
+            "cite_spans": [
+                {
+                    "start": 353,
+                    "end": 376,
+                    "text": "(Rackauckas et al. 2020",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 377,
+                    "end": 402,
+                    "text": "(Rackauckas et al. , 2019",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "For the implementation, we choose a n = 2-layer densely connected neural network with 10 units in the hidden layer and the ReLU activation function. This choice was because we found sigmoidal activation functions to stagnate. The final model was described by 63 tunable parameters. The neural network architecture schematic is shown in the attached Supplementary Information. The governing coupled ordinary differential equations for the augmented SIR model are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "dR(t) dt = \u03b3I(t) (4.14)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "dT (t) dt = Q(t) I(t) = NN(W, U ) I(t).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "(4.15)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "The quarantined population is initialized to a very small value T (t = 0) \u2248 10 and, . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 thereafter, the neural network learns how to approximate it based on the local data from each region under study. Initial conditions The starting point t = 0 for each simulation was the day at which 500 infected cases were detected, i.e. I 0 = 500. The number of susceptible individuals was assumed to be equal to the respective regional populations, i.e. S(t = 0) = 11 million, 60 million, 52 million and 327 million for Wuhan, Italy, South Korea and USA respectively. Also, in all simulations, the number of recovered individuals was initialized to a small number R(t = 0) \u2248 10. Parameter estimation The time resolved data for the infected, I data and recovered, R data for each locale considered is obtained from the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University. The neural network-augmented SIR ODE system was trained by minimizing the mean square error loss function L NN (W, \u03b2, \u03b3) = log(I(t)) \u2212 log(I data (t)) 2 + log(R(t)) \u2212 log(R data (t)) 2 (4.16) that includes the neural network's weights W . Minimization was carried out through local adjoint sensitivity analysis (Cao et al. 2003; Rackauckas et al. 2019 ) following a similar procedure outlined in Rackauckas et al. (2020) and implemented using the ADAM optimizer (Kingma & Ba 2014) for 300 \u223c 500 iterations. To avoid over-fitting, the training is stopped when the loss function, L is seen to stagnate and the first derivative I \u2032 (t), R \u2032 (t) is seen to match that of the data. (Lyons 2020) , leads to smaller recovery rate and hence a smaller fraction of the population being transferred from the infected compartment to the recovered compartment in the model described in (4.12) -(4.15). Thus, simultaneous training of W, \u03b2, \u03b3 as described above leads to our model over-estimating the infected case count. As a result, for the USA, we first find the optimal \u03b3 by minimizing (4.16), and then use this value of \u03b3 for minimizing the loss function, L(W, \u03b2) = log(I(t)) \u2212 log(I data (t)) 2 . Such an independent optimization procedure for estimating \u03b3 may lead to small errors in the estimation of R(t). Such errors are seen to be negligible in this case (figure 8a), thus validating this approach for the USA. The estimates of \u03b2, \u03b3, Q(t) obtained using this procedure are shown in table 1. Table  also shows the intervention efficiency defined as the number of days elapsed between detection of 500 th case and the first time when the effective reproduction number reached R t < 1 in the chosen locale.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 65,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 85,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 1196,
+                    "end": 1213,
+                    "text": "(Cao et al. 2003;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 1214,
+                    "end": 1236,
+                    "text": "Rackauckas et al. 2019",
+                    "ref_id": null
+                },
+                {
+                    "start": 1281,
+                    "end": 1305,
+                    "text": "Rackauckas et al. (2020)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1347,
+                    "end": 1365,
+                    "text": "(Kingma & Ba 2014)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1562,
+                    "end": 1574,
+                    "text": "(Lyons 2020)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2372,
+                    "end": 2383,
+                    "text": "Table  also",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "Forecasts in figures 3, 5, 7 were obtained by using the sub-population data on the final days of their respective training periods to initialize the trained neural network models for Wuhan, Italy and Korea. For figure 10 , the forecasts were obtained by similarly initializing the model but subsequently in the post April 1 st period adjusting the quarantine model gradually over 17 days till 10 April according to where j = Wuhan, Italy, Korea for the respective assumed quarantine policy adoptions.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 211,
+                    "end": 220,
+                    "text": "figure 10",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Model 2: With quarantine control"
+        },
+        {
+            "text": "The authors declare no conflicts of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest"
+        },
+        {
+            "text": "Data collection Data for the infected and recovered case count in Wuhan is obtained . CC-BY-NC-ND 4.0 International license It is made available under a preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the (which was not peer-reviewed) Table shows infection and recovery rates \u03b2 and \u03b3, respectively, and the range of quarantine strength function, Q(t) obtained from minimising (4.16); along with the intervention efficiency defined as the number of days elapsed between detection of 500 th case and the first time when the effective reproduction number reached Rt < 1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 101,
+                    "end": 112,
+                    "text": "Table shows",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conflicts of Interest"
+        },
+        {
+            "text": "[H] from the data released by the Chinese National Health Commission. Infected and recovered count data for Italy, South Korea and USA is obtained from the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Adjoint sensitivity analysis for differentialalgebraic equations: The adjoint dae system and its numerical solution",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Petzold",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Serban",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "SIAM journal on scientific computing",
+            "volume": "24",
+            "issn": "3",
+            "pages": "1076--1089",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "CDC 2020 Coronavirus Disease 2019 (COVID-19) Situation Summary",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F W"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Kok",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K W"
+                    ],
+                    "last": "To",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C Y"
+                    ],
+                    "last": "Yip",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W S"
+                    ],
+                    "last": "Poon",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tsoi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "514--523",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The effect of travel restrictions on the spread of the 2019 novel coronavirus (covid-19) outbreak. Science . CHP 2020 Centre for Health Protection of the Hong Kong Special Administrative Region Government. CHP closely monitors cluster of pneumonia cases on mainland",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chinazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ajelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gioannini",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Litvinova",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Merler",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Piontti",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rossi",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Viboud",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "What china's coronavirus response can teach the rest of the world",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cyranoski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Modelling the sars epidemic by a lattice-based monte-carlo simulation",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "IEEE Engineering in Medicine and Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "7470--7473",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Impact of non-pharmaceutical interventions (npis) to reduce covid-19 mortality and healthcare demand",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nedjati Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boonyasiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "U L M A"
+                    ],
+                    "last": "Cucunuba Perez",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dighe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.25561/77482"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "How South Korea Flattened the Curve",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fisher",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sang-Hun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Italian lockdown puts 16m people in quarantine",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Ghiglione",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Politi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Horowitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kirkpatrick",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Dip in Italy's Cases Does Not Come Fast Enough for Swamped Hospitals",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Adam: A method for stochastic optimization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kingma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1412.6980"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The effect of human mobility and control measures on the covid-19 epidemic in china",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Kraemer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gutierrez",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pigott",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Du Plessis",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Faria",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Hanage",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Brownstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Early dynamics of transmission and control of covid-19: a mathematical modelling study. The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jit",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Munday",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (sars-cov2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Singapore, Taiwan and Hong Kong face second wave of Coronavirus cases",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Wall Street Journal",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Those recovered unknown, but coronavirus deaths rise in ny",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lyons",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Anthony Fauci predicts 'millions' of U.S. coronavirus cases, more than 100,000 deaths",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Miller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Analysis of a spatially extended nonlinear seis epidemic model with distinct incidence for exposed and infectives",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Mukhopadhyay",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bhattacharyya",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Nonlinear Analysis: Real World Applications",
+            "volume": "9",
+            "issn": "2",
+            "pages": "585--598",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Coronavirus cases have dropped sharply in south korea. what's the secret to its success",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Normille",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "jl -A julia library for neural differential equations",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Diffeqflux",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1902.02376"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Universal differential equations for scientific machine learning",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rackauckas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Martensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Warner",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zubov",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Supekar",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Skinner",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ramadhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2001.04385"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Raissi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Perdikaris",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Karniadakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Computational Physics",
+            "volume": "378",
+            "issn": "",
+            "pages": "686--707",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Novel coronavirus 2019-ncov: early estimation of epidemiological parameters and epidemic predictions",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Extension and verification of the seir model on the 2009 influenza a (h1n1) pandemic in japan",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Saito",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Imoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Yamaguchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sato",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nakada",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kami",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Miyano",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Higuchi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Mathematical biosciences",
+            "volume": "246",
+            "issn": "1",
+            "pages": "47--54",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Forecasting epidemics through nonparametric estimation of time-dependent transmission rates using the seir model",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Smirnova",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Decamp",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Bulletin of mathematical biology",
+            "volume": "81",
+            "issn": "11",
+            "pages": "4343--4365",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Estimation of the transmission risk of the 2019-ncov and its implication for public health interventions",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Phase-adjusted estimation of the number of coronavirus disease 2019 cases in wuhan, china",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tsamlag",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell Discovery",
+            "volume": "6",
+            "issn": "1",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-ncov outbreak originating in wuhan, china: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Wuhan without quarantine control; day 0 = 24 January 2020: Estimation of the infected and recovered case count compared to the data acquired from the Chinese National Health Commission based on the (a) SIR epidemiological model and (Wuhan neural network model, day 0 = 24 January 2020: (a) Estimation of the infected and recovered case count compared to the data. (b) Quarantine strength function Q(t) learnt by the neural network. (c) Effective reproduction number Rt.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Wuhan forecasting: (a) Quarantine strength Q(t) and (b) Effective reproduction number Rt based on the neural network augmented SIR model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Italy neural network model, day 0 = 27 February 2020: (a) Estimation of the infected and recovered case count compared to the data. (b) Quarantine strength function Q(t) learnt by the neural network. (c) Effective reproduction number Rt.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Italy forecasting: (a) Quarantine strength, Q and (b) Effective reproduction number, Rt in Italy based on the neural network augmented SIR model. South Korea neural network model, day 0 = 22 February 2020: (a) Estimation of the infected and recovered case count compared to the data post 22 February 2020 in South Korea. (b) Quarantine strength function Q(t) learnt by the neural network. (c) Effective reproduction number Rt.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "South Korea forecasting: (a) Quarantine strength Q(t) and (b) Effective reproduction number Rt, based on the neural network augmented SIR model. USA neural network model, day 0 = 8 March 2020: (a) Estimation of the infected and recovered case count compared to the data post 8 March 2020 in USA. (b) Quarantine strength function Q(t) learnt by the neural network. (c) Effective reproduction number Rt. USA forecasting: (a) Quarantine strength, Q and (b) Effective reproduction number, Rt in USA based on the neural network augmented SIR model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "effective quarantine strength Q(t). Qualitatively, Q(t) is inversely proportional to the average time it takes for an infected person to be quarantined and to further infect any susceptible individuals.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "USA mixed models forecasting, day 0 = 8 March 2020: (a) Comparison of the forecast infected case count for USA after March 31 st according to the trained model for USA, or gradual adjustment to one of the quarantine control functions Q(t) of Wuhan, Italy or Korea according to (4.17). (b) Adjusted quarantine strength function for USA according to (4.17).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "t 17 Q j (t), (t = 0 on April 1 st ) (4.17)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "(a) Neural network architecture used: 2 layers with 10 units in the hidden layer. (b) Training loss, L(W, \u03b2, \u03b3) according to (4.16) for all regions considered.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF3": {
+            "text": "The training loss curves for all regions are shown in the attached Supplementary Information. The plots in figures 2, 4, 6 and 8 were obtained by following this approach separately for each locale, training the respective neural networks according to data available for the periods January 24 th -March 3 rd for Wuhan, February 24 th -March 23 rd for Italy, February 22 nd -March 17 th for Korea, and March 8 th -April 1 st for the US. It should be noted that under-reporting of the recovered case count, R(t) in the USA",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

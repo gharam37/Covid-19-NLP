@@ -1,0 +1,822 @@
+{
+    "paper_id": "87055d4a879db6a01362a6954d7d0959bef8aa87",
+    "metadata": {
+        "title": "CoViD-19: Meta-heuristic optimization based forecast method on time dependent bootstrapped data",
+        "authors": [
+            {
+                "first": "Livio",
+                "middle": [],
+                "last": "Fenga",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Italian National Institute of Statistics ISTAT",
+                    "location": {
+                        "postCode": "00184",
+                        "settlement": "Rome, Kantar",
+                        "country": "Italy, Italy"
+                    }
+                },
+                "email": "livio.fenga@istat.it"
+            },
+            {
+                "first": "Carlo",
+                "middle": [
+                    "Del"
+                ],
+                "last": "Castello",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Italian National Institute of Statistics ISTAT",
+                    "location": {
+                        "postCode": "00184",
+                        "settlement": "Rome, Kantar",
+                        "country": "Italy, Italy"
+                    }
+                },
+                "email": "carlo.delcastello@kantar.com"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "A compounded method -exploiting the searching capabilities of an operation research algorithm and the power of bootstrap techniques -is presented. The resulting algorithm has been successfully tested to predict the turning point reached by the epidemic curve followed by the CoViD-19 virus in Italy. Futures lines of research, which include the generalization of the method to a broad set of distribution, will be finally given.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In general, predicting the time of a peak conditional to a set of time dependent data is a non trivial task. Often carried out in a multi-tasking fashion, requiring the availability of time and resources, the correct estimation of future turning points can be important in many instances but becomes crucial in the case of epidemic events. These are the typical circumstances when the forecasting exercise is conducted on-line and on a time series exhibiting a small sample size. However, under these conditions, the problem might become particularly complicated since statistical methods usually employed for this purposes -for example of the type hidden Markov (see, e.g. Hamilton (1989) and Koskinen and\u00d6ller (2004) ) or non parametric (see, e.g., Delgado and Hidalgo (2000) ) models -not only are very demanding in terms of building and tuning procedures, but typically require the availability of a \"long\" stretch of data. In addition to that, the time series related to epidemics usually show highly non-linear dynamics, which, if not pre-processed, make them not suitable for standard linear models. On the other hand, attempting to fit non-linear models -e.g. of the type Self Exciting Threshold Autoregressive (see, for example Clements et al. (2003) ) or artificial neural network (Hassoun et al. (1995) ) -it is not a viable options, due to the above mentioned sample size issues. In any case, when an ill-tuned model is fitted on a time series, reliable outcomes should not be reasonably expected. Therefore, an approach able to perform under the above outlined conditions, is proposed. In essence, the problem is solved by building a unified framework in which two powerful techniques -belonging to two different branches of computational statistics -are sequentially employed to lower the amount of uncertainty embedded in the observed data and to find a (possibly global) Page 1 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 674,
+                    "end": 689,
+                    "text": "Hamilton (1989)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 694,
+                    "end": 718,
+                    "text": "Koskinen and\u00d6ller (2004)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 751,
+                    "end": 777,
+                    "text": "Delgado and Hidalgo (2000)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1237,
+                    "end": 1259,
+                    "text": "Clements et al. (2003)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1291,
+                    "end": 1313,
+                    "text": "(Hassoun et al. (1995)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 optimum through which the \"best\" statistical distribution for the data set at hand is found.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As above stated, the approach studied in this paper, is rooted in a unified framework in which two powerful paradigms are exploited. The first one, which belongs to the so called computer intensive statistical methods, is the bootstrap, which will be detailed in 4. By using this technique, an high number of \"bona fide\" replications of the original data are generated. In essence, each of the bootstrap series obtained \"mimics\" the observations recorded, so that the number of series observed -which in real life is typically equal to one -becomes (very) high. Repeating a mathematical operation (e.g. the computation of an estimator) B times makes possible i) the assessment of the degree of uncertainty associated with the obtained estimations and ii) less biased estimators. The latter goal is achievable by design of the bootstrap method, as through its replications the use of central tendency functions, such as mean or median, are possible. The second tool employed, is an optimization method for the selection of the \"best\" parametrization of a class of statistical distribution commonly used in the literature. In practice, this step is performed in the so called bootstrap world, meaning that it is sequentially repeated for each bootstrap sample. By doing so, the degree of uncertainty associated with the selected distribution is lower than the one obtainable by processing just one set of data (the real observations).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The unified framework"
+        },
+        {
+            "text": "This paper uses the official data diffused daily by the National Institute of Healthan agency of the Italian Ministry of health -and the Department of Civil Protection. The data set includes 38 daily data points collected at national level during the period starting from January 19 th to March 27 th . The used indicator -which will refer to as the variable of interest -is obtained by subtracting, for each day, from the total number of people tested positive of Corona virus the number of the deaths and of the recovery.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data and contagion indicator"
+        },
+        {
+            "text": "The choice of the most appropriate resampling method is far from being an easy task, especially when the identical and independent distribution iid assumption (Efron's initial bootstrap method) is violated. Under dependence structures embedded in the data, simple sampling with replacement has been proved -see, for example Carlstein et al. (1986) -to yield suboptimal results. As a matter of fact, iid-based bootstrap schemes are not designed to capture, and therefore replicate, dependence structures. This is especially true under the actual conditions (small sample sizes and strong non-linearity). In such cases, selecting the \"right\" resampling scheme becomes a particularly challenging task as many resamplig schemes are not designed to capture the dynamics typically found in epidemiology. As an example, the well known resampling method called sieve bootstrap -introduced by B\u00fchlmann et al. (1997) -cannot be employed due to the quadratic shape almost always found in this type of time series.",
+            "cite_spans": [
+                {
+                    "start": 324,
+                    "end": 347,
+                    "text": "Carlstein et al. (1986)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "In more details, while in the classic bootstrap an ensemble \u2126 represents the population of reference the observed time series is drawn from, in MEB a large number of ensembles (subsets), say {\u03c9 1 , . . . , \u03c9 N } becomes the elements belonging to \u2126, each of them containing a large number of replicates {x 1 , . . . , x J }. Perhaps, the most important characteristic of the MEB algorithm is that its design guarantees the inference process to satisfy the ergodic theorem. Formally, denoting by the symbol | \u00b7 | the cardinality function (counting function) of a given ensemble of time series {x t \u2208 \u03c9 i ; i = 1, . . . , N }, the MEB procedure generates a set of disjoint subsets \u2126 N \u2261 \u03c9 1 \u2229 \u03c9 1 \u00b7 \u00b7 \u00b7 \u2229 \u03c9 N Page 2 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprint s.t. E\u2126 N \u2248 \u00b5(x t ), being \u00b5(\u00b7) the sample mean. Furthermore, basic shape and probabilistic structure (dependency) is guaranteed to be retained \u2200x * t,j \u2282 \u03c9 i \u2282 \u2126.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "MEB resampling scheme has not negligible advantages over many of the available bootstrap methods: it does not require complicated tune up procedures (unavoidable, for example, in the case of resampling methods of the type Block Bootstrap) and it is effective under non-stationarity. MEB method relies on the entropy theory and the related concept of (un)informativeness of a system. In particular, the Maximum Entropy of a given density \u03b4(x), is chosen so that the expectation of the Shannon Information",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "Under mass and mean preserving constraints, this resampling scheme generates an ensemble of time series from a density function satisfying (4). Technically, MEB algorithm can be broken down in the 8 steps below detailed. 2. S 1 is sorted according to the numbers placed in the first column. As a result, the order statistics x (t) and the vector I ord of sorted I ind are generated and respectively placed in the first and second column;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "3. compute \"intermediate points\", averaging over successive order statistics, i.e. c t =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": ", t = 1, . . . T \u22121 and define intervals I t constructed on c t and r t , using ad hoc weights obtained by solving the following set of equations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "4. from a uniform distribution in [0, 1], generate T pseudorandom numbers and define the interval R t = (t/T ; t + 1/T ] for t = 0, 1, . . . , T \u2212 1, in which each p j falls;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "5. create a matching between R t and I t according to the following equations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "so that a set of T values {x j,t }, as the j th resample is obtained. Here \u03b8 is the mean of the standard exponential distribution;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "Page 3 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprint 6. a new T \u00d7 2 sorting matrix S 2 is defined and the T members of the set {x j,t } for the j th resample obtained in Step 5 is reordered in an increasing order of magnitude and placed in column 1. The sorted I ord values (",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "Step 2) are placed in column 2 of S 2 ; 7. matrix S 2 is sorted according to the second column so that the order {1, 2, . . . , T } is there restored. The jointly sorted elements of column 1 is denoted by {x S,j,t }, where S recalls the sorting step;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "8. Repeat Steps 1 to 7 a large number of times.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Resampling Method"
+        },
+        {
+            "text": "This section aims to define an alternative method to forecast our variable of interest using an optimization approach to fit a set of distribution functions on bootstrap replications.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "The variable of interest is assumed to approximately describe a logistic function, scaled by a normalizing parameter h (representing the asymptotic number of cases) Fig. 1 and its derivative is a Gaussian function re-scaled by the parameter h.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 165,
+                    "end": 171,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "where t = days since pandemic has started in Italy h = magnitude scale Page 4 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprint \u00b5 = peak of daily cases (scale) \u03c3 = standard deviation (shape) So, given \u2022 the parameter vector \u03b8 = (h, \u00b5, \u03c3), where \u03b8 \u2208 \u0398 \u2022 the total active cases x t since the infection spread",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "This is a non-linear unconstrained optimization problem which cannot be addressed using standard global optimization methods (Simplex, Branch and Bound or Branch and Cut algorithm), which are designed for Linear Programming LP (Murty (1983) ) and Mixed-Integer Linear Programming MILP (B\u00e9nichou et al. (1971) ), within the field of discrete combinatorial problems (Papadimitriou and Steiglitz (1998) ).",
+            "cite_spans": [
+                {
+                    "start": 227,
+                    "end": 240,
+                    "text": "(Murty (1983)",
+                    "ref_id": null
+                },
+                {
+                    "start": 285,
+                    "end": 308,
+                    "text": "(B\u00e9nichou et al. (1971)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 364,
+                    "end": 399,
+                    "text": "(Papadimitriou and Steiglitz (1998)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "Local search Simulated Annealing meta-heuristic to approximate global optimization can be used to solve unconstrained non-linear problems in a large space.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bootstrap driven forecast optimization"
+        },
+        {
+            "text": "Simulated annealing (SA), following Van Laarhoven and Aarts (1987) , is a probabilistic technique for approximating the global optimum of a given function. Specifically, it is a metaheuristic used to approximate global optimization in a large search space for an optimization problem.",
+            "cite_spans": [
+                {
+                    "start": 54,
+                    "end": 66,
+                    "text": "Aarts (1987)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Simulated Annealing Optimization"
+        },
+        {
+            "text": "The name and inspiration come from annealing in metallurgy, a technique involving heating and controlled cooling of a material to increase the size of its crystals and reduce their defects. Both are attributes of the material that depend on its thermodynamic free energy. Heating and cooling the material affects both the temperature and the thermodynamic free energy. Simulated annealing can be used to approximate the global minimum for a function with many variables. In 1983, this approach was used by Kirkpatrick et al. (1983) for a solution of the traveling salesman problem. They also proposed its current name, simulated annealing. This notion of slow cooling implemented in the simulated annealing algorithm is interpreted as a slow decrease in the probability of accepting worse solutions as the solution space is explored. Accepting worse solutions is a fundamental property of meta-heuristics because it allows for a more extensive search for the global optimal solution.",
+            "cite_spans": [
+                {
+                    "start": 506,
+                    "end": 531,
+                    "text": "Kirkpatrick et al. (1983)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Simulated Annealing Optimization"
+        },
+        {
+            "text": "In general, simulated annealing algorithms work as below explained. The temperature progressively decreases from an initial positive value to zero. At each time step, the algorithm randomly selects some neighbor state s * of the current state s, measures its energy (in this case the M SE i (x * t,i ) on the bootstrap distribution) and decides between moving the system to the state s * or staying in state s according to the temperature-dependent probabilities of selecting better or worse solutions, which during the search respectively remain at 1 (or positive) and decrease towards zero.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulated Annealing Optimization"
+        },
+        {
+            "text": "Page 5 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulated Annealing Optimization"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulated Annealing Optimization"
+        },
+        {
+            "text": "The following pseudocode presents the simulated annealing heuristic applied to bootstrap replicates. For each bootstrap it starts from a state s 0 and continues searching solutions until temperature decay reaches a low temperature. In the process, the call Neighbour(s, \u03c6) should generate a randomly chosen neighbour of a given state s; the call Random U (0, 1) should pick and return a value in the range [0, 1], uniformly at random. The annealing schedule is defined by the temperature decay based on the fixed cooling rate \u03c1. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulated annealing on bootstrap pseudocode"
+        },
+        {
+            "text": "is the acceptance probability at each iteration given temperature T and Boltzmann constant (see Aarts and Korst (1988) ",
+            "cite_spans": [
+                {
+                    "start": 96,
+                    "end": 118,
+                    "text": "Aarts and Korst (1988)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Simulated annealing on bootstrap pseudocode"
+        },
+        {
+            "text": "otherwise.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulated annealing on bootstrap pseudocode"
+        },
+        {
+            "text": "In order to improve local search speed the parameter space \u0398 can be bounded to \u0398 \u2282 \u0398 removing useless tails. SA parameters has been recursively tuned and the procedure improved using an initial temperature T 0 = 10000, a cooling rate \u03c1 = 0.0006, Boltzmann constant k B = 100 and radius \u03c6 = 0.3(\u03b8 max \u2212 \u03b8 min) .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Empirical evidences"
+        },
+        {
+            "text": "Optimization procedure applied to 500 Bootstraps, derived from active case in Italy from February 19 th to March 27 th , shows Page 6 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Empirical evidences"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprint As an approximation, confidence bounds from normal distibution are derived for each of the parameters, such that with 0.01 significance level P r(119401 \u2264 h \u2264 124955) = 0.99 P r(36.41 \u2264 \u00b5 \u2264 37.07) = 0.99 P r(10.6 \u2264 \u03c3 \u2264 10.9) = 0.99 \u00b5 confidence interval points out a peak day of daily cases between March 25 th and 26 th , while h magnitude parameter shows an asymptote of totale active cases curve between 120000 and 125000. The new cases curve has an asymptotic behavior, so cutting tail beyond a 0.1 cut-off for new infections, the pandemic time window is hypothetically over after May 16 th . This behavior is clearly described in the below charts built considering Gaussian and Cumulated Gaussian around 99% confidence lower and upper bound for each parameter.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 122,
+                    "text": "//doi.org/10.1101/2020.04.02.20050153",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Empirical evidences"
+        },
+        {
+            "text": "Page 7 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Empirical evidences"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Empirical evidences"
+        },
+        {
+            "text": "The SA optimization for fitting bootstraps derived from real data is applicable to any kind of distribution known in literature and empirical distributions as well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": "This kind of research highlights a great potential if the aforementioned procedure is enhanced with the automatic choice of known distributions \u03be r or empirical Page 8 of 10",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ones \u03be e where (\u03be r , \u03be e ) are in a predefined distribution space \u039e. More in detail, the algorithm could include a pre-processing light SA optimization (with an higher cooling rate \u03c1 to cut down the number of SA iterations) to reduce the distribution space \u039e and the parameter space \u0398 \u03be for each distribution \u03be \u2208 \u039e and boost the optimization search performed by the main SA process.",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": "Page 9 of 10 . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Further developments"
+        },
+        {
+            "text": "The views and opinions expressed in this article are those of the authors and do not necessarily reflect the official policy or position of the Italian National Institute of Statistics or any other Entity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Disclaimer"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Simulated annealing and Boltzmann machines",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Aarts",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Korst",
+                    "suffix": ""
+                }
+            ],
+            "year": 1988,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Experiments in mixed-integer linear programming",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "B\u00e9nichou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-M",
+                    "middle": [],
+                    "last": "Gauthier",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Girodet",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hentges",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ribi\u00e8re",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Vincent",
+                    "suffix": ""
+                }
+            ],
+            "year": 1971,
+            "venue": "Mathematical Programming",
+            "volume": "1",
+            "issn": "1",
+            "pages": "76--94",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Sieve bootstrap for time series",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "B\u00fchlmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Bernoulli",
+            "volume": "3",
+            "issn": "2",
+            "pages": "123--148",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The use of subseries values for estimating the variance of a general statistic from a stationary sequence",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Carlstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "The annals of statistics",
+            "volume": "14",
+            "issn": "3",
+            "pages": "1171--1179",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "On SETAR non-linearity and forecasting",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Clements",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Franses",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Van Dijk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of Forecasting",
+            "volume": "22",
+            "issn": "5",
+            "pages": "359--375",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Nonparametric inference on structural breaks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Delgado",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hidalgo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Journal of Econometrics",
+            "volume": "96",
+            "issn": "1",
+            "pages": "113--144",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A new approach to the economic analysis of nonstationary time series and the business cycle",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hamilton",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Econometrica: Journal of the Econometric Society",
+            "volume": "",
+            "issn": "",
+            "pages": "357--384",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Fundamentals of artificial neural networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Hassoun",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Optimization by simulated annealing",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kirkpatrick",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Gelatt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Vecchi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "science",
+            "volume": "220",
+            "issn": "4598",
+            "pages": "671--680",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A classifying procedure for signalling turning points",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Koskinen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L.-E",
+                    "middle": [],
+                    "last": "And\u00f6ller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Journal of Forecasting",
+            "volume": "23",
+            "issn": "3",
+            "pages": "197--214",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Combinatorial optimization: algorithms and complexity Courier Corporation",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Papadimitriou",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Steiglitz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Simulated annealing",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Van Laarhoven",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Aarts",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "Simulated annealing: Theory and applications Springer",
+            "volume": "",
+            "issn": "",
+            "pages": "7--15",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "1.A sorting matrix of dimension T \u00d7 2, say S 1 , accommodates in its first column the time series of interest x t and an Index Set -i.e. I ind = {2, 3, . . . , T } -in the other one;",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Let current temperature T = t 0 \u2022 Set Cooling rate \u03c1 \u2022 For each bootstrap series i in {1, . . . , N } -Let current solution s = s Loop while temperature T > 1 * Pick a random neighbor, s new \u2190 Neighbor(s, \u03c6), where \u03c6 is the radius around s",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "COVID19 Avg(h) = 122178, Avg(\u00b5) = 36.7, Avg(\u03c3) = 10.8.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ". COVID19 Active cases",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "No information is lost if parameters space is reduced to",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": ". https://doi.org/10.1101/2020.04.02.20050153 doi: medRxiv preprintFig. 3. COVID19 Active cases fitting with Cumulated Gaussian Fig. 4. COVID19 New active cases fitting with Gaussian",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "AsymptoteClass (\u00b12500)  median point  34 35 36 37 38 39 40 41 42 43 44 45 Total  100000  13 19  3  8  3  1  47  102500  22 27  6  5  3  63  105000  18 13 12  6  3  1  2  55  107500  16  5  6  4  31  110000  31 10  6  1  1  2  1  52  112500  10  3  7  2  1  1  24  115000  23  7  4  1  1  1  37  117500  11  1  2  3  1  18  120000  6  2  4  1  3  16  122500  3  3  2  8  125000  3  2  3  3  2  1  14  127500  1  1  2  130000  1  1  1  1  4  132500  1  1  3  1  1  7  135000  2  2  1  1  1  7  137500  1  3  1  1  6 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 15,
+                    "end": 513,
+                    "text": "(\u00b12500)  median point  34 35 36 37 38 39 40 41 42 43 44 45 Total  100000  13 19  3  8  3  1  47  102500  22 27  6  5  3  63  105000  18 13 12  6  3  1  2  55  107500  16  5  6  4  31  110000  31 10  6  1  1  2  1  52  112500  10  3  7  2  1  1  24  115000  23  7  4  1  1  1  37  117500  11  1  2  3  1  18  120000  6  2  4  1  3  16  122500  3  3  2  8  125000  3  2  3  3  2  1  14  127500  1  1  2  130000  1  1  1  1  4  132500  1  1  3  1  1  7  135000  2  2  1  1  1  7  137500  1  3  1  1  6",
+                    "ref_id": null
+                }
+            ],
+            "section": "annex"
+        }
+    ]
+}

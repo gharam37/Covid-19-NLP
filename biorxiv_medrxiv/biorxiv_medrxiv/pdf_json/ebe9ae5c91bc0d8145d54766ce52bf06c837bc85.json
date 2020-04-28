@@ -1,0 +1,486 @@
+{
+    "paper_id": "ebe9ae5c91bc0d8145d54766ce52bf06c837bc85",
+    "metadata": {
+        "title": "Modeling the COVID-19 pandemic -parameter identifica- tion and reliability of predictions",
+        "authors": [
+            {
+                "first": "Klaus",
+                "middle": [],
+                "last": "Hackl",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Ruhr-Universit\u00e4t Bochum",
+                    "location": {
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In this paper, we try to identify the parameters in an elementary epidemic model, the so-called SI-model, via non-linear regression using data of the COVID-19 pandemic. This is done based on the data for the number of total infections and daily infections, respectively. Studying the convergence behavior of the two parameter sets obtained this way, we attempt to estimate the reliability of predictions made concerning the future course of the epidemic. We validate this procedure using data for the case numbers in China and South Korea. Then we apply it in order to find predictions for Germany, Italy and the United States. The results are encouraging, but no final judgment on the validity of the procedure can yet be made.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In most countries, social distancing measures are in effect now in order to fight the covid-19 pandemic. Considering the serious effects of these measures on the affected societies and the ensuing political discussions on their intensity and duration, it would be highly desirable to be able to make modeling based predictions on the future timeline of the epidemic, as long as the measures are upheld. Of course, many attempts are made in this direction. However, most of them require very detailed data that are laborious and time-consuming to generate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this work, we try to study the possibility to base predictions on data sets readily available, namely the number of reported infections. We are aware, that these numbers depend strongly on the intensity of testing done in the various countries and the reliability of the reported numbers. In this work we presume that there is a factor, country-specific, but constant in time, between the reported and the actual number of cases. If this assumption were valid, the total number of infected individuals would be off by this very factor. However, other parameters, like the point in time when the peak in the numbers of daily infections would occur, or the following rate of decay of these numbers, would not be affected.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Finally, we would like to stress, that we intend this work to be the starting point of a discussion and maybe further research. By no means, having a background in engineering and not in virology or epidemiology, we are claiming any medical expertise. The paper should be rather seen as a general exercise in modeling and interpretation of data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Our aim is to model a situation where social distancing measures are in effect, as currently is the case in most countries. This means, that only a small portion of the population is affected, which is well but not completely isolated from the rest. As starting point, we refer to the compartmental model by Kermack, McKendrick and Walker, [3] . It is defined by the differential equations\u1e60 = \u2212\u03b1SI,\u0130 = \u03b1SI \u2212 \u03b3I.",
+            "cite_spans": [
+                {
+                    "start": 340,
+                    "end": 343,
+                    "text": "[3]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "(1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "Here I(t) is the number of individuals in the infectious population and S(t) denotes the number of individuals in the susceptible population, in our case those who can get infected because they are not protected by social distancing. This formulation is also called the SIR-model, where the dependent variable R(t) stands for the removed (by recovery of death) population, and we have\u1e58 = \u03b3S. The parameter \u03b1 is related to the basic reproduction number by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "where N is the initially susceptible population and T inf = 1/\u03b3 is the time period during which an individual is infectious. For Sars-Cov-2, no definite value for T inf has yet been reported. The parameter \u03b3 denotes the rate at which individuals are removed from the infected population because of an outcome (recovery or death).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "In our study, we are going to neglect the term \u03b3I, which will have an effect only in late stages of the epidemic when S \u2248 \u03b3/\u03b1. As a result, we obtain the so-called SI-model, [4] . Later, we will see, that it is basically impossible to identify the parameter \u03b3 from the data available unless the epidemic is in a very late stage. So, for our purposes, this simplification amounts to a necessity.",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 177,
+                    "text": "[4]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "Employing the assumption above, Eqs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "(1) become equivatent to the so-called logistic . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint differential equation having the closed form solution",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "I max e Imax\u03b1tmax e Imax\u03b1tmax + e Imax\u03b1t , I(t) = I max e Imax\u03b1t e Imax\u03b1tmax + e Imax\u03b1t ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "and t max , marking the peak of the epidemic, is defined by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An elementary model"
+        },
+        {
+            "text": "In order to achieve a more robust parameter identification, we precondition our solution by introducing new parameters a, b given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "Note, that Eq. (6) implies",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "After substitution of Eqs. (6) into Eqs. (3), the number of total infections is then given as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "and the rate of daily infections becomes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "We determine the three parameters {a, b, t max } of our model via non-linear regression. The data taken from the worldometer web page, [1], which essentially uses the data from the Johns Hopkins University Center for Systems Science and Engineering (JHU CCSE).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "For the parameter identification done in this paper, we have used the available data up to including Apr. 4, 2020. The data are provided in form of lists {(t 1 , I 1 ), . . . , (t N data , I N data )} for the total number of infections up to day t i , and {(t 1 , \u2206I 1 ), . . . , (t N data , \u2206I N data )} for the number of daily infections. Time is measured in days, starting on Jan. 1, 2020. Hence, t = 1 d corresponds to Jan. 1, t = 32 d to Feb. 1, t = 61 d to Mar. 1, 2020, and so on. Obviously, we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter identification"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint Let us define errors e 0 (a, b, t max ) with respect to the total cases and e 1 (a, b, t max ) with respect to the daily cases by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(11) In order to judge the accuracy of the modeling, let us define the data norms",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "and the relative errors",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Finally, we find the parameters a, b, t max by minimizing the errors:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Minimization is done using the computer algebra system Mathematica, [2]. For our purposes, the simulated annealing global minimization algorithm works best. Attention has to be given, though, to choosing appropriate initial intervals for the parameters in order to achieve convergence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In Figs. 1 to 5, the numbers of daily cases (left) and total cases (right) are plotted versus time in days. In order to get an estimation of the variability of the predictions, we use both parameter identification schemes defined in Eqs, (14) and (15). The results obtained by fitting the number of total cases according to Eq. (14) are shown in red color and those obtained obtained by fitting the number of daily cases according to Eq. (15) are shown in magenta. The corresponding data are shown in blue color.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In Fig. 1 and Fig. 2 the data for China and South Korea are displayed. Both countries can be considered to be in a late stage of the epidemic and the data are matched well by the model. Especially for China, the predictions obtained by both parameter identification schemes are close together. The pronounced spike in the number of daily cases is due to a change of the procedure how infections are counted, and is averaged out by the model. It is apparent that the model cannot fit the remaining almost constant level of daily infections around 100 and the corresponding ongoing rise in the total cases in the South Korea data. This causes the predictions generated by both procedures to lie a little . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 9,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 14,
+                    "end": 20,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint further apart.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In Figs. 3, 4 and 5, the numbers of daily new cases are plotted for Germany, Italy and the United States. These countries can be considered to be in earlier stages of the epidemic. For Germany and Italy, the predictions generated by both procedures agree closely in the time range where data are already available and are divergent for later points in time. This divergence is especially strong in case of the United States data, indicating a very dynamic epidemic process of exponential growth taking place there. Figure 1 : China, left: daily cases (\u2206I a 0 ,b 0 ,t 0 max (t) red, \u2206I a 1 ,b 1 ,t 1 max (t) magenta), right: total cases (I a 0 ,b 0 ,t 0 max (t) in red, I a 1 ,b 1 ,t 1 max (t) in magenta), data in blue Figure 2 : South Korea, left: daily cases (\u2206I a 0 ,b 0 ,t 0 max (t) red, \u2206I a 1 ,b 1 ,t 1 max (t) magenta), right: total cases (I a 0 ,b 0 ,t 0 max (t) in red, I a 1 ,b 1 ,t 1 max (t) in magenta), data in blue . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 13,
+                    "text": "Figs. 3, 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 515,
+                    "end": 523,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 719,
+                    "end": 727,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint Figure 3 : Germany, left: left: daily cases (\u2206I a 0 ,b 0 ,t 0 max (t) red, \u2206I a 1 ,b 1 ,t 1 max (t) magenta), right: total cases (I a 0 ,b 0 ,t 0 max (t) in red, I a 1 ,b 1 ,t 1 max (t) in magenta), data in blue Figure 4 : Italy, left: left: daily cases (\u2206I a 0 ,b 0 ,t 0 max (t) red, \u2206I a 1 ,b 1 ,t 1 max (t) magenta), right: total cases (I a 0 ,b 0 ,t 0 max (t) in red, I a 1 ,b 1 ,t 1 max (t) in magenta), data in blue Figure 5 : United States, left: left: daily cases (\u2206I a 0 ,b 0 ,t 0 max (t) red, \u2206I a 1 ,b 1 ,t 1 max (t) magenta), right: total cases (I a 0 ,b 0 ,t 0 max (t) in red, I a 1 ,b 1 ,t 1 max (t) in magenta), data in blue",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 107,
+                    "end": 115,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 319,
+                    "end": 327,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 529,
+                    "end": 537,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Some key data provided by the model are given in Table 1 . They are defined as follows:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 49,
+                    "end": 56,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "I 0 max = a 0 /b 0 , I 1 max = a 1 /b 1 : This is the total number of population getting infected, if the social distancing measures taken are upheld until the epidemic has completely subsided.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint Note, that for China and South Korea,these numbers correspond closely to the total number of cases reported. e 0,rel , e 1,rel : The is relative errors produced by both parameter identification procedures, as defined in Eq. (13). Note, that due to the fluctuating nature of the number of daily cases, e 1,rel is much larger than e 0,rel . ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "In the initial stages of an epidemic, the number of cases grows exponentially. This is easy to see by considering the limit t \u2192 \u2212\u221e in Eqs. (8) and (9), giving",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reliability of predictions"
+        },
+        {
+            "text": "From Eq. (16), we see that during an early stage, it is impossible to identify the parameters a and t max independently, because the occur via the common factor a/e btmax . Hence, there are infinitely many pairs of a and t max giving the same behavior and thus being minimizers in Eqs. (14) and (15). By virtue, it is even harder to fit all parameters in the SIR-model or one of the many existing extensions of it. Only past this phase of exponential growth, it is possible to identify all three parameters and thus arrive at viable predictions. But how to identify this point in time from the available data?",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 286,
+                    "end": 290,
+                    "text": "(14)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Reliability of predictions"
+        },
+        {
+            "text": "Our suggestion for a solution of this problem is to monitor the two different parameter . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reliability of predictions"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint sets {a 0 , b 0 , t 0 max } and {a 1 , b 1 , t 1 max } defined in Eqs. (14) and (15). Theoretically, the values should be close to each other. However, during a phase of exponential growth, the mentioned ill-posedness of the minimization problems given by Eqs. (14) and (15) will give results lying substantially apart.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 368,
+                    "end": 372,
+                    "text": "(14)",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Lets test this hypothesis: In Figs. 6 to 10, we display the parameters I 0 max (in red) and I 1 max (in magenta) to the left and b 0 (in red) and b 1 (in magenta) to the right, respectively, versus time in days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Looking at the timeline for China, we can state stable behavior starting between day 50 and 60, agreeing with the converged behavior in Fig. 1 . For South Korea, we have convergence around day 66. Afterwards, the graphs diverge slightly again, which is likely due to the constant number of daily infections occurring in the later stage of the epidemic, already mentioned above. From this observation we can deduce with some caution, that the predictions based on the present model will be reliable to a certain extent as soon as the parameters identified by the two procedures stated in Eqs. (14) and (15) approach each other.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 136,
+                    "end": 142,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Applying this reasoning to the data for Italy, Fig. 9 , we can assume reliable predictions starting on day 83. This is supported by the close values for T 100 in Table 1 . Less confidence can be put into the predictions for Germany. In Fig. 8 , the graphs for I 0 max and I 1 max seem to have converged, but for b 0 and b 1 , this cannot be stated with certainty. We will have to wait for the development during the upcoming few days. No convergence can be observed up to now for the United States data, Fig. 10 , where we are likely still in a phase of rapid growths of the case numbers. . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 47,
+                    "end": 53,
+                    "text": "Fig. 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 162,
+                    "end": 169,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 236,
+                    "end": 242,
+                    "text": "Fig. 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 504,
+                    "end": 511,
+                    "text": "Fig. 10",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.07.20056937 doi: medRxiv preprint Figure 10 : United States, left: I 0 max (in red) and I 1 max (in magenta), right: b 0 (in red) and b 1 (in magenta)",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 146,
+                    "text": "Figure 10",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We have identified the parameters in an elementary epidemic model via non-linear regression using data of the covid-19 pandemic. Furthermore, we have attempted to get an insight into the reliability of predictions based on this procedure by observing the timeline of the parameters calculated by two different schemes. Our results indicate, that this approach might work. However, more detailed studies will be necessary in order to establish this method as valid. So caution is required when interpreting the results stated here. In the future, it would be desirable, too, to identify more complex models. It is uncertain, though, if this will be possible at all without more detailed data available.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A contribution to the mathematical theory of epidemics",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "William Ogilvy Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gilbert",
+                    "middle": [
+                        "Thomas"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Walker",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proceedings of the Royal Society of London. Series A, Containing Papers of a Mathematical and Physical Character",
+            "volume": "115",
+            "issn": "772",
+            "pages": "700--721",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "This is the time predicted when the number of daily new cases will drop below 100 using both regression procedures, indicating a point in time when social distancing measures might be loosened. For Germany, Italy and the United States the values are in the range from mid of April to mid of May. T data : The dates, when the number of daily new cases dropped below 100 in China and South Korea, agreeing very well with the model data. (For South Korea, the number of daily new cases is fluctuating strongly. So we took the date, when the number dropped below 100 the second time.)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "China, left: I 0 max (in red) and I 1 max (in magenta), right: b 0 (in red) and b 1 (in magenta)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "South Korea, left: I 0 max (in red) and I 1 max (in magenta), right: b 0 (in red) and b 1 (in magenta) Germany, left: I 0 max (in red) and I 1 max (in magenta), right: b 0 (in red) and b 1 (in magenta) Italy, left: I 0 max (in red) and I 1 max (in magenta), right: b 0 (in red) and b 1 (in magenta)",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

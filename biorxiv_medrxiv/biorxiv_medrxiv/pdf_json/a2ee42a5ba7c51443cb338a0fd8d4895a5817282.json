@@ -1,0 +1,1113 @@
+{
+    "paper_id": "a2ee42a5ba7c51443cb338a0fd8d4895a5817282",
+    "metadata": {
+        "title": "RAPID, LARGE-SCALE, AND EFFECTIVE DETECTION OF COVID-19 VIA NON-ADAPTIVE TESTING",
+        "authors": [
+            {
+                "first": "Matthias",
+                "middle": [],
+                "last": "T\u00e4ufer",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Pooling of samples can increase lab capacity when using Polymerase chain reaction (PCR) to detect infections such as COVID-19. However, pool testing is typically performed via an adaptive testing strategy which requires a feedback loop in the lab and at least two PCR runs to confirm positive results. This can cost precious time. We discuss a non-adaptive testing method where each sample is distributed in a prescribed manner over several pools, and which yields reliable results after one round of testing. More precisely, assuming knowledge about the overall infection incidence rate, we calculate explicit error bounds on the number of false positives which scale very favourably with pool size and sample multiplicity. This allows for hugely streamlined PCR testing and cuts in detection times for a large-scale testing scenario. A viable consequence of this method could be real-time screening of entire communities, frontline healthcare workers and international flight passengers, for example, using the PCR machines currently in operation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "One key to containing and mitigating the CoVid-19 pandemic is suggested to be rapid testing on a massive scale [HZW + 20, SBY] . It would be beneficial to develop the ability to routinely, and in particular rapidly, test groups such as frontline healthcare workers, police officers, and international travellers. Testing for CoVid-19 is currently performed via the polymerase chain reaction (PCR) on nasopharyngeal swabs [TTY + 20] . Typically, the population size significantly exceeds the capacity for testing, with the number of available PCR machines and reagents an important bottleneck in this process.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 121,
+                    "text": "[HZW + 20,",
+                    "ref_id": null
+                },
+                {
+                    "start": 122,
+                    "end": 126,
+                    "text": "SBY]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 421,
+                    "end": 431,
+                    "text": "[TTY + 20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There are two basic approaches to PCR testing in populations: 1. individual tests, where every single sample is examined, and 2. pooled tests where larger sets of samples are mixed and tested en bloc. Pooled testing was pioneered by Dorfman in 1943 [Dor43] and led to a host of research activity, both on the lab side as well as the theoretical side [AJS19, DH99, DH06] . If the infection is rare in the population, then pooled testing may be advisable. In this case it can assist in optimizing precious testing capacity since most individual results would be negative. Pooling relies on the fact that the PCR is reasonably reliable under the combination of samples: the preprint [YAST + 20] suggests that a detection of COVID-19 in pools of size 32 and possibly 64 is feasible.",
+            "cite_spans": [
+                {
+                    "start": 233,
+                    "end": 256,
+                    "text": "Dorfman in 1943 [Dor43]",
+                    "ref_id": null
+                },
+                {
+                    "start": 350,
+                    "end": 357,
+                    "text": "[AJS19,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 358,
+                    "end": 363,
+                    "text": "DH99,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 364,
+                    "end": 369,
+                    "text": "DH06]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 680,
+                    "end": 691,
+                    "text": "[YAST + 20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "While a classic pooling strategy has the advantage that less overall PCR tests are required, there are disadvantages in terms of lab organisation and -more crucially -time: pooling only indicates whether a pool contains at least one infected individual. If samples are tested in pools of size n and the incidence of the infection \u03c1 is small (more precisely, if \u03c1 \u00b7 n is small) then in average 1 \u2212 (1 \u2212 \u03c1) n = n\u03c1 \u2212 n 2 \u03c1 2 + \u00b7 \u00b7 \u00b7 \u2248 n\u03c1 (remember that \u03c1 \u00b7 n is small) of pools will be positive and hence a portion n \u00b7 \u03c1 of individuals need to undergo a second test. In other words, pooled testing with individual verification of positive pools is an adaptive testing strategy, the lab organisation for which is a labour, management, and resource intensive process. It has several drawbacks, since it requires keeping multiple lab samples and rerunning of the time-intensive PCR process. The lab feedback loop makes the entire workflow more susceptible to delays (see Figure 2 ). This may result in delays in individual results -a particular problem when the objective is to rapidly identify infected individuals, who may infect others while waiting for the test outcome. Furthermore, since the number of samples selected for a second round of testing is a random quantity, some reserve capacity is required to prevent further delays. This makes it more challenging for the lab to operate near its maximal capacity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 965,
+                    "end": 973,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the theoretical research on testing strategies the distinction is made between adaptive testing, for example when all samples in a positive pool undergo a second round of testing, and non-adaptive strategies, where all tests can be run simultaneously [DH99] . Testing every sample individually can be considered as a trivial non-adaptive strategy, but there exist nonadaptive strategies which combine the benefit of pooling with the advantages of non-adaptive testing.",
+            "cite_spans": [
+                {
+                    "start": 254,
+                    "end": 260,
+                    "text": "[DH99]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this note, we propose a non-adaptive pooling strategy for rapid and large-scale screening for COVID-19 or other infections where detection time is critical. This allows for significant streamlining of the testing process and reductions in detection time. Firstly because only one round of PCR is required, and secondly because it eliminates actions in the lab workflow that require input from results determined in the lab, i.e. the testing infrastructure can be organized completely linearly, cf. Figure 2 for an illustration. The strategy will systematically overestimate the number of positives, but we can provide error bounds on the number of false positives which scale very favourably with large numbers and will be small in realistic scenarios.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 501,
+                    "end": 509,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Our testing strategy is as follows: every individual's sample is broken up into k samples and distributed over k different pools of size n such that no two individuals share more than one pool. An individual is considered as tested positive if all the pools in which its sample has been given are tested positive. Let us make this definition more formal:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition of the non-adaptive testing strategy: creation of multipools"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint Definition 1 (Multipools). Let a population (X 1 , . . . , X N ) of size N , a pool size n, and a multiplicity k be given, and assume that N k is a multiple of n. We call a collection of subsets/pools of {X 1 , . . . , X N } an (N, n, k)multipool, or briefly multipool, if all of the following three conditions hold: (M1) Every pool consists of exactly n elements. (M2) Every sample X i is contained in exactly k pools. (M3) For any two different samples X i , X j there exists at most one pool which contains both X i and X j .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition of the non-adaptive testing strategy: creation of multipools"
+        },
+        {
+            "text": "If N = n 2 and k = 2 then the construction of an (N, n, k)-multipool is quite straightforward, see also Figure 1 : arrange the N samples in a rectangular grid and then pool along every row and column, cf. [SSW + 16, FFLH, ZDF + 14]. However, as we shall see below, k = 2 is in many realistic scenarios insufficient for the desired precision.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 104,
+                    "end": 112,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Definition of the non-adaptive testing strategy: creation of multipools"
+        },
+        {
+            "text": "The recent preprint [FFLH] proposes to arrange samples in a (3 or higher dimensional) hypercube and to pool along all hyperplanes. This makes every individual sample appear in three or more pools, but it is not a multipool in the sense of Definition 1 above, since in dimension three and higher, any two hyperplanes will intersect in more than one point, in violation of Property (M3). This creates unnecessary correlations between different pools and impairs performance. One proper and flexible way to construct multipools is given by the Shifted Transversal Design [TM06] which we explain in Section 4.",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 26,
+                    "text": "[FFLH]",
+                    "ref_id": null
+                },
+                {
+                    "start": 568,
+                    "end": 574,
+                    "text": "[TM06]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Definition of the non-adaptive testing strategy: creation of multipools"
+        },
+        {
+            "text": "We always assume that the incidence \u03c1 of the infection is small compared to the inverse pool size 1/n. This is a reasonable requirement, also in classical pooling strategies (a \u03c1n portion of samples will have to undergo second testing, thus a large \u03c1n would attenuate the benefit of pooling).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "Assuming perfect performance of the PCR, also under pooling (see Section 6 on how to deal with uncertainty here), multipooling will identify all infected individuals, since all their pools will be positive. However, someone might falsely be declared positive if all pools in which they are contained happen to contain an infected sample.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "The expected portion of false positives in a multipool strategy is (3.1) \u03c1 fp = P(X i negative but all its pools positive) Here, the third identity crucially uses the property (M3) which guarantees independence between the poolmates in the different pools of a sample. By Bayes' rule, the probability to actually be negative when tested positive by the multipool (i.e. the portion of subjects falsely declared positive among all subjects declared positive) is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "Let us calculate for which k the probability of a positive test result being a false positive does not exceed fp > 0:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "This provides a lower bound on the necessary multiplicity k in terms of the sample size n, the knowledge on the incidence \u03c1 of the infection, and the acceptable portion fp of falsely positive tests among all positives. Assuming fp < 1 and \u03c1 \u2264 1 2 (which are both reasonable assumptions, recall that \u03c1n is small), the lower bound in (3.2) is monotone increasing in \u03c1. Hence, if the exact incidence is unknown but we have an upper bound on it, we can work with the largest/worst case \u03c1. Let us summarize our findings in the following Theorem 1. Let the incidence of the infection be at most \u03c1 \u2264 1 2 , let n be such that n\u03c1 \u2264 1 and let 0 < fp < 1. Then if The number of tests required in a multipool strategy is N k/n, an improvement compared to individual testing by a factor n/k. A key observation is that the lower bound on k in Ineq. (3.3) scales very favourably with large multiplicities n. Indeed, recall that in an adaptive pooling strategy one wants on the one hand large pool sizes n, but on the other hand n\u03c1 should be small. It is therefore reasonable to have n proportional to the inverse of \u03c1, i.e. n\u03c1 \u2248 C. Using that 1 \u2212 \u03c1 \u2248 1 and 1 \u2212 (1 \u2212 \u03c1) n\u22121 \u2248 (n \u2212 1)\u03c1 \u2248 n\u03c1, the lower bound in (3.3) behaves approximately as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "that is k grows only logarithmically with the pool size n. An analogous analysis shows that k also grows logarithmically with the inverse of fp when the error probability fp is sent to zero. We have sketched the interplay between pool size n, multiplicity k, false positive probability fp and the minimal k required for some choices of n, \u03c1, and fp in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 352,
+                    "end": 359,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Controlling the number of false positives"
+        },
+        {
+            "text": "The question for which combiniations (N, n, k) a multipool exists seems to be in general a non-trivial combinatorial problem. We focus here on the Table 1 . Lower bounds on the number k required to make the probability of a positive result being a false positive smaller than fp for different choices of pool size n and bound on the incidence \u03c1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 147,
+                    "end": 154,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "case when N = n 2 and on constructions based on the Shifted Transversal Design [TM06] . As mentioned in [FFLH] , assuming N to be a square number is not really a restriction since numbers N which are not a square can be either divided into smaller squares or extended to a larger square number by adding negative \"dummy samples\".",
+            "cite_spans": [
+                {
+                    "start": 79,
+                    "end": 85,
+                    "text": "[TM06]",
+                    "ref_id": null
+                },
+                {
+                    "start": 104,
+                    "end": 110,
+                    "text": "[FFLH]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "It is useful to imagine all N samples arranged in an n \u00d7 n-square and denote the sample in the i-th row and the j-th column by X ij . For k = 2, a (N, n, k)-multipool can be constructed by pooling along rows and columns, as for instance in Figure 3 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 240,
+                    "end": 248,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "We have seen in Table 1 that for many relevant parameters a multiplicity k = 2 is not sufficient for the required precision. To deal with the case k = 3, one can sample along diagonals, where the diagonals are continued periodically, see Figure 3 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 16,
+                    "end": 23,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 238,
+                    "end": 246,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "Theorem 2. Let N = n 2 and n \u2265 2. Then there exists an (N, n, 3)multipool, obtained by sampling along rows, columns, and all periodically continued north-west-to-south-east diagonals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "In order to pass to k = 4, one might be tempted to now pool along the other (north-east-to-south-west) diagonals, but this is not going to yield a . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint Another option is to sample along lines of different slopes, that is to construct a multipool using pools of the form P (l, m) := X j,l+jm(mod n) : j = 0, . . . , n \u2212 1 , l, m \u2208 {0, . . . , n \u2212 1}, where mod n means that we calculate modulo n, that is as soon as we exceed n \u2212 1, we start counting from 0 again. We sketch such sets in Figure 5 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 702,
+                    "end": 710,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "It follows from standard algebraic properties of the integers modulo n (more precisely from the fact that Z(mod n) is a field having multiplicative . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint inverses if and only if n is prime) that any two such pools do not intersect in more than one point if and only if n is a prime number. This leads to:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "Theorem 3. Let n be a prime number and let N = n 2 . Then, there exists a (N, n, k)-multipool for k = (n + 1), and consequently also for every smaller k. This multipool is given by pooling along all rows, that is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "and pooling along all slopes, that is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "We show in Figure 5 an illustration in the case k = 5. This construction is also referred to as the Shifted Transversal Design in [TM06] .",
+            "cite_spans": [
+                {
+                    "start": 130,
+                    "end": 136,
+                    "text": "[TM06]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 11,
+                    "end": 19,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "If N is a square, but not a square of a prime, an adapted strategy (with smaller pool size n) can be devised by exploiting the fact that \u221a N can be written as a product of a prime and another number.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "From a practical perspective it seems to be reasonable to generate multipools by a sequence of unions of two equally diluted pools. This leads to pool sizes which are a power of 2, certainly not a prime number (except for 2 itself). One approach to accomodate for that would be population sizes N = n 2 where n is a prime just less than a power of 2, e.g. n = 31, which is just less than 32 or n = 61 which is just less than 64. Then pools of size n can be mixed by adding a small number of negative dummy samples and proceeding as if n was a power of 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Generating multipools"
+        },
+        {
+            "text": "Let us sketch some concrete examples where the pool sizes are a prime number and where the multipooling strategy might be useful: N = 961, \u03c1 \u2264 1%, n = 31. Let the population size be N = 31 2 = 961. This could for instance be the number of employees in a company or passengers which depart from an international airport within a certain time window. Let the incidence rate \u03c1 be no more than 1.0% and let us work with a pool size n = 31. Theorem 1 then allows to bound the probability of a positive test being erroneous for different multiplicities k, see Table 2 . Accepting for k fp k/n 4 0.32 0.129 5 0.11 0.161 6 0.03 0.194 7 0.008 0.226 Table 2 . Probability of a positive result being a false positive and the portion k/n of tests required with respect to individal testing for n = 31, \u03c1 \u2264 0.01 and different k.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 554,
+                    "end": 561,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 640,
+                    "end": 647,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Examples and scenarios"
+        },
+        {
+            "text": "instance a false positive probability of 3% requires 6N/n = 186 PCR tests, 19 .4% of what would be required in individual testing. Let us emphasize again here that this means that 3% among the results flagged as positive will be false positives, not 3% of the overall population.",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 74,
+                    "text": "6N/n = 186 PCR tests,",
+                    "ref_id": null
+                },
+                {
+                    "start": 75,
+                    "end": 77,
+                    "text": "19",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Examples and scenarios"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint N = 3721, \u03c1 \u2264 0.1%, n = 61. The multipool method scales well with larger numbers. Let the population size be N = 61 2 = 3721 and the pool size 61, which is of the order of pools being used for the PCR today [YAST + 20] . Let furthermore be the incidence rate be no larger than 0.1%. The error bounds in Theorem 1 then lead to Table 3 . If we choose k = 4 and accept k fp k/n 3 0.17 0.049 4 0.012 0.066 5 0.0007 0.082 Table 3 . Probability of a positive result being a false positive and the portion k/n of tests required with respect to individal testing for n = 61, \u03c1 \u2264 0.001 and different k. fp = 1.2% as the probability for positive results being false positives, we need N k/n = 244 tests in order to fast and efficiently test 3721 individuals, that is 6.6% of what would be needed for individual testing. N = 16129, \u03c1 \u2264 0.1%, n = 127. Let us consider a hypothetical scenario where a dilution of samples by a factor 127 is acceptable, that is N = 127 2 = 16129. The error bounds given by Theorem 1 are shown in Table 4 . If one k fp k/n 4 0.165 0.031 5 0.023 0.039 6 0.0028 0.047 Table 4 . Probability of a positive result being a false positive and the portion k/n of tests required with respect to individal testing for n = 127, \u03c1 \u2264 0.001 and different k.",
+            "cite_spans": [
+                {
+                    "start": 427,
+                    "end": 438,
+                    "text": "[YAST + 20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 546,
+                    "end": 553,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 637,
+                    "end": 644,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1235,
+                    "end": 1242,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1304,
+                    "end": 1311,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Examples and scenarios"
+        },
+        {
+            "text": "works with k = 5 and accepts a false positive rate of fp = 2.3%, then only N k/n = 635 PCR tests would be required, that is 3.9% of what would be needed in the case of individual testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Examples and scenarios"
+        },
+        {
+            "text": "The non-adaptive multi-pooling strategy provides a streamlined and efficient organisation of the testing process and cuts in detection time. This significant benefit comes with potential reductions in accuracy compared with adaptive testing, but this false positive rate can be tightly controlled and tailored to suit the circumstance. The false positive probability fp deemed an acceptable cost for the increased testing efficiencies may depend on, for example, the infection characteristics, the government policy and resource levels.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and possible extensions"
+        },
+        {
+            "text": "A small modification of our strategy might furthermore allow for an improvement of the false negative rate -even compared to usual adaptive pool testing strategies: even though commonly used, pooling samples can potentially dilute samples close to the identification threshold of the PCR and increase the probaility of false negatives. The recent preprint [YAST + 20] . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.028431 doi: bioRxiv preprint estimates a false negative rate of 10% when detecting COVID-19 in pools of size 32. One can reduce this type of false negative in our strategy by declaring all samples which are in at least k \u2212 1 positive pools as tested positive. This will on the one hand lower the probability of false negatives, but more importantly it will only mildly affect the false positive rate. This could be seen by adding a next-order term in the error analysis performed leading up to Theorem 1. Furtherore, knowledge on the false positive rate gained through experiments would be required, but the general message that the necessary multiplicity k will grow slowly with large n and small fp remains.",
+            "cite_spans": [
+                {
+                    "start": 356,
+                    "end": 367,
+                    "text": "[YAST + 20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and possible extensions"
+        },
+        {
+            "text": "Let us finally note that the basic idea is close to compressed sensing and sparse recovery [CT06, FH13] . While in our situation the output space consists of {0, 1}-vectors, which make the mathematics we use rather elementary, there also seem to be applications of the PCR where quantitative measurements are taken and where compressive sensing techniques might be applied.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 97,
+                    "text": "[CT06,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 98,
+                    "end": 103,
+                    "text": "FH13]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and possible extensions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Group testing: An information theory perspective. Foundations and Trends R in Communications and Information Theory",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Aldridge",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Scarlett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "15",
+            "issn": "",
+            "pages": "196--392",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Near-optimal signal recovery from random projections: Universal encoding strategies?",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Candes",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Tao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "IEEE Transactions on Information Theory",
+            "volume": "52",
+            "issn": "12",
+            "pages": "5406--5425",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Combinatorial Group Testing and Its Applications",
+            "authors": [
+                {
+                    "first": "D.-Z",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Pooling Designs and Nonadaptive Group Testing",
+            "authors": [
+                {
+                    "first": "D.-Z",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The detection of defective members of large populations",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dorfman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1943,
+            "venue": "The Annals of Mathematical Statistics",
+            "volume": "14",
+            "issn": "4",
+            "pages": "436--440",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Purim: a rapid method with reduced cost for massive detection of covid-19",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Fargion",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fargion",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "De Sanctis Lucentini",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Habib",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.11975"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A Mathematical Introduction to Compressive Sensing",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Foucart",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Rauhut",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Eliminating covid-19: A community-based analysis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Siegenfeld",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bar-Yam",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.10086"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A two-dimensional pooling approach towards efficient detection of parasitoid and pathogen DNA at low infestation rates",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Sint",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sporleder",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wallinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Zegarra",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Oehm",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Dangi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Giri",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kroschel",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Traugott",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Methods in Ecology and Evolution",
+            "volume": "7",
+            "issn": "12",
+            "pages": "1548--1557",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Consistent detection of 2019 novel coronavirus in saliva",
+            "authors": [
+                {
+                    "first": "]",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "+ 20",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Kai-Wang To",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tak-Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tsang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chik-Yan Yip",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Man-Chun Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "-Hong",
+                    "middle": [],
+                    "last": "Shiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Chik",
+                    "suffix": ""
+                },
+                {
+                    "first": "-Chung",
+                    "middle": [],
+                    "last": "Yau",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kandamby",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Lung",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tam",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wing-Shan Poon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinical Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Evaluation of COVID-19 RT-qPCR test in multi-sample pools",
+            "authors": [
+                {
+                    "first": "]",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "+ 20",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Yelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Aharony",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shaer-Tamar",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Argoetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Messer",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Berenbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shafran",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kuzli",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gandali",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hashimshony",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mandel-Gutfreund",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Halberthal",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Geffen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Szwarcwort-Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kishony",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A two-dimensional pooling strategy for rare variant detection on next-generation sequencing platforms",
+            "authors": [
+                {
+                    "first": "]",
+                    "middle": [
+                        "P C"
+                    ],
+                    "last": "+ 14",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Zuzarte",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Denroche",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fehringer",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Katzov-Eckert",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hung",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mcpherson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PLoS ONE",
+            "volume": "9",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Pooling along rows and columns.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Illustration of the work flow for pooling with second test (left) and multipooling (right)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "1 \u2212 (1 \u2212 \u03c1) n\u22121 ) then in any multipooling strategy with pool size n and multiplicity k, the probability of a positive test being a false positive does not exceed fp .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Pooling along rows, columns, and periodically continued diagonals.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The two diagonals (red and blue) intersect in two points (black). They cannot both be used as pools in a multipool. Multipools of different slopes as in Theorem 3 for n = 5. multipool in general, see for instanceFigure 4for the case of n = 8 where two diagonals intersect in more than one point.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgements. The author thanks Christoph Schumacher for helpful discussions. Comments by Emma Lawrance, Albrecht Seelmann and Sasha Sodin are gratefully acknowledged.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

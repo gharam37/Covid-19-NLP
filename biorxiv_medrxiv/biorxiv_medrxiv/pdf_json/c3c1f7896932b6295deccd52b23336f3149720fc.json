@@ -1,0 +1,335 @@
+{
+    "paper_id": "c3c1f7896932b6295deccd52b23336f3149720fc",
+    "metadata": {
+        "title": "Stochastic Compartmental Modelling of SARS-CoV-2 with Approximate Bayesian Computation",
+        "authors": [
+            {
+                "first": "Vedant",
+                "middle": [],
+                "last": "Chandra",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins University",
+                    "location": {
+                        "addrLine": "3400 N Charles St",
+                        "postCode": "21218",
+                        "settlement": "Baltimore",
+                        "region": "MD",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In this proof-of-concept study, we model the spread of SARS-CoV-2 in various environments with a stochastic susceptible-infectious-recovered (SIR) compartmental model. We fit this model to the latest epidemic data with an approximate Bayesian computation (ABC) technique. Within this SIR-ABC framework, we extrapolate long-term infection curves for several regions and evaluate their steepness. We propose several applications and extensions of the SIR-ABC technique.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The SIR model (Kermack & McKendrick 1927) traces 3 trajectories in phase space: susceptible (S), infectious (I), and recovered members of the population (R). The transmission rate \u03b2 represents the number of disease transmissions per unit time, per infected host. The recovery rate \u03b3 is simply the number of recoveries per unit time. The disease lifetime is exponential, with a wait time scaling as e \u2212\u03b3t . The expectation of disease duration is hence 1 \u03b3 . These parameters govern the disease model with the following differential equations:",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 41,
+                    "text": "(Kermack & McKendrick 1927)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "EPIDEMIC MODEL"
+        },
+        {
+            "text": "We use an implementation of the Gillespie algorithm (Gillespie 1977) to generate stochastic trajectories of S, I, and R from these differential equations.",
+            "cite_spans": [
+                {
+                    "start": 52,
+                    "end": 68,
+                    "text": "(Gillespie 1977)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "EPIDEMIC MODEL"
+        },
+        {
+            "text": "Armed with the ability to generate stochastic infection and recovery curves from starting parameters, we turn to fitting the starting parameters from real-world epidemic data. Since the models are stochastic in nature, there isn't a simple analytical form that we can minimize. Additionally, rather than fitting for only the parameters themselves, we would also like to quantify how certain we are about those parameters. We therefore employ an approximate Bayesian computation (ABC) technique to compare our simulations to observations and recover the posterior distributions of \u03b2 and \u03b3 (Figure 1 ). This technique was previously used to fit initial mass functions to nearby galaxies (Gennaro et al. 2018) . The general goal of ABC is to sample the posterior distributions of simulation parameters such that the simulations match the observed data. In practice, it is impossible for simulations to exactly match data due to noise and ill-posed models. Additionally, if the observable space is continuous, then the probability of simulations exactly matching observations is exactly zero. Therefore, we define some distance d between simulations and observations, as well as a tolerance . We accept those parameters who produce simulations are d < away from the observed data. By initially sampling from the prior distributions of the parameters and iteratively shrinking the tolerance up to some stopping criterion, we 'shrink' the prior into the posterior.",
+            "cite_spans": [
+                {
+                    "start": 685,
+                    "end": 706,
+                    "text": "(Gennaro et al. 2018)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 588,
+                    "end": 597,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "The Dong et al. (2020) epidemic data consists of a 2-dimensional time series comprising of the number of confirmed cases and the number of recovered cases per . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 22,
+                    "text": "Dong et al. (2020)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 day (R). We subtract these two quantities to derive the number of infectious cases per day, I. Given a simulated epidemic and the observed data, we quantify the difference between both the infectious and recovered population curves to obtain a distance",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "Rather than a-priori assuming the initial susceptible population S, we marginalize over it as a nuisance parameter in our ABC procedure. Therefore, our ABC algorithm fits for three parameters: \u03b2, \u03b3, and S.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "We use the pyabc package in Python (Klinger et al. 2018) for our ABC procedure. We employ a simple particle filter algorithm (sequential Monte Carlo) that accepts or rejects sampled particles based on the selection criterion d < , until p particles have been accumulated. The first iteration samples uniform priors on each parameter, and each subsequent iteration samples the posterior of the previous iteration. We shrink by setting i of the i th iteration equal to the median of all the sampled distances d from the (i \u2212 1) th iteration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "As the parameters converge to their posterior, the shrinkage of slows down, and the sampler has to reject progressively more particles in order to accumulate p particles with d < . We choose a stopping criterion such that the acceptance ratio (number of total particles sampled in order to accumulate p valid particles) is 1%. We find that the models are well-converged at this point, and sampling further does not improve the parameter posteriors. The root mean square difference defined in Eqn. 2 is around d \u223c 10 for the converged models. Each fit takes \u223c 25 minutes to complete on a regular laptop computer. Figure 3 . Extrapolated infection curves for the 10 worstaffected Chinese provinces. We allow the epidemic solution to continue until no active infections remain.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 612,
+                    "end": 620,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "APPROXIMATE BAYESIAN COMPUTATION"
+        },
+        {
+            "text": "We fit our model to the 12 provinces in China worst affected by SARS-CoV-2, with the exception of Hubei due to the lack of early-stage data there. We recover posterior densities of \u03b2, \u03b3, and the number of susceptible citizens S (Figure 2 ). We present epidemic curves with our model simulations overlaid for all regions in the appendix.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 228,
+                    "end": 237,
+                    "text": "(Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "RESULTS"
+        },
+        {
+            "text": "For most provinces, there is an excellent agreement between the SIR-ABC model and the total number of confirmed cases. The fit is less perfect for the individual infected-recovered curves. This is to be expected, since the real-world obviously does not truly follow an SIR model. There are various externalities like spatial effects and government/healthcare responses. Our simple SIR model also lacks vital statistics like births and deaths. For a fatal illness like SARS-CoV-2, it would be valuable to add these parameters to the model. However, for the purpose of this proof-of-concept study, we estimate that adding these parameters will negligibly affect the goodness-of-fit of the total confirmed cases (Chen & Li 2020) . We extrapolate the model for each region by allowing it to run until no active infections remain (Fig. 3) . We find a consistent extrapolated infection profile for all the provinces under study. This indicates a similar level of government response after the first infections were reported, despite differing population sizes in each region. We quantify the 'steepness' of the infection curve by dividing the maximum number of active infected patients by the total length of the extrapolated infection curve, i.e. the duration of the epidemic. We compare the steepness of different Chinese provinces in Fig. 4 .",
+            "cite_spans": [
+                {
+                    "start": 709,
+                    "end": 725,
+                    "text": "(Chen & Li 2020)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 825,
+                    "end": 833,
+                    "text": "(Fig. 3)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1331,
+                    "end": 1337,
+                    "text": "Fig. 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "RESULTS"
+        },
+        {
+            "text": "We find a strong correlation (p < 0.01) between the steepness of the infection curve and the fitted initial number of susceptible patients. This is likely not a significant finding, but rather an intrinsic collinearity between these measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101/2020.03.29.20046862 doi: medRxiv preprint B e ij in g H e il o n g ji a n g S ic h u a n C h o n g q in g S h a n d o n g J ia n g s u J ia n g x i A n h u i G u a n g d o n g Z h e ji a n g H e n a n 0 2 4 6 Steepness of Curve Figure 4 . Relative 'steepness' of the extrapolated infection curves in Fig. 3 .",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 122,
+                    "text": "//doi.org/10.1101/2020.03.29.20046862",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 331,
+                    "end": 339,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 403,
+                    "end": 409,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "RESULTS"
+        },
+        {
+            "text": "In this proof-of-concept study, we apply approximate Bayesian computation to fit stochastic epidemic models to real world data. We encourage researches to improve and adapt these methods to other problems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "An interesting extension of our analysis would be characterizing the reproduction rate R 0 of different regions. However, we use a non-standard parameterization of the SIR model for the benefit of our ABC optimization. Therefore, our derived R 0 = \u03b2/\u03b3 lacks interpretability and cannot be compared to other studies. We invite other researchers to repeat our analysis with the standard SIR parameterization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Additionally, whilst parameter fits are poorly constrained in populations where the infection has not already peaked, it would be interesting to explore epidemic forecasting on those datasets. The Gillespie algorithm can be optimized to work faster with larger numbers of patients. Our parameterization of the SIR model can also be modified to include vital statistics like births and deaths. ABC generalizes well to these higher-dimensional parameter spaces. Specific to SARS-CoV-2, age-structured models would also be a valuable development, as would models that include vaccinations and acquired immunity. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s1473-3099(20)30235-8"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s1473-3099(20)30120-1"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "An advantage of the SIR-ABC method is the ability to fully capture the covariate joint distribution between fitted model parameters.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Above: Posterior distributions of our fitted epidemic parameters for the Hunan province. Below: Observed epidemic curves, along with 25 realizations of the best-fit model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Observed epidemic curves, along with 25 realizations of our best-fit SIR-ABC model for 4 Chinese provinces.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Observed epidemic curves, along with 25 realizations of our best-fit SIR-ABC model for 5 more Chinese provinces.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This study uses the data repository for the 2019 Novel Coronavirus Visual Dashboard operated by the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE), supported by ESRI Living Atlas Team and the Johns Hopkins University Applied Physics Lab (JHU APL).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS"
+        }
+    ]
+}

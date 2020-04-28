@@ -1,0 +1,454 @@
+{
+    "paper_id": "6c90244c5dc0044c12a29e7006ecddc9e1509037",
+    "metadata": {
+        "title": "Improving COVID-19 Testing Efficiency using Guided Agglomerative Sampling",
+        "authors": [
+            {
+                "first": "Fayyaz",
+                "middle": [],
+                "last": "Minhas",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Dimitris",
+                "middle": [],
+                "last": "Grammatopoulos",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Lawrence",
+                "middle": [],
+                "last": "Young",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Imran",
+                "middle": [],
+                "last": "Amin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "National Institute of Biotechnology and Genetic Engineering",
+                    "location": {
+                        "settlement": "Faisalabad",
+                        "country": "Pakistan"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "David",
+                "middle": [],
+                "last": "Snead",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University Hospitals Coventry & Warwickshire",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Neil",
+                "middle": [],
+                "last": "Anderson",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University Hospitals Coventry & Warwickshire",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Asa",
+                "middle": [],
+                "last": "Ben-Hur",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Colorado State University",
+                    "location": {
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Nasir",
+                "middle": [],
+                "last": "Rajpoot",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "settlement": "Coventry",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "One of the challenges in the current COVID-19 crisis is the time and cost of performing tests especially for large-scale population surveillance. Since, the probability of testing positive in large population studies is expected to be small (<15%), therefore, most of the test outcomes will be negative. Here, we propose the use of agglomerative sampling which can prune out multiple negative cases in a single test by intelligently combining samples from different individuals. The proposed scheme builds on the assumption that samples from the population may not be independent of each other. Our simulation results show that the proposed sampling strategy can significantly increase testing capacity under resource constraints: on average, a saving of ~40% tests can be expected assuming a positive test probability of 10% across the given samples. The proposed scheme can also be used in conjunction with heuristic or Machine Learning guided clustering for improving the efficiency of large-scale testing further. The code for generating the simulation results for this work is available here: https://github.com/foxtrotmike/AS.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Effective large scale testing and contact tracing have been successfully used in a number of countries for controlling the spread of the SARS-CoV-2 virus (CoV-2) which causes COVID-19 disease [1] . However, in resource-limited settings, it may not be feasible to do large scale testing unless the efficiency of existing tests is improved in terms of number of tests required for a given number of samples. In this short paper, we discuss a computer-science inspired divide and conquer strategy based on pooling samples from multiple individuals that can improve test efficiency by a significant amount under a minimalistic set of assumptions.",
+            "cite_spans": [
+                {
+                    "start": 192,
+                    "end": 195,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Given a set of individuals to be tested for CoV-2, the number of tests required for identifying positive individuals can be reduced from by considering the fact that the probability of testing positive is small (say, = 0.1) and individual test results are typically not independent of each other (e.g., members in the same household or people in contact with each other or other CoV-2 infected individuals can have dependencies in their test results). In this work, we propose a divide and conquer agglomerative sampling strategy that is built on these ideas and can be used to reduce the number of tests. Before delving into the details of the method, we present a list of assumptions underlying the proposed method:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions"
+        },
+        {
+            "text": "1. Pooling: Samples of multiple individuals can be combined or mixed into a single \"bag\" which can be tested by a single test such that:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions"
+        },
+        {
+            "text": "a. The test produces a positive outcome if any of the samples in the bag is positive b. The test produces negative outcome if none of the samples in the bag is positive c. Testing in bags does not change the error rate of the test being used 2. Multiplicity: Multiple samples can be taken from a single individual or a single sample from an individual can be divided further 3. Rarity: The probability of testing positive is small ( < 0.2) It can be expected that these assumptions are satisfied by a number of current tests for CoV-2 infection such as the quantitative RT-PCR and serological (antibody) testing [2] .",
+            "cite_spans": [
+                {
+                    "start": 612,
+                    "end": 615,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Assumptions"
+        },
+        {
+            "text": "Consider a set of individuals = {1,2, \u2026 , } to be tested for CoV-2 infection. Assume that the (originally unknown) test result of each of the individuals is given by \u2282 {0,1}, = 1 \u2026 . Without loss of generality or introducing any limitations in the model, assume that for each individual, we are also given a set of d-features \u2208 (such as frailty, age, gender, contact with known or suspected CoV-2 infected patients, geographical location, symptoms, family/household dependencies, etc.,) that can be used to generate a degree of belief of that individual to test positive. We denoted this degree of belief by , = 1 \u2026 . In case, it is not possible to assign a belief to each individual, can be considered to be uniformly random, i.e., ~(0,1). Alternatively, belief can be assigned by a human oracle in a subjective manner or can be obtained through machine learning or probabilistic modelling based on the given set of features. If we cluster or mix individual samples into bags and proceed with testing these bags in a hierarchical manner, the number of required tests can be reduced by essentially pruning out multiple negative samples in a single test. For this purpose, consider a tree structure organization of the given set of individuals based on the degree of belief , = 1 \u2026 (or using the given set of features directly) as shown in the example figure below. The basic idea of agglomerative testing is that we test a bag of samples and if the bag level result comes out negative, then there is no need to test each of the samples individually. However, in case, the test comes out positive, we subdivide the samples into further clusters and test each of these bags next. This is continued until we get a test score of each individual. Furthermore, if a test for a bag comes out positive but the next sub-bag tests negative, then we know that the positive result is a consequence of a positive individual in the other bag which can be split further directly without additional testing. This guide algorithm based on even binary split is summarized in Algorithm-1. The figure below shows that if we obtain a mixed bag of all individual samples 1-8 and do a single test, the outcome will be negative and there is no need to do individual testing. For a bag comprising of cases 9-16, the result of the test will be positive because there is at least one positive individual in the bag. Doing this in a recursive manner can lead to reducing the number of tests required from 16 to 11 or 14 depending upon how the terminal nodes are tested. If we have access to informed belief values, then the given samples can be sorted with respect to their belief values prior to tree construction. Tree construction can also be done in an unsupervised manner based on existing individual features coupled with hierarchical or agglomerative clustering. [3] .",
+            "cite_spans": [
+                {
+                    "start": 2842,
+                    "end": 2845,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Algorithm Description"
+        },
+        {
+            "text": "In order to evaluate the efficacy of this approach, we constructed a simple simulation in which individuals are assigned random test labels ( = 1 with probability and = 0 with probability 1 \u2212 ). Each individual is then assigned a degree of belief . We tested with both a random degree of belief (no belief information) and varying degrees of belief as measured by the concordance between and by using an additive normal distribution noise prior = + (with ~\u2135(0, )) with the degree of noise controlled by the standard deviation parameter . For a given simulation setting (number of individuals, prior probability and belief control factor ), we calculate the number of required tests by the proposed sampling method. In order to get reliable statistical estimates of the distribution of the number of required tests for a given simulation setting, we repeated the simulation multiple times with the same setting and plotted the distribution of the number of required tests using a box plot. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation Setup"
+        },
+        {
+            "text": "Based on our computational analysis, the expected number of tests required for a given positive probability and input samples (under no belief assumptions) can be calculated as: ( , ) = 2( \u2212 1)(1 \u2212 2 \u22124.5 ) + 1. This formulation captures the typical average case number of required tests using the proposed strategy. It can be seen that this formulation is heavily dependent on the value of the positive probability. However, it can significantly reduce the number of required tests when the probability is small, e.g., for community level testing. The probability value up to which the proposed strategy can remain effective, i.e., up till T<N, is called the utility breakdown probability = | ( , )< and it is independent of the value of (for large N) can be calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical Analysis"
+        },
+        {
+            "text": "= 0.22. (proof omitted for brevity).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical Analysis"
+        },
+        {
+            "text": "Lab testing of the proposed method is currently underway. However, we are sharing the basic idea of the proposed method together with the simulation results in order to support the ongoing COVID-19 efforts across the globe. Specifically, our planned wet lab experiments will be aimed at studying the impact of this approach on the sensitivity/sepecificity of tests and understanding practical limitations for use with PCR or immunoassay-based testing as well as serology.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lab Testing"
+        },
+        {
+            "text": "All simulation results guarantee that the output of the tests remains unchanged from individual testing, i.e., if the original test identifies a given sample as positive (negative) then using the proposed scheme will identify that given sample as positive (negative) but with fewer number of tests required in overall. Figure 2 shows the number tests required under the proposed scheme for different positive probability values ( ) and different values of ( ) under no a prior belief (uniformly random ) . It can be clearly seen that the mathematical formula for the number of expected tests is in excellent concordance with the simulation results. Figure 2(a) shows that the number of required tests for = 16 with the proposed method remains below up to a probability of = 0.22 as expected. Figure 2 (b) shows the same analysis for = 256. Figure 2 (c) shows that the expected number of tests that can be saved is above 40% for all values of at a positive probability of = 0.1. This clearly shows that the proposed scheme can be very beneficial in practical settings. The number of required tests can be reduced further by incorporating a belief parameter or performing unsupervised agglomeration based on individual features as discussed below.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 319,
+                    "end": 327,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 649,
+                    "end": 660,
+                    "text": "Figure 2(a)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 792,
+                    "end": 800,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 840,
+                    "end": 848,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Under no informed heuristic or belief"
+        },
+        {
+            "text": "As discussed in the methods section, if there is a way of predicting the likelihood of someone testing positive for CoV-2 (e.g., by using a machine learning method) or assigning such belief based on expert opinion, then the efficiency of the proposed scheme can be further improved by first ranking (sorting) the given samples with respect to their belief values. The concordance of the belief value and the true status can be measured by using the area under the receiver operating characteristic curve (AUC) between these values [4]: = 0.5 implies poor concordance between belief and the actual test status whereas = 1.0 implies perfect concordance. Please note that this AUC score is not between the test outcomes and the actual status but is used as a means of measuring the impact of the additive noise on the belief values for each individual. The degree of concordance is dependent upon the value of the noise factor : = 0 will result in perfect concordance ( = 1) in which case, no testing is needed as the belief is perfect whereas for large values of , the AUC value will be 0.5. Below we show the results of the proposed scheme for various values of , and . For = 1.0, we get an average AUC score of 0.75 and this leads to a moderate increase in the number of tests that can be saved in comparison to the no-belief simulation. This shows that even a weak belief assignment model coupled with the proposed scheme can significantly reduce the number of required tests. For = 0.5 (with an AUC score of 0.9), the saving is even more substantial (up to 60%). This clearly shows that the proposed testing scheme can lead to further improvements by incorporating belief through machine learning models or expert assignment. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.13.039792 doi: bioRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Under an informed heuristic or belief"
+        },
+        {
+            "text": "In this work, we have developed a community laboratory testing strategy for CoV-2 based on a divide and conquer approach [5] that can reduce the number of tests required for testing a given number of samples. It can optionally be used in conjunction with a belief assignment method such as a machine learning prediction model or with guidance from a human expert to improve testing . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.13.039792 doi: bioRxiv preprint efficiency even further. In terms of machine learning, the proposed scheme can be adapted for use to work together with a machine learning model which generates a ranked list of likely positive samples which can be tested individually followed by agglomerative testing of the remaining samples. Additionally, in the absence of a predictive model or another means of belief assignment, the proposed scheme can use feature-based unsupervised clustering to reduce the number of required tests building on the assumption that the test results of individuals are not independent of each other. We have opted to share the proposed method in the hope that it can be beneficial to large-scale CoV-2 testing and the management of patients with COVID-19. Laboratory trials with the proposed sampling technique are being considered at the University of Warwick to study the impact of the proposed strategy on accuracy of existing testing methods and understand practical limitations.",
+            "cite_spans": [
+                {
+                    "start": 121,
+                    "end": 124,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions and Future Work"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Testing Individuals for Coronavirus Disease 2019 (COVID-19)",
+            "authors": [
+                {
+                    "first": "Joseph",
+                    "middle": [],
+                    "last": "Hadaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "Max",
+                    "middle": [],
+                    "last": "Schumm",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edward",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Livingston",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.5388"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Sample Pooling as a Strategy to Detect Community Transmission of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "Catherine",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hogan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Malaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "Benjamin",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Sahoo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pinsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.5445"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Data Clustering: Algorithms and Applications",
+            "authors": [
+                {
+                    "first": "Charu",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Aggarwal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chandan",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Reddy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Introduction to Machine Learning",
+            "authors": [
+                {
+                    "first": "Ethem",
+                    "middle": [],
+                    "last": "Alpaydin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Introduction to Algorithms",
+            "authors": [
+                {
+                    "first": "Thomas",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Cormen",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Charles",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ronald",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Leiserson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Clifford",
+                    "middle": [],
+                    "last": "Rivest",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Stein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Concept diagram for the proposed agglomerative sampling scheme for a given set of 16 individuals with 3 positives (p=0.19) indicated by the plus (+) or (-) sign in the leaf nodes of the tree. Each circle represents a possible test of a bag of samples. Each x indicates pruned nodes. Note that the number of tests required is 11 instead of 16.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Simulation results of the proposed sampling scheme. In each figure, a plot of the average number of tests required in multiple trials for a given positive probability value are shown as a box plot together with the theoretical estimate: ( , ) = 2( \u2212 1)(1 \u2212 2 \u22124.5 ) + 1.(a) for N=16 (b) for N = 256 With = 1.0 and (c) Plot of the number of tests saved as a function of the N for p=0.1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Results of the simulation in terms of number of tests required for different positive probability values for N=256 with (a) = 0.5 and (b) = 1.0. (c) and (d) show the expected percentage tests saved for different values of N for p=0.1 with = 0.5 and = 1.0, respectively.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

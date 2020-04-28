@@ -1,0 +1,1631 @@
+{
+    "paper_id": "91b4b266ec178426f8b25c2cba9f2cc32fd70321",
+    "metadata": {
+        "title": "Detection of spreader nodes and ranking of interacting edges in Human-SARS-CoV protein interaction network",
+        "authors": [
+            {
+                "first": "Sovan",
+                "middle": [],
+                "last": "Saha",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Piyali",
+                "middle": [],
+                "last": "Chatterjee",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Netaji Subhash Engineering College",
+                    "location": {
+                        "addrLine": "Kolkata 3"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Subhadip",
+                "middle": [],
+                "last": "Basu",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Mita",
+                "middle": [],
+                "last": "Nasipuri",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Jadavpur University",
+                    "location": {
+                        "settlement": "Kolkata"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The entire world has recently witnessed the commencement of coronavirus disease 19 pandemic. It is caused by a novel coronavirus (n-CoV) generally distinguished as Severe Acute Respiratory Syndrome Coronavirus 2 (SARS-CoV-2). It has exploited human vulnerabilities to coronavirus outbreak. SARS-CoV-2 promotes fatal chronic respiratory disease followed by multiple organ failure which ultimately puts an end to human life. No proven vaccine for n-CoV is available till date in spite of significant research efforts worldwide. International Committee on Taxonomy of Viruses (ICTV) has reached to a consensus that the virus SARS-CoV-2 is highly genetically similar to Severe Acute Respiratory Syndrome Coronavirus (SARS-CoV) outbreak of 2003. It has been reported that SARS-CoV has ~89% genetic similarities with n-CoV. With this hypothesis, the current work focuses on the identification of spreader nodes in SARS-CoV protein interaction network. Various network characteristics like edge ratio, neighborhood density and node weight have been explored for defining a new feature spreadability index by virtue of which spreader nodes and edges are identified. The selected top spreader nodes having high spreadability index have been also validated by Susceptible-Infected-Susceptible (SIS) disease model. Initially, the proposed method is applied on a synthetic protein interaction network followed by SARS-CoV-human protein interaction network. Hence, key spreader nodes and edges (ranked edges) are unmasked in SARS-CoV proteins and its connected level 1 and level 2 human proteins. The new network attribute spreadability index along with generated SIS values of selected top spreader nodes when compared with the other network centrality based methodologies like Degree centrality (DC), Closeness centrality (CC), Local average centrality (LAC) and Betweeness centrality (BC) is found to perform relatively better than the existing-state-of-art.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The pandemic COVID-19 registered its first case on 31 December 2019 [1] . It laid its foundation in the Chinese city of Wuhan (Hubei province) [2] . Soon, it made several countries all over the world [3] as its victim by community spreading which ultimately compelled World Health Organization (WHO) to declare a global health emergency on 30 January 2020 [4] for the massive outbreak of COVID-19. Owing to its expected fatality rate to be 4% by WHO [5] , researchers from worldwide nations have joined their hands to work together to understand the spreading mechanisms of this virus SARS-CoV-2 [6]-[9] and to find out all possible ways to prevent human lives from the dark shadow of COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 68,
+                    "end": 71,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 200,
+                    "end": 203,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 356,
+                    "end": 359,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 450,
+                    "end": 453,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Coronavirus belongs to the family Coronaviridae. This single stranded RNA virus not only affects humans but also mammals and birds too. Due to coronavirus, common fever/flu symptoms are noted in humans followed by acute respiratory infections. Nevertheless SARS-CoV-2 is under the same Betacoronavirus genus as that of MERS and SARS coronavirus [12] . It comprises of several structural and non-structural proteins. The structural proteins includes the envelope (E) protein, membrane (M) protein, nucleocapsid (N) protein and the spike (S) protein. Though SARS-CoV-2 has been identified recently but there is an intense scarcity of data as well as necessary information needed to gain immunity against SARS-CoV-2. Research study has revealed the fact that SARS-CoV-2 is highly genetically similar to SARS-CoV based on several experimental genomic analyses [9], [12]- [14] . This is also the same reason behind the naming convention of SARS-CoV-2 by International Committee on Taxonomy of Viruses (ICTV) [15] . Due to this genetic similarity, immunological study of SARS-CoV may lead to the discovery of SARS-CoV-2 potential drug development.",
+            "cite_spans": [
+                {
+                    "start": 345,
+                    "end": 349,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 867,
+                    "end": 871,
+                    "text": "[14]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1003,
+                    "end": 1007,
+                    "text": "[15]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the proposed methodology, Protein-protein interaction network (PPIN) has been used as the central component in identification of spreader nodes in SARS-CoV. PPIN has been found to be very effective module for protein function determination [16] - [18] as well as in the identification of central/essential or key spreader nodes in the network [19] - [23] . Compactness of the network and its transmission capability is estimated using centrality analysis. Anthonisse et al. [23] proposed a new centrality named as Betweenness Centrality (BC) . BC is actually defined as the measure of impact of a particular node over the transmission between every pair of nodes with a consideration that this transmission is always executed over the shortest path between them. It is defined as: ) where ( , ) is the total number of shortest paths from node to node and ( , , ) is the number of those paths that pass through . Another centrality, closeness centrality (CC), was defined by Sabidussi et al. [24] . It is actually a procedure for detecting nodes having efficient transmission capability within a network. Nodes which have high closeness centrality value are considered to have the shortest distance to all available nodes in the network. It can be mathematically expressed as:",
+            "cite_spans": [
+                {
+                    "start": 243,
+                    "end": 247,
+                    "text": "[16]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 250,
+                    "end": 254,
+                    "text": "[18]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 346,
+                    "end": 350,
+                    "text": "[19]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 353,
+                    "end": 357,
+                    "text": "[23]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 477,
+                    "end": 481,
+                    "text": "[23]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 784,
+                    "end": 785,
+                    "text": ")",
+                    "ref_id": null
+                },
+                {
+                    "start": 994,
+                    "end": 998,
+                    "text": "[24]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where | | denotes the number of neighbors of node u and ( , ) is the distance of the shortest path from node to node . Two other important centrality methods: Degree centrality (DC) [19] and Local average centrality (LAC) [21] also found to be very effective in this area of research. DC is considered to be the most simplest among the available centrality measures which only count the number of neighbors of a node. Nodes having high degree is said to be highly connected module of the network. It is defined as:",
+            "cite_spans": [
+                {
+                    "start": 182,
+                    "end": 186,
+                    "text": "[19]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 222,
+                    "end": 226,
+                    "text": "[21]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where | | hold the same meaning as state above. LAC is defined to be the local metric to compute the essentiality of node w.r.t. transmission ability by considering its modular nature, the mathematical model of which is highlighted as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where is the subgraph induced by and )* + , is the total number of nodes which are directly connected in .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "By analyzing the above facts, it has been felt that there is a pressing need to understand the proper way of disease transmission from SARS-CoV-2 PPIN to human PPIN [16] - [18] . But since SARS-CoV-2 PPIN is still not available, SARS-CoV PPIN is considered for this research study. As discussed earlier, due to its high genetic similarity with SARS-CoV-2, the same will help in better understanding of SARS-CoV-2 PPIN. In the proposed methodology, at first SARS-CoV-Human PPIN (up to level-2) is formed from the collected datasets [25] - [27] . Once it is formed, spreader nodes are identified in each of SARS-CoV proteins, its level-1 and level-2 of human network by the application of a new network attribute i.e. spreadability index which is a combination of three terminologies: 1) edge ratio [28] 2) neighborhood density [28] and 3) node weight [29] . The detected spreader nodes are also validated by the existing SIS epidemic disease model [30] . Then the edges connecting two spreader nodes are ranked based on the average of spreadability index of spreader nodes themselves to access to the spreading ability of the corresponding edge. The ranked edges thus highlight the path of entire disease propagation from SARS-CoV to human level-1 and then from human level-1 to human level-2 proteins.",
+            "cite_spans": [
+                {
+                    "start": 165,
+                    "end": 169,
+                    "text": "[16]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 172,
+                    "end": 176,
+                    "text": "[18]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 531,
+                    "end": 535,
+                    "text": "[25]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 538,
+                    "end": 542,
+                    "text": "[27]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 797,
+                    "end": 801,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 826,
+                    "end": 830,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 850,
+                    "end": 854,
+                    "text": "[29]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 947,
+                    "end": 951,
+                    "text": "[30]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Spreader nodes and edges both play a crucial role in transmission of infection from one part of the network to another. Generally in a disease specific PPIN models, at least two entities are involved: one is pathogen/Bait and the other is host/Prey [31] . In this research work, SARS-CoV takes the role of the former while human later. SARS-CoV first transmits infection to its corresponding interaction human proteins which in turn affect its next level of proteins. So, the transmission occurs through connected nodes and edges. Not all the nodes or proteins in the PPIN transmit infection. So, proper identification of nodes transmitting infection (spreader nodes) is required. It is simultaneously also true that the transmission is not possible without the edges connecting two spreader nodes. Thus these connecting edges are called spreader edges. The proposed methodology involves a proper study and assessment of various existing established PPIN features followed by the identification of spreader nodes, which has been also verified by SIS model.",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 253,
+                    "text": "[31]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "Ego network of node (-) [28] is defined as the grouping of node itself along with its corresponding level-1 neighbors and interconnections. N (-) [28] consists of the set of nodes which belong to the ego network,i.e. { } \u222a 1( ).",
+            "cite_spans": [
+                {
+                    "start": 24,
+                    "end": 28,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 146,
+                    "end": 150,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ego Network"
+        },
+        {
+            "text": "Edge ratio of node [28] is defined by the following equation: where 2 I 9 : and 2 J 9 : is defined as the total number of outgoing edges fromand the total number of interactions among node 's neighbors, respectively. \u0393 ( ) denotes the level-1 neighbors of node .is considered to be Ego network. 1 9 : (K) denotes node K's neighbors which belongs -. In the edge ratio, 2 I 9 : is positively related to the non-peripheral location of node .",
+            "cite_spans": [
+                {
+                    "start": 19,
+                    "end": 23,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Edge ratio"
+        },
+        {
+            "text": "Large number of interactions resulting from the ego network actually denotes that the node has high level of interconnectivity between its neighbors. On the other hand, 2 J 9 : is negatively related to the inter-module location of node . It represents the fact that the interconnectivity between neighbors is usually connected to the number of structural holes available around the node. When neighbor's interconnectivity is low, the root or the central node gain more control of the flow of transmission among the neighbors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Edge ratio"
+        },
+        {
+            "text": "Jaccard dissimilarity [32] of node and K ( L M43 N ( , K)) is defined as:",
+            "cite_spans": [
+                {
+                    "start": 22,
+                    "end": 26,
+                    "text": "[32]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Jaccard Dissimilarity"
+        },
+        {
+            "text": "where |\u0393(i) \u2229 \u0393(j) | refers to the number of common neighbors of neighbors of and K. |\u0393(i) \u222a \u0393(j)| is defined as the total number of neighbors of and K. Similarity between two nodes is determined by Jaccard similarity based on their common neighbors. The similarity degree between and K is considered to be more when they have more number of common neighbors. Whereas, when dissimilarity between the neighbors of a node is high, it guarantees that the only common node among the neighbors is the central node, which is termed as structural hole situation [28] .",
+            "cite_spans": [
+                {
+                    "start": 555,
+                    "end": 559,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Jaccard Dissimilarity"
+        },
+        {
+            "text": "The neighborhood diversity [28] is defined as:",
+            "cite_spans": [
+                {
+                    "start": 27,
+                    "end": 31,
+                    "text": "[28]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Neighborhood Density"
+        },
+        {
+            "text": "When a node's neighborhood density reaches its greatest value, it reveals the fact that the neighbors have no other closer path. Hence, the neighbors should transmit or communicate through this node.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neighborhood Density"
+        },
+        {
+            "text": "Node weight Y of node \u2208 Z in PPIN [29] is interpreted as the average degree of all nodes in ",
+            "cite_spans": [
+                {
+                    "start": 34,
+                    "end": 38,
+                    "text": "[29]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Node weight"
+        },
+        {
+            "text": "Spreadability index of node is defined as the ability of node to transmit an infection from one node to another. Mathematically it can be defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "Nodes having high spreadability index are termed as spreader nodes i.e. these nodes have the capability to transmit the infection to its maximum number of interconnected neighbors in a much short amount of time in comparison to the other nodes in PPIN. Figure 1 Synthetic PPIN1 consisting of 33 nodes and 53 edges where each node represents a protein and its interaction is represented by edges. Figure 1 represents a sample PPIN where each protein is denoted as nodes while its interaction by edges. In this network, spreadability index is computed by using basic network characteristics as stated earlier which has been highlighted and compared to DC, BC, CC and LAC in Table 1 to Table 5 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 253,
+                    "end": 261,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 396,
+                    "end": 404,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 672,
+                    "end": 679,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 683,
+                    "end": 690,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . The copyright holder for this preprint (which was not peer-reviewed) is the . 8  3  15  11  3  16  12  3  17  13  3  18  16  3  19  15  3  20  20  3  21  32  3  22  10  2  23  14  2  24  18  2  25  6  2  26  28  2  27  29  2  28  30  2  29  25  2  30  26  2  31  27  2  32  31  2  33 33 2",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 156,
+                    "end": 361,
+                    "text": "8  3  15  11  3  16  12  3  17  13  3  18  16  3  19  15  3  20  20  3  21  32  3  22  10  2  23  14  2  24  18  2  25  6  2  26  28  2  27  29  2  28  30  2  29  25  2  30  26  2  31  27  2  32  31  2  33",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "In Figure 1 , it can be observed that nodes 1, 24 are clearly the most essential spreaders. Node 1 connects the four densely connected modules of the network which turns this node to stand in the author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 11,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . first position having highest spreadability index by our proposed methodology. This node has been correctly ranked by all the methods except LAC and DC. Node 24 though has moderate edge ratio and node weight, but is one of the most densely connected modules itself in spite of getting isolated from the main network module of node 1. Moreover, node 24 has the highest neighborhood density. It establishes the fact that the only path of transmission of nodes 26, 27, 25, 28, 29, 30, 31, 32 and 33 is node 24. Thus if node 24 gets affected, then all the connected nodes with it will be getting immediately affected due to the lack of the connectivity of the neighbors with other central nodes. So, node 24 holds the second position with respect to spreadability index in our proposed methodology. Node 24 is not properly identified as the second most influential spreader nodes by the other methods. Further assessment of the remaining nodes highlights the fact that the performance of the new attribute spreadability index in our proposed methodology is relatively better in comparison to the others.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Spreadability Index and Spreader nodes"
+        },
+        {
+            "text": "The SIS Epidemic Model [30] is used in this proposed methodology as a way of modeling SARS-CoV epidemic by classifying the proteins in SARS-CoV-human PPIN based on their disease/infection status. SIS actually refers to Susceptible, Infected and Susceptible states which are generally considered as the three probable states that a protein in a PPIN can fall into due to SARS-CoV. 1) S -The susceptible proteins who are not yet infected but are at risk for getting infected. In general every protein in PPIN is initially in susceptible state. 2) I -Infected proteins who are infected and are capable of transmitting the disease to other proteins. 3) S -proteins who have recovered and again become susceptible. Infection rate of the network, recovery rate ( general assumption is any one out of the infected proteins gets recovered in one day) and total number of proteins are usually provided as input to SIS. If a protein gets infected and it has many neighbors, then any neighbor can get infected or may not be. So the final result is generated after 50 iterations for each infected protein. The total no. of susceptible after 50 iterations in the neighborhood of each infected protein divided by the total number of proteins in the network generates the infection capability of the infected protein. Thus the spreader nodes identified by spreadability index are validated by the infection rate as generated by SIS for them. It can be observed from Table 1 to Table 5 that the proposed methodology has the highest SIS infection rate of 2.46 (see Table 1 ) in comparison to others for their corresponding top 10 spreader nodes in the synthetic network as shown in Figure 1 .",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 27,
+                    "text": "[30]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1451,
+                    "end": 1458,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1462,
+                    "end": 1469,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 1548,
+                    "end": 1555,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1665,
+                    "end": 1673,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Validation of spreader nodes by SIS model"
+        },
+        {
+            "text": "To show the ranking of interacting spreader edges, another synthetic PPIN 2 has been considered as network 1 while the previous synthetic PPIN 1 in section 2.2 ( Figure 1 ) has been represented as network 2 in Figure 2 . Node D, E and F are the selected top spreader nodes in network 1 by spreadability index in the same way as that of synthetic PPIN 1 in Figure 1 while to avoid the complexity in the diagram, top 5 nodes in network 2 (see Table 1 ) are selected as spreader nodes in network 2. Red colored edges are the interconnectivities between the nodes of network 1 while black colored edges show the interconnectivity between nodes of network 2. Green colored spreader edges (i.e. edges connected with spreader nodes) show the interconnectivity between network 1 and 2. Ranking of a spreader edge measures the effectiveness of transmission ability of a spreader edge i.e. how many interactive nodes gets infected through that edge. Thus all the spreading edges are ranked based on the average of the spreadability index of its connected spreader nodes. The ranked spreader edges in Figure 2 are highlighted in Table 6 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 162,
+                    "end": 170,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 210,
+                    "end": 218,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 356,
+                    "end": 364,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 441,
+                    "end": 448,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1090,
+                    "end": 1098,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1118,
+                    "end": 1125,
+                    "text": "Table 6",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "Ranking of Spreader edges"
+        },
+        {
+            "text": "The proposed methodology leads to the identification of spreader nodes and edges by a network characteristic spreader index which has been also checked and validated by SIS model. Initially the whole working module is implemented on synthetic networks as shown in Figure 1 and Figure 2 in section 2 and then on SARS-CoV-human dataset. To visualize the infection transmission from SARS-CoV to human, PPIN of the both needs to be formed for which three datasets have been curated. They are: 1) SARS-CoV PPIN [25] 2) SARS-CoV-Human PPIN [25] 3) Human PPIN [26] , [27] . SARS-CoV PPIN consists of 17 interactions among SARS-CoV proteins along with the involvement of 7 unique proteins after the removal of self loops and data redundancy. Only the interconnected SARS-CoV proteins having direct connections (level-1) with human proteins are considered rather than the isolated ones. SARS-CoV-Human PPIN includes 118 interactions between SARS-CoV and human. It is used to fetch the level-1 interactions of human proteins for the corresponding SARS-CoV proteins in SARS-CoV PPIN. Human PPIN consists of 314384 interactions. It is utilized for getting the indirect interactions (level-2) of level-1 human proteins formed earlier. The application of the proposed methodology in SARS-CoV-human PPIN is highlighted in Figure 3 .",
+            "cite_spans": [
+                {
+                    "start": 506,
+                    "end": 510,
+                    "text": "[25]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 534,
+                    "end": 538,
+                    "text": "[25]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 560,
+                    "end": 564,
+                    "text": "[27]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 264,
+                    "end": 272,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 277,
+                    "end": 285,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 542,
+                    "end": 557,
+                    "text": "Human PPIN [26]",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1307,
+                    "end": 1315,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "In Figure 3A , at first SARS-CoV PPIN is displayed in which each protein is marked in red. Thereafter spreader nodes in SARS-CoV PPIN are identified by spreadability index which are denoted as blue nodes among red. Once the spreader nodes are active (in Figure 3B) , it transmits the infection to its corresponding direct partners i.e. human level 1proteins (marked in green). In Figure 3C , spreader nodes are identified in SARS-CoV level 1 human proteins (marked in blue) and the disease will be transmitted further. The same will continue till SARS-CoV level 2 human proteins in which green nodes are the spreaders and thus the infection will penetrate further in human PPIN resulting in a significant fall in human immunity level followed by severe acute respiratory syndrome.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 12,
+                    "text": "Figure 3A",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 254,
+                    "end": 264,
+                    "text": "Figure 3B)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 380,
+                    "end": 389,
+                    "text": "Figure 3C",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "In Figure 4 , the PPIN of SARS-CoV network has been highlighted. There are mainly 9 proteins which include E, M, ORF3A, ORF7A, S, N, ORF8A, ORF8AB, and ORF8B. The computed spreadability index of each of this protein and its corresponding validation by SIS model is highlighted in Table 7 . It is also compared with other central/ influential spreader node detection methodologies like DC, CC, LAC and BC which are shown in Table 8, Table 9, Table 10 and  Table 11 respectively. Similarly spreader nodes are also identified in SARS-CoV's level 1 neighbors and level 2 neighbors (see Figure 5 and Figure 6 ). and its corresponding interaction is highlighted by edges.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 11,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 280,
+                    "end": 287,
+                    "text": "Table 7",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 423,
+                    "end": 463,
+                    "text": "Table 8, Table 9, Table 10 and  Table 11",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 582,
+                    "end": 590,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 595,
+                    "end": 603,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.038216 doi: bioRxiv preprint Spreadability index definitely plays an important role in this proposed methodology. In fact, spreader nodes are successfully identified by the virtue of this scoring technique which covers all the aspects of transmitting infection from one node to another in a PPIN. It should be mentioned here that while identifying spreader nodes in SARS-CoV level 2 human proteins, it has been noted that the number of nodes are getting increased largely with the increment of successive levels. So, high, medium and low threshold [33] have been applied and the entire disease transmission through spreadability index is computationally assessed at each threshold.",
+            "cite_spans": [
+                {
+                    "start": 661,
+                    "end": 665,
+                    "text": "[33]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.038216 doi: bioRxiv preprint The network statistics of spreader nodes at each level observed that threshold application is only implemented at SARS not on others. This is because of the availability of very less number of nodes and edges. Only nodes and edges having extremely low spreadability index",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "Beside identification of spreader nodes, spreader edges are also identified. The ranked edges between SARS-CoV spreaders and its level 1 human spreaders is highlighted in Table 13 while the ranked edges between SARS low threshold are highlighted in respectively. 24 24 24 The network statistics of spreader nodes at each level of threshold is shown in Table 12 observed that threshold application is only implemented at SARS-CoV level 2 human proteins not on others. This is because of the availability of very less number of nodes and edges. Only nodes and edges having extremely low spreadability index have been discarded at the first level.",
+            "cite_spans": [
+                {
+                    "start": 263,
+                    "end": 271,
+                    "text": "24 24 24",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 171,
+                    "end": 179,
+                    "text": "Table 13",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 352,
+                    "end": 360,
+                    "text": "Table 12",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Experimental Result"
+        },
+        {
+            "text": "Beside identification of spreader nodes, spreader edges are also identified. The ranked edges CoV spreaders and its level 1 human spreaders is highlighted in Table 13 while the ranked edges between SARS-CoV s level 1 and level 2 human spreaders at high, medium and highlighted in A- Table 1 , A- Table 2 and A- Table 3 human PPIN (blue node represents SARS-CoV proteins while yellow node represents SARS-CoV s level-1 human spreaders) at three levels of thresholds of threshold is shown in Table 12 . It can be CoV level 2 human proteins not on others. This is because of the availability of very less number of nodes and edges. Only have been discarded at the first level.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 158,
+                    "end": 166,
+                    "text": "Table 13",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 283,
+                    "end": 290,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 296,
+                    "end": 303,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 311,
+                    "end": 318,
+                    "text": "Table 3",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 490,
+                    "end": 498,
+                    "text": "Table 12",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "Beside identification of spreader nodes, spreader edges are also identified. The ranked edges CoV spreaders and its level 1 human spreaders is highlighted in Table 13 while at high, medium and in the appendix CoV proteins while yellow node author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 158,
+                    "end": 166,
+                    "text": "Table 13",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.038216 doi: bioRxiv preprint Figure 6 SARS-CoV-human PPIN (blue node represents SARS green nodes represent SARS The entire network view of SARS-CoV and human PPIN has been generated online under three circumstances:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 150,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "1) All the nodes and edges are considered as spreader nodes and edges respectively and are ranked accordingly. In the above generated network views, the blue, yellow and green color represent SARS-CoV spreaders, its level 1 human spreaders and its level2 human spreaders respectively. The remaining nodes are in indigo.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.038216 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SARS-CoV spreaders"
+        },
+        {
+            "text": "Spreadability index is thus proved to be effective in the detection of spreader nodes and edges in SARS-CoV-human PPIN along with the cross validation by SIS model. Spreader nodes are the most critical nodes in the network which actually transmit the infection to its successors. Simultaneously it is also true if the spreader nodes are not connected with spreader edges infection transmission would not have been possible.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "In a nutshell, it can be said that the proposed work exploits the possibility of understanding the entire disease propagation/transmission from SARS-CoV network to human network. It should be borne in mind that SARS-CoV 2 is ~89% genetically similar to its predecessor SARS-CoV [34] , [35] . It strongly reveals the fact that the human proteins chosen as spreaders of SARS-CoV might be the potential targets of SARS-CoV 2 also. If our future research work reveals this assumption, then it will definitely explore a new direction in the identification of essential drugs/vaccine for SARS-CoV 2. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.038216 doi: bioRxiv preprint",
+            "cite_spans": [
+                {
+                    "start": 278,
+                    "end": 282,
+                    "text": "[34]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 285,
+                    "end": 289,
+                    "text": "[35]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "World-Health-Organization Coronavirus disease (COVID-19) outbreak",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "10223",
+            "pages": "30185--30194",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "World Map | CDC",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Statement on the second meeting of the International Health Regulations (2005) Emergency Committee regarding the outbreak of novel coronavirus (2019-nCoV)",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "statement-on-the-meeting-of-the-international-health-regulations-(2005)-emergency-committee-regarding-the-outbreak",
+            "authors": [],
+            "year": 2020,
+            "venue": "Statement on the meeting of the International Health Regulations (2005) Emergency Committee regarding the outbreak of novel coronavirus 2019",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in Wuhan",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Protein function prediction from dynamic protein interaction network using gene expression data",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Prasad",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Basu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nasipuri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J. Bioinform. Comput. Biol",
+            "volume": "17",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1142/S0219720019500252"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Protein function prediction from proteinprotein interaction network using gene ontology based neighborhood analysis and physico-chemical features",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Prasad",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Basu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nasipuri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Bioinformatics and Computational Biology",
+            "volume": "16",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1142/S0219720018500257"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Funpred 3.0: Improved protein function prediction using protein interaction network",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Basu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nasipuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Plewczynski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PeerJ",
+            "volume": "2019",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj.6830"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Lethality and centrality in protein networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jeong",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Mason",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Barab\u00e1si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Oltvai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Nature",
+            "volume": "411",
+            "issn": "6833",
+            "pages": "41--42",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/35075138"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Centers of complex networks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wuchty",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Stadler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "J. Theor. Biol",
+            "volume": "223",
+            "issn": "1",
+            "pages": "45--53",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0022-5193(03)00071-7"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A local average connectivity-based method for identifying essential proteins from the network level",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Comput. Biol. Chem",
+            "volume": "35",
+            "issn": "3",
+            "pages": "143--150",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.compbiolchem.2011.04.002"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "High-betweenness proteins in the yeast protein interaction network",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Joy",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Brock",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Ingber",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "J. Biomed. Biotechnol",
+            "volume": "",
+            "issn": "2",
+            "pages": "96--103",
+            "other_ids": {
+                "DOI": [
+                    "10.1155/JBB.2005.96"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The rush in a directed graph",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anthonisse",
+                    "suffix": ""
+                }
+            ],
+            "year": 1971,
+            "venue": "BN 9/71. Stichting Mathematisch Centrum",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The centrality index of a graph",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Sabidussi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1966,
+            "venue": "Psychometrika",
+            "volume": "31",
+            "issn": "4",
+            "pages": "581--603",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/BF02289527"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The SARS-Coronavirus-host interactome: Identification of cyclophilins as target for pan-Coronavirus inhibitors",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pfefferle",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "PLoS Pathog",
+            "volume": "7",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.ppat.1002331"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Large-Scale Analysis of Disease Pathways in the Human Interactome",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Agrawal",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zitnik",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/189787"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Identifying influential spreaders based on edge ratio and neighborhood diversity measures in complex networks",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Samadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bouyer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Computing",
+            "volume": "101",
+            "issn": "8",
+            "pages": "1147--1175",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s00607-018-0659-9"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Detecting overlapping protein complexes in PPI networks based on robustness",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proteome Sci",
+            "volume": "11",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/1477-5956-11-S1-S18"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The mathematical theory of infectious diseases and its applications",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "T J"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Analysis of protein targets in pathogen-host interaction in infectious diseases: a case study on Plasmodium falciparum and Homo sapiens interaction network",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sengupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Basu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nasipuri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Brief. Funct. Genomics",
+            "volume": "17",
+            "issn": "6",
+            "pages": "441--450",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bfgp/elx024"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "THE DISTRIBUTION OF THE FLORA IN THE ALPINE ZONE",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jaccard",
+                    "suffix": ""
+                }
+            ],
+            "year": 1912,
+            "venue": "New Phytol",
+            "volume": "11",
+            "issn": "2",
+            "pages": "37--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1469-8137.1912.tb05611.x"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "A method for predicting protein complex in dynamic PPI networks",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "BMC Bioinformatics",
+            "volume": "17",
+            "issn": "S7",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s12859-016-1101-y"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Genomic characterization of the 2019 novel human-pathogenic coronavirus isolated from a patient with atypical pneumonia after visiting Wuhan",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F W"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerg. Microbes Infect",
+            "volume": "9",
+            "issn": "1",
+            "pages": "221--236",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/22221751.2020.1719902"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": ", corona viruses like Middle East Respiratory Syndrome (MERS) and Severe Acute Respiratory Syndrome (SARS) create global pandemic due to its infection ability. Both of these corona viruses are the member of genus Betacoronavirus under Coronaviridae. SARS created a major outbreak in 2003 originating from Southern China. 774 deaths were reported among 8098 globally registered cases resulting in an estimated fatality rate of 14%-15% [10]. While MERS commenced in Saudi Arabia creating an endemic in 2012. The world witnessed 858 deaths among 2494 registered positive cases. It generated high fatality rate of 34.4% in comparison to SARS [11].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "[ \\ ] , a sub-graph of a graph [ \\ . It is considered as another measure to determine the strength of connectivity of a node in a network. Mathematically, it is represented by , Z\" is the set of nodes in[ \\ ]  . | Z dd | is the number of nodes in[ \\ ]  . And )*( ) is the degree of a node \u2208 Z\" in [ \\ ] .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Ranking of spreader edges between two interconnected PPIN based on spreadability index. Thickness of the edges vary with the order of ranking.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Mechanism of transmission of infection through spreader nodes. A. PPIN of SARS-CoV (red). Selection of spreader nodes in SARA-CoV PPIN (blue). B. Interaction of SARS-CoV spreaders with its level 1 corresponding proteins in human PPIN (green). C. Selection of spreaders in level 1 (yellow) and level 2 human proteins (green). Rest proteins in human PPIN are ignored to prevent overlap in the diagram.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "SARS-CoV PPIN consisting of 9 proteins which each protein is represented by a node",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Computation of spreadability index of synthetic figure 1 along with computation of infection rate of selected top 10 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Computation of closeness centrality of synthetic figure 1 along with computation of infection rate of selected top 10 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Computation of betweeness centrality of synthetic figure 1 along with computation of infection rate of selected top 10 spreader nodes by SIS model. author/funder. All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Computation of local average centrality of synthetic figure 1 along with computation of infection rate of selected top 10 spreader nodes by SIS model. author/funder. All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Computation of degree centrality of synthetic figure 1 along with computation of infection rate of selected top 10 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Ranking of spreader edges for network 1 and network 2 inFigure 2",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Computation of spreadability index of SARS-CoV PPIN along with computation of infection rate of selected top 6 spreader nodes by SIS model. Computation of degree centrality of SARS-CoV PPIN along with computation of infection rate of selected top 6 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Computation of closeness centrality of SARS-CoV PPIN along with computation of infection rate of selected top 6 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Computation of local average centrality of SARS-CoV PPIN along with computation of infection rate of selected top 6 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "Computation of betweeness centrality of SARS-CoV PPIN along with computation of infection rate of selected top 6 spreader nodes by SIS model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF12": {
+            "text": "Ranked spreader edges between SARSRanked spreader edges between SARS-CoV spreaders and its level 1 human",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF14": {
+            "text": "//www.who.int/emergencies/mers-cov/en/ (accessed Apr. 06, 2020). [12] R. Lu et al., \"Genomic characterisation and epidemiology of 2019 novel coronavirus: implications for virus origins and receptor binding,\" Lancet, vol. 395, no. 10224, pp. 565-574, Feb. 2020, doi: 10.Letko, A. Marzi, and V. Munster, \"Functional assessment of cell entry and receptor usage for SARS-CoV-2 and other lineage B betacoronaviruses,\" Nat. Microbiol., vol. 5, no. 4, pp. 562-569, Feb. 2020, doi: 10.1038/s41564-020-0688-y. [14] M. Hoffmann, H. Kleine-Weber, N. Kr\u00fcger, M. M\u00fcller, C. Drosten, and S. P\u00f6hlmann, \"The novel coronavirus 2019 (2019-nCoV) uses the SARS-coronavirus receptor ACE2 and the cellular protease TMPRSS2 for entry into target cells,\" bioRxiv, p. 2020.01.31.929042, Jan. 2020, doi: 10.1101/2020.01.31.929042. https://www.who.int/emergencies/diseases/novel-coronavirus-2019/technical-guidance/naming-thecoronavirus-disease-(covid-2019)-and-the-virus-that-causes-it (accessed Apr. 06, 2020). https://www.cidrap.umn.edu/news-perspective/2020/01/china-releases-genetic-data-new-coronavirus-nowdeadly (accessed Apr. 10, 2020).A-Table 2Ranked spreader edges between SARS-CoV s level 1 and level 2 human proteins at medium threshold author/funder. All rights reserved. No reuse allowed without permission.A-Table 3Ranked spreader edges between SARS-CoV s level 1 and level 2 human spreaders at low threshold author/funder. All rights reserved. No reuse allowed without permission.The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.author/funder. All rights reserved. No reuse allowed without permission.The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.12.author/funder. All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Authors are thankful to the CMATER research laboratory of the Computer Science Department, Jadavpur University, India, for providing infrastructure facilities during progress of the work. This project is partially supported by the CMATER research laboratory of the Computer Science and Engineering Department, Jadavpur University, India, and DBT project (No.BT/PR16356/BID/7/596/2016), Ministry of Science and Technology, Government of India.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgement"
+        }
+    ]
+}

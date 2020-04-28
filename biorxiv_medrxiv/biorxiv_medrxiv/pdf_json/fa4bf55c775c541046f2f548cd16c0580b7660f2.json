@@ -1,0 +1,1599 @@
+{
+    "paper_id": "fa4bf55c775c541046f2f548cd16c0580b7660f2",
+    "metadata": {
+        "title": "Modeling quarantine during epidemics by mass-testing with drones",
+        "authors": [
+            {
+                "first": "Leonid",
+                "middle": [],
+                "last": "Sedov",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Epidemic spread and drone technology are topics of broad research and public interest (the former heated by the current events, while the latter driven by the latest technological developments in the drone industry). We study the potential of using drones to deliver tests, enabling mass-testing for the infection. We show how the testing intensity, increased with the use of drones, may \"flatten the curve\" by quarantining test-positive population --for that, we extend the classical SIR epidemic spread model, introducing the \"quarantined\" compartment and solving (numerically) differential equations which govern the extended model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Epidemic spread and drone technology are topics of broad research and public interest (the former heated by the current events, while the latter driven by the latest technological developments in the drone industry). We study the potential of using drones to deliver tests, enabling mass-testing for the infection. We show how the testing intensity, increased with the use of drones, may \"flatten the curve\" by quarantining test-positive population --for that, we extend the classical SIR epidemic spread model, introducing the \"quarantined\" compartment and solving (numerically) differential equations which govern the extended model. Importance of proactive COVID-19 screening, including symptomless people, has been acknowledged [BYWT+20, FLNI+20, HSXJ+20, LPCS+20, NKMS+20, WNB20]. However, mass-testing may be seriously impeded by population's fear of visiting testing facilities due to potentially high concentration of infection there; the fear is confirmed by health officials who advise against visiting hospitals \"unless necessary\" (examples of such directives from authorities during COVID-19 pandemic abound): \"Stay home\" is the overarching recommendation during pandemic virtually everywhere in the world. The good news is that COVID-19 test does not have to be necessarily conducted at a designated facility because (despite being somewhat unpleasant,) the test can be self-administered: a person may collect the material him/herself or with the help of a family member. Still, having people go somewhere to pick up and drop the tests would beat the purpose of the social distancing. A possible solution is to use drones to distribute tests to the population as well as to collect the tests back, bringing them to laboratories; the test results could then be communicated back to people electronically, so that those with positive tests put themselves into quarantine. Here we follow the infection dynamics by extending the SIR model [KM27] to include the compartment for quarantined population and show how the testing intensity, increased with use of drones, decreases the epidemic spread. Since pre-symptomatic infectiousness makes early surveillance and control crucial (symptom-based actions are not as effective), our results may guide the cooperation between health and transportation authorities towards optimal use of the available resources.",
+            "cite_spans": [
+                {
+                    "start": 1948,
+                    "end": 1954,
+                    "text": "[KM27]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Recent advances in the drone (unmanned aerial vehicles, or UAV) technology allow one to perform unmanned delivery-to-the-door of various goods [SNTWN19] . Drones succeed with blood transportation [AHSW+17, ANTBS17, ASPHS15, GRPS+14, KCMG+18] (and even organ transportation is being explored [SRSBBW18] ), implying that transporting by drones the less sensitive [WHO20] COVID-19 test samples (e.g, upper respiratory specimens in nasopharyngeal and oropharyngeal swab or lower respiratory specimens like sputum) may also be technically feasible [ASCMZ16] (related studies went so far as to explore testing for avian influenza A (H7N9) virus directly on the drone [WF06] ). This opens the potential to use drones for mass-testing the population for COVID-19, most importantly --including asymptomatic people --it has been reported that symptomless people can be infectious as well [BYWT+20 FLNI+20, GV'14, HSXJ+20, NKMS+20] (in fact, since symptomatic people were advised to isolate very early, it may be the case that the pandemic occurred mostly due to asymptomatic transmission [LPCS+20] ). In particular, if the infected but asymptomatic people become infectious after D=4 days from being infected [FLNI+20] , then (assuming the tests can determine that a person is infectious starting from day 0 of the infection) quarantining everyone within 4 days of the infection could stop asymptomatic COVID-19 spread altogether (assuming responsible behavior of self-quarantining from the asymptomatic people who received positive test results). We estimate that for a medium-size city with ~100000 inhabitants (Norrk\u00f6ping, Sweden --our guinea pig), 36 Switzerland Matternet [SM] drones (each carrying 100 tests) suffice to visit everyone (distributing, collecting and returning the tests to the lab) once every 4 days --see . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 152,
+                    "text": "[SNTWN19]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 291,
+                    "end": 301,
+                    "text": "[SRSBBW18]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 543,
+                    "end": 552,
+                    "text": "[ASCMZ16]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 661,
+                    "end": 667,
+                    "text": "[WF06]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 1078,
+                    "end": 1087,
+                    "text": "[LPCS+20]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1199,
+                    "end": 1208,
+                    "text": "[FLNI+20]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1667,
+                    "end": 1671,
+                    "text": "[SM]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . To put our estimates into practical perspective, we connect to existing drone models. The weight of a single test (20g) is calculated as the sum of the viral transport medium weight (3g [UTM]), the plastic tube with the cup and the swab (7g = weight of a 10mL syringe [SAAPP] ), an A4 list of instructions (5g) and packaging (5g). Since a single test would fit into ~11cm x 2cm x 2cm box, 100 tests would occupy 4-5L of cargo. This is at the upper limit of the volume for some of the drone models (e.g., the one from Amazon Prime [AP]), implying that cargo volume may be a capacity-limiting factor. As far as the payload weight goes, the market essentially offers either vehicles with few kilograms of payload (such as Amazon Prime drones [AP], or medical delivery drones from UPS [UPS] or Switzerland Matternet [SM] ) or large machines lifting hundreds of kilograms (such as Boeing Cargo air vehicle [BC] or ACC air drone [AI]). Thus in terms of weight, different drones may carry anywhere between ~50 to ~5000 tests; for conservative estimates, we experimented with the capacity ranging from 20 to 1000. (The different drone models also have slightly different maximum speeds, but they differ by at most a factor of 2, and 60km/h is a reasonable speed for all the drones --our estimates scale linearly with the speed, so it is straightforward to adjust our results for other flying speeds.)",
+            "cite_spans": [
+                {
+                    "start": 346,
+                    "end": 353,
+                    "text": "[SAAPP]",
+                    "ref_id": null
+                },
+                {
+                    "start": 859,
+                    "end": 864,
+                    "text": "[UPS]",
+                    "ref_id": null
+                },
+                {
+                    "start": 890,
+                    "end": 894,
+                    "text": "[SM]",
+                    "ref_id": null
+                },
+                {
+                    "start": 979,
+                    "end": 983,
+                    "text": "[BC]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "For the impact of our results on epidemic spread theory, we introduce an extension of the SIR model for epidemic development [KM27, HLM14] . The vanilla SIR model's transitions between its 3 compartments (or, states) S, I, R (Susceptible, Infected, Recovered resp.) are governed by the following differential equations dS/dt = -a*S*I, dI/dt = a*S*I -b*I, dR/dt = b*I where S, I, R stand for the number of susceptible, infected, recovered people resp. as functions of the time t (the notation is slightly abused by identifying the numbers with the compartment names), and a, b are the parameters signifying the rates of the transfer between the states. The parameters are estimated from the clinical data; e.g., b=1/T where T is the average duration of the disease in a patient.",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 131,
+                    "text": "[KM27,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 132,
+                    "end": 138,
+                    "text": "HLM14]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "For a theoretical application of our estimates, we restate our vision that each drone will fly its route continuously: that is, even though we are solving a \"single-shot\" service problem which minimizes the time needed to serve every inhabitant only once, we envision that people will be tested periodically, with the interval D between the tests (the recurring testing is needed to catch those who were infected after the previous test). We introduce the \"Quarantined\" compartment (Q) into the SIR model and assume that I now represents infected but not quarantined people (i.e., those spreading the disease); we dub the extended model SIQR. ( We remark that our model is different from other extensions of SIR such as SEIR [AB12, B10, BP19] introducing Exposed people or models with vaccination [KWMD+03] ) Transitions to Q happen only from I, and the rate of the transition is 1/D (this is where our estimates of D are used); transitions from Q happen only to R with the rate b (the same as from I to R --we assume that the . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 643,
+                    "end": 644,
+                    "text": "(",
+                    "ref_id": null
+                },
+                {
+                    "start": 797,
+                    "end": 806,
+                    "text": "[KWMD+03]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "removal of an infected patient does not depend on whether the patient is quarantined or not). Thus the state transitions in SIQR model are governed by dS/dt = -a*S*I, dI/dt = a*S*I -(b+c)*I, dQ/dt = c*I -b*Q, dR/dt = b*(I+Q) where Q is the number of people on quarantine and c=1/D.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Since the parameters of SIR (and hence SIQR) vary widely depending on the country, anti-epidemic measures, quality of the available data and other factors, we do not confine ourselves to specific values for the parameters. Instead, we present SIQR curves for a whole range of the parameters. Specifically, we started from the open-source GeoGebra applet [S20] which computes SIR curves S, I, R for any values of the parameters a and b set by the user; the parameters are set simply by moving a and b sliders, so the curves change interactively as the parameters are modified (the applet assumes that the total population size is 1, i.e., it shows the fractions of population in the S, I and R compartments). We changed the sliders to represent the recovery time and the effective reproduction number R0 (the number of people infected by one infected person): a and b are then calculated as b=1/T, a=R0*b = R0/T; we choose T and R0 as the user-input parameters because they are the ones estimates for which are easier to find reported (sources with various estimates bound, but we do not restrict ourselves to any particular one since we give the full flexibility with the parameters choice). To extend SIR to our SIQR, we add the slider for the inter-testing interval D, calculate c=1/D and change the SIR differential equations to the SIQR equations above. We also depict the curve CI showing the total (cumulative) number of people infected; that is, CI(t) is the number of people that have been infected by the time t (since the transition to infected happens only from the susceptible, CI is simply the total population minus S). Figure 3 shows screenshots of our SIQR applet --it can be seen how the curve flattens with D=8 (the applet is interactive, and we invite the reader to play online with our sliders for the different parameters at http://tiny.cc/SIQR). Figure 1 for the number of different-capacity drones needed to reach D=8) Figure 4 shows real data (pink crosses) for confirmed COVID-19 cases in Sweden starting from 100 cases on March 06 2020 [ECDE] (see [GWWK+20] for detailed COVID-19 history in Sweden). The basic SIR model (Q=0) fits the data with a modest (for the novel coronavirus) value of R0=2.27, which is reasonable given the general hygiene and cultural distancing in Sweden. Because not all the population was tested, we do not know the true number of infected people. Instead of trying to estimate this true number (which would introduce yet another parameter), we fit our pink curve into the confirmed cases; in this sense R0 represents here the number of new confirmed cases per one confirmed case Our SIQR model suggests that regular mass-testing with the interval D=30 (which roughly amounts to randomly testing ~3.3% of the population every day) would flatten the curve quite significantly We again invite the reader to play with our interactive GeoGebra applet http://tiny.cc/SIQR_Swe to see the effects of the testing frequency, as well as the changes in the parameters R0 and T.",
+            "cite_spans": [
+                {
+                    "start": 354,
+                    "end": 359,
+                    "text": "[S20]",
+                    "ref_id": null
+                },
+                {
+                    "start": 2074,
+                    "end": 2083,
+                    "text": "[GWWK+20]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1634,
+                    "end": 1642,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1868,
+                    "end": 1876,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1942,
+                    "end": 1950,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": ""
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Our work may help the authorities to quantify the lessons learned during the COVID-19 pandemic and utilize them during future epidemics (more generally, our methods may be applied to any kind of mass delivery and collection: e.g., the drones may distribute immunity tests to release people from quarantine). Indeed, one stumbling block to drones ubiquity is the generally absent regulation (in particular, in regions with less strict or absent (anti-)drone laws, UAVs are already widely used for medical applications including infectious disease surveillance and epidemiology [BMAN+14, CMRS+19, HMCMM17, GPHS+18]). With a proactive thinking, the authorities could design sets of regulations with different levels of strictness: in situations like epidemics, more lenient regulations could take force and let the drone operations rise to higher levels than during nominal course of events --the switch may be justified not only by the extreme social value of the drones use (as shown here), but also by the fact that during the (even partial) quarantine there are fewer people on the streets, which lowers the ground risk of drone operations (one of the concerns for the regulators [AHH19, BNEK+17, BNAB+17, DPJ18, PRC20, WCS17]).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We emphasize that our model of mass-testing can be applied at any geographic scale. In particular, while the epidemic is confined to a limited area, it may be reasonable to concentrate on mass-testing only the potentially affected region. As far as our theoretical results (SIQR) are concerned, incorporating people on quarantine into epidemic spread modeling may not only provide more accurate prediction of the disease spread, but also help understand the economic consequences of the quarantine (see [T20] for discussion of COVID-19 economic impact).",
+            "cite_spans": [
+                {
+                    "start": 503,
+                    "end": 508,
+                    "text": "[T20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "To obtain the estimates for Figure 1 , we consider a laboratory for COVID-19 tests processing, assigned to mass-test the population living in a certain service area: for a city with a single hospital (as e.g., in Norrk\u00f6ping --our running example) the area is the whole city, while more generally the region may be split among several laboratories . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 28,
+                    "end": 36,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "(including, possibly temporarily set up) by the authorities (in the centralized model, considered here, it is the authorities who decide for each laboratory from where to collect the tests). To define the locations for test delivery/collection, use the population data with fine granularity, providing population count in every grid square (we used the map giving the number of people living in each 100m x100m square [SCB] ). The drone fleet is stationed at the hospital (the fleet may contain the hospital's own vehicle plus possibly machines subcontracted from drone service suppliers --we do not go into the economic details here, envisioning that the costs saved for the economy thanks to the slower virus expansion will outweigh the costs for renting drones services). The number N of drones in the fleet and the capacity C (the number of tests that can be loaded onto one drone) are our variables (representing the resources) --we present the number of days D as the function of N and C (for visualization, in Fig. 1 we present the a separate N--D curve for each considered value of C).",
+            "cite_spans": [
+                {
+                    "start": 418,
+                    "end": 423,
+                    "text": "[SCB]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1017,
+                    "end": 1023,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "In the output we seek a route for each drone (see Figure 2 for an example), with the indication of how many people the drone serves in each square along its route (in some squares this number may be 0 meaning that the drone just passes over the square); the total number of people served by the route between successive returns to the hospital should not exceed the drone capacity C. Note that a square may be served by several drones; e.g., if the number of people living in a square is 2C or more, the square will have to be visited at least two times (or possibly more, if one of the times the drone is not used in the square to its full capacity). We suggest that in practice the drone repeats the route twice: first to distribute the tests and then to collect them --the interval between the distribution and collection does not influence our results since we compute a single route for every drone and duplicate it, thus simply doubling the length of the routes and consequently the number of drones needed to maintain certain testing frequency (if the interval is long, people may store their specimen in the fridge [WHO20]). The time a drone spends in each square it serves (i.e., in each square where its route serves >0 people) is set to 15min: this includes the time to possibly distribute the tests to (or collect the tests from) several cottages in the square; it also includes the time to change drone batteries at the base (hospital, lab) when needed. The route for each drone consists of several tours, where each tour is a closed loop that starts and ends at the hospital and the number of people served on each tour is at most C (any such tour may be executed by a drone without returning to the base as long as the battery capacity is not a constraining factor: for a drone with our maximum considered capacity C=1000 this would hold in a reasonable city scenario because 1000 people may be typically reached on a tour of length 10-20km, which is below the range of a non-toy drone; in a rural scenario, however, where visiting 1000 people may require longer tours, the battery may become the limiting factor and the maximum tour length constraint will have to be added when computing the tours). Minimizing the total length of such tours, needed to cover all people in the area, is known as the Capacitated Vehicle Routing Problem (C-VRP). We used Google's OR-Tools [PF] to solve the C-VRP, i.e., to find the tours that collectively serve all people in the area . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 2386,
+                    "end": 2390,
+                    "text": "[PF]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 50,
+                    "end": 58,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "(for an indication of the solution quality, we remark that the OR-Tools output 1042 tours for capacity-100 drones, which is close to the minimum 102638/100 ~= 1027 tours needed to serve the total of 102638 people living in our city with capacity-100 drones).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Finally, to minimize the length L of the longest drone route (which directly impacts the makespan, i.e., the time to fly all routes and thus serve the entire population), we split the tours into N sets (we did this for every value of N in a range), so that every set becomes a route for a drone (the tours in the drone's set are executed one-by-one in an arbitrary order). When splitting the tours, the objective is to minimize the length of the longest route (i.e., to minimize the maximum total length of the tours in a route) --it is the longest route that is the \"bottleneck\" of our solution, defining the longest time that a person has to wait for the drone. This is exactly the Minimum Makespan Scheduling problem aka Load Balancing (because it balances the \"load\" of every drone) aka Multiprocessor Scheduling (the drones can be viewed as processors which have to collectively process the set of tasks --fly all given tours). We formulated the problem as an Integer Program (IP) and solved it using Gurobi solver [G20] (separately for each value of N). Specifically, in the IP the binary decision variable x dt was equal to 1 if the route for drone d included the tour t. The IP minimized the length L of the longest route (i.e., the objective function was L) subject to the constraints \u03a3 d x dt = 1 for every tour t (meaning that every tour must be included in exactly one route) and the constraints To convert the longest route length L into the time needed to fly all the routes (the makespan), we assumed that the drones operate 12 hours per day and fly with the speed of 60km/h. We do not investigate other values of these two parameters because the time of serving the routes scales linearly with them: e.g., if the drones fly 24/7 (the authority shall decide whether it is wise to disturb people's sleep and distribute the tests also overnight in order to increase the testing intensity) or with twice the speed, the service time simply doubles, etc. We remark that, on the contrary, the dependence on the drone capacity C is not straightforward at all: changing C changes already the tours (in a way which is hard to predict a priori --the tours are output by the advanced Google OR-Tools optimization software), which of course influences the routes and their lengths. We therefore run our experiments separately for several values of C (for each C, we solve the Minimum Makespan Scheduling problem for each value of N). Refer to Figure  1 for the results showing the relation between N and the service time D.",
+            "cite_spans": [
+                {
+                    "start": 1020,
+                    "end": 1025,
+                    "text": "[G20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2446,
+                    "end": 2455,
+                    "text": "Figure  1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "Our code is available at https://github.com/undefiened/corona_drones for any community to make their own estimates like ours. The needed data is the laboratories locations (for the case of multiple laboratories, also the service area of each laboratory), the population density map and the drone capacity. Our GeoGebra applets are accessible online at http://tiny.cc/SIQR (the generic SIQR model) and http://tiny.cc/SIQR_Swe (with Sweden's data plotted). . CC-BY 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.15.20067025 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Stochastic epidemic models and their statistical analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Andersson",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Britton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "151",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Ground Risk Assessment Service Provider (GRASP) Development Effort as a Supplemental Data Service Provider (SDSP) for Urban Unmanned Aircraft System",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ancel",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Helsel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Heinich",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Drone transport of chemistry and hematology samples over long distances",
+            "authors": [],
+            "year": null,
+            "venue": "American journal of clinical pathology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Can unmanned aerial systems (drones) be used for the routine transport of chemistry, hematology, and coagulation laboratory specimens?",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Amukele",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sokoll",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pepper",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Howard",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Street",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PloS one",
+            "volume": "",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Drone transport of microbes in blood and sputum laboratory specimens",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Amukele",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Street",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Carroll",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of clinical microbiology",
+            "volume": "54",
+            "issn": "10",
+            "pages": "2622--2625",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Stochastic epidemic models: a survey",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Britton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Mathematical biosciences",
+            "volume": "225",
+            "issn": "1",
+            "pages": "24--35",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Boeing Cargo air vehicle",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Stochastic Epidemic Models with Inference",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Britton",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Pardoux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Lecture Notes in Mathematics",
+            "volume": "2255",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Unmanned aircraft systems for studying spatial abundance of ungulates: relevance to spatial epidemiology",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vicente",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PloS one",
+            "volume": "",
+            "issn": "12",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Preliminary risk assessment for small unmanned aircraft systems",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Barr",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Newman",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ancel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Belcastro",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Foster",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Evans",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Klyde",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "17th AIAA Aviation Technology, Integration, and Operations Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Hazards identification and analysis for unmanned aircraft system operations",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Belcastro",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Newman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Evans",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Klyde",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Barr",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ancel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "17th AIAA Aviation Technology, Integration, and Operations Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Presumed asymptomatic carrier transmission of COVID-19",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Jama",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "High-accuracy detection of malaria vector larval habitats using drone-based multispectral imagery",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Carrasco-Escobar",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Manrique",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ruiz-Cabrejos",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Saavedra",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Alava",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bickersmith",
+                    "suffix": ""
+                },
+                {
+                    "first": ".",
+                    "middle": [
+                        "."
+                    ],
+                    "last": "Gamboa",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PLoS neglected tropical diseases",
+            "volume": "13",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Towards a Rigorous Basis for Specific Operations Risk Assessment of UAS",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Denney",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pai",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE/AIAA 37th Digital Avionics Systems Conference (DASC)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "European Centre for Disease Prevention and Control. Data on the geographic distribution of COVID-19 cases",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Impact of non-pharmaceutical interventions (NPIs) to reduce COVID19 mortality and healthcare demand",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nedjati Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": ".",
+                    "middle": [
+                        "."
+                    ],
+                    "last": "Dighe",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Virological sampling of inaccessible wildlife with drones",
+            "authors": [],
+            "year": null,
+            "venue": "Viruses",
+            "volume": "10",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Intervention strategies against COVID-19 and their estimated impact on Swedish healthcare capacity",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Willem",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wijngaart",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kamerlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Brusselaers",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Kasson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.11.20062133"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "On the improvement of blood sample collection at clinical laboratories. BMC health services research",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Grasas",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ramalhinho",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pessoa",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Resende",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Caball\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Barba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Gurobi Optimization, LLC. Gurobi Optimizer Reference Manual",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Using low-cost drones to map malaria vector habitats",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hardy",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Makame",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cross",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Majambere",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Msellem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Parasites & vectors",
+            "volume": "10",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Exact analytical solutions of the Susceptible-Infected-Recovered (SIR) epidemic model and of the SIR model with equal death and birth rates",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Harko",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lobo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Mak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Applied Mathematics and Computation",
+            "volume": "236",
+            "issn": "",
+            "pages": "184--194",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Drone inflight mixing of biochemical samples",
+            "authors": [],
+            "year": null,
+            "venue": "Analytical biochemistry",
+            "volume": "545",
+            "issn": "",
+            "pages": "1--3",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Containing papers of a mathematical and physical character",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proceedings of the royal society of london. Series A",
+            "volume": "115",
+            "issn": "772",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Modelling vaccination strategies against foot-and-mouth disease",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E J"
+                    ],
+                    "last": "Woolhouse",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "May",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Grenfell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "6919",
+            "pages": "136--142",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Ground risk map for unmanned aircraft in urban environments",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Primatesta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rizzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "La Cour-Harbo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Intelligent & Robotic Systems",
+            "volume": "97",
+            "issn": "3",
+            "pages": "489--509",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "SIR GeoGebra applet",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Sparks",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "High contagiousness and rapid spread of severe acute respiratory syndrome coronavirus 2. Emerg Infect Dis",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sanche",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Romero-Severson",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hengartner",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Multi-Objective Optimization for Drone Delivery",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sawadsitang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Niyato",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nutanong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 IEEE 90th Vehicular Technology Conference (VTC2019-Fall)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "An initial investigation of unmanned aircraft systems (UAS) and real-time organ status measurement for transporting human organs",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Scalea",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Restaino",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scassero",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Blankenship",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Bartlett",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Wereley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE journal of translational engineering in health and medicine",
+            "volume": "6",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Single Use Syringe",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Totalbefolkning p\u00e5 100x100 m ruta",
+            "authors": [],
+            "year": null,
+            "venue": "Swedish University of Agricultural Sciences",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Switzerland Matternet medical delivery drone",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Susceptible-Infected-Recovered (SIR) Dynamics of COVID-19 and Economic Impact",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Toda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.11221"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "UPS medical delivery drone",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Response to COVID-19 in Taiwan: big data analytics, new technology, and proactive testing",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Brook",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "A review of unmanned aircraft system ground risk models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Washington",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clothier",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Silva",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Progress in Aerospace Sciences",
+            "volume": "95",
+            "issn": "",
+            "pages": "24--44",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Diagnostics-in-a-Suitcase: Development of a portable",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A E W M"
+                    ],
+                    "last": "Weidmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Transactions of the Royal Society of Tropical Medicine and Hygiene",
+            "volume": "100",
+            "issn": "",
+            "pages": "775--84",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Fig. 1 which shows our results for drones of various capacity and for varying number of drones. (See Methods section for details of obtaining the presented results.)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "The number of days D needed to collect tests from the whole city population as the function of the number N of used drones (of different capacities).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Snapshots of our online applet showing the curves for quite high R0=5.7[SLXR+20]. Left: SIR curves (Q=0, obtained by setting D to infinity). Right: SIQR with the testing interval D=8 (see",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "COVID-19 cases growth (starting from 100 cases) in Sweden [ECDE] shown with pink crosses. Top: SIR model (S and R not shown). Bottom: Mass-testing even as rarely as every D=30days flattens the curve.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Left: An example route of a drone with capacity 100; one of the tours in the route is shown black. Pink asterisk is the hospital. Right: A zoom in on the black tour: the orange circles depict the tests delivery/pickup locations; circle size is proportional to the number of tests delivered/picked-up at the location (99 tests are delivered on this tour). The underlying heatmap is the population density.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "the length of the tour t (meaning that L is the length of the longest route, i.e., the length of any route does not exceed L).",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "-19) in suspected human cases: interim guidance, 19 March 2020 (No. WHO/COVID-19/laboratory/2020.5). World Health Organization.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

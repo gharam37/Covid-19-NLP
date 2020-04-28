@@ -1,0 +1,1653 @@
+{
+    "paper_id": "58f8e789cec67e7bb6323e5d2997c2c1b390a3a3",
+    "metadata": {
+        "title": "A protocol for adding knowledge to Wikidata, a case report",
+        "authors": [
+            {
+                "first": "Andra",
+                "middle": [],
+                "last": "Waa",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "The COVID-19 pandemic, caused by the SARS-CoV-2 virus, is leading to a burst of swiftly released scientific publications on the matter (1) . In response to the pandemic, many research groups have started projects to understand the SARS-CoV-2 virus life cycle and to find solutions. Examples of the numerous projects include outbreak.info (2) , VODAN around FAIR data (3) , CORD-19-on-FHIR (4) and #covidpathways (5) . Many research papers and preprints get published every week and many call for more Open Science (6) . The Dutch universities went a step further and want to make any previously published research openly available, in whatever way related to COVID-19 research (7) .",
+            "cite_spans": [
+                {
+                    "start": 135,
+                    "end": 138,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 338,
+                    "end": 341,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 514,
+                    "end": 517,
+                    "text": "(6)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 677,
+                    "end": 680,
+                    "text": "(7)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, this swift release of research findings comes with an increased number of incorrect interpretations (8) which can be problematic when new research articles are picked up by main-stream media (9) . Rapid evaluation of these new research findings and integration with existing resources requires a frictionless access to the underlying research data upon which the findings are based. This requires interoperable data formats and sophisticated integration for these resources. A first step in this integration is knowing if you talk about the same gene or the same proteins. Using an interoperability layer in common, we can link different resources more easily.",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 112,
+                    "text": "(8)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 200,
+                    "end": 203,
+                    "text": "(9)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The Gene Wiki project has been tearing down the different research silos on genetics, biological processes, related diseases and associated drugs (10) . In contrast to legacy databases, where data models follow a relational data schema of connected tables, Wikidata ( https://wikidata.org/ ) uses statements to store facts (see Figure 1 ) (10) (11) (12) (13) . This model of statements aligns well with the RDF triple model of the semantic web and the content of Wikidata is also serialized as Resource Description Framework (RDF) triples (14, 15) , acting as stepping stone for data resources to the semantic web. Through its SPARQL endpoint other nodes in the semantic web, using either mappings between these resources or through federated SPARQL queries (16) . Automated editing of Wikidata simplifies a lot of things, however, the quality control of that process must be monitored carefully. This requires a clear data schema that allows the various resources to be linked with additional provenance. This schema describes the key concepts required for the integrations of the resources we are interested in: NCBI Taxonomy (17) , NCBI Gene (18) , UniProt (19) , the Protein Data Bank (PDB) (20) , WikiPathways (21) , and PubMed. Therefore , the key elements for   which we need a model include viruses, virus strains, virus genes, and virus proteins. The first two provide the link to taxonomies, the models for genes and proteins link to UniProt, PDB, and WikiPathways. These key concepts are also required to annotate research output such as journal articles and datasets related to these topics. Wikidata calls such keywords 'main subjects'. The introduction of this model and the actual SARS-CoV-2 genes and proteins in Wikidata enables the integration of these resources.",
+            "cite_spans": [
+                {
+                    "start": 146,
+                    "end": 150,
+                    "text": "(10)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 339,
+                    "end": 343,
+                    "text": "(10)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 344,
+                    "end": 348,
+                    "text": "(11)",
+                    "ref_id": null
+                },
+                {
+                    "start": 349,
+                    "end": 353,
+                    "text": "(12)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 354,
+                    "end": 358,
+                    "text": "(13)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 539,
+                    "end": 543,
+                    "text": "(14,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 544,
+                    "end": 547,
+                    "text": "15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 758,
+                    "end": 762,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1128,
+                    "end": 1132,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1145,
+                    "end": 1149,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1160,
+                    "end": 1164,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1195,
+                    "end": 1199,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1215,
+                    "end": 1219,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 328,
+                    "end": 336,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1244,
+                    "end": 1345,
+                    "text": ", the key elements for   which we need a model include viruses, virus strains, virus genes, and virus",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "This paper is a case report of a workflow/protocol for data integration and publication. The first step in this approach is to develop the data schema. Within",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Wikidata, shape expressions (ShEx) are used as the structural schema language to describe and capture schema's of concepts (22, 23) . It shapes the RDF structure by which Wikidata content is made available. These shapes have the advantage that they are easily exchanged and describe linked data models as a knowledge graph.",
+            "cite_spans": [
+                {
+                    "start": 123,
+                    "end": 127,
+                    "text": "(22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 128,
+                    "end": 131,
+                    "text": "23)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Since the shapes describe the model, they enable discussion, revealing inconsistencies between resources and allow for consistency checks of the content added by automated procedures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "After introducing the model, the process of adding knowledge to Wikidata is described. In this process, the seven human coronaviruses (HCoVs), MERS, SARS, Wikidata. This protocol is finalised by describing how the resulting data schema and data can be applied to support other projects, particularly #covidpathways .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The semantic web was proposed as a vision of the Web, in which information is given well-defined meaning and better enabling computers and people to work in cooperation (25) . In order to achieve that goal, several technologies have appeared, like RDF for describing resources (15) , SPARQL to query RDF data (26) and the Web Ontology Language (OWL) to represent ontologies (27) .",
+            "cite_spans": [
+                {
+                    "start": 169,
+                    "end": 173,
+                    "text": "(25)",
+                    "ref_id": null
+                },
+                {
+                    "start": 277,
+                    "end": 281,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 309,
+                    "end": 313,
+                    "text": "(26)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 374,
+                    "end": 378,
+                    "text": "(27)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Linked data was later proposed as a set of best practices to share and reuse data on the web (28) . The linked data principles can be summarized in four rules that promote the use of uniform resource identifiers (URIs) to name things, which can be looked up to retrieve useful information for humans and for machines using RDF, as well as having links to related resources. These principles have been adopted by several projects, enabling a web of reusable data, known as the linked data cloud ( https://lod-cloud.net/ ), which has also been applied to life science (29) .",
+            "cite_spans": [
+                {
+                    "start": 566,
+                    "end": 570,
+                    "text": "(29)",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "One prominent project is Wikidata, which has become one of the largest collections of open data on the web (16) . Wikidata follows the linked data principles offering both HTML and RDF views of every item with their corresponding links to related items, and a SPARQL endpoint called the Wikidata Query Service. Wikidata's RDF model offers a reification mechanism which enables to represent information about statements like qualifiers and references (see also That statement can be reified to add qualifiers and references. For example, a qualifier can state that the genomic assembly ( P659 ) is GRCh38 ( Q20966585 ) with a reference declaring that it was stated ( P248 ) in ensembl Release 99 ( Q83867711 ).",
+            "cite_spans": [
+                {
+                    "start": 107,
+                    "end": 111,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In Turtle, those declarations are represented as (see also wd: Q29867336 rdfs: label \"human X chromosome\" . wd: Q20966585 rdfs: label \"Genome assembly GRCh38\" . wd: Q83867711 rdfs: label \"ensembl Release 99\" .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Although the RDF data model is very flexible, specifying an agreed structure for the data allows domain experts to identify the properties and structure of their data facilitating the integration between heterogeneous data sources. Shape expressions were used to provide the right level of abstraction. YaShE, a ShEx editor implemented in JavaScript, was applied to author these shapes (32) . This application provides the means to associate labels in the natural language of Wikidata to the corresponding identifiers. The initial entity schema was defined with YaShE as a proof of concept for virus genes and proteins. In parallel, statements already available in Wikidata were used to automatically generate an initial shape for virus strains with sheXer. The statements for virus strains were retrieved with SPARQL 6 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint from the Wikidata Query Service (WDQS). The generated shape was then further improved through manual curation. The syntax of the shape expressions were continuously validated through YaShE and the Wikidata Entity Schema namespace was used to share and collaboratively update the schema with new properties. Figure 3 gives a visual outline of these steps. ",
+            "cite_spans": [
+                {
+                    "start": 386,
+                    "end": 390,
+                    "text": "(32)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1347,
+                    "end": 1355,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Specifying data models with ShEx"
+        },
+        {
+            "text": "The second step in our workflow is to add entries for all virus strains, genes and their gene products to Wikidata. This information is spread over different resources. Here, annotations were obtained from NCBI EUtils (33) , Mygene.info (34) , and UniProt, as 7 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint outlined below. Input to the workflow is the NCBI Taxonomy identifier of a virus under scrutiny. ( e.g. 2697049 for SARS-CoV-2). The taxon annotations are extracted from NCBI EUtils. The gene and gene product annotations are extracted from mygene.info and the protein annotations are extracted from UniProt using the SPARQL endpoint at ( https://sparql.uniprot.org/ ). Genomic information from seven human coronaviruses (HCoVs) was obtained from literature including the NCBI Taxonomy identifiers. For six virus strains a reference genome was available and was used to populate Wikidata. For SARS-CoV-1, the NCBI Taxonomy identifier referred to various strains, though no reference strain was available. To overcome this issue, the species taxon for SARS-related coronaviruses (SARSr-CoV) was used instead, following the practices of NCBI Genes and UniProt.",
+            "cite_spans": [
+                {
+                    "start": 237,
+                    "end": 241,
+                    "text": "(34)",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Populating Wikidata with Human Coronavirus Data"
+        },
+        {
+            "text": "The Entrez Programming Utilities (EUtils) is the application programming interface (API) to the Entrez query and database system at the National Center for Biotechnology Information (NCBI). From this set of services the scientific name of the virus under scrutiny was extracted (e.g. \"Severe acute respiratory syndrome coronavirus 2\").",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "NCBI Eutils"
+        },
+        {
+            "text": "Mygene.info is a web service which provides a REST API that can be used to obtain up-to-data gene annotations. The first step in the process is to get a list of applicable genes for a given virus by providing the NCBI taxon id. The following step is to obtain The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint EUtils. UniProt Identifiers are acquired using the SPARQL endpoint of UniProt, which is a rich resource for protein annotations provided by the Swiss Bioinformatics Institute. Figure 5 shows the SPARQL query that was applied to acquire the protein annotations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 578,
+                    "end": 586,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Mygene.info"
+        },
+        {
+            "text": "{ \"_id\": \"43740571\" , \"_score\": 15.594226 , \"accession\": { \"genomic\": [ \"MN908947.3\" , \"NC_045512.2\" ], \"protein\": [ \"QHD43419.1\" , \"YP_009724393.1\" ] }, \"entrezgene\": \"43740571\" , \"locus_tag\": \"GU280_gp05\" , \"name\": \"membrane glycoprotein\" , \"other_names\": \"membrane glycoprotein\" , \"refseq\": { \"genomic\": \"NC_045512.2\" , \"protein\": \"YP_009724393.1\" }, \"retired\": 43560233 , \"symbol\": \"M\" , \"taxid\": 2697049 , \"type_of_gene\": \"protein-coding\" } The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint updated regularly and will allow pathway curators to annotate virus genes and proteins in their pathways and provide linkouts on the WikiPathways website.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mygene.info"
+        },
+        {
+            "text": "The COVID-19 related pathways from WikiPathways COVID-19 Portal are added to Wikidata using the approach previously described (10) . For this, a dedicated repository has been set up to hold the GPML files, the internal WikiPathways file format, The GPML is converted into RDF files with the WikiPathways RDF generator (36) , while the files with author information are manually edited. For getting the most recent GPML files, a custom Bash script was developed (getPathways.sh). The conversion of the GPML to RDF uses the previously published tools for WikiPathways RDF (36) . Here, we adapted the code with unit tests to have one for each GPML file, using some simple template test. These are available in the SARS-CoV-2-WikiPathways branch of Wikidata2Bridgedb . Based on this earlier generated pathway RDF and using the Wikidataintegrator library, the WikiPathways bot was used to populate Wikidata with additional statements and items. The pathway bot was extended with the capability to link virus proteins to the corresponding pathways which was essential to support the Wikidata resource.",
+            "cite_spans": [
+                {
+                    "start": 126,
+                    "end": 130,
+                    "text": "(10)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 318,
+                    "end": 322,
+                    "text": "(36)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 570,
+                    "end": 574,
+                    "text": "(36)",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Mygene.info"
+        },
+        {
+            "text": "These changes can be found in the sars-cov-2-wikipathways-2 branch.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mygene.info"
+        },
+        {
+            "text": "The second use case is to demonstrate how we can link virus gene and protein information to literature. Here, we used Scholia ( https://tools.wmflabs.org/scholia/ ) as a central tool (13) . It provides a graphical interface around data in Wikidata, for example literature about a specific coronavirus protein (e.g. Q87917585 for the SARS-CoV-2 spike protein). Scholia uses SPARQL queries to provide information about topics. We annotated literature around the HCoVs with the specific virus strains, the virus genes, and the virus proteins as 'main topic'.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "(13)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Scholia"
+        },
+        {
+            "text": "To align the different sources in Wikidata, a common data schema is needed. We have created a collection of schema's that represent the structure of the items added 11 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint to wikidata. Input to the workflow is the NCBI taxon identifier, which is input to mygene.info (see Figure 3 ). Taxon information is obtained and added to Wikidata according to a set of linked Entity Schemas ( E170 : virus, E174 : strain, E69 : disease). Gene annotations are obtained and added to WIkidata following the Schemas ( E165 : virus gene, E169 : virus protein) and protein annotations are obtained and added to Wikidata following the two schemas. The last two schemas are an extension from more generic schemas for proteins ( E167 ) and genes ( E75 ). Table 1 . The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint Wikidata identifiers, 69 NCBI Gene identifiers, 42 UniProt identifiers, and 55 RefSeq identifiers. The mapping file has been released on the BridgeDb website ( https://bridgedb.github.io/data/gene_database/ ). The mapping database has also been loaded on the BridgeDb webservice at http://webservice.bridgedb.org/ which means it can be used in the next use case: providing links out for WikiPathways. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint gene and protein, two Wikidata identifiers with links may be given. In that case, one is for the gene and one for the protein.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 488,
+                    "end": 496,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 951,
+                    "end": 958,
+                    "text": "Table 1",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Semantic data landscape"
+        },
+        {
+            "text": "The WikiPathways use case shows us that literature describes our knowledge about how coronaviruses work at a rather detailed level. Indeed, many articles discuss the genetics, homology of genes and proteins across viruses, or the molecular aspects of how these proteins are created and how they interfere with the biology of the human cell. The biological pathways show these processes, but ultimately the knowledge comes from literature. Wikidata allows us to link literature to specific virus proteins and genes, depending on what the article describes. For this it uses the 'main subject' property ( P921 ). We manually annotated literature with the Wikidata items for specific proteins and genes. We developed two SPARQL queries to count the number of links between genes ( https://w.wiki/Lsp ) and proteins ( https://w.wiki/Lsq ) and the articles that discuss them. Scholia takes advantage of the 'main subject' annotation, allowing the creation of \"topic\" pages for each protein. For example, Figure 8 shows the topic page of the SARS-CoV-2 spike protein. Wikidata provides a solution. It is part of the semantic web, taking advantage of its reification of the Wikidata items as RDF. Data in Wikidata itself is frequently, often almost instantaneously, synchronised with the RDF resource and available through its SPARQL endpoint ( http://query.wikidata.org ). The modelling process turns out to be an important aspect of this protocol. Wikidata contains numerous entity classes as entities and more than 7000 properties which are ready for (re-)use. However, that also means that one is easily lost. The ShEx schema have helped us develop a clear model, as a social contract between the authors of this paper, as well as documentation for future users.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 999,
+                    "end": 1007,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Scholia"
+        },
+        {
+            "text": "Using these schemas, it was simpler to validate the correctness of the updated bots to enter data in Wikidata. The bots have been transferred to the Gene Wiki Jenkins platform. This allows the bots to be kept running regularly, pending the ongoing efforts of the coronavirus and COVID-19 research communities. While the work of the bots will continue to need human oversight, potentially to correct errors, it provides a level of scalability and generally reduces the authors from a lot of repetitive work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scholia"
+        },
+        {
+            "text": "One of the risks of using bots, is the possible generation of duplicate items. This can happen to humans as well, but they can apply a wider range of academic skills to resolve these issues. Indeed, in running the bots, duplicate Wikidata items were created, for which an example is shown in Figure 9 . The Wikidataintegrator library does have functionality to prevent the creation of duplicates by comparing properties, based on used database identifiers. However, if two items have been created using different identifiers, these cannot be easily identified. Close inspection of examples, such as the one in Figure 9 , showed that the duplicates were created because there was a lack of overlap between the data to be added and the existing item. The UniProt identifier did not yet resolve, because it was manually extracted from information in a March 27 pre-release (see ftp.uniprot.org/pub/databases/uniprot/pre_release/ ). The Pfam identifier pointed to a page that did not contain mappings to other identifiers. In addition, the lack of references to the primary source hampers curators ability to merge duplicate items and expert knowledge was essential to identify the duplication. Fortunately, names used for these RNA viruses only refer to one protein as the membrane protein.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 292,
+                    "end": 300,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 610,
+                    "end": 618,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Scholia"
+        },
+        {
+            "text": "Generally, the curator would have to revert to the primary literature to identify the 17 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint overlap. Statements about 'encoded by' to the protein coding genes were found to be helpful as well. Reconciliation might be possible through sequence alignment, which means substantial expert knowledge and skills are required.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scholia"
+        },
+        {
+            "text": "This makes reconciliation in Wikidata based on matching labels, descriptions and synonyms, matching statements and captured provenance (qualifiers and references) hazardous, due to different meanings to the same label. A targeted curation query ( geneAndProteinCurationQuery.rq , see Supporting Information) was developed to highlight such duplications and manually curated seven duplicate protein entries for SARS-CoV-2 alone. This duplication is common and to be expected, particularly in situations like a pandemic, when many groups contribute to the same effort. In this case, this paper only represents one group contributing to the Wikidata:WikiProject COVID-19 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scholia"
+        },
+        {
+            "text": "We also discovered that the virus taxonomy is different from those of mammalian species. For example, there is no clear NCBI taxon identifier for SARS-CoV-1 and after consultation with other projects, we defaulted to using the taxon identifier for the SARS-related CoVs, something that NCBI and UniProt seem to have done as well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scholia"
+        },
+        {
+            "text": "Finally, we note that during the two weeks this effort took place, several other resources introduced overviews, including dedicated COVID-19 portals from UniProt ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scholia"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Preventing a covid-19 pandemic",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Watkins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Virus Outbreak Data Network (VODAN)",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "CORD-19-on-FHIR --Semantics for COVID-19 Discovery",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The Coronavirus and Open Science: Our reads and Open use cases",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The COVID-19 pandemic stresses the societal importance of open science",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sondervan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bosman",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kramer",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Brinkman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Imming",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Versteeg",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "ScienceGuide",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Speed Science: The risks of swiftly spreading coronavirus research",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sharma",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Scarr",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kelland",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Covid-19: six million doses of hydroxychloroquine donated to US despite lack of evidence",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Mahase",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "BMJ",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Wikidata as a knowledge graph for the life sciences. eLife",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Waagmeester",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Stupp",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Burgstaller-Muehlbacher",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Good",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Griffith",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Griffith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Wikidata as a semantic framework for the Gene Wiki initiative",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Burgstaller-Muehlbacher",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Waagmeester",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Mitraka",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Turner",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Putman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Database",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Scholia And Scientometrics With Wikidata",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "\u00c5"
+                    ],
+                    "last": "Nielsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Mietchen",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Willighagen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Introducing Wikidata to the Linked Data Web",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Erxleben",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "G\u00fcnther",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kr\u00f6tzsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mendez",
+                    "suffix": ""
+                },
+                {
+                    "first": "D ;",
+                    "middle": [],
+                    "last": "Vrande\u010di\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mika",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Tudorache",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bernstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Welty",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Knoblock",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Vrande\u010di\u0107",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Semantic Web -ISWC 2014",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "RDF 1.1 Concepts and Abstract Syntax. W3C",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Cyganiak",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lanthaler",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Getting the Most Out of Wikidata: Semantic Technology Usage in Wikipedia's Knowledge Graph",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Malyshev",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kr\u00f6tzsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gonz\u00e1lez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gonsior",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bielefeldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Vrande\u010di\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bontcheva",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Su\u00e1rez-Figueroa",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Presutti",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Celino",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sabou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "The Semantic Web -ISWC 2018",
+            "volume": "11137",
+            "issn": "",
+            "pages": "376--94",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-030-00668-6_23"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "The NCBI Taxonomy database",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Federhen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nucleic Acids Res",
+            "volume": "40",
+            "issn": "D1",
+            "pages": "136--179",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Gene: a gene-centered information resource at NCBI",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Hem",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Katz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ovetsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wallin",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Ermolaeva",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nucleic Acids Res",
+            "volume": "43",
+            "issn": "D1",
+            "pages": "36--42",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "UniProt: the universal protein knowledgebase",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Consortium",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nucleic Acids Res",
+            "volume": "45",
+            "issn": "D1",
+            "pages": "158--169",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Protein Data Bank: the single global archive for 3D macromolecular structure data",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wwpdb Consortium",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Burley",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Berman",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bhikadiya",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nucleic Acids Res",
+            "volume": "47",
+            "issn": "D1",
+            "pages": "520--528",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "WikiPathways: a multifaceted pathway database bridging metabolomics to other omics research",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Slenter",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kutmon",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hanspers",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Riutta",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Windsor",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Nunes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nucleic Acids Res",
+            "volume": "46",
+            "issn": "D1",
+            "pages": "661--667",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Using Shape Expressions (ShEx) to Share RDF Data Models and to Guide Curation with Rigorous Validation",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Thornton",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Solbrig",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Stupp",
+                    "suffix": ""
+                },
+                {
+                    "first": "Labra",
+                    "middle": [],
+                    "last": "Gayo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mietchen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Prud&apos;hommeaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Semantic Web",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Shape expressions: an RDF validation and transformation language",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Prud&apos;hommeaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "Labra",
+                    "middle": [],
+                    "last": "Gayo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Solbrig",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the 10th International Conference on Semantic Systems -SEM '14",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "A Novel Coronavirus from Patients with Pneumonia in China",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "8",
+            "pages": "727--760",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "SPARQL 1.1 Query Language. W3C",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Seaborne",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Harris",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "OWL 2 Web Ontology Language Document Overview",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "W3c Owl Working",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Group",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Linked open drug data for pharmaceutical research and development",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Samwald",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Jentzsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bouton",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Kalles\u00f8e",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Willighagen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hajagos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J Cheminformatics",
+            "volume": "3",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "What Works Well With Wikidata? In: Proceedings of the 11th International Workshop on Scalable Semantic Web Knowledge Base Systems co-located with 14th International Semantic Web Conference",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hogan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kr\u00f6tzsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rdf",
+                    "middle": [],
+                    "last": "Reifying",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "CEUR Workshop Proceedings",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bethlehem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "RDFSHape: Online demo implementation of ShEx and SHACL",
+            "authors": [
+                {
+                    "first": "Jose",
+                    "middle": [
+                        "Emilio"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Labra",
+                    "middle": [],
+                    "last": "Gayo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Internet]. Zenodo",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "BioGPS and MyGene.info: organizing online, gene-centric information",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Macleod",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Su",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Nucleic Acids Res",
+            "volume": "41",
+            "issn": "D1",
+            "pages": "561--566",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "The BridgeDb framework: standardized access to gene, protein and metabolite identifier mapping services",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Van Iersel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Pico",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kelder",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hanspers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "BMC Bioinformatics",
+            "volume": "11",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Using the Semantic Web for Rapid Integration of WikiPathways with Other Biological Online Data Resources",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Waagmeester",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kutmon",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Riutta",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Willighagen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Evelo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PLOS Comput Biol",
+            "volume": "12",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Structure of a Wikidata item, containing a set of statements which are key-value pairs, with qualifiers and references. Here the item for the ACE2 protein is given containing a statement about its molecular function. This molecular function (peptidyl-dipeptidase activity) contains a reference stating when and where this information was obtained. The Gene Wiki project aligns novel primary data sources with Wikidata in a cycle of consecutive steps where the data schema of the primary source is aligned with the available Wikidata properties. Once the schema is in place, bots are developed to add and regularly update Wikidata with knowledge from the primary resource under scrutiny.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Example of RDF data model representing ACE2, created with RDFShape (31) .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Flow diagram for entity schema development and the executable workflow for the virus gene protein bot. A) The workflow of creating the shape expressions. B) The computational workflow of the how information was used from various public resources to populate Wikidata.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "gene annotations for the individual genes from mygene.info through http://mygene.info/v3/gene/43740571 . This results in the name and a set of applicable identifiers (Figure 4) UniProt The annotations retrieved from mygene.info also contain protein identifiers such as UniProt, RefSeq and PDB, however their respective names are lacking. To obtain names and mappings to other protein identifiers, RefSeq and UniProt were consulted. Refseq annotations were acquired using the earlier mentioned",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "JavaScript Object notation output of the mygene,info output for gene with NCBI gene identifier 43740571.WikidataintegratorWikidata integrator is a Python library ( https://github.com/SuLab/WikidataIntegrator ) that wraps around the Wikidata API ( https://www.wikidata.org/w/api.php )(10) . From external resources such as the NCBI, gene and taxonomy statements have been compiled with provenance and assigned to the associated Wikidata items. When an item did not exist (or recognized), it was created. The module compiled a",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "The UniProt SPARQL query used to obtain additional protein annotations, descriptions and external resources.Data Integration Use Cases / Validation WikiPathways and BridgeDbWikiPathways is a biological pathway database and can visualize the details of interactions between proteins, metabolites, etc. It depends on BridgeDb to map identifiers of external data and knowledge to the identifiers used for the genes, proteins, and metabolites in the pathways(35) . Furthermore, mappings to Wikidata are required to establish the link of biological entities in pathways and journal articles that have those entities as main topics. Therefore, the virus genes and proteins are required to exist in Wikidata, enabling the interoperability between WikiPathways and Wikidata. Additionally, new virus mapping databases for BridgeDb are created by extracting the new virus gene and protein data, including links between Wikidata, NCBI Gene, RefSeq and UniProt identifiers using a SPARQL query ( https://github.com/bridgedb/Wikidata2Bridgedb ). The mapping databases will",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Overview of the shex schemas and the relations between them. All shapes, properties and items are available from within Wikidata. Bots The bots developed and used in this protocol are adaptations of the bots developed in the Gene Wikiproject. On regular intervals the bots run to update viral gene and protein annotations as well as pathway updates from WikiPathways. For the gene and protein annotations, we have also made a Jupyter Notebook. The bot that synchronises virus, gene and protein information and the Jupyter Notebook are available at https://github.com/SuLab/Gene_Wiki_SARS-CoV . The bot that synchronises the WikiPathways pathways with Wikidata was updated from the original version to allow adding proteins annotated with Wikidata identifiers and no longer requires pathways to be part of the Curated Collection. The customized are managed within a Jenkins environment allowing to schedule the synchronisation procedure at set intervals which can be changed depending on the update speed of the external resources. The Jenkins jobs are available from http://jenkins.sulab.org/ . Data added Using the gene and proteins bots explained in the Methods section, missing genes and proteins have been added for the seven human coronaviruses. The results are summarized in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Screenshot of SARS-CoV-2 and COVID-19 Pathway in WikiPathways ( wikipathways:WP4846 ) showing the BridgeDb popup box for the ORF3a gene, showing a link out to Scholia via the gene's Wikidata identifier.WikiPathwaysThe WikiPathways project is involved in an international collaboration to curate knowledge about the biological processes around SARS-CoV-2 and COVID-:WP4846 ). To ensure interoperability, WikiPathways uses BridgeDb and taking advantage of the enriched BridgeDb webservice, WikiPathways now links out for HCoV genes and proteins (depending on availability of mappings) to RefSef, NCBI Gene, UniProt, and Scholia (seeFigure 7). The latter links to the next use case, and provides a link to literature about the virus. It should be noted that for",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Screenshot of the Scholia page for the SARS-CoV-2 spike glycoprotein, it shows four articles that specifically discuss this protein.DiscussionThis paper describes a protocol we developed for our efforts taken to align genetic annotations from reference resources with Wikidata. Numerous annotations are scattered across different sources without any high-level of integration, thereby reducing the reusability of knowledge from different sources. Integration of the annotations from these resources is a complex and time consuming task. Each resource uses different ways to access the data from a user and machine perspective. Making use of these protocols programmatically to access and retrieve data of interest, requires the knowledge of various technologies and procedures to extract the information of interest.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Comparison of two Wikidata entries for the SARS-CoV-2 M protein. Since this screenshot was made, the entries have been merged in a manually curation process.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "see Ref.(30) ). As an example, item Q14875321 , which represents ACE2 (protein-coding gene in the Homo sapiens species) has a statement specifying that it has a chromosome ( P1057 ) with value chromosome X ( Q29867336 ). In RDF Turtle, this can be declared as:wd: Q14875321 wdt: P1057 wd: Q29867336 .",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "statements by parsing the primary sources under scrutiny and extracted what statements already existed on Wikidata. A JavaScript Object Notation (JSON) string was created that resembled the JSON data model used by the Wikidata API. This JSON string was then submitted to the Wikidata API for ingestion.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Summary of the seven human coronaviruses, including taxon identifiers, the Wikidata items, and the number of genes and proteins. The latter two are generated by the SPARQL queries geneCount.rq and proteinCount.rq in the Supporting Information.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "( https://covid-19.uniprot.org/ ) ( https://PDBe.org/covid19/ ). This manuscript presented a protocol to link information from disparate resources, including NCBI Taxonomy, NCBI Gene, UniProt, PubMed, and WikiPathways. Using the existing Wikidata infrastructure, we developed semantic schemas for virus strains, genes, and proteins, bots written in Python to add knowledge on genes and proteins of the seven human coronaviruses and linked them to biological pathways in WikiPathways and to primary literature, visualized in Scholia. We were able to do so in the period of two weeks, using an ad-hoc formed team from existing collaborations, taking advantage of the open nature of the components involved.. CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint wd:Q16983360 # HKU1 wd:Q16991954 # OC43 wd:Q8351095 # NL63 wd:Q16983356 # 229E wd:Q4902157 # MERS-CoV wd:Q278567 # SARS-CoV } ?item wdt:P31 wd:Q7187 ; wdt:P703 ?virus . SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". } } GROUP BY ?virus ?virusLabel Protein counts for selected viruses: proteinCount.rq SELECT ?virus ?virusLabel (COUNT(?item) AS ?genes ) WHERE { VALUES ?virus { wd:Q82069695 # SARS-CoV-2 wd:Q16983360 # HKU1 wd:Q16991954 # OC43 wd:Q8351095 # NL63 wd:Q16983356 # 229E wd:Q4902157 # MERS-CoV wd:Q278567 # SARS-CoV } ?item wdt:P31 wd:Q8054 ; wdt:P703 ?virus . SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". } } GROUP BY ?virus ?virusLabel 23 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.05.026336 doi: bioRxiv preprint",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The protocol presented in this work would not be as powerful if it was not for the works of many, which ensure that the fruits of our work are immediately interoperable with lots of other efforts, even though that integration was the whole purpose of developing this protocol. We thank the work of the larger Wikidata:WikiProject COVID-19 community in which we operated, Wikidata volunteers in general, and in particular Ralf Stephan, Daniel Mietchen, and Finn",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

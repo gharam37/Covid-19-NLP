@@ -1,0 +1,607 @@
+{
+    "paper_id": "1707ca21d0de4fbc2f728c4442658a0910a940e5",
+    "metadata": {
+        "title": "Scirpy: A Scanpy extension for analyzing single-cell T-cell receptor sequencing data",
+        "authors": [
+            {
+                "first": "Gregor",
+                "middle": [],
+                "last": "Sturm",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Tamas",
+                "middle": [],
+                "last": "Szabo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Georgios",
+                "middle": [],
+                "last": "Fotakis",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Marlene",
+                "middle": [],
+                "last": "Haider",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Dietmar",
+                "middle": [],
+                "last": "Rieder",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Zlatko",
+                "middle": [],
+                "last": "Trajanoski",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Francesca",
+                "middle": [],
+                "last": "Finotello",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medical University of Innsbruck",
+                    "location": {
+                        "postCode": "6020",
+                        "settlement": "Biocenter, Innsbruck",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Advances in single-cell technologies have enabled the investigation of T cell phenotypes and repertoires at unprecedented resolution and scale. Bioinformatic methods for the efficient analysis of these large-scale datasets are instrumental for advancing our understanding of adaptive immune responses in cancer, but also in infectious diseases like COVID-19. However, while well-established solutions are accessible for the processing of single-cell transcriptomes, no streamlined pipelines are available for the comprehensive characterization of T cell receptors. Here we propose Scirpy , a scalable Python toolkit that provides simplified access to the analysis and visualization of immune repertoires from single cells and seamless integration with transcriptomic data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Scirpy source code and documentation are available at https://github.com/icbi-lab/scirpy .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "B and T lymphocytes are equipped with a vast repertoire of immune cell receptors that can recognize a wealth of different antigens. High-throughput sequencing technologies have enabled the study of these immune repertoires at unprecedented resolution (Hackl et al. , 2016; Finotello et al. , 2019) and are advancing our understanding of adaptive immune responses in cancer (Valpione et al. , 2020) , as well as in autoimmune (Hanson et al. , 2020) and infectious (Schober et al. , 2020) diseases, including COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 251,
+                    "end": 272,
+                    "text": "(Hackl et al. , 2016;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 273,
+                    "end": 297,
+                    "text": "Finotello et al. , 2019)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 373,
+                    "end": 397,
+                    "text": "(Valpione et al. , 2020)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 425,
+                    "end": 447,
+                    "text": "(Hanson et al. , 2020)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 463,
+                    "end": 486,
+                    "text": "(Schober et al. , 2020)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Novel single-cell sequencing technologies now allow the joint profiling of transcriptomes and T cell receptors (TCRs) in single cells. However, while the study of single-cell transcriptomes is facilitated by tools like Seurat (Butler et al. , 2018) and Scanpy (Wolf et al. , 2018) , the bioinformatic analysis of paired \u03b1 and \u03b2 TCR chains is still in its infancy. Several methods to perform specific analytical tasks have been proposed ( Supplementary Table 1 ), but the comprehensive characterization of TCR diversity from single cells is still hampered by the lack of standardized and ready-to-use computational pipelines.",
+            "cite_spans": [
+                {
+                    "start": 226,
+                    "end": 248,
+                    "text": "(Butler et al. , 2018)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 260,
+                    "end": 280,
+                    "text": "(Wolf et al. , 2018)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 452,
+                    "end": 459,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Here, we present Scirpy ( s ingle-c ell i mmune r epertoires in Py thon), a Python-based Scanpy extension that provides simplified access to various computational modules for the analysis and visualization of immune repertoires from single cells. Due to its tight integration with Scanpy, Scirpy allows the combination with scRNA-seq transcriptomic data to comprehensively characterize the phenotype and TCR of single T cells.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "integrates different bioinformatic methods for importing, analyzing, and visualizing single-cell TCR-sequencing data ( Fig. 1 ). TCR data can be loaded from CellRanger (10x Genomics) and TraCeR (Stubbington et al. , 2016) outputs, thus allowing the analysis of both 10x Genomics and Smart-seq2 data, respectively. The AnnData data structure provided by Scanpy is used to store matched TCR information and transcriptomic profiles .",
+            "cite_spans": [
+                {
+                    "start": 194,
+                    "end": 221,
+                    "text": "(Stubbington et al. , 2016)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 117,
+                    "end": 125,
+                    "text": "( Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scirpy"
+        },
+        {
+            "text": "Scirpy uses a flexible TCR model supporting up to two \u03b1 and \u03b2 chains per cell, allowing the identification of dual-TCR T cells (Schuldt and Binstadt, 2019 ) (see Supplementary Note 1 ). It also flags cells with more than two chains, which potentially represent doublets ( Supplementary Fig. 1 ) and may be discarded from downstream analyses. Scirpy defines clonotypes based on the amino-acid or nucleotide sequence of the TCR complementarity-determining region 3 (CDR3). The user can choose between defining clonotypes based on sequence identity or similarity. The second approach, inspired by TCRdist (Dash et al. , 2017) , leverages the Parasail library (Daily, 2016) to compute pairwise sequence alignments and identify clusters of T cell clonotypes that likely recognize the same antigens. For building clonotype networks, Scirpy makes use of the sparse-matrix implementation from the scipy package (Virtanen et al. , 2020) , ensuring scalability to hundreds of thousands of cells.",
+            "cite_spans": [
+                {
+                    "start": 127,
+                    "end": 154,
+                    "text": "(Schuldt and Binstadt, 2019",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 602,
+                    "end": 622,
+                    "text": "(Dash et al. , 2017)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 656,
+                    "end": 669,
+                    "text": "(Daily, 2016)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 903,
+                    "end": 927,
+                    "text": "(Virtanen et al. , 2020)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 270,
+                    "end": 292,
+                    "text": "( Supplementary Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scirpy"
+        },
+        {
+            "text": "exploring the abundance, diversity, and expansion of clonotypes across samples, patients, or cell-type clusters derived from transcriptomics data ( Supplementary Fig. 2 and 3 ) . Relationships between clonotypes can be investigated with a graph-based approach (Supplementary Figure 4) , in addition to spectratype plots that visualize CDR3 sequence length distribution, and VDJ-usage plots (Supplementary Figure 5) . Finally, TCR information can be integrated with transcriptomic data, for instance by overlaying Uniform Manifold Approximation and Projection (UMAP) plots ( Supplementary Figure 3 ) . A detailed tutorial guiding through a typical analysis workflow is available at https://icbi-lab.github.io/scirpy/tutorials.html .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 146,
+                    "end": 176,
+                    "text": "( Supplementary Fig. 2 and 3 )",
+                    "ref_id": null
+                },
+                {
+                    "start": 260,
+                    "end": 284,
+                    "text": "(Supplementary Figure 4)",
+                    "ref_id": null
+                },
+                {
+                    "start": 405,
+                    "end": 414,
+                    "text": "Figure 5)",
+                    "ref_id": null
+                },
+                {
+                    "start": 572,
+                    "end": 598,
+                    "text": "( Supplementary Figure 3 )",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scirpy"
+        },
+        {
+            "text": "Case study: re-analysis of 140k single T cells To demonstrate the applicability to a real-world scenario, we re-analyzed a recent single-cell dataset of ~140k T cells (Wu et al. , 2020) . Single T cells were isolated from tumours, normal adjacent tissue, and peripheral blood of 14 patients with four different cancer types, and subjected to single-cell RNA and TCR sequencing with the 10x technology. Consistently with the original results, we found that the majority of clonotypes were singletons and only 8-19% of patients' clonotypes were clonally expanded ( Supplementary Fig. 2 ) . Our results further confirm that CD8 + effector, effector memory, and tissue resident T cells comprised a large fraction of clonotypes that were expanded in both the tumor and normal tissue, while CD4 + T cells consisted mostly of singletons (Supplementary Fig 3) . Moreover, leveraging Scirpy's capability to define clonotypes based on sequence-similarity rather than identity, we identified clusters of CDR3 amino-acid sequences indicating convergent TCR evolution (Supplementary Fig. 4) .",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 185,
+                    "text": "(Wu et al. , 2020)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 563,
+                    "end": 583,
+                    "text": "Supplementary Fig. 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 830,
+                    "end": 851,
+                    "text": "(Supplementary Fig 3)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1055,
+                    "end": 1077,
+                    "text": "(Supplementary Fig. 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Scirpy"
+        },
+        {
+            "text": "The analysis ran in 12 minutes on a single core of an Intel E5-2699A v4, 2.4 GHz CPU when defining clonotypes based on sequence identity, and in 35 minutes on 44 cores when using pairwise sequence alignment. A jupyter notebook to reproduce this case study is available at: https://icbi-lab.github.io/scirpy-paper/wu2020.html .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scirpy"
+        },
+        {
+            "text": "Scirpy is a versatile tool to analyze single-cell TCR-sequencing data that enables seamless integration with the Scanpy toolkit, the de facto standard for analyzing single-cell data in Python. Scirpy is highly scalable to big scRNA-seq data and, thus, allows the joint characterization of phenotypes and immune cell receptors in hundreds of thousands of T cells. An extension of Scirpy to characterize \u03b3\u03b4 TCR and B cell receptor (BCR) repertoires is planned for the next release. Figure 1 . The Scirpy workflow. After defining clonotypes via CDR3-sequence similarity, scirpy offers a wide range of visualization options to explore clonotype expansion, abundance, and VDJ gene usage. Finally, clonotype information can be integrated with transcriptomic data, leveraging the scanpy workflow. Top panel: Exemplary clonotype network. Each node represents a cell, colored by sample. Edges connect cells belonging to the same clonotype. Middle panel: Clonal expansion of different T cell subsets visualized as bar chart. The bars colored in blue, orange, and green represent the fractions of cells belonging to clonotypes with one, two or more than two cells, respectively. Lower panel: UMAP embedding based on gene expression. Colored dots represent the cells belonging to the most abundant clonotypes.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 480,
+                    "end": 488,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conclusions"
+        },
+        {
+            "text": "4 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.10.035865 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Integrating single-cell transcriptomic data across different conditions, technologies, and species",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Butler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Biotechnol",
+            "volume": "36",
+            "issn": "",
+            "pages": "411--420",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Parasail: SIMD C library for global, semi-global, and local pairwise sequence alignments",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Daily",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "BMC Bioinformatics",
+            "volume": "17",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Quantifiable predictive features define epitope-specific T cell receptor repertoires",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dash",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nature",
+            "volume": "547",
+            "issn": "",
+            "pages": "89--93",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Next-generation computational tools for interrogating cancer immunity",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Finotello",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Rev. Genet",
+            "volume": "20",
+            "issn": "",
+            "pages": "724--746",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Computational genomics tools for dissecting tumour-immune cell interactions",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hackl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat. Rev. Genet",
+            "volume": "17",
+            "issn": "",
+            "pages": "441--458",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "T-cell receptor immunosequencing reveals altered repertoire diversity and disease-associated clonal expansions in ankylosing spondylitis patients",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hanson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Arthritis Rheumatol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Reverse TCR repertoire evolution toward dominant low-affinity clones during chronic CMV infection",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schober",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Immunol",
+            "volume": "21",
+            "issn": "",
+            "pages": "434--441",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Dual TCR T Cells: Identity Crisis or Multitaskers?",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Schuldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Binstadt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J. Immunol",
+            "volume": "202",
+            "issn": "",
+            "pages": "637--644",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "T cell fate and clonality inference from single-cell transcriptomes",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J T"
+                    ],
+                    "last": "Stubbington",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat. Methods",
+            "volume": "13",
+            "issn": "",
+            "pages": "329--332",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Immune-awakening revealed by peripheral T cell dynamics after one cycle of immunotherapy",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Valpione",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Cancer",
+            "volume": "1",
+            "issn": "",
+            "pages": "210--221",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "SciPy 1.0: fundamental algorithms for scientific computing in Python",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Virtanen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Methods",
+            "volume": "17",
+            "issn": "",
+            "pages": "261--272",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "SCANPY: large-scale single-cell gene expression data analysis",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Wolf",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Genome Biol",
+            "volume": "19",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Peripheral T cell expansion predicts tumour infiltration and clinical response",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "",
+            "pages": "274--278",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {},
+    "back_matter": []
+}

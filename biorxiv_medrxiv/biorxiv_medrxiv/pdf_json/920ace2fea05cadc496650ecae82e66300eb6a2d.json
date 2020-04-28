@@ -1,0 +1,657 @@
+{
+    "paper_id": "920ace2fea05cadc496650ecae82e66300eb6a2d",
+    "metadata": {
+        "title": "Projections for first-wave COVID-19 deaths across the US using social-distancing measures derived from mobile phones",
+        "authors": [
+            {
+                "first": "Spencer",
+                "middle": [],
+                "last": "Woody",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Mauricio",
+                "middle": [],
+                "last": "Tec",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Maytal",
+                "middle": [],
+                "last": "Dahan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Kelly",
+                "middle": [],
+                "last": "Gaither",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Spencer",
+                "middle": [
+                    "J"
+                ],
+                "last": "Fox",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Lauren",
+                "middle": [
+                    "Ancel"
+                ],
+                "last": "Meyers",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "James",
+                "middle": [],
+                "last": "Scott",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "On March 26, 2020, the Institute for Health Metrics and Evaluation (IHME) at the University of Washington released a website that forecasts coronavirus disease healthcare demand and mortality for all states in the United States. After being cited during a White House briefing on COVID-19 modeling efforts, their forecasting model, described in a preprint on medRxiv [IHME et al., 2020] , has received an enormous amount of attention from both the general population and scientific community. IHME has since updated the model several times resulting in considerable revisions to the COVID-19 forecasts.",
+            "cite_spans": [
+                {
+                    "start": 367,
+                    "end": 386,
+                    "text": "[IHME et al., 2020]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The IHME approach departs from classic epidemiological modeling. Rather than using systems of equations to project the person-to-person transmission of the virus, the model postulates that COVID-19 deaths will rise exponentially and then decline in a pattern that roughly resembles a bell curve (i.e., normal distribution). The model assumes that the shape of the curve will be curtailed by social distancing measures. Key inputs driving this component of the IHME model include the reported dates of state-wide shelter-in-place orders and shapes of COVID-19 epidemiological curves observed in Chinese and European cities following the implementation of similar measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In light of the popular appeal of the IHME model and considerable scrutiny from the scientific community, we have developed an alternative curve-fitting method for forecasting COVID-19 mortality throughout the US. Our model is similar in spirit to the IHME model, but different in two important details.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "1. For each US state, we use local data from mobile-phone GPS traces made available by SafeGraph 1 to quantify the changing impact of social-distancing measures on \"flattening the curve.\" 2. We reformulated the approach in a generalized linear model framework to correct a statistical flaw that leads to the underestimation of uncertainty in the IHME forecasts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The incorporation of real-time geolocation data and several key modifications yields projections that differ noticeably from the IHME model, especially regarding uncertainty when projecting COVID-19 deaths several weeks into the future.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "At a high level, our model shares some key properties of the IHME model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model overview"
+        },
+        {
+            "text": "Similarity 1: a statistical curve-fitting approach. Ours is not an epidemiological model, in the sense that we do not try to model disease transmission, nor do we use or attempt to estimate underlying epidemiological parameters like the basic reproductive rate or attack rate. Rather, our model is purely statistical: we are fitting a curve and a probabilistic error model to observed death rates in a state, and we are extrapolating from that curve. The advantage of this approach is that it does not require estimates of critical epidemiological parameters, some of which remain elusive. The disadvantage is that it cannot project longer-term epidemiological dynamics beyond the initial wave of mitigated transmission. For this reason, we do not use the model to make projections beyond a moderate (2-3 week) horizon.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model overview"
+        },
+        {
+            "text": "Similarity 2: time-evolving Gaussian curves. The family of curves we use for expected deaths over time is identical to that of the IHME model. Specifically, we assume that expected daily death rates can be locally approximated by a three-parameter curve that is proportional to a Gaussian kernel. This approximation is local in the sense that the curve's three parameters are allowed to evolve in time as a function of state-level covariates. Just as in the IHME model, this results in fitted death-rate curves that, when plotted over time, can differ substantially from the shape of a single Gaussian. While epidemic curves do not resemble Gaussian curves, time-evolving Gaussian curves do provide a good fit to observed COVID-19 state-level death rates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model overview"
+        },
+        {
+            "text": "As in the IHME analysis, our regression model connects each state's deathrate curve to covariates that describe social distancing within each state. Changes in each state's social-distancing covariates can \"flatten the curve\" by changing the peak death rate, the timing of that peak, and the deceleration in death rate near the peak. The strength of this approach is that it can leverage readily available data on social distancing without requiring a mechanistic transmission model. However, our model differs from the IHME model in at least three key ways, which collectively result in different forecasting behavior.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Similarity 3: regression on social-distancing covariates to inform projections."
+        },
+        {
+            "text": "Difference 1: real-time daily social-distancing data. We use data on Americans' actual social-distancing behavior, derived from GPS traces from tens of millions of mobile phones across the country. This data source quantifies two main types of distancing behavior: 1) changes in visitation patterns to public places like restaurants, bars, schools, parks, pharmacies, grocery stores, etc.; and 2) time spent at home versus at work. The IHME model, by contrast, uses a much coarser measure of social distancing: the timing of state-level policy implementations like school closures and stay-at-home orders. But the mobile-phone data reveals substantial differences among states in the timing and extent of peoples' actual distancing behavior, even for states with nominally similar policies. In Texas, for example, many large cities issued their own stay-at-home orders before the state did, affecting the movement patterns of many millions of people days before a statewide policy was in place-a fact that is clearly visible in the data. Our measures capture this substantial state-level and temporal variation that is obscured by regressing only on policies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Similarity 3: regression on social-distancing covariates to inform projections."
+        },
+        {
+            "text": "Difference 2: U.S. data only. The IHME model assumes that data on death rates and social distancing policies in other countries (specifically China, at least 3 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Similarity 3: regression on social-distancing covariates to inform projections."
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Similarity 3: regression on social-distancing covariates to inform projections."
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10. 1101 /2020 in the original formulation of the model) can inform U.S. state-level forecasts. For a variety of reasons, we find this assumption problematic. Our forecasts therefore rely solely on U.S. data, with state-level parameters shrunk toward a common mean in a hierarchical Bayesian model. Difference 3: valid uncertainty quantification. We address a problem with the IHME model by relying on a fundamentally different statistical assumption about model errors. Briefly: the IHME model fits cumulative death rates using a least-squares-like procedure on the log scale and applying standard large-sample statistical theory to get confidence intervals. For this procedure to result in valid uncertainty quantification, one must assume that successive model errors are independent. But in the IHME fitting procedure, this assumption is violated: today's cumulative death rate is yesterday's plus an increment, so the two must be correlated. Our model repairs this problem by fitting daily (noncumulative) death rates using a mixed-effects negative-binomial generalized linear model.",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Similarity 3: regression on social-distancing covariates to inform projections."
+        },
+        {
+            "text": "We let i index the geographic area; in our analysis this is U.S. states, but it could be at any level of spatial resolution (e.g. country, city, etc). To make our results comparable to the IHME model, let t denote the number of days elapsed since a threshold death rate of 3 per 10 million residents was reached in a given area. Thus t doesn't represent calendar days, but rather a notion of \"epidemic days.\" Let y it denote observed number of deaths in area i at time t. Let\u1ef9 it denote per-capita death rate. The IHME model assumes that the expected daily death rate \u03bb it can be locally approximated by a curve proportional to a Gaussian kernel:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "This leads to the following interpretation of the parameters:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "\u2022 \u03ba is the maximum daily expected death rate",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "\u2022 \u00b5 is the day on which the expected death rate achieves its maximum",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "\u2022 \u03c9 is a steepness parameter: higher \u03c9 means the death rate rises more rapidly as t approaches \u00b5, and also falls more rapidly on the far side of 4 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . Figure 1 : The IHME model's April 5 projections ten days ahead for Italy and Spain (blue lines). The actual data (black dots) fall noticeably outside the model's 95% error bars (shaded blue region), illustrating the model's underestimate of forecasting uncertainty, even in countries whose peak daily death rates seem to be well characterized by the data.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 78,
+                    "end": 86,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model structure"
+        },
+        {
+            "text": "\u00b5. Specifically, the slope at the inflection point of the death-rate curve is \u03ba \u221a \u03c9.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "Equation (1) expresses the most general form of the IHME model, where \u03b8 it = (\u03ba it , \u00b5 it , \u03c9 it ) changes from area to area and day to day. This is highly overparametrized; it is necessary to enforce some type of shrinkage on these parameters in order to make the model identifiable. We address model overparametrization in a similar way to the original IHME analysis (i.e. via a hierarchical model). But we use very different data based on mobile-phone GPS traces that quantify actual distancing behavior, rather than the timing of state-level social-distancing policies (e.g. school closures, stay-at-home orders, etc.).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "The IHME model-fitting process. We note that the IHME model parameterizes its Gaussian curves in a slightly different way, but the underlying family is identical to Equation (1), in the sense that there is a bijection between our parameterization and theirs. Briefly, the IHME model assumes that the cumulative death rate is proportional to Gaussian CDF, and they fit the three model parameters by optimizing a penalized least-squares objective on the log-cumulativedeaths scale, interpreting the result as a Bayesian maximum a posteriori (MAP) estimate under an assumed prior. More specifically, let N i be the population in state i and define r it = N \u22121 i \u2211 s<t y it be the per-capita cumulative death rate in 5 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.16.20068163 doi: medRxiv preprint state i. The IHME model assumes that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "(2)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "The model is fit by a penalized nonlinear least-squares procedure, encouraging the parameters of each state's \u03bb i (t) curve to be shrunk towards a common conditional mean, given social-distancing covariates. They interpret the result as a hierarchical Bayesian MAP estimate under an assumed prior, and use the inverse Hessian matrix at the MAP estimate as plug-in estimate of the posterior covariance matrix for the model parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "In the Appendix, we describe why this procedure does not result in valid confidence intervals. Briefly, it ignores the problems of heteroscedasticity and intra-day correlation in model errors associated with fitting to cumulative data. Together these have major consequences for uncertainty quantification. Figure 1 briefly illustrates the problems that can arise: it shows the IHME projections for Italy and Spain on April 5 looking ten days ahead, together with 95% prediction intervals. The actual data fall noticeably outside the model's claimed range of uncertainty. This is especially worrisome, given that peak daily death rates in Italy and Spain seem to be well-characterized by the data itself, versus the situation in many U.S. states that have yet to reach their peak, where we must rely on a model to extrapolate the location of the peak.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 307,
+                    "end": 315,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model structure"
+        },
+        {
+            "text": "An April 8 technical report by Marchant et. al points to similar problems with the IHME's U.S. projections. They found that, in evaluating the model's U.S. projections made on April 1, only 27% of the actual data points on the subsequent day actually fell within the 95% confidence bands.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "Luckily, this is an easily correctable problem, by placing the model in Equation (1) into the framework of generalized linear modeling. This allows for better uncertainty quantification, as we describe in the next section.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model structure"
+        },
+        {
+            "text": "Observe that if we move to the log scale, Equation (1) becomes:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "for some \u03b2 vector. Keeping in mind that \u03bb it is the expected value for a count outcome (daily deaths y it ), we recognize this as the expression for the linear predictor in a generalized linear model (GLM) with a log link function, as might arise in a Poisson or negative-binomial regression model for y. On the right-hand side, we have a locally quadratic regression on t, the number of elapsed days since deaths crossed the threshold value of 3 per 10 million. Moreover, there 6 All rights reserved. No reuse allowed without permission. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi. org/10.1101 org/10. /2020 is a simple relationship between the regression coefficients \u03b2 and the original parameters of the curve:",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 102,
+                    "text": "org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 116,
+                    "text": "org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "Thus to fit the model, we estimate a hierarchical negative binomial regression model with mean \u03bb and overdispersion parameter r, as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "where E(y it ) = \u03bb it and Var(y it ) = \u03bb it (1 + \u03bb it /r). Here we have included an offset for the logarithm of N i , the population in area i, so that the linear predictor can be interpreted as the log per-capita death rate. Here x it is a vector of social-distancing predictors that are allowed to \"flatten the curve\" by changing its shape, via the second-stage regression. The negative binomial model naturally handles the heteroscedasticity and overdispersion that we observe in the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "One note: we have phrased this model as a raw polynomial. But we actually fit the model using orthogonal polynomials to stabilize estimation; one may convert between the raw and orthogonal parameterizations easily. We fit the model using Markov Chain Monte Carlo, sampling from the posterior distribution of all model parameters. We use weakly informative priors on the fixed effects \u03b2, the second-stage regression coefficients \u0393, and the covariance matrix \u03a3 of the random effects. We also explored the possibility of using more informative priors based on daily death rates from European countries. But this had almost no effect on the fit of the model. Model fitting was carried out using the rstanarm package in R [Goodrich et al., 2020] . Forward-looking model projections are based on draws from the posterior predictive distribution. Because of the way that our covariates are constructed (see below), most of the x values for these forward-looking projections correspond to social-distancing behavior that has already been observed. However, at a longer horizon some extrapolation of x is necessary to generate projections; here we assume that socialdistancing behavior in a state remains unchanged from the average behavior over the seven most recent days of available data.",
+            "cite_spans": [
+                {
+                    "start": 717,
+                    "end": 740,
+                    "text": "[Goodrich et al., 2020]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Our fitting approach"
+        },
+        {
+            "text": "To define the social-distancing predictors x it , we take a weighted averages of past social-distancing metrics made available to us by SafeGraph. The metrics considered as predictors include daily time series per location for:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Social-distancing predictors"
+        },
+        {
+            "text": "\u2022 the median duration of time that people in a given area spend at home, as well as the number of people in an area exhibiting \"full-time work\" behavior, at their normal place of work; 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Social-distancing predictors"
+        },
+        {
+            "text": "\u2022 and total visitation counts for various points of interest aggregated by category, including grocery stores, hospitals, parks, restaurants, bars, colleges, etc. 3 These data are derived from GPS traces of tens of millions of mobile phones nationwide. \"Home\" and \"work\" locations for a device were inferred by Safe-Graph based on daytime and overnight locations over an extended period of time. The data were provided to us in an aggregated format; no device-level data or individual GPS traces were accessible by the research team. Figure 2 shows a selection of these social-distancing measures over time in both New York and Texas. We denote these D distancing metrics s it,1 , . . . , s it,D , observed each day in each state. To construct useful covariates out of this information, we proceed as follows. For each distancing metric s j , define a corresponding lagged versio\u00f1 s j as follows:s it,j = L \u2211 l=1 w l s i,t\u2212l,j where w = (w 1 , . . . , w L ) is a fixed vector of backward looking weights. The lagging is necessary to account for the time from infection to death. Social distancing actions taken on day t will not result in an immediate change in death rates; rather, the effect will show up many days in the future. We therefore tune this weight vector based on prior knowledge of the distribution of lags between infection with COVID-19 and death. Specifically, w is a Gaussian kernel centered 23.5 days in the past, with a standard deviation of 6 days. This is based on published estimates of time from contraction to illness onset [Lauer et al., 2020] and on time from illness onset to death [Zhou et al., 2020] .",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 164,
+                    "text": "hospitals, parks, restaurants, bars, colleges, etc. 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1611,
+                    "end": 1630,
+                    "text": "[Zhou et al., 2020]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 534,
+                    "end": 542,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Social-distancing predictors"
+        },
+        {
+            "text": "To construct predictors x for our regression model, we then take the first four principal components of the lagged social distancing metrics. These four components explain about 95% of the variation in the state-level data. Figure 2 : SafeGraph social-distancing data in New York versus Texas. The socialdistancing predictors we use in our model quantify visitation patterns to various points of interest, using GPS traces derived from mobile phones. The vertical axis is standardized so that 0 represents a pre-pandemic baseline, and -0.5 indicates a 50% decrease in visitations relative to that baseline. The vertical lines in each panel represent the day in which the state death rate reached 3 per 10 million residents. One can see that social distancing in Texas began substantially before this threshold day was reached, but much nearer this day in New York. 9 All rights reserved. No reuse allowed without permission. author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 224,
+                    "end": 232,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Social-distancing predictors"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Social-distancing predictors"
+        },
+        {
+            "text": "In the IHME model, the choice of using penalized-least-squares fit on the logcumulative-deaths scale has major consequences for statistical inference. In particular, the authors use the inverse-Hessian matrix at the MAP estimate in order to produce uncertainty estimates. This uncertainty quantification procedure, however, implicitly assumes that successive observations are independent. Indeed, without this assumption, it is not generally true that the inverse-Hessian at the MAP provides a valid large-sample estimate for the covariance matrix of an estimator, Bayesian or otherwise. This important technical condition simply cannot be true on the scale used for fitting the IHME model, for the simple reason that the data used for fitting are cumulative: if today's prediction for cumulative death rate is too high, then tomorrow's prediction is more likely to be too high as well. This is easily verified by a simple calculation. The covariance of two successive cumulative death rates r it is: cov(r i,t , r i,t+1 ) = cov(r i,t , r i,t + y i,t+1 ) = var(r it ) + cov(r i,t , y i,t+1 ) = N \u22122 var \u2211 s<t y it + cov(r i,t , y i,t+1 )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Uncertainty quantification in the original IHME model"
+        },
+        {
+            "text": "This covariance cannot be zero unless cov(r i,t , y i,t+1 ) is negative, and of sufficient magnitude to exactly cancel out the first (positive) term-which is highly implausible. Moving to the logarithmic scale does not repair the basic fallacy of assuming independent errors. This likely accounts for much of the understatement in uncertainty seen in Figure 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 351,
+                    "end": 359,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "A Uncertainty quantification in the original IHME model"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "rstanarm: Bayesian applied regression modeling via Stan",
+            "authors": [
+                {
+                    "first": "Ben",
+                    "middle": [],
+                    "last": "Goodrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonah",
+                    "middle": [],
+                    "last": "Gabry",
+                    "suffix": ""
+                },
+                {
+                    "first": "Imad",
+                    "middle": [],
+                    "last": "Ali",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sam",
+                    "middle": [],
+                    "last": "Brilleman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "COVID-19 health service utilization forecasting team, and Christopher JL Murray. Forecasting COVID-19 impact on hospital bed-days, icudays, ventilator-days and deaths by us state in the next 4 months",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ihme",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "https:/www.medrxiv.org/content/10.1101/2020.03.27.20043752v1"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The Incubation Period of Coronavirus Disease 2019 (COVID-19) From Publicly Reported Confirmed Cases: Estimation and Application. Annals of Internal Medicine",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stephen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyra",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qifang",
+                    "middle": [],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Forrest",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qulu",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hannah",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Meredith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nicholas",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Azman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Justin",
+                    "middle": [],
+                    "last": "Reich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lessler",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "03",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-0504"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Clinical course and risk factors for mortality of adult inpatients with COVID-19 in Wuhan, China: a retrospective cohort study. The Lancet",
+            "authors": [
+                {
+                    "first": "Fei",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ronghui",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guohui",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhibo",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yeming",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoying",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "30566--30569",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {},
+    "back_matter": [
+        {
+            "text": "1 SafeGraph is a data company that aggregates anonymized location data from numerous applications in order to provide insights about physical places. To enhance privacy, SafeGraph excludes census block group information if fewer than five devices visited an establishment in a month from a given census block group.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

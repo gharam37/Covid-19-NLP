@@ -1,0 +1,1714 @@
+{
+    "paper_id": "0d55a624d36d28ba438fce724dcf1e659521ecef",
+    "metadata": {
+        "title": "Rapid in silico design of antibodies targeting SARS-CoV-2 using machine learning and supercomputing 1",
+        "authors": [
+            {
+                "first": "Thomas",
+                "middle": [],
+                "last": "Desautels",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lawrence Livermore National Laboratory",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Adam",
+                "middle": [],
+                "last": "Zemla",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lawrence Livermore National Laboratory",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Edmond",
+                "middle": [],
+                "last": "Lau",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lawrence Livermore National Laboratory",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Magdalena",
+                "middle": [],
+                "last": "Franco",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lawrence Livermore National Laboratory",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Daniel",
+                "middle": [],
+                "last": "Faissol",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lawrence Livermore National Laboratory",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Rapidly responding to novel pathogens, such as SARS-CoV-2, represents an extremely challenging and complex endeavor. Numerous promising therapeutic and vaccine research efforts to mitigate the catastrophic effects of COVID-19 pandemic are underway, yet an efficacious countermeasure is still not available. To support these global research efforts, we have used a novel computational pipeline combining machine learning, bioinformatics, and supercomputing to predict antibody structures capable of targeting the SARS-CoV-2 receptor binding domain (RBD). In 22 days, using just the SARS-CoV-2 sequence and previously published neutralizing antibody structures for SARS-CoV-1, we generated 20 initial antibody sequences predicted to target the SARS-CoV-2 RBD. As a first step in this process, we predicted (and publicly released) structures of the SARS-CoV-2 spike protein using homology-based structural modeling. The predicted structures proved to be accurate within the targeted RBD region when compared to experimentally derived structures published weeks later. Next we used our in silico design platform to iteratively propose mutations to SARS-CoV-1 neutralizing antibodies (known not to bind SARS-Cov-2) to enable and optimize binding within the RBD of SARS-CoV-2. Starting from a calculated baseline free energy of -48.1 kcal/mol (\u00b1 8.3), our 20 selected first round antibody structures are predicted to have improved interaction with the SARS-CoV-2 RBD with free energies as low as -82.0 kcal/mole. The baseline SARS-CoV-1 antibody in complex with the SARS-CoV-1 RBD has a calculated interaction energy of -52.2 kcal/mole and neutralizes the virus by preventing it from binding and entering the human ACE2 receptor. These results suggest that our predicted antibody mutants may bind the SARS-CoV-2 RBD and potentially neutralize the virus. Additionally, our selected antibody mutants score well according to multiple antibody developability metrics. These antibody designs are being expressed and experimentally tested for binding to COVID-19 viral proteins, which will provide invaluable feedback to further improve the machine learning-driven designs. This technical report is a high-level description of that effort; the Supplementary Materials includes the homology-based structural models we developed and 178,856 in silico free energy calculations for 89,263 mutant antibodies derived from known SARS-CoV-1 neutralizing antibodies. : bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "As a bioinformatic heuristic, we computed the number of mutations that are considered to be \"unlikely\" (labeled \"number of unconventional mutations\" in the dataset provided in the Supplementary Materials) for each mutant antibody considered. This heuristic describes mutations that are low probability under a mutational probability distribution derived from the",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Numerous promising therapeutic [1, 2] or vaccine [3, 4] research efforts are underway for COVID-19, yet a therapeutic or vaccine is not currently available. Traditional drug and biologic development are experiment-driven, typically executed via large-scale screening in vitro and in vivo. While traditional approaches have led to many effective and safe therapeutics, they require years to complete and therefore cannot alone be relied upon to support a rapid response to novel pathogens [5] [6] [7] .",
+            "cite_spans": [
+                {
+                    "start": 31,
+                    "end": 34,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 35,
+                    "end": 37,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 49,
+                    "end": 52,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 53,
+                    "end": 55,
+                    "text": "4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 488,
+                    "end": 491,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 492,
+                    "end": 495,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 496,
+                    "end": 499,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Data-driven (machine learning) methods are increasingly being explored for rapid therapeutic development [8, 9] , potentially offering the promise of a very rapid design phase. However, a purely data-driven machine learning system would be limited in rapid response scenarios due to the inevitable insufficiency of available data on novel or emerging pathogens. Theory-driven computational methods, such as molecular dynamics simulations, can provide virtually limitless amounts of data for target systems, but still require experimental validation.",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 108,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 109,
+                    "end": 111,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Lawrence Livermore National Laboratory (LLNL) and GlaxoSmithKline (GSK) Vaccines Research have developed a combined computational-experimental platform for vaccine antigen design over the last two years. This combined platform combines experiment-driven, data-driven, and theory-driven approaches to leverage the strength of each approach, while mitigating their limitations. The initial predictions from this platform are driven by a computational component based on integrating existing experimental data, structural biology/bioinformatic modeling, and molecular dynamics simulations on high-performance computing systems. An active machine learning model aims to optimize binding behavior by iteratively proposing mutations to the amino acid sequence of an initial antigen. Proposed mutant antigens are evaluated with existing computational binding estimation tools using known or estimated antibody-antigen structures. The platform leverages a feature representation of the three-dimensional antigenantibody interface and a Bayesian optimization algorithm to propose computational evaluation of mutants with high predicted performance and mutants that improve the machine learning model itself. The computational platform further improves its predictions by proposing designs that are evaluated with a high throughput experimental evaluation component, the results of which are incorporated into the machine learning model in a feedback loop. This combined computational-experimental antigen design platform, and results generated by it, will be described in greater detail in a future joint publication with GSK, including details of the machine learning model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In response to the COVID-19 pandemic, we modified and used our computational components of the antigen design platform to propose mutations to SARS-CoV-1 neutralizing antibodies to achieve and optimize binding to the receptor binding domain (RBD) of the SARS-CoV-2 spike protein. This approach is motivated and enabled by knowledge of existing antibodies specific to the RBD of the SARS-CoV-1 spike protein that prevent SARS-CoV-1 from binding the human ACE2 receptor and entering the cell, thus neutralizing the virus [10, 11] . The high similarity of SARS-CoV-1 and SARS-CoV-2, including the RBD [12] , suggest that such an approach could produce efficacious therapeutic antibodies. In 22 days (1/23-2/13/2020), we demonstrated that our platform could generate antibody designs using only SARS-CoV-2 sequence information, with support from antibody/antigen structures that had previously been experimentally determined for SARS-CoV-1. We executed this entire workflow by constructing a homologybased structural model before any experimentally determined structures of the SARS-CoV-2 Sprotein were available.",
+            "cite_spans": [
+                {
+                    "start": 519,
+                    "end": 523,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 524,
+                    "end": 527,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 598,
+                    "end": 602,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Our approach to designing therapeutic antibodies"
+        },
+        {
+            "text": "In the absence of a known SARS-CoV-2 spike protein structure, we characterized the SARS-CoV-2 surface glycoprotein sequence YP_009724390.1 [13] by constructing a homology-based structural model using the AS2TS protein modeling system [14] . The structures of the spike proteins from SARS-CoV-1 (Protein Data Bank (PDB) entries: 5x58 [15] , 6nb6 [10] , 2dd8 [11] , and 3bgf [16] ) were identified as the closest and most complete PDB structural templates to use for modeling, with resolutions 3.2, 4.2, 2.3, and 3.0 \u00c5 respectively. Of the four templates, the last three provide experimentally solved complexes with three antibodies, S230, M396, and F26G19. As our main focus in constructed homology models was to achieve the highest possible accuracy in the RBD-FAB (antigen-binding fragment) interfaces we used additional PDB templates to refine models in corresponding regions. For example, PDB template 2ghw [17] was used to improve accuracy in the modeled interface between RBD and FAB of neutralizing antibody 80R.",
+            "cite_spans": [
+                {
+                    "start": 139,
+                    "end": 143,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 234,
+                    "end": 238,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 333,
+                    "end": 337,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 345,
+                    "end": 349,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 357,
+                    "end": 361,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 910,
+                    "end": 914,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Homology-based structural modeling of the SARS-CoV-2 spike protein produces accurate structural estimates when compared to experimentally derived structures"
+        },
+        {
+            "text": "A CryoEM-derived structure of the SARS-CoV-2 spike protein became available on Feb. 19, 2020 and was publicly released Feb 26, 2020 [18] (https://www.rcsb.org/structure/6vsb). X-ray crystal structures (of the receptor-binding domain) became available starting March 4, 2020 (http://www.rcsb.org/structure/6VW1 , to be published). Comparison with our homology models indicates that our estimated structures (completed Jan 23, 2020; publicly available beginning Feb 3, 2020) were accurate, especially at the FAB (antigen-binding fragment) [19] antibody interfaces. Figure 1 and Table 1 show residue deviations for our SARS-CoV-2 homology models, SARS-CoV-2 CryoEM structures, and SARS-CoV-1 structures, using a SARS-CoV-2 X-ray structure 6w41_C as the reference. The two regions indicated by rectangular boxes (residues 382-393 and 475-484) are part of loop regions where local conformations deviate, but note that these regions are not part of the interface with the selected antibodies. Figure 2 depicts our homology-based model superimposed on a CryoEM structure, with the M396 antibody structure provided to indicate the FAB-RBD interface region. Note that the only regions with deviations above 2.0 \u00c5 are outside the interface region.",
+            "cite_spans": [
+                {
+                    "start": 84,
+                    "end": 87,
+                    "text": "19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 88,
+                    "end": 92,
+                    "text": "2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 132,
+                    "end": 136,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 537,
+                    "end": 541,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 563,
+                    "end": 571,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 576,
+                    "end": 583,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 987,
+                    "end": 995,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Homology-based structural modeling of the SARS-CoV-2 spike protein produces accurate structural estimates when compared to experimentally derived structures"
+        },
+        {
+            "text": "LGA [19] , and global distance calculation GDC [20] from X-ray structures. Listed in descending order by LGA.",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 8,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 47,
+                    "end": 51,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "TABLE 1. Structure similarity scores using x-ray structure 6w41 as reference. SARS-CoV-2 CryoEM structures, our SARS-CoV-2 homology models, and SARS-Cov-1 structures show similar deviations by root-mean-square deviation (RMSD),"
+        },
+        {
+            "text": "Type RMSD Sequence Identity",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure"
+        },
+        {
+            "text": "LGA GDC ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure"
+        },
+        {
+            "text": "Details of our computational-experimental platform will be described in greater detail in a future publication, including details on the active machine learning model, the feature space used to represent the three dimensional antigen-antibody interface, and the antibody optimization pipeline. Overall, to generate the initial 20 antibodies, we executed the following steps:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "1. Obtain structures for which experimentally-determined atomic coordinates were previously deposited in the PDB for several SARS-CoV-1-neutralizing antibodies in complex with the SARS-CoV-1 S-protein; obtain sequences from SARS-CoV-2 S-protein.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "2. Map public SARS-CoV-2 spike protein sequences into structures. We estimated 10 costructures involving 3 antibodies. (Completed Jan 23, 2020; made publicly available Feb 3, 2020. We used two of these antibodies (M396 and S230) in our subsequent calculations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "3. Define a set of residues for modification in each of the starting SARS-CoV-1-neutralizing antibodies via automatic contact estimation. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.03.024885 doi: bioRxiv preprint D92_L, S93_L, S94_L, D95A_L, (Y96_L). We did not consider insertions or deletions at this phase of our work. 4 . Use machine learning module of computational design platform to iteratively propose mutations to the original antibody (M396) and perform free energy calculations using FoldX [21] on LLNL high-performance computing (HPC) to maximize estimated affinities to our SARS-CoV-2 spike protein homology model. By Feb 13, 2020, we evaluated 89,263 mutant antibodies selected from a design space of 10 40 (20 amino acids 31 positions ). The primary template for this structure was PDB 2dd8.",
+            "cite_spans": [
+                {
+                    "start": 389,
+                    "end": 390,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 568,
+                    "end": 572,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "5. Use HPC to perform additional free energy calculations on 110 selected antibody sequences by performing free energy calculations using Rosetta [22] and 102 antibodies with molecular dynamics simulations [23] ; assess all sequences with the STATIUM energy prediction tool [24] . (Completed by Feb 13, 2020)",
+            "cite_spans": [
+                {
+                    "start": 146,
+                    "end": 150,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 206,
+                    "end": 210,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 274,
+                    "end": 278,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "6. Assess the developability of 139 selected antibody sequences using the 5 developability metrics from the Therapeutic Antibody Profiler [25] . ",
+            "cite_spans": [
+                {
+                    "start": 138,
+                    "end": 142,
+                    "text": "[25]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Rapidly generating 20 initial antibody designs for experimental evaluation"
+        },
+        {
+            "text": "We used the machine learning module of our computational design platform to iteratively propose mutations to the original antibody (M396) and run FoldX [21] calculations on LLNL HPC to estimate free energies to the SARS-CoV-2 spike protein homology model. FoldX binding calculations estimate the change in free energy (ddG) of the antibody-antigen protein complex resulting from the proposed mutations (to M396). We used this calculation as part of an objective function to drive the antibody optimization via the machine learning model. We evaluated 89,263 mutants with FoldX during the course of our search for improved antibodies with estimated ddG values ranging from -10.1 to 19.2 kcal/mole. Figure 3 plots improvements in the FoldX-estimated ddG values over the course of the machine learning-driven optimization process. These results indicate that the machine learning model was effective in searching the combinatorial space of possible antibody mutants to perform design optimization and identify increasingly improved predicted antibody designs. We then selected a subset of these antibody mutants for additional calculations using Rosetta [22] , STATIUM [24] , and molecular dynamics calculations [23] , as well as antibody developability estimates via the Therapeutic Antibody Profiler [25] (see Methods section). While all in silico calculations performed were used to select our 20 first round antibodies, the molecular mechanics/generalized Born solvent accessible surface area (MM/GBSA) molecular dynamics calculations [23] , described in the Methods section, are considered to be our most accurate estimate. MM/GBSA calculates antibody/antigen interaction free energies using fully solvated molecular dynamics (MD) for conformational sampling of the protein complex, but estimates free energy by a computationally less expensive implicit solvent model (GBSA). M396, our starting template for design, is known to neutralize SARS-CoV-1 by binding its RBD and preventing the virus from binding and entering the human ACE2 receptor; our MM/GBSA calculations for M396 in complex with the SARS-CoV-1 spike protein yield -52.2 kcal/mole (\u00b17.2). M396 is known not to bind to the SARS-CoV-2 spike protein [18] and yields -48. ",
+            "cite_spans": [
+                {
+                    "start": 152,
+                    "end": 156,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1151,
+                    "end": 1155,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1166,
+                    "end": 1170,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1209,
+                    "end": 1213,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1299,
+                    "end": 1303,
+                    "text": "[25]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1536,
+                    "end": 1540,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 2214,
+                    "end": 2218,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 697,
+                    "end": 705,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Machine learning-driven computational design platform generates antibodies with improved predicted binding to SARS-CoV-2 receptor binding domain (RBD)"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.03.024885 doi: bioRxiv preprint with SARS-CoV-1. These results suggest that these M396-derived antibody mutants potentially bind and neutralize SARS-CoV-2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Improvements in FoldX-estimated ddG values propsed by machine learning model: first 5% of antibody mutants proposed (red) vs last 5% proposed (blue)"
+        },
+        {
+            "text": "Starting on Jan 23, 2020, we used two high-performance computers at LLNL over the course of 22 days to support over 200,000 CPU hours and 20,000 GPU hours, performing 178,856 in silico free energy calculations of candidate antibodies in complex with the SARS-CoV-2 RBD. We performed this work using just the SARS-CoV-2 sequence and previously published neutralizing antibody structures for SARS-CoV-1. Our predicted structures of SARS-CoV-2 proved to be accurate within the targeted RBD region when compared to experimentally derived structures published weeks later. With our predicted SARS-CoV-2 structures, we used our in silico design platform to evaluate 89,263 mutant antibodies by iteratively proposing mutations to SARS-CoV-1 neutralizing antibodies to optimize binding within the SARS-CoV-2 RBD. We selected 20 initial antibody sequences predicted to target the SARS-CoV-2 RBD. Starting from a baseline free energy of -48.1 kcal/mol (\u00b1 8.3), our 20 selected first round antibody structures are predicted to have improved interaction with the SARS-CoV-2 RBD with free energies ranging as low as -82.0 kcal/mole. The baseline SARS-CoV-1 antibody in complex with the SARS-CoV-1 RBD has a calculated free energy of -52.2 kcal/mole and neutralizes the virus by preventing it from binding and entering the human ACE2 receptor. These results suggest that our predicted antibody mutants may bind the SARS-CoV-2 RBD and therefore potentially neutralize the virus. Additionally, our antibody mutants score well according to multiple antibody developability metrics via the Therapeutic Antibody Profiler.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "These 20 antibody designs are now being expressed and experimentally tested for binding to SARS-CoV-2 spike protein, which will provide invaluable feedback to further improve the machine learning-driven designs. We are also continually improving our platform and performing additional in silico calculations, which will be included in future updates to this document. In addition, we are currently (1) performing higher fidelity molecular dynamics calculations to increase the accuracy of predictions using [26, 27] , (2) investigating binding \"hotspots\" via single point mutation computational analysis, and (3) exploring any potential impacts from glycosylation at the RBD site.",
+            "cite_spans": [
+                {
+                    "start": 507,
+                    "end": 511,
+                    "text": "[26,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 512,
+                    "end": 515,
+                    "text": "27]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "The Supplementary Materials to this document include (1) the 10 homology-based structural models we developed of SARS-CoV-2 in complex with SARS-CoV-1 neutralizing antibodies and (2) all antibody mutant sequences and in silico free energy calculations performed for 89,263 mutant antibodies derived from the M396 SARS-CoV-1 neutralizing antibody, which we used to select a first round of 20 candidate antibodies for experimental evaluation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.03.024885 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "In the absence of a known SARS-CoV-2 spike protein structure, we characterized the surface glycoprotein sequence YP_009724390.1 [13] by constructing a homology-based structural model using the AS2TS system [14] and SARS-CoV-1. To assess regions of sequencestructure conservation or variability between SARS-CoV-1 and SARS-CoV-2 (sequence similarity=71%), we created a set of initial structural models using available templates. The comparative analysis between constructed models and all available templates from PDB was performed using the StralSV algorithm [28] , which identifies protein fragments that exhibit structural similarities despite low primary amino acid sequence similarity and regions where some structure conformation uncertainties can be observed. We used results from these searches for modeling missing loop regions and assessment of possible structure conformation diversity in preliminary models.",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 206,
+                    "end": 210,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 559,
+                    "end": 563,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Homology-based structural modeling of the SARS-CoV-2 Spike protein structure as a starting point for antibody design"
+        },
+        {
+            "text": "In the constructed final models, the conformation of sidechain atoms was predicted using SCWRL [29] when residue-residue correspondences did not match. Residues that were identical between the template and the SARS-CoV-2 spike protein were copied from the templates onto the models. The structural and stereochemical quality of the models was checked using a contact-dot algorithm in the MolProbity software package [30] , and the final constructed models were finished with relaxation using UCSF Chimera [31] . Figures 4 and 5 show two of our constructed structural models of the SARS-CoV-2 spike protein in complex with a FAB (S230 and M396 in Figs. 3 and 4, respectively) of a SARS-CoV-1 neutralizing antibody. A set of all provided models was constructed to help assessment of possible different conformations in the spike-antibody complexes.",
+            "cite_spans": [
+                {
+                    "start": 95,
+                    "end": 99,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 416,
+                    "end": 420,
+                    "text": "[30]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 505,
+                    "end": 509,
+                    "text": "[31]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 512,
+                    "end": 527,
+                    "text": "Figures 4 and 5",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Homology-based structural modeling of the SARS-CoV-2 Spike protein structure as a starting point for antibody design"
+        },
+        {
+            "text": "For our ddG FoldX calculations of 89,263 mutant antibodies in complex with the RBD, we started with structure minimization using the \"minimize structure\" procedure available in UCSF Chimera [31] . This process was followed by up to 50 iterations of the \"RepairPDB\" function in FoldX. We performed ddG calculations on the defined list of mutations using the \"BuildMODEL\" procedure, which estimates stability (dg) defined by the free energy of a protein. We used up to 46 runs in this procedure to check if calculated rotamers of specified mutations converged to the optimal or trapped solution. A first set of our ddG estimates was calculated as a difference in free energy (dg) between the mutant and wild-type (labeled \"FoldX ddG Average\" in Supplementary Materials). Additional ddG estimates were calculated using the \"AnalyseComplex\" algorithm for which we used the wild-type and mutated models to calculate ddG based on energy changes in interface only within RBD-FAB complexes (labeled \"FoldX ddG Interface\" in Supplementary Materials).",
+            "cite_spans": [
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "[31]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Binding calculations with FoldX"
+        },
+        {
+            "text": "To estimate ddG values using Rosetta, we started from structure minimization using the \"relax\" procedure. For each S protein-FAB complex model, we made 10 relaxed structures from which we chose the representative model with the lowest free energy. In these structures, we calculated ddG estimates as change of stability using the \"ddg_monomer\" algorithm with 50 iterations and settings as described in [32] (labeled \"Rosetta ddG Total Energy\" in Supplementary Materials). Additional ddG estimates were calculated using the \"Flex_ddG\" protocol [33] , which evaluates energy changes by focusing on interfaces within RBD-FAB complexes only (labeled \"Rosetta ddG Flex\" in Supplementary Materials). In addition, Rosetta calculations (Total Energy and Flex) were performed for all possible single-point mutations for each of the 31 locations selected for mutation (19 amino acid mutation possibilities *31 locations = 589 total Rosetta single-point mutation calculations).",
+            "cite_spans": [
+                {
+                    "start": 402,
+                    "end": 406,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 543,
+                    "end": 547,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Binding calculations with Rosetta"
+        },
+        {
+            "text": "We used molecular mechanics/generalized Born solvent accessible surface area (MM/GBSA) calculations for antibody/antigen interaction free energies [19] . MM/GBSA uses fully solvated molecular dynamics for conformational sampling of the protein complex but estimates free energy by a computationally cheaper implicit solvent model (GBSA). All molecular dynamics simulations were performed with OpenMM [34] , a toolkit for molecular simulation, using the AMBER force field [35] . Positional constraints (1 kcal/mole*\u00c5 2 ) were place on the backbone atoms (C, N, and CA) during heating of the system. The system was heated in 50 K increments for 100 ps at each temperature. Once the system was at 310 K, all constraints were removed and equilibration was performed for 9 ns. Ten individual 5 ns dynamics simulations were performed from the equilibrated system for conformational sampling. The last 1 ns of the dynamics in 50 ps increments from each of the simulations was used for the MM/GBSA calculation (200 total structures). The MM/GBSA calculations were performed using MMPBSA.py that is part of the AMBER suite of programs.",
+            "cite_spans": [
+                {
+                    "start": 147,
+                    "end": 151,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 400,
+                    "end": 404,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 471,
+                    "end": 475,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Binding calculations with molecular dynamics"
+        },
+        {
+            "text": "Blosum62 substitution matrix [36] . This mutational probability distribution gives some substitutions higher probabilities (e.g., A->S; 0.1168) and some lower (e.g., A->W; 0.00594), where the total of the probabilities of the 19 \"destination\" amino acids is 1.0. If a given point mutation is given a probability of < 0.052 (i.e., less than 1/19th) the mutation is declared \"unconventional\" and this count is incremented by one. For example, for Alanine (A), 11 of 19 mutations are \"unconventional\" with this heuristic.",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 33,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Binding calculations with molecular dynamics"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Discovering drugs to treat coronavirus disease 2019 (COVID-19)",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Drug Discoveries & Therapeutics",
+            "volume": "14",
+            "issn": "1",
+            "pages": "58--60",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Compounds with therapeutic potential against novel respiratory 2019 coronavirus",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Martinez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Antimicrobial Agents and Chemotherapy",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Developing Covid-19 Vaccines at Pandemic Speed",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Lurie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Saville",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hatchett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Halton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The SARS-CoV-2 vaccine pipeline: an overview",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Strych",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hotez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Bottazzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Current Tropical Medicine Reports",
+            "volume": "",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "How to improve R&D productivity: the pharmaceutical industry's grand challenge",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mytelka",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dunwiddie",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Persinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Munos",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lindborg",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Schacht",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Nature reviews Drug discovery",
+            "volume": "9",
+            "issn": "3",
+            "pages": "203--214",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Innovation in the pharmaceutical industry: new estimates of R&D costs",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Dimasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Grabowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hansen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of health economics",
+            "volume": "47",
+            "issn": "",
+            "pages": "20--33",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Development times and approval success rates for drugs to treat infectious diseases",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Dimasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Florez",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Stergiopoulos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pe\u00f1a",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wilkinson",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Getz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinical Pharmacology & Therapeutics",
+            "volume": "107",
+            "issn": "2",
+            "pages": "324--332",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "How artificial intelligence is changing drug discovery",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nature",
+            "volume": "557",
+            "issn": "7706",
+            "pages": "55--55",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Rethinking drug design in the artificial intelligence era",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Walters",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Plowright",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Sieroka",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Listgarten",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Goodnow",
+                    "suffix": ""
+                },
+                {
+                    "first": ".",
+                    "middle": [
+                        "."
+                    ],
+                    "last": "Zentgraf",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature Reviews Drug Discovery",
+            "volume": "",
+            "issn": "",
+            "pages": "1--12",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Unexpected Receptor Functional Mimicry Elucidates Activation of Coronavirus Fusion",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Walls",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Cell",
+            "volume": "176",
+            "issn": "",
+            "pages": "1026--1039",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Structure of Severe Acute Respiratory Syndrome Coronavirus Receptorbinding Domain Complexed with Neutralizing Antibody",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Prabakaran",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "J.Biol.Chem",
+            "volume": "281",
+            "issn": "",
+            "pages": "15829--15836",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Structure of the SARS-CoV-2 spike receptor-binding domain bound to the ACE2 receptor",
+            "authors": [
+                {
+                    "first": "Jun",
+                    "middle": [],
+                    "last": "Lan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "1476--4687",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A novel coronavirus associated with a respiratory disease in Wuhan of Hubei province",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "AS2TS system for protein structure modeling and analysis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zemla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nucleic Acids Res",
+            "volume": "33",
+            "issn": "",
+            "pages": "111--115",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Cryo-EM structures of MERS-CoV and SARS-CoV spike glycoproteins reveal the dynamic receptor binding domains",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nat Commun",
+            "volume": "8",
+            "issn": "",
+            "pages": "15092--15092",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Structural insights into immune recognition of the severe acute respiratory syndrome coronavirus S protein receptor binding domain",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Pak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "J.Mol.Biol",
+            "volume": "388",
+            "issn": "",
+            "pages": "815--823",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Structural basis of neutralization by a human anti-severe acute respiratory syndrome spike protein antibody, 80R",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "J. Biol. Chem",
+            "volume": "281",
+            "issn": "45",
+            "pages": "34610--34616",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Cryo-EM structure of the 2019-nCoV spike in the prefusion conformation",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wrapp",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Corbett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Goldsmith",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hsieh",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Abiona",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Mclellan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "367",
+            "issn": "6483",
+            "pages": "1260--1263",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "LGA: A method for finding 3D similarities in protein structures",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zemla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nucleic Acids Research",
+            "volume": "31",
+            "issn": "13",
+            "pages": "3370--3374",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The other 90% of the protein: Assessment beyond the \u03b1-carbon for CASP8 template-based and high-accuracy models",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Keedy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proteins",
+            "volume": "77",
+            "issn": "9",
+            "pages": "29--49",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "The FoldX web server: an online force field",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schymkowitz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nucleic Acids Res",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "ROSETTA3: an object-oriented software suite for the simulation and design of macromolecules",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Leaver-Fay",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Methods in Enzymology",
+            "volume": "487",
+            "issn": "",
+            "pages": "545--574",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The MM/PBSA and MM/GBSA methods for estimating ligand-binding affinities",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Genheden",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Ryde",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Expert Opin Drug Discov",
+            "volume": "10",
+            "issn": "5",
+            "pages": "449--461",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Genome-wide prediction and validation of peptides that bind human prosurvival Bcl-2 proteins",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Debartolo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PLoS computational biology",
+            "volume": "10",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Five computational developability guidelines for therapeutic antibody profiling",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Raybould",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "116",
+            "issn": "",
+            "pages": "4025--4030",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Analysis and elimination of a bias in targeted molecular dynamics simulations of conformational transitions: application to calmodulin",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ovchinnikov",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Karplus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "The Journal of Physical Chemistry B",
+            "volume": "116",
+            "issn": "29",
+            "pages": "8584--8603",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Microsecond Molecular Dynamics Simulations of Proteins Using a Quasi-Equilibrium Solvation Shell Model",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ovchinnikov",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Conti",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lightstone",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Karplus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Chemical Theory and Computation",
+            "volume": "16",
+            "issn": "3",
+            "pages": "1866--1881",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "StralSV: assessment of sequence variability within similar 3D structures and application to polio RNA-dependent RNA polymerase",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zemla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "BMC Bioinformatics",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Improved prediction of protein side-chain conformations with SCWRL4",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Krivov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proteins Struct. Funct. Bioinformatics",
+            "volume": "77",
+            "issn": "",
+            "pages": "778--795",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "MolProbity: all-atom structure validation for macromolecular crystallography",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Acta Crystallogr. D",
+            "volume": "66",
+            "issn": "",
+            "pages": "12--21",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "UCSF Chimera-a visualization system for exploratory research and analysis",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Pettersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "J. Comput. Chem",
+            "volume": "25",
+            "issn": "",
+            "pages": "1605--1612",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Role of Conformational Sampling in Computing Mutation-Induced Changes in Protein Structure and Stability",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Kellogg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proteins: Struct., Funct",
+            "volume": "79",
+            "issn": "",
+            "pages": "830--838",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Flex ddG: Rosetta Ensemble-Based Estimation of Changes in Protein-Protein Binding Affinity upon Mutation B. The Journal of physical chemistry",
+            "authors": [
+                {
+                    "first": "Kyle",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Barlow",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "122",
+            "issn": "",
+            "pages": "5389--5399",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "OpenMM: A hardware-independent framework for molecular simulations",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Eastman",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Pande",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Computing in science & engineering",
+            "volume": "12",
+            "issn": "4",
+            "pages": "34--39",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "The Amber biomolecular simulation programs",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Case",
+                    "suffix": ""
+                },
+                {
+                    "first": "Iii",
+                    "middle": [],
+                    "last": "Cheatham",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Darden",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gohlke",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Merz",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": ".",
+                    "middle": [
+                        "."
+                    ],
+                    "last": "Woods",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Journal of computational chemistry",
+            "volume": "26",
+            "issn": "16",
+            "pages": "1668--1688",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Amino acid substitution matrices from protein blocks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Henikoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Henikoff",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "89",
+            "issn": "",
+            "pages": "10915--10919",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Bar representation of structural alignments with 6w41_C x-ray structure is used as reference. Four currently released X-ray structures of RBD from SARS-CoV-2 show high similarity with our SARS-C0V-2 homology models structures, SARS-CoV-2 CryoEM structures, and SARS-CoV-1 structures) in most regionsexcept two loops (which are not part of the interface with our selected antibodies) where local conformations deviate. Green: residue deviations below 2.0 \u00c5; yellow: below 4.0 \u00c5; orange: below 6.0 \u00c5; red: below 8.0 \u00c5 (or not aligned/missing regions). Listed in descending order by Local-Global Alignment (LGA)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "For antibody M396, up to 31 residues were allowed to simultaneously mutate, later narrowed to 21 based on intermediate results (parenthesized residues were eliminated): S31_H, (Y32_H), (T33_H), W47_H, G50_H, I51_H, (T52_H), I53_H, L54_H, I56_H, A57_H, N58_H, Y59_H, A60_H, (Q61_H), D95_H, T96_H, V97_H, (M98_H), (G99_H), G100_H, N27_L, (G29_L), S30_L, (K31_L), (W91_L),",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "(A) Our homology model (thin) superimposed on CryoEM 6vsb chain A (thick). Fab (m396) structure provided to indicate FAB-RBD interface region. Regions that are missing in CryoEM structure but are present in our model are in red. (B) Our homology-based model superimposed with the X-ray structure 6w41_C (reference structure in Figure 1). The coloring scheme in this superposition corresponds to 5th bar in Figure 1. Regions that deviate less than 2.0 A are green. Deviations above 2.0 A are in yellow, orange or red. Note that the regions with deviations above 2.0 A are all outside the interface region",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "A total of 89,263 antibody mutants were proposed by the machine learning model during the course of the antibody optimization. Each antibody mutant was evaluated with FoldX with two different calculations; first to estimate energy changes for the entire complex (y-axis) and second for the RBD-FAB interface only (x-axis). The first 4,462 (5% of the total) antibody mutants proposed by the machine learning model are shown in red. The last 4,462 mutants proposed, shown in blue, resulted in a distribution of mutants with much lower energies (more favorable FAB-RDB interaction), indicating that the machine learning model was effective in searching the combinatorial space of possible antibody mutants to identify increasingly improved predicted antibody designs. Note that FoldX Interface calculations were a major driver of the objective function for optimization, and therefore show the most improvement.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "1 kcal/mole (\u00b1 8.3) in complex with SARS-CoV-2 via MM/GBSA, assuming the same conformation as with SARS-CoV-1. Our 20 selected antibody designs, which are derived from M396, are predicted to have improved interaction with the RBD of the SARS-CoV-2 spike protein with MM/GBSA free energies as low as -82.0 kcal/mole, also assuming the same conformation as",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "One of constructed structural models of SARS-CoV-2 Spike protein (blue) in complex with the FAB of a SARS-CoV-1 neutralizing human antibody M396 (heavy chain in green, light chain in red).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Homology-estimated structure of SARS-CoV-2 S-protein in complex with anti-SARS-CoV-1 neutralizing antibody S230 fragment: template PDB 6NB6.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "During this 22-day period, we used two high-performance computers located at LLNL to support over 200,000 CPU hours and 20,000 GPU hours, performing 178,856 in silico free energy calculations for 89,263 mutant antibodies in complex with the RBD. Given the 31 residues on M396 considered for mutation, the antibody design space has 10 40 possibilities. Supplementary Materials include all sequences and calculations performed for M396. From these calculations, as well as from additional bioinformatic heuristics described in the Methods section, we selected 20 initial antibodies for experimental evaluation.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The design platform leveraged in this work was supported by DARPA contract HR0011940414 and HR0011832631. We would like to thank GSK team members for their support with the design platform, including (in alphabetical order) Kathryn Arrildt, Robert van den Berg, Matthew Bottomley, Chelsy Chesterman, Jason Laliberte, Enrico Malito, Corey Mallet, Jeannette Sierra, and Newton Wahome. The COVID-19 effort described in this document was supported by Laboratory Directed Research and Development (LDRD 20-ERD-032) at Lawrence Livermore National Laboratory (LLNL). We would like to thank LLNL management, especially Shankar Sundaram for his instrumental role throughout and Tom Bates for his support with the COVID-19 effort, as well as Jason Paragas for his role in conceiving the effort.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "Included in the Supplementary Materials are (1) the 10 homology-based structural models we developed of SARS-CoV-2 in complex with SARS-CoV-1 neutralizing antibodies and (2) all antibody mutant sequences and all in silico free energy calculations performed for over 89,263 mutant antibodies derived from the M396 SARS-CoV-1 neutralizing antibody used in selecting the 20 first round candidate antibodies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials"
+        }
+    ]
+}

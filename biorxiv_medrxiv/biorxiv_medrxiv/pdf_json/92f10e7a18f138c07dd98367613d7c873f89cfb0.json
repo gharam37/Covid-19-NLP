@@ -1,0 +1,1410 @@
+{
+    "paper_id": "92f10e7a18f138c07dd98367613d7c873f89cfb0",
+    "metadata": {
+        "title": "Growth rate and acceleration analysis of the COVID-19 pandemic reveals the effect of public health measures in real time",
+        "authors": [
+            {
+                "first": "Yuri",
+                "middle": [
+                    "Tani"
+                ],
+                "last": "Utsunomiya",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "S\u00e3o Paulo State University (Unesp)",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "country": "SP Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Adam",
+                "middle": [],
+                "last": "Taiti",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Harth",
+                "middle": [],
+                "last": "Utsunomiya",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "International Atomic Energy Agency (IAEA) Collaborating Centre on Animal Genomics and Bioinformatics",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Rafaela",
+                "middle": [
+                    "Beatriz"
+                ],
+                "last": "Pintor Torrecilha",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "International Atomic Energy Agency (IAEA) Collaborating Centre on Animal Genomics and Bioinformatics",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Silvana",
+                "middle": [],
+                "last": "De C\u00e1ssia Paula",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "International Atomic Energy Agency (IAEA) Collaborating Centre on Animal Genomics and Bioinformatics",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Marco",
+                "middle": [],
+                "last": "Milanesi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "International Atomic Energy Agency (IAEA) Collaborating Centre on Animal Genomics and Bioinformatics",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jos\u00e9",
+                "middle": [],
+                "last": "Fernando Garcia",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "S\u00e3o Paulo State University (Unesp)",
+                    "location": {
+                        "addrLine": "16050-680 R. Clovis Pestana 793 -Dona Amelia",
+                        "settlement": "Ara\u00e7atuba",
+                        "country": "SP Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Paulo",
+                "middle": [],
+                "last": "Donato Castellane S/N -Jaboticabal",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "/",
+                "middle": [],
+                "last": "Sp",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Brazil",
+                "middle": [
+                    ";"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background: Ending the COVID-19 pandemic is arguably one of the most prominent challenges in recent human history. Following closely the growth dynamics of the disease is one of the pillars towards achieving that goal. Objective: We aimed at developing a simple framework to facilitate the analysis of the growth rate (cases/day) and growth acceleration (cases/day\u00b2) of COVID-19 cases in real-time. Methods: The framework was built using the Moving Regression (MR) technique and a Hidden Markov Model (HMM). The dynamics of the pandemic was initially modeled via combinations of four different growth stages: lagging (beginning of the outbreak), exponential (rapid growth), deceleration (growth decay) and stationary (near zero growth). A fifth growth behavior, namely linear growth (constant growth above zero), was further introduced to add more flexibility to the framework. An R Shiny application was developed, which can be accessed at",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The World Health Organization (WHO) officially declared Coronavirus Disease (COVID-19) a global pandemic on March 11 th 2020 (1) . The disease is caused by the novel Severe Acute Respiratory Syndrome Coronavirus 2 (SARS-CoV-2) (2,3), which seems to have first emerged in Wuhan, China on December 12 th 2019 (4, 5) . Worldwide dissemination has been extremely rapid, and by the time this study was completed (April 2 nd 2020) a total of 928,437 cases and 46,891 deaths had been reported across 204 countries and territories according to data from the European Center for Disease Prevention and Control (ECDC) (6) . Approximately 86% of all cases are estimated to have been undocumented prior to the cordon sanitaire in China (7) , which suggests that the disease might be also substantially under-reported in other countries. Nevertheless, partial COVID-19 prevalence data are still an invaluable resource to help monitoring and controlling the disease. In particular, extracting daily estimates of growth rate (cases/day) and acceleration (cases/day\u00b2) in disease dissemination from real-time case reports can be decisive for an effective and promptly action to restrain further contagion. Here we report the development of a simple framework dedicated to the real-time analysis of COVID-19 prevalence. This framework was built using a combination of Moving Regression (MR) and Hidden Markov Model (HMM), and was deployed as a Shiny (8) application in R (9) . Here we show the utility of that framework in the analysis of publicly available COVID-19 case reports that are updated daily by the ECDC.",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 128,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 307,
+                    "end": 310,
+                    "text": "(4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 311,
+                    "end": 313,
+                    "text": "5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 608,
+                    "end": 611,
+                    "text": "(6)",
+                    "ref_id": null
+                },
+                {
+                    "start": 724,
+                    "end": 727,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1432,
+                    "end": 1435,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1453,
+                    "end": 1456,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "For simplicity, assume that the cumulative number of COVID-19 cases over time (i.e., the growth curve) in a specific country or territory follows an unknown sigmoidal function (Figure 1a) . Such assumption is common in the analysis of growth data and has been applied to a wide range of problems, from tumor (10) to bacterial (11) growth. Although empirical data from China ( Figure  1b) and South Korea (Figure 1c ) seemed to support it well, that assumption will be substantially relaxed later in our framework to accommodate complex dynamics in the evolution of COVID-19 prevalence. We define growth rate and growth acceleration as the first and second order derivatives, respectively, of the prevalence of COVID-19 in respect to time. In our framework, we selected MR to approximate these derivatives over competing models that are frequently used to describe the behavior of sigmoidal growth curves, such as the Gompertz model (12, 13) , because: (i) it is dependent on a single free parameter, the \"smooth factor\", which represents the number of neighboring days used in local regression; (ii) growth rate and acceleration estimates are approximated by ordinary least squares equations, which are computationally inexpensive; (iii) we performed extensive simulations of growth curves and found that it produces reasonably accurate estimates of growth rate (median R 2 = 0.99 with smooth factor of 3) and acceleration (median R 2 = 0.92 with smooth factor of 3) (Figure 2) ; (iv) it is very robust to departures from sigmoidal curves; and (v) it does not rely on observations of the whole curve to produce instantaneous growth rate and acceleration estimates, and thus can produce such estimates in near real time. Argument (v) is especially relevant to the analysis of COVID-19 data since the pandemic is ongoing and each country will be at a different stage of the growth curve as time passes. A clear disadvantage of MR is that it may over-fit the growth curve to the data, especially if the selected smooth factor is small (say < 3), in which case accurate prediction of new cases of COVID-19 is limited to very few days in the future. Still, even single-day predictions can be of great use during a pandemic if reasonably accurate. In the ECDC data set, a forward validation showed that single-day predictions were sufficiently accurate (R\u00b2 ~ 0.95) (Figure 3) .",
+            "cite_spans": [
+                {
+                    "start": 326,
+                    "end": 330,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 932,
+                    "end": 936,
+                    "text": "(12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 937,
+                    "end": 940,
+                    "text": "13)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 176,
+                    "end": 187,
+                    "text": "(Figure 1a)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 376,
+                    "end": 387,
+                    "text": "Figure  1b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 404,
+                    "end": 414,
+                    "text": "(Figure 1c",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1467,
+                    "end": 1477,
+                    "text": "(Figure 2)",
+                    "ref_id": null
+                },
+                {
+                    "start": 2359,
+                    "end": 2369,
+                    "text": "(Figure 3)",
+                    "ref_id": null
+                }
+            ],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "Sigmoidal growth curves can be partitioned into four easily distinguishable stages (Figure 1a) : (a) the lagging stage, which corresponds to the beginning of the outbreak or disease importation, where the number of cases are low and increase only marginally every day; (b) the exponential stage, when growth starts accelerating and the number of new cases increase rapidly day-by-day; (c) the deceleration stage, where the number of new cases reduces daily and tends to asymptote; and (d) the stationary stage, characterized by stagnation of the prevalence with sporadic new cases occurring each day. The growth rate graph is approximately bell-shaped, with its peak corresponding to the inflection of the exponential stage. This inflection point signals the beginning of a decline in the growth rate. The growth acceleration graph usually consists of a combination of two bell-shaped curves: the first one with a peak and the second with a valley. The peak indicates the point where acceleration starts descending towards zero. The moment when acceleration is exactly zero coincides with the inflection of the exponential stage, which marks the beginning of growth deceleration (i.e., negative acceleration). The latter corresponds to the entire concave section of the curve, but the very bottom of the valley indicates that the prevalence is moving towards stagnation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 83,
+                    "end": 94,
+                    "text": "(Figure 1a)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "In spite of sigmoidal curves following the four above described stages sequentially, we anticipated that the growth of COVID-19 cases may not necessarily obey this sequence in practice, since the dynamics of the disease is likely complex and highly responsive to the implementation or relaxation of public health measures. This implies that a country that has already reached a stationary stage could resume exponential growth, for example by seeding a new outbreak via importation. Likewise, decelerating countries could as well regain acceleration by relaxing prevention measures. Furthermore, some countries may face multiple cycles of acceleration and deceleration prior to reaching a stationary growth. These scenarios could produce more complex growth curves that deviate from the sigmoidal shape by mounting different arrangements of exponential, deceleration and stationary stages. Of note, MR has sufficient flexibility to model these complex scenarios and can easily accommodate curves exhibiting arbitrary permutations of these four stages. In addition, the near-zero acceleration that is intimately related to the stationary stage in sigmoidal curves could also arise from a non-zero constant growth rate in practice. In such cases, the growth curve would exhibit a linear pattern, which can be interpreted as a fifth growth stage that is not observed in classic sigmoidal functions. Such linear pattern may appear if the deceleration stage does not form an enough deep valley prior to acceleration rising up again towards zero. Again, MR is capable of modeling these anomalous behaviors. In this study we sought to ascertain whether these five stages of growth curves could have direct implications in understanding the dynamics of COVID-19 prevalence both globally and locally. We further developed a Hidden Markov Model (HMM) to automate the detection of transitions between stages in the growth curve using acceleration and growth rate data obtained with MR as input (see Material and Methods).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "Using MR and HMM on ECDC data frozen on April 2 nd 2020, we evaluated the utility of the framework in identifying countries reaching deceleration or stationary growth. We also looked for countries presenting complex arrangements of the five growth stages. The countries found to have reached a near-stationary stage at some point were China and South Korea (Figure 1b-c) . By projecting official government announcements against the fitted curves of these countries, we observed that decline in growth acceleration occurred shortly after the implementation of measures that drastically reduced human movement. Deceleration of growth was achieved within 2 weeks and the prevalence plateaued within 6 weeks. These results indicated that: (i) the effect of public health measures on SARS-CoV-2 prevention can be detected in seemingly real time by monitoring the behavior of acceleration curves; and (ii) restriction to human mobility is very effective in controlling the spread of the disease, but takes several weeks to produce a stationary growth. These findings are in line with a recent study showing that human mobility explained early growth and decline of new cases of COVID-19 in China (14) . As discussed before, one should not immediately assume that a country in stationary growth will remain in that stage, since acceleration could take off again if new cases are imported or preventive measures are relaxed. In fact, our HMM classifier categorized the apparent stationary growth stage of China and South Korea as a linear growth. Indeed, both countries have not reached a perfect asymptote and their COVID-19 prevalences are instead growing in a linear pattern.",
+            "cite_spans": [
+                {
+                    "start": 1191,
+                    "end": 1195,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 357,
+                    "end": 370,
+                    "text": "(Figure 1b-c)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "To illustrate the utility of the framework in detecting acceleration decay, we decided to look more closely to data from three countries: United States of America (USA), Brazil and Italy (Figure 4) . The latter has been severely impacted with the disease, and by the time we completed our study the country had recorded 110,574 cases and 13,157 deaths. On March 10 th 2020 Italy implemented a strict quarantine, and five days later the country reached its maximum acceleration and started to move towards an inflection of the exponential growth. On March 25 th Italy further implemented a complete shut down of its borders, and our analysis showed that the country started to decelerate on March 26 th . Brazil and USA both showed brief declines in acceleration between March 20 th and 25 th , but were still found in exponential growth as of April 2 nd . In fact, Brazil resumed acceleration incline on March 26 th . Still, since acceleration response to effective measures seems rapid, both Brazil and USA could begin a deceleration process within few weeks if effective measures are implemented are rigorously followed. To date, Brazil has accumulated 6,836 cases and 241 deaths, whereas USA has recorded 216,721 cases and 5,138 deaths.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 187,
+                    "end": 197,
+                    "text": "(Figure 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "To exemplify the ability of our framework in detecting complex arrangements of growth stages that substantially deviate from the sigmoidal model, we selected Denmark, Estonia and Qatar ( Figure  4) . All three countries experienced deceleration phases that did not culminate in stationary growth. Instead, a brief linear growth was formed after deceleration, which was followed by a new exponential growth stage. Estonia has further entered a new deceleration phase on March 27 th . These observations indicate that the growth dynamics of COVID-19 cases is more complex than previously appreciated. Therefore, analyzing the raw growth curve alone, dissociated from its derivatives, is very limiting for inference and may hamper the understanding of the pandemic evolution. In part, the lack of combined analysis of growth rate and acceleration in this pandemic is to be blamed on scarce availability of tailor made, user-friendly software. To aid to the analysis of growth rate and acceleration of COVID-19 cases, we built a web application using R (9) and Shiny (8) . This application automatically loads the latest ECDC case reports and applies MR to extract growth rate and acceleration from real-time data. The app also performs automated classification of growth stages with HMM (albeit free parameters should be manually tuned for improved results). Users are not limited to case reports from ECDC, since the app allows for the upload of custom data (e.g., city, region, province or state), which can be used to monitor the growth behavior of COVID-19 locally. Upon closing of the COVID-19 pandemic, this tool could be further used in the analysis of future outbreaks and epidemics, or even of historical disease data. A limiting factor however is that the proposed framework relies on updated case reports, such that sub-notification, delayed communication and the elapsed time between sample collection, diagnostic results and reporting may impact the real-time inference of growth dynamics in disease transmission and consequently jeopardize the timely detection of transitions in the growth curve. In spite of that limitation, the presented tool remains highly useful to monitor the growth behavior of epidemics.",
+            "cite_spans": [
+                {
+                    "start": 1063,
+                    "end": 1066,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 187,
+                    "end": 197,
+                    "text": "Figure  4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "RESULTS AND DISCUSSION"
+        },
+        {
+            "text": "We deployed a simple framework for the real-time analysis of COVID-19 prevalence. We were able to demonstrate that the real-time decomposition of growth curves of COVID-19 cases into growth rate and acceleration can be a powerful tool to monitor the impact of public health measures on the spread of the disease. We also showed that restrictions to human mobility can significantly decelerate the incidence of new cases within weeks. Furthermore, we found that the prevalence of the disease is more complex and dynamic than previously appreciated. This observation will have important implications to assumptions adopted in mathematical models to predict the evolution of the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSIONS"
+        },
+        {
+            "text": "The MR technique adopted here aimed at fitting a smooth growth curve to the COVID-19 prevalence data, such that the resulting curve could describe the cumulative number of cases as a function of time. For n recorded days in a given country or territory, let x be a n-dimensional column vector of days since the first case report and y the reciprocal column vector with elements corresponding to the cumulative number of cases. Relative to day d, we define y d and x d as k-sized subset vectors of y and x, respectively, where k = 1 + 2s and s is a free parameter representing the number of offset days before and after day d. Hereafter, we refer to s as the \"smooth factor\", since it controls the compromise between over-smoothing (large s) and over-fitting (small s) the curve to the data. Finally, we define X d = [1 k x d ], where 1 k is a k-dimensional column vector with all elements equal to one. The local growth rate was estimated by ordinary least squares regression:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Moving regression (MR) model"
+        },
+        {
+            "text": "where m d is an intercept and g d is the estimated growth rate (cases/day) at day d. In practice, g d corresponds to an estimate of the instantaneous rate of change in the number of cases at day d, which in turn is an approximation to the first order derivative of the unknown growth function evaluated at time d. The smoothed growth curve was obtained by calculating fitted values as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Moving regression (MR) model"
+        },
+        {
+            "text": "After fitting equation (1) to all n records, we define g is a vector of size n containing all estimated local growth rates and g d as a k-sized subset vector of g. The local growth acceleration at day d was then obtained by adapting equation (1):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Moving regression (MR) model"
+        },
+        {
+            "text": "where a d is the estimated growth acceleration (cases/day\u00b2) at day d. Now a d is an estimate of the instantaneous rate of change of the growth rate at day d, which consequently approximates the second order derivative of the unknown growth function evaluated at time d.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Moving regression (MR) model"
+        },
+        {
+            "text": "In order to automate the process of growth stage classification, we built a HMM that uses acceleration data obtained from MR as input. Considering a as the n-dimensional vector of estimated growth accelerations across n recorded days, we first compute z = sign(a), where sign(.) is a modified sign function which retrieves -1 for a < -c, +1 for a > c and 0 otherwise. Scalar c is defined as an acceleration cutoff, which is treated here as a free parameter. The objective of the HMM was to generate a sequence of states K = (k 1 , k 2 , \u2026, k n ) where each element k i takes one of the following values: \"lagging\", \"exponential\", \"deceleration\" or \"stationary\". The initial probabilities for these hidden states were set to 1, 0, 0 and 0, respectively, assuming that all growth curves start from a lagging stage. Now let T be a 4 x 4 matrix of transition probabilities between hidden states and E be a 4 x 3 matrix of emission probabilities that models the probability of each hidden state producing a z value of -1, 0 or +1. We adopted: The selected values in T only permitted transitions lagging \u2192 exponential, exponential\u2192 deceleration or deceleration \u2192 stationary. Values in E made z = 0 more likely to be produced by either the lagging or stationary stages, z = +1 more likely to be produced by the acceleration stage and z = -1 more likely to be produced by the deceleration stage. For the atypical transition deceleration \u2192 exponential, the described model would generate a short and intermediate stationary step between these two stages. In these cases, the spurious stationary step was replaced by an exponential classification after the HMM has been fitted to the data. The Viterbi algorithm implemented in the HMM v1.0 package (15) in R (9) was used to estimate the sequence K. After prediction of growth stages, stationary classifications were confronted against growth rates. If a given stationary stage presented a median growth rate greater than the maximum growth rate of the lagging phase, it was re-classified as a \"linear\" stage.",
+            "cite_spans": [
+                {
+                    "start": 1738,
+                    "end": 1742,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Hidden Markov Model (HMM) for growth stage classification"
+        },
+        {
+            "text": "To test the performance of MR in approximating growth curves and their rate of change and acceleration in scenarios where these curves have been observed only partially (i.e., real-time case report), we selected a widely used sigmoidal mathematical function, namely the Gompertz model, to generate 50,000 simulated growth curves. We used a parameterization of the Gompertz model that is dependent on four parameters:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation study"
+        },
+        {
+            "text": "where t is a time point, a is the asymptote (i.e., number of cases at the stationary stage), exp is the exponential function, k is a growth coefficient and d is the time at inflection of the exponential stage (i.e., time when the growth rate reaches its maximum value and acceleration transitions from positive to negative). All simulations were performed considering a 100-days period, with parameters sampled as follows: a ~ Uniform(500, 10000), k ~ Uniform(0.05, 0.95) and d \u0168 niform (5, 95) . Completely stationary curves were discarded. The accuracy of growth rate and acceleration estimates produced by MR with smooth factor ranging from s = 3 to s = 10 were then evaluated by taking the coefficient of determination (R\u00b2) of the regression of true values onto estimates.",
+            "cite_spans": [
+                {
+                    "start": 487,
+                    "end": 490,
+                    "text": "(5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 491,
+                    "end": 494,
+                    "text": "95)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Simulation study"
+        },
+        {
+            "text": "We analyzed case reports that have been updated daily by the European Center for Disease Prevention and Control (ECDC). The framework was applied to that data using smooth factors ranging from s = 3 to s = 10. The acceleration curves were clipped at observation n -s to avoid poor growth acceleration estimates at the end of the curve. Likewise, the last s days had their growth rates estimated by compounding rates from n -s to n using the acceleration estimated for day n -s. Finally, next-day predictions of COVID-19 prevalence were obtained by summing the last observed prevalence with its estimated growth rate. In order to measure the accuracy of these predictions, we performed a step-wise simulation by censoring observations ahead of each day, fitting MR to the remaining data and then comparing predicted and true next-day prevalence. Accuracy of predictions were again measured by linear regression.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Analysis of COVID-19 case reports"
+        },
+        {
+            "text": "All analyses presented in this paper were performed using R version 3.4.4 (9) . To visualize the growth rate and acceleration of COVID-19 pandemic, we implemented a simple Shiny (8) dashboard application, which offers an intuitive web interface and allow us to be updated on new cases and the prevalence of COVID-19 worldwide. The application automatically loads the latest case reports from ECDC. Alternatively, users can upload their own data to visualize the growth rate and acceleration of COVID-19 of specific states, provinces, cities or aggregate data from arbitrary territory definitions. For the implementation we used the following packages: shiny v1.4.0 (16), shinydashboard v0.7.1 (17), shinydashboardPlus v0.7.0 (18), readxl v1.3.1 (19) , shinyalert v1.0 (20) , httr v1.4.1 (21) and plotly v4.9.2 (22) , all available on CRAN (Comprehensive R Archive Network, https://cran.r-project.org/). The application can be downloaded from our GitHub repository at https://github.com/adamtaiti/SARS-CoV-2. A live instance of the app will be maintained until the end of the pandemic at https://www.theguarani.com.br/covid-19 .",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 77,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 745,
+                    "end": 749,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 768,
+                    "end": 772,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 787,
+                    "end": 791,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 810,
+                    "end": 814,
+                    "text": "(22)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Analysis and visualization tools"
+        },
+        {
+            "text": "The data in this study were obtained from the European Center for Disease Prevention and Control (ECDC) and are publicly available at https://opendata.ecdc.europa.eu/covid19/casedistribution/csv (accessed on April 2 nd 2020). The source code for the R Shiny application used for data analysis is found in our GitHub repository: https://github.com/adamtaiti/SARS-CoV-2. A live instance of the app can be accessed at http://www.theguarani.com.br/covid- 19.   361  362  363  364  365  366  367  368  369  370  371  372  373  374  375  376  377  378  379  380  381  382  383  384   385  386  387  388  389  390  391   392  393  394  395  396  397  398  399   400  401  402  403   404  405  406  407  408  409  410 . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 451,
+                    "end": 709,
+                    "text": "19.   361  362  363  364  365  366  367  368  369  370  371  372  373  374  375  376  377  378  379  380  381  382  383  384   385  386  387  388  389  390  391   392  393  394  395  396  397  398  399   400  401  402  403   404  405  406  407  408  409  410",
+                    "ref_id": null
+                }
+            ],
+            "section": "DATA AVAILABILITY"
+        },
+        {
+            "text": "The copyright holder for this preprint . 2020. The first red dot marks the midpoint between January 23 rd and 24 th 2020, when a strict cordon sanitaire was imposed to Wuhan, Shanghai, Jiangsu and Hainan. The second red dot pinpoints February 4 th 2020, when the cordon was extended to a larger portion of the eastern part of China. (c) Fitted curves for South Korea between January 20 th and April 2 nd 2020. The red dot is placed between February 20 th and 21 st 2020, when a collection of restrictions to human mobility was imposed, including lockdown of Daegu city, suspension of flights, cancellation of mass gatherings and lockdown of all South Korean military bases. The apparent stationary stage of both countries is in reality classified as linear growth by our framework, since the approximately constant growth rate in this period is larger than the maximum growth rate observed during the lagging stage.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Italy. By the time the study was completed, the governments of the United States of America (a) and Brazil (b) had not announced severe strict measures to restrain human movement, such as a lockdown. As a measure to reduce movement, these two countries had primarily focused on preventing mass gatherings, besides of closing schools, nurseries, universities and other places that facilitate agglomeration, such as shopping malls. This is in contrast with Italy (c), which imposed strict quarantine on March 10 th 2020 (first red dot) and closure of borders on March 25 th 2020 (second red dot). The country is currently in growth deceleration. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FIGURE 4 | Growth rate and acceleration in the United States of America (USA), Brazil and"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.03.30.20047688 doi: medRxiv preprint FIGURE 5 | Growth rate and acceleration in Denmark, Estonia and Qatar. These three countries exhibited complex arrangements of growth stages. (a) On March 11 th 2020 (red dot), Denmark became the second European country to establish a lockdown. The country started decelerating new cases of COVID-19 two days after. (b) On March 13 th 2020 (red dot) a state of emergency was declared by the Estonian government, which imposed significant restrictions to travel and mass gatherings. Decline of growth rate was observed one day after, and deceleration started within 4 days. (c) Our analysis indicated that Qatar reached its peaking acceleration on March 9 th 2020 (red dot), the same day when Qatari officials had announced the closure of schools, nurseries, and universities, in addition to strong restrictions to traveling. One day after, the country registered a sudden spike in the number of cases (arrow). The days that followed were marked by a clear decline in acceleration and eventually deceleration of growth, which coincided with a succession of measures by the Qatari government that eventually led to significant restrictions to human movement. Although stationary growth was expected after deceleration, these three countries passed through a short linear phase and then regained acceleration, which initiated a new exponential phase. Estonia has further initiated a second deceleration stage on March 27 th 2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FIGURE 4 | Growth rate and acceleration in the United States of America (USA), Brazil and"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "World Health Organization, Coronavirus disease (COVID-2019) situation reports",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Coronaviridae Study Group of the International Committee on Taxonomy of Viruses. The species Severe acute respiratory syndrome-related coronavirus: classifying 2019-nCoV and naming it SARS-CoV-2",
+            "authors": [],
+            "year": 2020,
+            "venue": "Nature Microbiology",
+            "volume": "5",
+            "issn": "",
+            "pages": "536--544",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41564-020-0695-z"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The proximal origin of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Andersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rambaut",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Lipkin",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Holmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Garry",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Zhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Shi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "",
+            "pages": "270--273",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2012-7"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "COVID-19 control in China during mass population movements at New Year. Lancet (2020)",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "B\u00e4rnighausen",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "395",
+            "issn": "",
+            "pages": "764--766",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pei",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Easy web applications in R",
+            "authors": [
+                {
+                    "first": "Rstudio",
+                    "middle": [],
+                    "last": "Inc",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Shiny",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "R Core Team",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Physiological random processes in precision cancer therapy",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Henscheid",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Clarkson",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Myers",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Barrett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "PloS One",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0199823"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Modeling of the bacterial growth curve",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Zwietering",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Jongenburger",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Rombouts",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Van &apos;t Riet",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Appl Environ Microbiol",
+            "volume": "56",
+            "issn": "",
+            "pages": "1875--81",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The Gompertz Curve as a Growth Curve",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Winsor",
+                    "suffix": ""
+                }
+            ],
+            "year": 1932,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "18",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.18"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The use of Gompertz models in growth analyses, and new Gompertzmodel approach: An addition to the Unified-Richards family",
+            "authors": [
+                {
+                    "first": "Kmc",
+                    "middle": [],
+                    "last": "Tj\u00f8rve",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Tj\u00f8rve",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "PLoS One",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0178691"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The effect of human mobility and control measures on the COVID-19 epidemic in China",
+            "authors": [
+                {
+                    "first": "Mug",
+                    "middle": [],
+                    "last": "Kraemer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gutierrez",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pigott",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Du Plessis",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Faria",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Hanage",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Brownstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Layan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dye",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Pybus",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Scarpino",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb4218"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "HMM -Hidden Markov Models. R package version 1",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Himmelmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "shiny: Web Application Framework for R",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Allaire",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mcpherson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "shinydashboard: Create Dashboards with 'Shiny",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Ribeiro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Add More 'AdminLTE2' Components to 'shinydashboard",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Granjon",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Shinydashboardplus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Read Excel Files",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bryan",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Readxl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Easily Create Pretty Popup Messages (Modals) in 'Shiny'",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Attali",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Edwards",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Shinyalert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Tools for Working with URLs and HTTP",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Httr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Growth rate and acceleration in China and South Korea. (A) Theoretical model exemplified by simulated data using a four-parameters Gompertz model with an asymptote at 80,000, growth coefficient of 0.15, inflection time at 35, and time ranging from 1 to 80. (B) Fitted curves for China between December 31 st 2019 and April 2 nd",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We would like to express our highest gratitude to all health agents and individuals around the globe who were involved in reporting cases and making COVID-19 prevalence data available to the public. This study did not receive financial support and was conducted during voluntary social isolation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS"
+        },
+        {
+            "text": "Y.T.U. conceived the study, performed simulations, coordinated the data analysis and wrote the manuscript. A.T.H.U. built R code for data analysis and programmed the Shiny App Dashboard. R.B.P.T., S.C.P., M.M. and J.F.G. revised growth curves for all countries/territories and pinpointed dates of measures taken by them to reduce human mobility. All authors revised and agreed with the contents of the manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "AUTHOR CONTRIBUTIONS"
+        },
+        {
+            "text": "The authors declare no competing interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "COMPETING INTERESTS"
+        }
+    ]
+}

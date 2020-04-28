@@ -1,0 +1,630 @@
+{
+    "paper_id": "85527d59d9d5b5e5b4d936d053f4d8cb617976ab",
+    "metadata": {
+        "title": "ViralMSA: Massively scalable reference-guided multiple sequence alignment of viral genomes XXXXXXX Received on XXXXX; revised on XXXXX; accepted on XXXXX",
+        "authors": [
+            {
+                "first": "Niema",
+                "middle": [],
+                "last": "Moshiri",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "UC San Diego",
+                    "location": {
+                        "addrLine": "La Jolla",
+                        "postCode": "92093",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In molecular epidemiology, the identification of clusters of transmissions typically requires the alignment of viral genomic sequence data. However, existing methods of multiple sequence alignment scale poorly with respect to the number of sequences. Results: ViralMSA is a user-friendly reference-guided multiple sequence alignment tool that was built to enable the alignment of ultra-large viral genome datasets. It scales linearly with the number of sequences, and it is able to align tens of thousands of full viral genomes in seconds. Availability: ViralMSA is freely available at https://github.com/niemasd/ViralMSA as an open-source software project.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Real-time or near real-time surveillance of the spread of a pathogen can provide actionable information for public health response (Poon et al ., 2016) . Though there is currently no consensus in the world of molecular epidemiology regarding a formal definition of what exactly constitutes a \"transmission cluster\" (Novitsky et al ., 2017) , all current methods of inferring transmission clusters require a multiple sequence alignment (MSA) of the viral genomes: distance-based methods of transmission clustering require knowledge of homology for accurate distance measurement (Pond et al ., 2018) , and phylogenetic methods of transmission clustering require the MSA as a precursor to phylogenetic inference (Balaban et al ., 2019; Rose et al ., 2017; Ragonnet-Cronin et al ., 2013; Prosperi et al ., 2011) .",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 151,
+                    "text": "(Poon et al ., 2016)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 315,
+                    "end": 339,
+                    "text": "(Novitsky et al ., 2017)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 577,
+                    "end": 597,
+                    "text": "(Pond et al ., 2018)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 709,
+                    "end": 732,
+                    "text": "(Balaban et al ., 2019;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 733,
+                    "end": 752,
+                    "text": "Rose et al ., 2017;",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 753,
+                    "end": 783,
+                    "text": "Ragonnet-Cronin et al ., 2013;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 784,
+                    "end": 807,
+                    "text": "Prosperi et al ., 2011)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The standard tools for performing MSA such as MAFFT, MUSCLE, and Clustal Omega typically utilize progressive-iterative approaches due to their broad applicability (Katoh & Standley, 2013; Edgar, 2004; Sievers & Higgins, 2014) . However, these methods become prohibitively slow for real-time pathogen surveillance as the number of viral genomes grows. For example, during the COVID-19 pandemic, the number of viral genome assemblies available from around the world grew exponentially in the initial months of the pandemic, but MAFFT, the fastest of the aforementioned MSA tools, scales quadratically with respect to the number of sequences.",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 187,
+                    "text": "(Katoh & Standley, 2013;",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 188,
+                    "end": 200,
+                    "text": "Edgar, 2004;",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 201,
+                    "end": 225,
+                    "text": "Sievers & Higgins, 2014)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the case of closely-related viral sequences for which a high-confidence reference genome exists, MSA can be accelerated by comparing each viral genome in the dataset against the reference genome and then using the reference as an anchor with which the individual alignments can be merged into a single MSA.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Here, we introduce ViralMSA, a user-friendly open-source MSA tool that utilizes read mappers such as Minimap2 (Li, 2018) to enable the reference-guided alignment of ultra-large viral genome datasets.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 120,
+                    "text": "(Li, 2018)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "VIRULIGN is another reference-guided MSA tool designed for viral genomes (Libin et al ., 2019) . While VIRULIGN also aims to support MSA of large sequence datasets, its primary objective is to produce codon-correct alignments, whereas ViralMSA's objective is to produce alignments for use in transmission clustering as fast as possible. Thus, while ViralMSA is not guaranteed to yield codon-aware alignments, it is orders of magnitude faster than VIRULIGN, which is critical for rapidly-growing epidemics. Further, VIRULIGN is codon-aware, making it appropriate for coding regions, whereas ViralMSA is appropriate for the alignment of whole viral genomes. Lastly, VIRULIGN requires a thorough annotation of the reference genome, which may be difficult to obtain (especially towards the beginning of a novel outbreak) and does not provide the user to easily utilize different reference genomes for different viral strains. ViralMSA, on the other . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.20.052068 doi: bioRxiv preprint N. Moshiri hand, only requires the reference genome assembly's GenBank accession number and can build any required index files on-the-fly",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 94,
+                    "text": "(Libin et al ., 2019)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related work"
+        },
+        {
+            "text": "ViralMSA is written in Python 3 and is thus cross-platform. ViralMSA depends on BioPython (Cock et al ., 2009 ) as well as on whichever read mapper the user chooses to utilize, which is Minimap2 by default (Li, 2018) . In addition to Minimap2, ViralMSA supports STAR (Dobin et al ., 2013) , Bowtie 2 (Langmead & Salzberg, 2012) , and HISAT2 (Kim et al ., 2019) , though the default of Minimap2 is strongly recommended for both performance and accuracy (Fig. 1) .",
+            "cite_spans": [
+                {
+                    "start": 90,
+                    "end": 109,
+                    "text": "(Cock et al ., 2009",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 206,
+                    "end": 216,
+                    "text": "(Li, 2018)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 267,
+                    "end": 288,
+                    "text": "(Dobin et al ., 2013)",
+                    "ref_id": null
+                },
+                {
+                    "start": 300,
+                    "end": 327,
+                    "text": "(Langmead & Salzberg, 2012)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 341,
+                    "end": 360,
+                    "text": "(Kim et al ., 2019)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 452,
+                    "end": 460,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "ViralMSA takes the following as input: (1) a FASTA file containing the viral genomes to align, (2) the GenBank accession number of the reference genome to use, and (3) the mapper to utilize (Minimap2 by default). ViralMSA will pull the reference genome from GenBank and generate an index using the selected mapper, both of which will be cached for future alignments of the same viral strain, and will then execute the mapping. ViralMSA will then process the results and output a multiple sequence alignment in the FASTA format. For commonly-studied viruses (e.g. HIV, SARS-CoV-2), the user can simply provide the name of the virus instead of an accession number, and ViralMSA will automatically select what we believe would be an appropriate reference genome.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "Because it uses the positions of the reference genome as anchors with which to merge the individual pairwise alignments, ViralMSA only keeps matches, mismatches, and deletions with respect to the reference genome: it discards all insertions with respect to the reference genome. For closely-related viral strains, insertions with respect to the reference genome are typically unique and thus lack usable phylogenetic or transmission clustering information, so their removal results in little to no impact on downstream analyses (Fig. 1b) . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 528,
+                    "end": 537,
+                    "text": "(Fig. 1b)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "In order to test ViralMSA's accuracy, we obtained a curated HIV-1 full genome MSA from the Los Alamos National Laboratory (LANL) HIV Sequence Database, which we used as our ground truth. We then used both MAFFT and ViralMSA (using the HXB2 reference genome) to recompute MSAs. No other MSA tools were included in the comparison due to being orders of magnitude slower than MAFFT (which would render the full experiment infeasible).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "Because ViralMSA's objective is to be utilized in transmission clustering workflows, which typically rely on pairwise distances between samples, we computed pairwise sequence distances between every pair of samples in each MSA (true, MAFFT, and ViralMSA) under the TN93 model of sequence evolution (Tamura & Nei, 1993) using pairwise distance calculator implemented in HIV-TRACE (Pond et al., 2018) . Then, for each estimated MSA, we measured alignment accuracy by computing the Mantel correlation test (using Spearman correlation) between the true and estimated MSAs.",
+            "cite_spans": [
+                {
+                    "start": 298,
+                    "end": 318,
+                    "text": "(Tamura & Nei, 1993)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 379,
+                    "end": 398,
+                    "text": "(Pond et al., 2018)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "In order to measure performance, we subsampled the full HIV dataset into datasets of n = 100, 200, 500, 1,000, and 2,000 sequences, with 10 replicates for each value of n . We then computed MSAs of each subsampled alignment replicate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results and discussion"
+        },
+        {
+            "text": "The results of the accuracy and performance experiments can be found in Figure 1 . As can be seen, ViralMSA in its default mode is consistently orders of magnitude faster than MAFFT (Fig. 1a ), yet it produces MSAs with the same level of accuracy (Fig. 1b) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 80,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 182,
+                    "end": 190,
+                    "text": "(Fig. 1a",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 247,
+                    "end": 256,
+                    "text": "(Fig. 1b)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results and discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "TreeCluster: Clustering biological sequences using phylogenetic trees",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Balaban",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PLoS One",
+            "volume": "14",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Biopython: freely available Python tools for computational molecular biology and bioinformatics",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "J A"
+                    ],
+                    "last": "Cock",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Bioinformatics",
+            "volume": "25",
+            "issn": "11",
+            "pages": "1422--1423",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "STAR: ultrafast universal RNA-seq aligner",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dobin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Bioinformatics",
+            "volume": "29",
+            "issn": "1",
+            "pages": "15--21",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "MUSCLE: a multiple sequence alignment method with reduced time and space complexity",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Edgar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "BMC Bioinform",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Fast gapped-read alignment with Bowtie 2",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Langmead",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Salzberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nat. Methods",
+            "volume": "9",
+            "issn": "",
+            "pages": "357--359",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Graph-based genome alignment and genotyping with HISAT2 and HISAT-genotype",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Biotechnol",
+            "volume": "37",
+            "issn": "",
+            "pages": "907--915",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Minimap2: pairwise alignment for nucleotide sequences",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "18",
+            "pages": "3094--3100",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "VIRULIGN: fast codon-correct alignment and annotation of viral genomes",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "J K"
+                    ],
+                    "last": "Libin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Bioinformatics",
+            "volume": "35",
+            "issn": "10",
+            "pages": "1763--1765",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Katoh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Standley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Mol. Biol. Evol",
+            "volume": "30",
+            "issn": "4",
+            "pages": "772--780",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Phylogenetic Inference of HIV Transmission Clusters",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Novitsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Infect. Dis. Transl. Med",
+            "volume": "3",
+            "issn": "2",
+            "pages": "51--59",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "HIV-TRACE (TRAnsmission Cluster Engine): a Tool for Large Scale Molecular Epidemiology of HIV-1 and Other Rapidly Evolving Pathogens",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L K"
+                    ],
+                    "last": "Pond",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Mol. Biol. Evol",
+            "volume": "35",
+            "issn": "7",
+            "pages": "1812--1819",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Near real-time monitoring of HIV transmission hotspots from routine HIV genotyping: an implementation case study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "F Y"
+                    ],
+                    "last": "Poon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Lancet HIV",
+            "volume": "3",
+            "issn": "5",
+            "pages": "231--238",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A novel methodology for large-scale phylogeny partition",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "C F"
+                    ],
+                    "last": "Prosperi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nat. Commun",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Automated analysis of phylogenetic clusters",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ragonnet-Cronin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "BMC Bioinform",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Identifying Transmission Clusters with Cluster Picker and HIV-TRACE",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rose",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "AIDS Res. Hum. Retroviruses",
+            "volume": "33",
+            "issn": "3",
+            "pages": "211--218",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Clustal Omega, accurate alignment of very large numbers of sequences",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sievers",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Higgins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Methods Mol. Biol",
+            "volume": "1079",
+            "issn": "",
+            "pages": "105--116",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Estimation of the number of nucleotide substitutions in the control region of mitochondrial DNA in humans and chimpanzees",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tamura",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nei",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Mol. Biol. Evol",
+            "volume": "10",
+            "issn": "3",
+            "pages": "512--526",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Performance and accuracy of ViralMSA. Execution time (seconds) and Mantel test Spearman correlations of TN93 distance matrices are shown for MSAs estimated by MAFFT and ViralMSA for various dataset sizes.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We would like to thank Heng Li and his exceptional work in developing Minimap2, which has enabled significant speedup in traditional viral analysis workflows. His work is absolutely integral to ViralMSA's improvement on existing approaches.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "This work has been supported by NSF grant NSF-2028040 to N.M. as well as the Google Cloud Platform (GCP) Research Credits Program.Conflict of Interest: none declared.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Funding"
+        }
+    ]
+}

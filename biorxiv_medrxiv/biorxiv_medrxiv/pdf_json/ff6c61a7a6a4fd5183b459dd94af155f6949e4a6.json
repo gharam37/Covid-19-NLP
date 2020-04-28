@@ -1,0 +1,2260 @@
+{
+    "paper_id": "ff6c61a7a6a4fd5183b459dd94af155f6949e4a6",
+    "metadata": {
+        "title": "Optimal COVID-19 epidemic control until vaccine deployment",
+        "authors": [
+            {
+                "first": "R",
+                "middle": [],
+                "last": "Djidjou-Demasse",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNRS",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Y",
+                "middle": [],
+                "last": "Michalakis",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNRS",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "M",
+                "middle": [],
+                "last": "Choisy",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNRS",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "M",
+                "middle": [
+                    "T"
+                ],
+                "last": "Sofonea",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNRS",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "S",
+                "middle": [],
+                "last": "Alizon",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "CNRS",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Since Dec 2019, the COVID-19 epidemic has spread over the globe creating one of the greatest pandemics ever witnessed. This epidemic wave will only begin to roll back once a critical proportion of the population is immunised, either by mounting natural immunity following infection, or by vaccination. The latter option can minimise the cost in terms of human lives but it requires to wait until a safe and efficient vaccine is developed, a period estimated to last at least 18 months. In this work, we use optimal control theory to explore the best strategy to implement while waiting for the vaccine. We seek a solution minimizing deaths and costs due to the implementation of the control strategy itself. We find that such a solution leads to an increasing level of control with a maximum reached near the fourth month of the epidemics and a steady decrease until vaccine deployment. This strategy strongly outperforms others with constant or cycling allocations of the same amount of resources to control the outbreak. This work opens new perspectives to mitigate the effects of the ongoing COVID-19 pandemics, and be used as a proof-of-concept in using mathematical modelling techniques to enlighten decision making and public health management in the early times of an outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In early December 2019, an outbreak caused by a novel betacoronavirus was reported in Wuhan, the capital city of the Hubei Chinese province [3, 16] . It rapidly spread to other provinces in China and to the rest of the world. On March 17 2020, the World Health Organisation (WHO) officially declared COVID-19 a pandemic. This RNA virus is now known as SARS-CoV-2 [21] and it is reported to cause lower respiratory tract infections in humans with a variety of unspecific symptoms [3, 10, 26] . The virulence of the infection is relatively high with a case fatality ratio estimated to be in the order of 1% [5, 6, 23, 25] , therefore making the virus a public health priority issue given the anticipated size of the epidemics due to the absence of pre-existing immunity.",
+            "cite_spans": [
+                {
+                    "start": 140,
+                    "end": 143,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 144,
+                    "end": 147,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 363,
+                    "end": 367,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 479,
+                    "end": 482,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 483,
+                    "end": 486,
+                    "text": "10,",
+                    "ref_id": null
+                },
+                {
+                    "start": 487,
+                    "end": 490,
+                    "text": "26]",
+                    "ref_id": null
+                },
+                {
+                    "start": 609,
+                    "end": 611,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 612,
+                    "end": 615,
+                    "text": "23,",
+                    "ref_id": null
+                },
+                {
+                    "start": 616,
+                    "end": 619,
+                    "text": "25]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Most countries reacted to the epidemics by rapidly implementing containment public health measures, also referred to as non-pharmaceutical interventions. China was the first country to react by putting the city of Wuhan on quarantine on January 23, 2020, shortly followed by the whole region. Other countries also implemented a national lock-down, such as France on March 17 or the United Kingdom on March 23.",
+            "cite_spans": [
+                {
+                    "start": 366,
+                    "end": 374,
+                    "text": "March 17",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Broadly speaking, there are two main ways to halt the spread of the epidemics. The first one is through natural immunisation: once a proportion 1\u22121/R 0 of the population has been infected (where R 0 is the basic reproduction number), a 'herd immunity' develops and the epidemic starts to decrease [1] . Note that this herd immunity threshold is lower than the 'worst-case scenario', i.e. the epidemics final size if no containment measure is implemented [13] . The second option is to achieve population immunisation through vaccination. The threshold to have the epidemics decrease remains the same, but the cost in terms of mortality can be much lower. These options have been investigated by the WHO Collaborating Centre for Infectious Disease Modelling in two reports [7, 24] . The first report explores the effect of an on/off triggering of 5 types of non-pharmaceutical interventions, whereas the second report compares a containment strategy to a suppression strategy, while factoring in indirect costs of implementing the strategy. Other models have explored the efficiency of contact tracing to mitigate the epidemics [11, 12] .",
+            "cite_spans": [
+                {
+                    "start": 297,
+                    "end": 300,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 454,
+                    "end": 458,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 772,
+                    "end": 775,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 776,
+                    "end": 779,
+                    "text": "24]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1127,
+                    "end": 1131,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1132,
+                    "end": 1135,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Here, we adopt a more modelling approach based on optimal control theory [15, 22] to determine the best strategy to implement until vaccine deployment. We therefore focus on a finite time interval [0, T ], where T is the number of days required for vaccine discovery, manufacturing and deployment. Our key metric is the fraction c of decrease in R 0 (or, equivalently, in the contact rate) obtained through non-pharmaceutical interventions, which we refer to as control intensity. Importantly, the model considers that implementing the control policy comes with a cost, which corresponds to diverting funding from important sources or to social deleterious effects, and can cause indirect mortality. Optimal control theory allows us to find the optimal control strategy over time, denoted by c(t), that minimises the cumulative sum of these costs over the [0, T ] period of time. We compare this strategy to scenarios without any control or with more homogeneous control (i.e. with c alternating between constant values at a given frequency) that involve the same average effort over time as the optimal strategy. We find that the optimal control strategy outperforms the others in terms of direct and indirect mortality.",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 77,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 78,
+                    "end": 81,
+                    "text": "22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We first present the structure of our epidemiological model, then we introduce the objective function we optimise and derive the optimality condition. We then present our results and analyse them in the light of earlier models implemented in the context of pandemic influenza [14, 17] and of the ongoing COVID-19 pandemics.",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 280,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 281,
+                    "end": 284,
+                    "text": "17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The model describes the epidemic dynamics of COVID-19 in a population where hosts can belong to five states: susceptible (S), latent i.e. infected but asymptomatic and not infectious (E), asymptomatic infectious (A), symptomatic infectious (I), recovered (R) and dead (D). Recovered hosts are assumed to be immune for life. The model is also structured by differential disease severity, since COVID-19 can cause both mild or severe infections [19, 26] . We assume that severe symptomatic infections (I s ) require hospitalisation, which reduces their contagiousness. The main variables and parameters of the model are listed in Table 1 and shown in Figure 1 . The case-fatality ratio (\u03b8) and the basic reproduction number (R 0 ) of the epidemic are known from the literature [5, 6, 16, 25] . From these, we can calculate the disease-induced mortality (\u03b1) and the transmission rate, assuming \u03b2 A = \u03b2 I , from the following equations:",
+            "cite_spans": [
+                {
+                    "start": 443,
+                    "end": 447,
+                    "text": "[19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 448,
+                    "end": 451,
+                    "text": "26]",
+                    "ref_id": null
+                },
+                {
+                    "start": 779,
+                    "end": 781,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 782,
+                    "end": 785,
+                    "text": "16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 786,
+                    "end": 789,
+                    "text": "25]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 628,
+                    "end": 635,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 649,
+                    "end": 657,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Model overview"
+        },
+        {
+            "text": "See Appendix D for details on the derivation of R 0 . Next, we introduce the model and describe its parameters and general hypotheses.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model overview"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 76,
+                    "end": 83,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "3"
+        },
+        {
+            "text": "The total population size at a given time t is denoted by N = S + E m + E s + A m +A s +I m +I s +R m +R s , where subscript s and m refer to infection severity (\"severe\" or \"mild\"). Without indicating the time dependency for simplicity, we define the force of infection by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": "where c is the percentage of reduction in transmission due to public health measures at time t, and \u03b2 A and \u03b2 I are the transmission rates of symptomatic and asymptomatic infections respectively. Parameter \u03be is the factor of reduction of the transmission rate of severe and symptomatic infections, which is due to being in a health care facility. A proportion p of exposed individuals (\u03bbS) move to the mild asymptomatic infection class at a rate \u03b5, while the remainder (1 \u2212 p) move to the severe asymptomatic infection class at the same rate \u03b5. We also assume that the epidemic is sustained by migration of E m and E s individuals at a constant rate p\u03bd and (1 \u2212 p)\u03bd respectively. Severe and mild asymptomatic infectious individuals become symptomatic at a same rate \u03c3 and recover at rates \u03b3 s and \u03b3 m respectively. While mild infections are never lethal, severe cases lead to death at rate \u03b1. We assume that the number of severely infected hosts at a given time, I s , affects the disease induced mortality rate (if hospitals are saturated for instance). If we denote by I the total number of infected hosts the health care system (especially the intensive care units, ICU) can sustain, then we assume the mortality rate \u03b1 to be a step function such that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": "We apply the same reasoning at the whole population level by assuming that natural mortality increases because of hospital saturation. We capture this using the following step function for the mortality rate \u00b5:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20049189 doi: medRxiv preprint Setting\u1e8f = dy dt , the resulting system of equations captures our model:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The SEAIR model with differential severity"
+        },
+        {
+            "text": "where N 0 and I 0 are initial total and infected populations defined in Table 1 . Basic properties such as existence, positivity and boundedness solutions of (2.5) are straightforward and therefore are not detailed here.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 79,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "System (2.5) is coupled with the following initial conditions"
+        },
+        {
+            "text": "In this section, we find the optimal control effort c * (t) which substantially minimizes the cumulative number of deaths until vaccine deployment. We first define the objective function to penalize and then derive the necessary optimality condition.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimal intervention"
+        },
+        {
+            "text": "A key step is to define the function to optimise. We assume that a successful scheme is one which reduces the number of deaths in the host population. For clarity, we separate deaths directly attributable to COVID-19 6 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "(D COVID = \u03b1[I s ] I s ) and deaths indirectly linked to COVID-19 infection but due to the saturation of the hospital system (D SAT = \u00b5[I s ] N ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "Therefore, the control scheme is optimal if it minimizes the objective function",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "The first integral corresponds to the total number of deaths over the time period considered and the second represents the total cost associated with the implementation of the control measures. As earlier studies [14, 17] , we assumed a quadratic expression in the second term associated to the control to capture non-linear costs potentially arising for intense control implementations. When the objective function is quadratic with respect to the control, differential equations arising from optimization have a known solution. Other functional forms often lead to systems of differential equations that are difficult to solve [15] . Finally, B is a coefficient allowing to weight the \"cost\" associated to the control implementation (c(t)) relative to the cost due to deaths. Our aim is to find the function c * satisfying",
+            "cite_spans": [
+                {
+                    "start": 213,
+                    "end": 217,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 218,
+                    "end": 221,
+                    "text": "17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 629,
+                    "end": 633,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "and L \u221e is the vector space of essentially bounded measurable functions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The objective function"
+        },
+        {
+            "text": "In order to deal with the necessary optimality conditions, we use Pontryagin's maximum principle [22] and introduce the following Hamiltonian for the system (2.5)-(3.7)",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 101,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "are adjoint functions and f v is given by the right-hand side of (2.5) for the v-compartment. The necessary conditions for the existence of the solution to problem",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "If c * is a solution of (3.7), then, following 3.9, it is characterized by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "7 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20049189 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "and the adjoint functions verify System (C.1) with the boundary conditions (or transversality conditions) z v (T ) = 0. The proof of the existence of such control is standard and we refer to [8, 20] for existence results. Therefore, existence of the optimal control to the above problem is assumed.",
+            "cite_spans": [
+                {
+                    "start": 191,
+                    "end": 194,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 195,
+                    "end": 198,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "The state system (2.5) and the adjoint system (C.1) together with the control characterization (3.10) constitute the optimality system to be solved numerically. Since the state equations have initial conditions and the adjoint equations have final time conditions, we cannot solve the optimality system directly. Instead, we use an iterative algorithm to sweep forward in time using a forward-backward sweep method [15] .",
+            "cite_spans": [
+                {
+                    "start": 415,
+                    "end": 419,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The necessary optimality condition"
+        },
+        {
+            "text": "The model proposed here describes epidemic dynamics during several weeks in a host population before vaccine deployment. In the baseline situation, there is no public health measure to control epidemics (c = 0). The infection spreads rapidly and the peak is reached within few weeks with a large number of severe cases (Figure 2b ). The healthcare system is quickly overwhelmed and this situation lasts for a relatively long period of time (black line in Figure 2b ). Consequently, the number of deaths increases exponentially with additional deaths due to the saturation of the health system (Figure 2c,d) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 319,
+                    "end": 329,
+                    "text": "(Figure 2b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 455,
+                    "end": 464,
+                    "text": "Figure 2b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 593,
+                    "end": 606,
+                    "text": "(Figure 2c,d)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Doing-nothing scenario"
+        },
+        {
+            "text": "Overall, for our parameter values, the average of the optimal control during the control period is c * \u2248 0.3. In the first stage, the optimal control increases rapidly to an intermediate value of approximately 0.5 (Figure 2a ) and the epidemics remains under control for a long time period during which healthcare capacity is not overwhelmed (Figure 2b) . Consequently, the number of deaths is strictly minimized during this first stage even though the control is far from its highest level (Figure 2c,d) . After this stage during which a dampened epidemic peak is achieved, the number of severe cases starts to decrease (Figure 2d) , and the control intensity is progressively relaxed until the end of the time interval considered (Figure 2a) . Importantly, in the absence of any take-over by health measures such as vaccine, the epidemic will certainly rebounce after the period of control. Indeed, only a small proportion of the population has been exposed (less than 0.03%) at the end of control period, which is far from the 1 \u2212 1/R 0 \u2248 60% required to reach the herd immunity threshold.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 214,
+                    "end": 224,
+                    "text": "(Figure 2a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 342,
+                    "end": 353,
+                    "text": "(Figure 2b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 491,
+                    "end": 504,
+                    "text": "(Figure 2c,d)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 621,
+                    "end": 632,
+                    "text": "(Figure 2d)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 732,
+                    "end": 743,
+                    "text": "(Figure 2a)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Optimal control scenario"
+        },
+        {
+            "text": "Furthermore, the total number of deaths with this optimal scenario is substantially lower compared to the \"doing nothing\" scenario (Figure 2c,d) . The 8 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 131,
+                    "end": 144,
+                    "text": "(Figure 2c,d)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Optimal control scenario"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Optimal control scenario"
+        },
+        {
+            "text": "cumulative number of deaths with the optimal control being at least 6,700 times smaller than when doing nothing. With the optimal control, the number of severe cases always remains below the healthcare capacity threshold, and thus the cumulative number of deaths indirectly attributable to the COVID-19 is minimized during the control period (Figure 2d ). An \"intuitive\" rule that emerges from the optimal control (Figure 2a) is (i) from the beginning of the epidemic, gradually but rapidly increase control intensity to an intermediate level when the number of severe cases is still increasing and (ii) progressively decrease control intensity when the number of severe cases starts to decrease. Note that the relationship between control intensity c and the log of severe cases log 10 (I s ) seems quasi-linear.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 342,
+                    "end": 352,
+                    "text": "(Figure 2d",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 414,
+                    "end": 425,
+                    "text": "(Figure 2a)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Optimal control scenario"
+        },
+        {
+            "text": "In this scenario, we start with a strict public health measure during 5 weeks, followed by a constant control intensity until the end of the period of interest (Figure 2a) . The idea is to capture the reaction of several countries that have first implemented strict containment strategies that cannot be sustained for a long period of time. In order to facilitate comparisons between scenarios, the fixed constant control corresponds to the average of optimal control c * . The initial strict control is assumed and it should be even easier to decrease deaths (since we control more). With this strategy, the epidemic peak is strongly delayed compared to the scenario without any control (Figure 2b) . However, the cumulative number of deaths at the end of the period of interest is very similar to the scenario without control, both for the direct deaths caused by COVID-19 infections and for the indirect deaths caused by the saturation of the healthcare system (Figure 2c,d) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 160,
+                    "end": 171,
+                    "text": "(Figure 2a)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 688,
+                    "end": 699,
+                    "text": "(Figure 2b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 964,
+                    "end": 977,
+                    "text": "(Figure 2c,d)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Constant control scenario"
+        },
+        {
+            "text": "By varying coefficient B, we can weight the relative importance of the death term and the control cost term in the objective function (3.6) . Small values of B correspond to situations where the control can be seen as \"inexpensive\", e.g. the host population can support strict public health measures both socially and economically. As a consequence, corresponding optimal controls can be very intense (Figure 3a ) and further decrease severe cases and deaths ( Figure  3b,c) . On the other hand, large values of B correspond to situations where control measures are \"expensive\" for the population, making strict public health measures unsustainable at the population level. In this case, control intensities remain intermediate (Figure 3a) , with more infections and deaths compared to cases with smaller values of B (Figure 3b,c) . However, except for very little costs where constant maximum control is the optimum, we find that the shape of the control function remains unchanged with an intense control by week 20, followed by a decrease in control intensity.",
+            "cite_spans": [
+                {
+                    "start": 134,
+                    "end": 139,
+                    "text": "(3.6)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 401,
+                    "end": 411,
+                    "text": "(Figure 3a",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 461,
+                    "end": 474,
+                    "text": "Figure  3b,c)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 728,
+                    "end": 739,
+                    "text": "(Figure 3a)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 817,
+                    "end": 830,
+                    "text": "(Figure 3b,c)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Effect of the cost of control B"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "9"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20049189 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "9"
+        },
+        {
+            "text": "The initial size of the epidemic plays an important role in the optimal control strategy. The larger the initial number of infections, the higher the optimal control intensity (Figure 4a) . Consequently, the longer the delay in implementing non-pharmaceutical interventions, the tighter the control in the first weeks before the gradual decreasing. Also, the longer the delay in implementing the strategy, the less the optimal strategy can minimise the number of severe infections and deaths (Figure 4b,c) . Table 1 . The dash line represents the healthcare capacity (color online).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 176,
+                    "end": 187,
+                    "text": "(Figure 4a)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 492,
+                    "end": 505,
+                    "text": "(Figure 4b,c)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 508,
+                    "end": 515,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Effect of the initial epidemic size on the optimal control"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. Table 1 . The dash line represents the healthcare capacity (color online).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 154,
+                    "end": 161,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "10"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "The COVID-19 pandemics represents a dilemma for public health policies, which are faced with either mitigating the epidemic wave to rely on natural immunisation, or suppressing the wave long enough to develop and implement a vaccine. We focused on the latter case to address the following question: in a context where resources are finite, how to best allocate the control effort of the epidemic over the time period necessary to deploy a vaccine?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Using optimal control theory, we show that, assuming a quadratic cost for the control effort at a given time (c(t)), an optimal control strategy significantly reduces the number of deaths and is particularly sustainable at the population level. With this strategy, the intensity of the control increases rapidly over the first quarter of the time period to an intermediate value and then decreases steadily. Other strategies, such as implementing a strong short containment (\"lock-down\") followed by a looser and constant control effort are almost comparable to a strategy without control in terms of cumulative number of deaths. Indeed, in this constant control strategy, the epidemic peak is delayed but barely dampened.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "As shown in the Appendix, we also investigated cycling strategies that alternate two levels (c max and c min ) of control intensity every 6 weeks. c max is fixed to 90% for all scenarios and c min is variable ( Figure S1 ). Overall, such scenarios delay the epidemic peak for the time during which controls are implemented. In the end of the period of interest, the cumulative number of deaths with all cycling strategies is comparable to that reached in the absence of control. This configuration is the same with shorther cycles, e.g. a weekly cycle of 2 work days and 5 lock-down days ( Figure S2) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 211,
+                    "end": 220,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 590,
+                    "end": 600,
+                    "text": "Figure S2)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Assuming an all-or-nothing scenario, we then considered an intense lockdown (c = 90%) with a variable duration of 12 or 50 weeks ( Figure S3a ). At first, this strategy maintains the epidemic dynamics under control ( Figure S3b ). However, as for the constant or the cycling strategies, these strategies only delay the epidemic peak and in the end the cumulative mortality over the time period of interest is comparable to the one without any control measure ( Figure S3b,c) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 131,
+                    "end": 141,
+                    "text": "Figure S3a",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 217,
+                    "end": 227,
+                    "text": "Figure S3b",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 461,
+                    "end": 474,
+                    "text": "Figure S3b,c)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "These results should be interpreted in a qualitative sense because we have made a number of assumptions to derive our solutions. First, the structure of the model itself could be refined, for instance to explicitly model critical cases as in the model by [2] . Several epidemiological parameters of the COVID-19 epidemics also remain largely unknown at this stage [18] . The natural and disease-induced mortality functions could also be modified to fit even more to the data. For instance, both of these could depend on the intensity of the control c(t) because resource allocation to fighting COVID-19 can imply increased mortality by other diseases. Finally, the structure of the objective function itself and the quadratic cost associated with the cost coefficient B could also be explored further.",
+            "cite_spans": [
+                {
+                    "start": 255,
+                    "end": 258,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 364,
+                    "end": 368,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The question of controlling the epidemic before a deployment of a vaccine may also arise for other pharmaceutical interventions such as the development of a curative treatment. One of the limitations of our study is that we assumed 12 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . that in the time necessary for vaccine development, the standard of treatment of COVID-19 infections remains constant. In reality, the time to discover and implement a new treatment could be lower than the time to discover and deploy a vaccine. This would not affect the general picture because the epidemic threat will remain unless the herd immunity threshold is reached. However, it would greatly affect our disease-induced mortality function and therefore the optimal strategy itself. Nevertheless, this same model remains valid in the context of treatment discovery if we redefine the time interval as the time necessary to set-up such a treatment. Qualitatively, we anticipate our results to hold on a shorter time interval.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our results offer new perspectives and research avenues to control the COVID-19 epidemics. In particular, we find that stragies that alleviate epidemic control too early all tend to only delay the epidemic wave. We also see that varying the level of control over time provides the best results for a constant control effort over the period of interest. An open challenge is to identify optimal strategies that could be implemented in the field, especially by accounting for potential differences in the cost of control implementation among populations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Clinical course and outcomes of critically ill patients with SARS-CoV-2 pneumonia in Wuhan, China: a single-centered, retrospective, observational study. The Lancet Respiratory Medicine. Table 1 . The dashed line represents the healthcare capacity (color online).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 187,
+                    "end": 194,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. Table 1 . The dash line represents the healthcare capacity (color online).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 154,
+                    "end": 161,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "17"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity. Table 1 . The dash line represents the healthcare capacity (color online).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 154,
+                    "end": 161,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "18"
+        },
+        {
+            "text": "\uf8f1 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f2 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f4 \uf8f3\u017c",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C The adjoint system"
+        },
+        {
+            "text": "It is useful to write System (2.5) into a more compact form. To that end, we set E = (E m , E s ), A = (A m , A s ) and I = (I m , I s ). As deaths and recovered are decoupled from the system, it is not necessary to keep them here. Here x T is set 19 . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D The basic reproduction number"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02. Following [4] , the basic reproduction number of Model (2.5) is defined as the spectral radius \u03c1 F V \u22121 of the next generation matrix F V \u22121 . A straightforward computation leads to \u03c1 F V \u22121 =S 0 \u03c1 1 \u03c3 P(\u03b2 A , \u03b2 A ) + P(\u03b2 I , \u03be\u03b2 I ) (\u03b3 + d(0)) \u22121 =S 0 \u03c1(K), with K = px py (1 \u2212 p)x (1 \u2212 p)y , x = \u03b2 A \u03c3 + \u03b2 I \u03b3m and y = \u03b2 A \u03c3 + \u03be\u03b2 I \u03b3s+\u03b1[0] . Since det(K) = 0, it comes",
+            "cite_spans": [
+                {
+                    "start": 124,
+                    "end": 127,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D The basic reproduction number"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D The basic reproduction number"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "20"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.02.20049189 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "20"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Infectious Diseases of Humans. Dynamics and Control",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "How will country-based mitigation measures influence the course of the COVID-19 epidemic? The Lancet",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Klinkenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hollingsworth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Epidemiological and clinical characteristics of 99 cases of 2019 novel coronavirus pneumonia in Wuhan, China: a descriptive study",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "507--513",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "On the definition and the computation of the basic reproduction ratio $R_0$ in models for infectious diseases in heterogeneous populations",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Metz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "J. Math. Biol",
+            "volume": "28",
+            "issn": "4",
+            "pages": "365--82",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "2019-nCoV: preliminary estimates of the confirmedcase-fatality-ratio and infection-fatality-ratio, and initial pandemic risk assessment",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Famulare",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Impact of nonpharmaceutical interventions (NPIs) to reduce COVID-19 mortality and healthcare demand",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nedjati-Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boonyasiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cucunub\u00e1",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dighe",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gaythorpe",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verity",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Volz",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Walters",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Winskill",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Whittaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ghani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Deterministic and Stochastic Optimal Control. Stochastic Modelling and Applied Probability",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Rishel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Website: Donn\u00e9es hospitali\u00e8res relatives \u00e0 l'\u00e9pid\u00e9mie de COVID-19",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "France",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Feasibility of controlling COVID-19 outbreaks by isolation of cases and contacts. The Lancet Global Health",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hellewell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Abbott",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gimma",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Bosse",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Jarvis",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Munday",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flasche",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Quilty",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Clifford",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Klepac",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jit",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Gibbs",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Zandvoort",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The Efficacy of Contact Tracing for the Containment of the 2019 Novel Coronavirus (COVID-19)",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hollingsworth",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A contribution to the mathematical theory of epidemics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proc. R. Soc. Lond. A",
+            "volume": "115",
+            "issn": "",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Optimal control for pandemic influenza: The role of limited antiviral treatment and isolation",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castillo-Ch\u00e1vez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of Theoretical Biology",
+            "volume": "265",
+            "issn": "2",
+            "pages": "136--150",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Optimal control applied to biological models",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lenhart",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Workman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "An optimal control theory approach to non-pharmaceutical interventions",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Muthuraman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lawley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "BMC Infect Dis",
+            "volume": "10",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Defining the Epidemiology of Covid-19 -Studies Needed",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Swerdlow",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Finelli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "382",
+            "issn": "13",
+            "pages": "1194--1196",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "2020. Secondary attack rate and superspreading events for SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Introduction to Optimal Control Theory",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Macki",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Strauss",
+                    "suffix": ""
+                }
+            ],
+            "year": 1982,
+            "venue": "Undergraduate Texts in Mathematics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "The species Severe acute respiratory syndromerelated coronavirus : classifying 2019-nCoV and naming it SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "Ictv",
+                    "middle": [],
+                    "last": "Of The",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "S G"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Mathematical Theory of Optimal Processes",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pontryagin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Boltyanskii",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Gamkrelidze",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Mishchenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 1965,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "The Global Impact of COVID-19 and Strategies for Mitigation and Suppression",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Whittaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Watson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "E C"
+                    ],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boonyasiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Boyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cattarino",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cucunub\u00e1",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Van Elsland",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Fitzjohn",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Flaxman",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Geidelberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Grassly",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Hinsley",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jorgensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Knock",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mishra",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Okell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Unwin",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verity",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vollmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Walters",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Winskill",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xi",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ghani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Estimating clinical severity of COVID-19 from the transmission dynamics in Wuhan, China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bushman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kishore",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Niehus",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Salazar",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Med",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "\u2212 c)\u03b2 I S(z S \u2212 pz Em \u2212 (1 \u2212 p)z Es ) \u2212 \u03b3 m z Rm + (\u03b3 m + \u00b5[I s ])z Im , z Is = \u2212\u00b5[I s ] + (1 \u2212 c)\u03b2 I S",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Im = \u2212\u00b5",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "The compartmental model flow diagram. Host states are indicated by squares and transitions by arrows (along with their corresponding rates). Hosts in all compartments die at a natural mortality rate \u00b5[I s (t)] that is not shown for clarity. Notations are shown in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Effect of the optimal strategy and constant control on the number of severe cases (I s ), deaths directly attributable to COVID-19 (D COVID ) and deaths indirectly linked to COVID-19 (D SAT ). (a) Control strategies. (b) Number of severe cases with and without controls. (c)-(d) Cumulative number of deaths with and without controls. Parameters of the model are set to their reference values given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Effect of the the weight parameter B on optimal interventions. (a) Control strategies. (b) Number of severe cases with and without controls. (c) Cumulative number of deaths with and without controls. Parameters of the model are set to their reference values given inTable 1. The dash line represents the healthcare capacity (color online).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Effect of the the initial epidemic size I 0 on optimal interventions. (a) Control strategies. (b) Number of severe cases with and without controls. (c) Cumulative number of deaths with and without controls. Parameters of the model are set to their reference values given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Zhou, F., T. Yu, R. Du, G. Fan, Y. Liu, Z. Liu, J. Xiang, Y. Wang, B. Song, X. Gu, L. Guan, Y. Wei, H. Li, X. Wu, J. Xu, S. Tu, Y. Zhang, H. Chen and B. Cao. 2020. Clinical course and risk factors for mortality of adult inpatients with COVID-19 in Wuhan, China: a retrospective cohort study. Intermediate constant control versus optimal control. In the intermediate control, each cycle last 12 weeks (with 6 weeks of lock-down at level c max = 90% and 6 weeks at level c min ). The first column (a)-(b)-(c) are respectively the control strategy, number of severe cases and cumulative number of deaths, with c min = 0. Second column (d)-(e)-(f ) with c min = 0.3. Third column (g)-(h)-(i) with c min = 0.6. Parameters of the model are set to their reference values given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Intermediate constant control versus optimal control. In the intermediate control, each cycle last 1 week (with 5 days of lock-down at level c max = 90% and 2 days at level c min ). The first column (a)-(b)-(c) are respectively the control strategy, number of severe cases and cumulative number of deaths, with c min = 0. Second column (d)-(e)-(f ) with c min = 0.3. Third column (g)-(h)-(i) with c min = 0.6. Parameters of the model are set to their reference values given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Full lock-down during 12 and 50 weeks versus optimal control. (a) The control strategy. (b) The number of severe cases. (c) The cumulative number of deaths. Parameters of the model are set to their reference values given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "\u2212 S \u03b2, (A, I) T , E =SP\u03b2(A, I) T \u2212 (\u03b5 + \u00b5[I]) E + \u03bdP, A =\u03b5E \u2212 (\u03c3 + \u00b5[I]) A, I =\u03c3A \u2212 (\u03b3 + \u00b5[I]I + d(I)) I,(D.2) where \u03b2 = (\u03b2 A , \u03b2 A , \u03b2 I , \u03be\u03b2 I ) , P = (p, 1\u2212p) T , \u03b3 = diag(\u03b3 m , \u03b3 s ), d(I) = diag (0, \u03b1[I]), I is the 2 \u00d7 2 identity matrix, diag(w)is a diagonal matrix which elements are given by w; and x, y is set for the usual scalar product of vectors x and y.Linearizing System (D.2) at the disease free environment (S, E, A, I) = (S 0 , 0, 0, 0) and setting u = (E, A, I) T , we obtainu = (F \u2212 V )u, where F is the rate of appearance of new infections in each class, and V is composed by the rate of transfer into each class by all other means and the rate of transfer out of each class. 0 P(\u03b2 A , \u03b2 A ) S 0 P(\u03b2 I , \u03be\u03b2 I",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We would like to thank the entire ETE modeling team composed of Samuel Alizon, Thomas B\u00e9n\u00e9teau, Marc Choisy, Gonch\u00e9 Danesh, Ramses Djidjou-Demasse, Baptiste Elie, Yannis Michalakis, Bastien Reyn\u00e9, Quentin Richard, Christian Selinger, Mircea T. Sofonea.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

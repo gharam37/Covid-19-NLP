@@ -1,0 +1,1404 @@
+{
+    "paper_id": "103da39315dacad4c697daebbeaabe42b75d46a8",
+    "metadata": {
+        "title": "Covid-19 predictions using a Gauss model, based on data from April 2",
+        "authors": [
+            {
+                "first": "Janik",
+                "middle": [],
+                "last": "Sch\u00fcttler",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "ETH Zurich",
+                    "location": {
+                        "postCode": "8093",
+                        "settlement": "Zurich",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Reinhard",
+                "middle": [],
+                "last": "Schlickeiser",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Ruhr-Universit\u00e4t Bochum",
+                    "location": {
+                        "postCode": "D-44780",
+                        "settlement": "Bochum",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Frank",
+                "middle": [],
+                "last": "Schlickeiser",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Martin",
+                "middle": [],
+                "last": "Kr\u00f6ger",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Ruhr-Universit\u00e4t Bochum",
+                    "location": {
+                        "postCode": "D-44780",
+                        "settlement": "Bochum",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We propose a Gauss model (GM), a map from time to the bell-shaped Gauss function to model the deaths per day and country, as a quick and simple model to make predictions on the coronavirus epidemic. Justified by the sigmoidal nature of a pandemic, i.e. initial exponential spread to eventual saturation, we apply the GM to existing data, as of April 2, 2020, from 25 countries during first corona pandemic wave and study the model's predictions. We find that logarithmic daily fatalities caused by Covid-19 are well described by a quadratic function in time. By fitting the data to second order polynomials from a statistical \u03c7 2 -fit with 95% confidence, we are able to obtain the characteristic parameters of the GM, i.e. a width, peak height and time of peak, for each country separately, with which we extrapolate to future times to make predictions. We provide evidence that this supposedly oversimplifying model might still have predictive power and use it to forecast the further course of the fatalities caused by Covid-19 per country, including peak number of deaths per day, date of peak, and duration within most deaths occur. While our main goal is to present the general idea of the simple modeling process using GMs, we also describe possible estimates for the number of required respiratory machines and the duration left until the number of infected will be significantly reduced. * Corresponding author \u2020 Electronic address: rsch@tp4.ruhr-uni-bochum.de \u2021 Electronic address: mk@mat.ethz.ch \u00a7 We submitted the first version to medRxiv.org (MEDRXIV/2020/055830) on April 5, 2020. This document is the second, revised version, but plots and data analysis, based on data from April 2, remain the same. We added acknowledgements.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Nowadays, numerous models to predict the spreading of infectious diseases like Covid-19 are available, for example the actively discussed susceptible-infected-removed (SIR) model [9] [10] [11] . Many of these models are either toy models that cannot make reliable predictions or they are so complex, by taking into account a wide range of factors, that simple predictions are not possible. In times of the coronavirus epidemic, predictions such as the maximum number of fatalities per day or the date of the peak number of newly seriously sick persons per day (SSPs) are valuable data for governments around the world, especially those facing the beginning of an exponential increase of casualties, and we hope to serve the people in charge with the here presented approach. In particular, fast predictions on the course of the coronavirus disease are crucial for policy makers to optimize their managing of the disease wave. To feed into the current debate on infectious disease models, we would like to propose a Gauss model (GM) as a simple, but effective description of fatalities caused by Covid-19 over time, similar to recent studies for the US [12] and for Germany [13] . In contrast to this previous work, we choose to use the logarithm of the reported daily death rates [2] , instead of cumulative infections, as monitored input data and we also do not rely on doubling times.",
+            "cite_spans": [
+                {
+                    "start": 179,
+                    "end": 182,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 188,
+                    "end": 192,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1152,
+                    "end": 1156,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1173,
+                    "end": 1177,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1280,
+                    "end": 1283,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. Introduction"
+        },
+        {
+            "text": "The Gaussian model maps time to the bell-shaped Gauss function to fit existing data of deaths per day and country, and to use this fit to extrapolate the deaths per day to future times. Though the GM may appear too simple to be predictive, and it most likely is, we can justify its use by several arguments: 1) the GM captures the data available today well, including the entire first epidemic wave in China, and 2) epidemics are initially exponential and eventually saturating processes in cumulative quantities and thus give rise to bell-shaped daily quantities, like the Gaussian function -all of which we will explain in detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. Introduction"
+        },
+        {
+            "text": "Please keep in mind that we are no epidemiologists and have no prior expertise in the modelling of diseases. Also, with the here presented GM we dare, by no means, to present a model capable of similar mechanistic and causal richness compared with existing infectious disease models. Our only addition is to note and use for predictions the macroscopic Gaussian nature of the time evolution of cumulative fatalities that is universal among all countries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. Introduction"
+        },
+        {
+            "text": "We model the time-dependent daily change of infections and daily change of deaths with their own, a priori independent, time-dependent Gaussian functions denoted by i(t) and d(t). Each Gaussian is a bell-shaped curve, the black line in Fig.  1(a) , characterized by three independent parameters: a width, a maximum height and a time at which the Gaussian curve attains this maximum height. For any value of these parameters, the general form of the Gauss function -the bell-shaped curve in Fig. 1 (a) -is preserved, but the concrete fit to given data can be optimized, as illustrated in Fig. 1(b) for varying parameters.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 236,
+                    "end": 246,
+                    "text": "Fig.  1(a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 490,
+                    "end": 496,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 587,
+                    "end": 596,
+                    "text": "Fig. 1(b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "A. Gauss model (GM)"
+        },
+        {
+            "text": "It must be emphasized that we model the daily change of deaths, in contrast to the cumulative number of deaths, more frequently available in public, because the change of deaths allow for a more stable fit around its maximum, i.e. the time of interest for predicted quantities. We will explain this point in the discussion. The cumulative deaths are the sum of all previous daily deaths up to today, while the number of daily deaths in turn is the difference of two consecutive days in cumulative deaths. In Fig. 1(a) , the red plot illustrates the cumulative number of deaths as a function of time for the respective daily number of deaths in the same panel.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 508,
+                    "end": 517,
+                    "text": "Fig. 1(a)",
+                    "ref_id": null
+                }
+            ],
+            "section": "A. Gauss model (GM)"
+        },
+        {
+            "text": "x max We prefer to base any quantitative conclusions only on the number of deaths, and not on the number of infections per day. Deaths are better documented than monitored infections in nearly all countries. A death caused by Covid-19 is easier to count than an infection, which might as well cause none to moderate symptoms and hence might remain uncounted. Statistically, a constant fraction of infected die from Covid-19 at a later time after being registered as infected [4, 19] . Thus, infection and death curves are equivalent descriptions of time evolution of Covid-19, and the coefficients characterizing their shape can be expected to be closely related. To demonstrate that both, infections and deaths, follow the GM, we analyzed and show results for both measures.",
+            "cite_spans": [
+                {
+                    "start": 475,
+                    "end": 478,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 479,
+                    "end": 482,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Gauss model (GM)"
+        },
+        {
+            "text": "Using the fitted polynomial coefficients we compute the three parameters of the GM, i.e. maximum height, time of maximum height and curve width, for each country. For mathematical details, please refer to the appendix. To demonstrate the universal Gaussian nature of the daily fatalities over time d, we display them in Fig. 3(a,b) , normalized so that all curves have unit width, maximum and time of maximum. The same plots for the cumulative fatalities D are shown in Fig. 3(c,d) . Daily infections i, daily fatalities d, cumulative infections I and cumulative fatalities D, all fit neatly onto the unit GM curve or its cumulative function, plotted in gray in the back for reference. China, which is the only country to provide data from its first pandemic wave for times greater than 0.6 (in normalized units), fits to the GM well over the entire significant course of infections and fatalities. This sparks the hope that the used GM will have predictive power for the remaining countries also after the maximum. The fits already provide sufficient evidence that the part prior to the maximum is captured well by the GM. The resulting GM parameters are listed and plotted in Fig. 4 . For most countries the GM width is within 10 and 15 days, roughly half of all countries have passed their peak of daily fatalities already and the peak is roughly below 20 fatalities per day and per million people. . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 320,
+                    "end": 331,
+                    "text": "Fig. 3(a,b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 470,
+                    "end": 481,
+                    "text": "Fig. 3(c,d)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1178,
+                    "end": 1184,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "C. The fitted parameters"
+        },
+        {
+            "text": "Using the GM, one can obtain predictions for the further course of the Covid-19 pandemic analytically from the three descriptors. We here present two possible applications: cumulative fatalities as a function of time and the maximum required number of respiratory equipment as well as its time point. First, the time evolution of the number of cumulative fatalities D, plotted in Fig. 5 , can be obtained by summing daily number of deaths d, predicted by our model. In this figure, we rescaled all curves back to normal times so that the future course of cumulative deaths can be easily read-off. One can compute analytically that the date after which the new deaths per day have decreased to 1% of their maximum lies roughly 2 widths after the maximum of daily deaths, and the values, denoted by T \u03b7 , for each country can be found in Fig. 4 (a). Already from visual inspection Fig. 5 suggests for Italy and Spain to plateau first, while France will have to face increasing number of fatalities considerably longer. It also anticipates the cumulative number of fatalities per million people over the entire course of the Covid-19 disease to be highest for France, Spain and Italy.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 380,
+                    "end": 386,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 836,
+                    "end": 842,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 879,
+                    "end": 885,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "D. Additional predictions"
+        },
+        {
+            "text": "Next, we estimate the number of required respiratory machines per date for the Covid-19 epidemic. We start by assuming the number of respiratory machines per day to be equal to the cumulative number of active seriously sick persons on the . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. given date, where active means not yet recovered by that date.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Additional predictions"
+        },
+        {
+            "text": "Each new seriously sick person per day (SSP) requires a respiratory machine for some days or even weeks before passing away or recovering from Covid-19. According to other works [19] , people to have died from Covid-19 occupied respiratory equipment for an average of 7 days prior to their death, but respiratory equipment may be in use for up to about one month for cases that later recovered. Thus, we may roughly estimate the number of active SSPs per date as the sum of people that became seriously sick within the past 10 days. Please note, however, that we try to only conceptually link the GM to useful quantities, we leave a thorough search of exact numbers to the reader. As a final step, we need relate SSPs and deaths. Assume that each SSP dies with a constant probability \u03b3 after some days, i.e. \u03b3 times SSPS gives the daily fatalities some days ahead. Taking again numbers from Ref. [19] , we could use that each deceased patient had used a respiratory machine for an average of 7 days prior to death and thus estimate the daily number of SSPs at a given date by the number of daily fatalities 7 days in the future divided by probability \u03b3.",
+            "cite_spans": [
+                {
+                    "start": 178,
+                    "end": 182,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 896,
+                    "end": 900,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Additional predictions"
+        },
+        {
+            "text": "The result of the above estimate reveals that the required number of respiratory equipment itself is a Gaussian curve, roughly centered around the same date as the daily fatality curve, and its peak value is proportional to a multiplicative factor that depends on the width of the Gaussian and ranges between 0.5 and 0.9 for the widths we found, the total number of fatalities D total , and the ratio of passing away as a SSP \u03b3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Additional predictions"
+        },
+        {
+            "text": "The preceding section demonstrated how a GM can be used to obtain statistical predictions for a pandemic such as the corona pandemic. The presentation was intentionally conceptual, to convey only the principle idea of such a model. It is clear that such predictions might work better for some countries than others. This is also why the reader should not be distracted too much by the large error in the fitted or derived parameters of Fig. 4 . The question remains, though, how the GM could be justified? In the following we aim to present a number of argu-ments in favor of the GM that make use of sigmoidal nature of saturating processes such as pandemics and include a numerical argument on the stability of models.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 436,
+                    "end": 442,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "III. Discussion"
+        },
+        {
+            "text": "First, let us list some other 'microscopic' models that can lead to a Gaussian dynamics of fatalities or infections. One of more prominent ones recently appeared in the Washington Post [14] . Stevens investigated what happens when simulitis spreads in a town, if everyone in the town starts at a random position, moving at a random angle, infecting others upon collision, and recovering after a certain time. The simulated number of infected people rises rapidly as the disease spreads and tapers off as people recover -a bell-shaped curve. We recreated the simulations and found evidence for the applicability of the GM under many circumstances. These results are not reported here, but support our central assumption. From another recent work using a holistic agent-based model [3] , where the agents adapt their behavior through artificial intelligence as part of the solution, there seems also evidence from the numerical results presented, that the number of newly infected may be well captured by a Gaussian function.",
+            "cite_spans": [
+                {
+                    "start": 185,
+                    "end": 189,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 780,
+                    "end": 783,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. Discussion"
+        },
+        {
+            "text": "The key of these behavior lies in the sigmoidal nature of saturating processes. Intuitively, we know that the cumulative number of cases for a wave of any pandemic must start from a constant (often 0), then increase exponentially and eventually saturate at a higher constant level. Functions that capture such a behavior, i.e. a smooth change from a lower constant to a higher constant over a finite duration, are called sigmoidal. The derivative of sigmoidal functions have a bell-shaped form, similar to a Gaussian function, but may be asymmetric in general. We here model the daily fatalities d, formally the derivative of the cumulative fatalities D. Since we expect cumulative cases D to be sigmoidal, from common-sense reasoning as argued above, this fixes the derivative, the daily fatalities d, to a bell-shaped form. Even though all pandemics thus give rise to bell-shaped d by this argument, the curve's parameters might differ, influenced mostly by policy, health system and culture. The predictive power of our model rests on the assumption that these influences are encoded already into the early data of casualties, combined with the assumption that the principal shape of all pandemics is fixed. This is of course an unjustified assumption or, if at all, justified only in a statistical sense when considering large number of trials. Why do we choose a symmetric bell-shaped form, the Gaussian function? We recognize that other models, such as Poisson functions that fade out slower after their maximum, might be more realistic. However, a symmetric function is the simplest model among all bell-shaped functions and works well enough to convey the idea of such models. Second, the times of greatest interest to policy makers are until the bell-curve's peak since once passed the health system should be able to cope.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. Discussion"
+        },
+        {
+            "text": "Sigmoidal functions are popular to model saturation processes such as cellular growth [20, 21] or enzyme (Michaelis-Menten) kinetics. Numerous sigmoidal functions exist and they have been used in many variations to predict infectious diseases [8] and have even been linked directly to models such as the SIR model [17] . Not surprisingly, sigmoidal models are frequently used in times of coronavirus [7, 15, 18] , most often using a (generalized) logistic function (Richard's curve). One model particularly similar to our GM [12] also uses the Gaussian integral as sigmoidal function with similar parameters. However, the study only applies to the US, for which we . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 86,
+                    "end": 90,
+                    "text": "[20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 91,
+                    "end": 94,
+                    "text": "21]",
+                    "ref_id": null
+                },
+                {
+                    "start": 243,
+                    "end": 246,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 314,
+                    "end": 318,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 400,
+                    "end": 403,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 404,
+                    "end": 407,
+                    "text": "15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 408,
+                    "end": 411,
+                    "text": "18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 525,
+                    "end": 529,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "III. Discussion"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055830 doi: medRxiv preprint noticed a bimodal Gaussian nature of d and thus decided not to model it here. Moreover, the precise methodology remains elusive as of today when we submitted this manuscript, but we assume the author fitted the sigmoidal Gaussian integral function, not its Gaussian derivative. We believe this to be a crucial difference to our procedure, to be discussed in the next paragraph.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "A major issue with sigmoidal models is that they are often prone to overfitting [6] and also we in our preliminary experiments found such sigmoidal fits to be sensitive to initial conditions and to often require a large number of parameters. Previously, people have tried to experiment with regularizations [17] to account for such instabilities. Instead, we here choose to fit the logarithm of daily change of cases d, not the cumulative cases D. The logarithm of d weights more evenly values close to the functions maximum and disregards other values. We believe this leads to a more stable model of d around its maximum, the turning point of D, and the time of interest since most relevant predictions such as peak of the pandemic, time point and width of peak are focused around this maximum.",
+            "cite_spans": [
+                {
+                    "start": 80,
+                    "end": 83,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 307,
+                    "end": 311,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The above arguments explained our believe in sigmoidal models, but we also see mechanistic problems in other type of models, such as exponentials. Many exponential models rely on doubling times [13] , which require intense preprocessing of data, such as smoothing, and are model dependent. Please refer to the methods in the appendix for further discussion of doubling times in the context of the here presented GM. Other exponential models report considerable deviations from an exponential nature, e.g. a power law behavior as the curve flattens [16] . Sigmoidal functions automatically account for exponential growth and subsequent flattening and we thus believe them to be a better predictor. We must note that we aim to be compared with descriptive models, i.e. models that work only in the statistical limit of large data. In contrast, mechanistic models for infectious diseases [4] are able to study the effect of parameters such as policies, health system or culture on the outcome of a pandemic, and thus to provide more detailed predictions and recommendations.",
+            "cite_spans": [
+                {
+                    "start": 194,
+                    "end": 198,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 548,
+                    "end": 552,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 885,
+                    "end": 888,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The here presented GM allows for simple predictions of future course of the Covid-19 disease and we have provided first evidence that a GM is able to capture the time evolution of the daily fatalities and infections per country. Fitted models describe past data well, including data from China.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "The model is so simple that it can be reproduced and applied without detailed knowledge of epidemiology, statistics or programming languages. There are many countries not yet drastically affected by Covid-19, which will likely change for many in the coming weeks, and the GM could for example be used to apply it to such countries as soon as sufficient data is available. Using the recipe presented here, interested readers are in the position to obtain estimates for the shape of the Gaussian curve for their country, state, community, and use this model to compute more quantities of interest, such as our sketch of how to estimate the maximum number of required respiratory machines and the date of this maximum demand. Knowing the time of maximum rush days of SSPs, the maximum number of SSPs and width could help the government and medical agencies in these countries to optimize the managing of the disease wave by appropriate drastic actions for limited time. Moreover, fortunately, as our study here demonstrates, the time of peak of the disease wave differs among countries. Knowledge of these peak times and their durations allows other countries to help those who undergo the peak of the wave at a significantly later time, with breathing apparati and trained medical personal for a brief predictable time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "Besides that we hope to make the public aware of the Gaussian or sigmoidal nature emerging from Covid-19 infections, similar to the numerous discussions of exponential functions in recent times. No pandemic is ever exponential, in the long run it is sigmoidal, and thus makes for a good discussion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "On one hand we are afraid our predictions will become reality, on the other they are more optimistic than all (few) predictions we came across so far. Confronting these predictions and the method with reality will help to either establish or rule out the presented approach within a very short time. It is the simplicity of the model and its missing freedom which will allows us to quickly decide on its usefulness for future applications.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "We conclude with a word of caution. We are certainly no experts in this field and a GM is simply a description of a smooth time evolution of deaths. We leave it to the reader to treat the here presented observations and claims with enough care.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "Gauss model -Denote the number of daily fatalities as a function of time by d(t) and the cumulative number of fatalities by D(t). We model the time evolution of fatalities using the GM, i.e. a Gaussian function of time,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "where w d denotes the width of the Gaussian, d max denotes the maximum value of fatalities and t d,max the time point at which this maximum is attained. The identical model and notation applies to the number of daily infections i(t), cumulative infections I(t) and parameters i max , t i,max , w i . We use publicly available data of monitored cumulative death rates D m (t), where the subscript m is used to distinguish data from our model, to derive the daily death rates by taking the first time derivative",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "and calculated its natural logarithm ln d m (t). The GM dy-. CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. Conclusion"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055830 doi: medRxiv preprint namics (A1) implies",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "which is a polynomial function of degree 2 with coefficients",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The relevant parameters determining the number of deaths per day, the width of the distribution, as well as the position of the peak are then given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Fitting & errors -Using a second order polynomial fit to the data we obtained the coefficients c 0 , c 1 , c 2 as well as their confidence intervals. For this, the Matlab R function [P,S,M]=polyfit(t,log(I m ),2) on the natural logarithm of the monitored death rates ln I m (t) yields the coefficients P=[c 2 ,c 1 ,c 0 ] of the fit as well as information about the confidence intervals. We made use of the function polyparci that uses only core Matlab R functions and does not require the Statistics Toolbox. It uses the procedures outlined in the polyfit documentation to calculate the covariance matrix, and uses functions betainc and fzero to calculate the cumulative t-distribution and the inverse tdistribution for a given probability and degrees-of-freedom. Within the limited amount of time we had to prepare this document, we were unable to compare error estimates from different approaches.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Deaths vs. infections -We have applied the same procedure to the measured number of infected people, i m (t), giving rise to another set of parameters i max , t i,max , and w i . We found that the GM widths for infections w i and fatalities w d are similar in magnitude, within errors, and that \u03c4 d,max and \u03c4 i,max differ by a number of days \u03c4 \u2248 10 [5] , that can be considered constant for practical purposes. Our analysis confirms this estimate. It is also useful to introduce the fraction of fatalities among the truly infected (not the reported infected) f = D total /I total , as this fraction can be expected to vary within limited bounds. We thus write",
+            "cite_spans": [
+                {
+                    "start": 349,
+                    "end": 352,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "This reduces the number of parameters for a combined study of daily deaths and infections to four, as f cannot be considered constant, or further down to three, employing f \u2248 5 \u00d7 10 \u22123 suggested by Fig. 1 of Ref. [5] . We did not make use of these relationships and numbers anywhere in this work, but they can still be used to estimate quantities mentioned below.",
+            "cite_spans": [
+                {
+                    "start": 213,
+                    "end": 216,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 198,
+                    "end": 204,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "While this study mostly focuses on the number of fatalities, we had also included data from 11 countries for the reported number of infections in some of the previous figures that provide evidence for the applicability of the GM. Table I lists the corresponding parameters.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 230,
+                    "end": 237,
+                    "text": "Table I",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Data used -Only countries which as of April 2nd, have reported more than 20 infected or 7 deceased people for more than 10 days. Also, outliers that are better described by a multimodal extension of the GM have been omitted (including the United States) with the exception of China, for which there was a clear end of the first wave on about March 12. This resulted in the 25 counties used here. Using the identical approach, many more countries will be available for analysis within the next few days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Cumulative fatalities -The accumulated number of fatalities at time t, which we refer to as cumulative number of fatalities, is the integral of the daily fatalities (A1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "\u03c0 is the projected total number of fatalities at t \u2192 \u221e and erf is the error function. Using (A7) the time t 0 by which a first patient died from the virus is immediately estimated via D(t 0 ) = 1. Similarly via I(t 0 ) = 1 for the first infected person, so-called patient 0, if one takes into account a time shift \u03c4 and ratio f between d max and i max , cf. (A6), and one ignores the fact that the gaussian is likely to break down in this limit. The explicit expression is t 0 = t i,max \u2212 w i erf \u22121 (1 \u2212 2/I total ) for the time of first appearance of Covid-19, and this time is specific for each country. Here, erf \u22121 is the inverse error function. For values close to unity it is well approximated by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Occupation of respiratory equipment -Most people that died from Covid-19 required respiratory equipment until their death for a period of length \u03c4 r and we assumed this period \u03c4 r to be constant. If \u03b3 people out of all that require respiratory equipment die, we can estimate the daily occupation of respiratory equipment r(t) by summing over the past \u03c4 r days of newly seriously sick persons per day (SSPs), which are related to the daily deaths shifted by the typical time T from being diagnosed as seriously sick until death. For that, we divide the sum of deaths over the past \u03c4 r days by \u03b3 to extrapolate to active SSPs at time t and hence required respiratory equipment",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The number of required respiratory machines r(t) attains its maximum at time t r,max = t d,max \u2212 T + \u03c4 r /2 and thus the peak number of required respiratory machines is r max = r(t r,max ) = (D total /\u03b3) erf(\u03c4 r /2w d ), where D total is the total number of deceased people. This peak r max increases with larger occupation times of respiratory machines \u03c4 r , larger total number of fatalities D total and narrower GM widths w d .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "For the fitted values of w d and a \u03c4 r of 10 days, the error function roughly is in the range 0.5 \u2264 erf(\u03c4 r /2w d ) \u2264 0.9. Flatten the curve!",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Percentiles of infection numbers -From t d,max and w d we can estimate dates at which time the number of daily infected people i will have reduced to the level of \u03b7 \u2208 [0, 1] of its maximum value. These times denoted as T \u03b7 are given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.06.20055830 doi: medRxiv preprint For \u03b7 = 1% and \u03b7 = 1\u2030 these times are explicitly given, employing the typical delay time \u03c4 \u2248 10 days (A6), by T 1% = t d,max \u2212 10 + 2.146 w d , T 1\u2030 = t d,max \u2212 10 + 2.628 w d .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The corresponding dates are listed in Fig. 4 . It is also possible to estimate dates, for which less than a certain \u03b7 of the total population remains infected and potentially dangerous to initiate another outbreak. This time is given by",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 38,
+                    "end": 44,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "(A10)"
+        },
+        {
+            "text": "where D total /MP had been tabulated (Fig. 4) , erf \u22121 is the inverse error function, and f defined by (A6) may be approximated by the value mentioned there. In this expression t i,max and w i can also be approximated by using the values calculated from fatalities, as described already. For \u03b7 = 10 \u22126 (one per million inhabitants), and a typical w i = 10, T * y \u2212 t i,max \u2248 46 days for D total /MP = 100.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 37,
+                    "end": 45,
+                    "text": "(Fig. 4)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "(A10)"
+        },
+        {
+            "text": "Doubling times -Doubling times, here denoted by k, are used to characterize the strength of an exponential growth process, independent of the exponential amplitude. A doubling time quantifies the time span required for the exponential to double (or, up to convention, to have doubled). Assuming a purely exponential growth, both d(t) = d max exp(\u03bdt) and D(t) = d(t)/\u03bd increase mono-exponentially with time, and the doubling time k is a constant, k = \u03bd \u22121 ln 2, while \u03bd = d (t)/d(t) = D (t)/D(t). For the GM the doubling time based on d(t) is thus given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(A10)"
+        },
+        {
+            "text": "while the doubling time based on D(t) is given by k(t) = (ln 2)/[k ln D(t)/dt] = (ln 2)D(t)/d(t). It is thus easy to calculate two versions of doubling times with the GM parameters at hand, using either daily or total measures, which differ if the growth is not ideally exponential. While doubling times are convenient as they alter only weakly during exponential growth, they are difficult to extract from data directly without applying smoothing procedures that differ from publication to publication, and they are not uniquely defined. For this reason we do not recommend to proceed with an analysis on reported doubling times, as done in [13] , unless the raw data is unavailable.",
+            "cite_spans": [
+                {
+                    "start": 642,
+                    "end": 646,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(A10)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Json time-series of coronavirus cases (confirmed, deaths and recovered) per country -updated daily",
+            "authors": [],
+            "year": 2020,
+            "venue": "Github contributors as of",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "COVID-19 epidemic in Switzerland: Growth prediction and containment strategy using artificial intelligence and big data",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Abhari",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Marini",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Chokani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Special report: The simulations driving the world's response to COVID-19",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Adam",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Modellierung von Beispielszenarien an der SARS-CoV-2 Epidemie 2020 in Deutschland",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Der Heiden",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Buchholz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.25646/6571.2."
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The theta-logistic is unreliable for modelling most census data: Theta-logistic model is not robust",
+            "authors": [
+                {
+                    "first": "Francis",
+                    "middle": [],
+                    "last": "Clark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Barry",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Brook",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "Re\u015fit"
+                    ],
+                    "last": "Steven Delean",
+                    "suffix": ""
+                },
+                {
+                    "first": "Corey",
+                    "middle": [
+                        "J A"
+                    ],
+                    "last": "Ak\u00e7akaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bradshaw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Meth. Ecol. Evolution",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.2041-210X.2010.00029.x"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Simulating and forecasting the cumulative confirmed cases of SARS-CoV-2 in China by boltzmann function-based regression analyses",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J. Infection",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2020.02.019"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Mathematical Functions to Describe Disease Progress Curves of Double Sigmoid Pattern",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hau",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Phytopathology",
+            "volume": "83",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1094/Phyto-83-928"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Contributions to the mathematical theory of epidemics-i",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Bull. Mathem. Biol",
+            "volume": "53",
+            "issn": "",
+            "pages": "33--55",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Contributions to the mathematical theory of epidemics-ii. the problem of endemicity",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1932,
+            "venue": "Bull. Mathem. Biol",
+            "volume": "53",
+            "issn": "",
+            "pages": "57--87",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Contributions to the mathematical theory of epidemics-iii. further studies of the problem of endemicity",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1933,
+            "venue": "Bull. Mathem. Biol",
+            "volume": "53",
+            "issn": "",
+            "pages": "89--118",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Forecasting covid-19 impact on hospital bed-days, icu-days, ventilator-days and deaths by us state in the next 4 months",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.27.20043752.URLmedRxiv.org"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A gaussian model for the time development of the Sars-Cov-2 corona pandemic disease. predictions for germany made on",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Schlickeiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Schlickeiser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.31.20048942.URLmedRxiv.org"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Why outbreaks like coronavirus spread exponentially, and how to flatten the curve",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Stevens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Washington Post",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Modelling fatality curves of COVID-19 and the effectiveness of intervention strategies",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Giovani",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vasconcelos",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Ant\u00f4nio",
+                    "suffix": ""
+                },
+                {
+                    "first": "Raydonal",
+                    "middle": [],
+                    "last": "Mac\u00eado",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ospina",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Francisco",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Almeida",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gerson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Duarte-Filho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "In\u00eas",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Souza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.02.20051557"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "COVID-19 epidemic: Power law spread and flattening of the curve",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mahendra",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ali",
+                    "middle": [],
+                    "last": "Verma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Soumyadeep",
+                    "middle": [],
+                    "last": "Asad",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.02.20051680"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Richards model revisited: Validation by and application to infection dynamics",
+            "authors": [
+                {
+                    "first": "Xiang-Sheng",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jianhong",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yong",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "J. Theor. Biol",
+            "volume": "313",
+            "issn": "",
+            "pages": "12--19",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jtbi.2012.07.024"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Generalized logistic growth modeling of the COVID-19 outbreak in 29 provinces in China and in the rest of the world",
+            "authors": [
+                {
+                    "first": "Ke",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Didier",
+                    "middle": [],
+                    "last": "Darcet",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qian",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Didier",
+                    "middle": [],
+                    "last": "Sornette",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.05681"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Clinical course and outcomes of critically ill patients with SARS-CoV-2 pneumonia in Wuhan, China: a single-centered, retrospective, observational study. The Lancet",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Shu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zou",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2213-2600(20)30079-5"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Fitting Sigmoidal Equations to Mammalian Growth Curves",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Zullinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Ricklefs",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Redford",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mace",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "J. Mammalogy",
+            "volume": "65",
+            "issn": "4",
+            "pages": "607--636",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "for which sufficient data about infections, but insufficient data about fatalities is available to us, as of April 2. The coefficient imax we could not extract from the existing data with an error less than 100%.\u00a8Parameters wi",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Table I: Gm Parameters",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Shifted and rescaled data separately for each of the 25 countries. (a) number of daily infections and fatalities. (b) obtained from (a) by averaging over entries at same (t \u2212 t d,max )/w d (bin size 0.01). (c) Number of cumulative infections and fatalities over time in normal scale, and (d) in logarithmic scale to appreciate different regimes with better resolution. (a)-(d) Thick gray is the theory expression (1) for daily, and (A7) for cumulative casualties. Data beyond (t \u2212 t d,max )/w d = 0.6 is from China alone. Raw data taken from Ref. [2].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Fitted GM parameters w d , t d,max , and dmax for those countries, for which sufficient data about fatalities is available by the time or writing. Error bars reported for 95% confidence intervals. (a) Table listing the three fitted GM parameters, followed by estimated cumulative number of fatalities Dtotal, the same quantity per million people (MP), and the projected dates T\u03b7 (A10) by which the number of daily infected people had reduced to the level of \u03b7 of its maximum value. Number of inhabitants according to OECD[1]. (b) Plot of the fitted parameters. The horizontal lines marks the day of this study, April 2nd. China is missing on this plot as its t d,max occurred on about Feb 17 according to our calculation. (c) Peak daily number of fatalities per 1 million inhabitants, i.e., dmax divided by the number of inhabitants times 10 6 . * ) For China we considered only the data during the first pandemic wave, i.e., until a minimum in daily fatalities was clearly reached on March 12.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Measured cumulative number of deaths per one million inhabitants (symbols), compared with the GM predictions (A7) for selected fits ofFig. 4. The cumulative number of fatalities determining the height of the future plateau is given by the product of width w d and dmax, times \u221a \u03c0 \u2248 1.77.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "The plots demonstrate the quadratic nature of the logarithmic fatalities per day.The meaning of the GM parameters is highlighted in the inset. Raw data taken from Ref.[2].",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "All authors contributed to the final manuscript. There are no competing interests to declare. All data is available in either the manuscript or the quoted data repositories.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        },
+        {
+            "text": "In this section we make the concepts used intuitively in the main text rigorous by introducing the necessary mathematical language.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Methods"
+        }
+    ]
+}

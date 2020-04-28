@@ -1,0 +1,1418 @@
+{
+    "paper_id": "ded9e241d5e7caad0faf90d1eac20a360b9d798e",
+    "metadata": {
+        "title": "Estimating COVID-19 outbreak risk through air travel",
+        "authors": [
+            {
+                "first": "Authors",
+                "middle": [
+                    "Y"
+                ],
+                "last": "Daon",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Tel Aviv University",
+                    "location": {
+                        "settlement": "Tel Aviv",
+                        "country": "Israel"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "R",
+                "middle": [
+                    "N"
+                ],
+                "last": "Thompson",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Oxford",
+                    "location": {
+                        "settlement": "Oxford",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "U",
+                "middle": [],
+                "last": "Obolski",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Tel Aviv University",
+                    "location": {
+                        "settlement": "Tel Aviv",
+                        "country": "Israel"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background : COVID-19 has spread rapidly across the globe during the first several months of 2020, creating a pandemic. Substantial, non-discriminatory limitations have been imposed on air travel to inhibit this spread. As the disease prevalence and incidence will decrease, more specific control measures will be sought so that commercial air travel can continue to operate yet not impose a high threat of COVID-19 resurgence. Methods : We use modelled global air travel data and population density estimates to analyse the risk posed by 1364 airports to initiate a COVID-19 outbreak. We calculate the risk using a probabilistic approach that considers the volume of air travelers between airports and the of each location, scaled by population density. This R 0 exercise is performed globally as well as specifically for two potentially vulnerable locations: Africa and India.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The coronavirus disease 2019 , caused by the Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), has been spreading rapidly since early cases were detected In Wuhan, China during December 2019 [1] . On March 11, the WHO declared the COVID-19 outbreak a pandemic [2] ; i.e. it is now deemed to be on a global scale, with significant autochthonous transmission in different countries. The implications of such a declaration can have is that tackling the COVID-19 pandemic might require international coordination and collaboration [3] . Up to date, COVID-19 cases have been observed in over 100 territories, in all inhabited continents [4] . Such a pervasive spread is partly a consequence of the innate transmissibility of the virus, which is expressed by the relatively high basic reproductive number point estimates ranging from 1.4 to as high as 6.5 (with uncertainty bounds providing an even wider range) [5] , [6] . However, an additional prominent reason for the especially wide and rapid spread of COVID-19 is likely to be the current high prevalence of international travel.",
+            "cite_spans": [
+                {
+                    "start": 203,
+                    "end": 206,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 272,
+                    "end": 275,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 539,
+                    "end": 542,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 644,
+                    "end": 647,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 918,
+                    "end": 921,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 924,
+                    "end": 927,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Although the spread of COVID-19 through maritime transport has received substantial media coverage due to the Diamond Princess and other cruise ships [7] , most of the imported cases outside China have likely originated from air travel [8] . These have spurred the applications of various outbreak control measures regarding air travel, including quarantining individuals returning via air travel from specific countries, or regardless of their departure locations [9] . Consequently, many flights have been cancelled, causing sharp decreases in flight volumes [8] . Such outbreak control measures are non-selective, and are hence costly, inconvenient and substantially hamper general international travel. As such, they might be resorted to mostly when other epidemic control options are not available.",
+            "cite_spans": [
+                {
+                    "start": 150,
+                    "end": 153,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 236,
+                    "end": 239,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 465,
+                    "end": 468,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 561,
+                    "end": 564,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A less restrictive possibility to control the COVID-19 spread is to concentrate efforts of detection and isolation of cases to specific locations. Risk assessments of scenarios of COVID-19 spread to new locations, or retrospective analysis or importation to certain locations, have been previously performed [10] - [14] . These studies mainly focused on the introduction of COVID-19 into highly vulnerable locations, often with public health infrastructures that may not respond efficiently to contain an outbreak. On the other hand, locations can also be determined as dangerous by their likelihood to disseminate infected individuals and initiate novel or reoccurring COVID-19 outbreaks in other locations. Investing additional resources in individual screening at locations defined as dangerous in this sense might therefore prove efficient in preventing spillover from countries which do not completely cancel international flights. In addition to being currently relevant, such a strategy might also be important when SARS-CoV-2 is suppressed to low-frequency or even undetectable circulation. Under this scenario, narrower public health interventions would be needed, and increased focus would be pointed at preventing new or recurrent outbreaks.",
+            "cite_spans": [
+                {
+                    "start": 308,
+                    "end": 312,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 315,
+                    "end": 319,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this study, we develop and examine a method for discriminating airports with a high potential of initiating a COVID-19 outbreak upon the introduction of an infected passenger. We apply this method to modelled flight data, and examine the risk of a new outbreak initiation globally, as well as in two regions where the effects of a sustained COVID-19 outbreak may be especially devastating: Africa and India. Our results are analysed and found robust to various disease outbreak modelling assumptions as well as to seasonal changes in flight patterns.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We approximated monthly data of airport connectivity by the model presented in [15] . Briefly, this data is obtained by applying a Poisson regression model for the number of passengers on covariates such as city connectivity, purchasing power index [16] , population and weather. This process has yielded information regarding major 364 n = 1 airports scattered throughout the world. The analyses presented in the text rely on air travel during October, when the Northern Hemisphere is approaching winter. However, similar results are obtained for different months as well (see supplementary material Figure S1 ). Continent and country information for each airport were retrieved from [17] .",
+            "cite_spans": [
+                {
+                    "start": 79,
+                    "end": 83,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 249,
+                    "end": 253,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 685,
+                    "end": 689,
+                    "text": "[17]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 601,
+                    "end": 610,
+                    "text": "Figure S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Data"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "Human population density data was retrieved from NASA [18] . For each airport an associated density, was calculated. First, the maximal population , .., i = 1 . n \u03c1 i density within a 130km edged square centered at said airport was found. Then, an average of a 30km edged square centered at said maximum was calculated. This heuristic of density estimation is meant to approximate the density of a major nearby location to which an infected passenger is likely to arrive. For example, our heuristic method found the maximal density location of JFK, EWR and LGA (three major airports serving New York City) to be located in downtown Manhattan. Similarly, the two airports serving Berlin (TXL, SXF) and two airports serving Tokyo (NRT, HND) were correctly assigned the same maximal population density in their corresponding metropolitans.",
+            "cite_spans": [
+                {
+                    "start": 54,
+                    "end": 58,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "We used population density estimates to adjust the basic reproduction number, with the rationale being that individual contact rates scale approximately proportional to population density [19] , which is consistent with another COVID-19 reproductive number estimate [20] . The basic reproductive number for region i, was calculated as ,",
+            "cite_spans": [
+                {
+                    "start": 188,
+                    "end": 192,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "associated with Wuhan Tianhe International Airport, and is the estimated R 0,w reproductive number in Wuhan. The value of was set to 3 in all the results in the R 0,w manuscript, as per recent estimates [5] . A sensitivity analysis for values of 2 and 4 R 0,w were also considered and yielded similar results (see supplementary material Figure  S3 ).",
+            "cite_spans": [
+                {
+                    "start": 203,
+                    "end": 206,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 337,
+                    "end": 347,
+                    "text": "Figure  S3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "After obtaining the basic reproductive number for each location i , we can calculate the probability of no outbreak in that location based on the arrival of a single infected individual, , according to the formula . We note that this formula is correct p i /R p i = 1 0,i for an exponential infectious period, which is often implicitly assumed in infectious diseases dynamic models [21] . Nonetheless, we performed a sensitivity analysis on the general case of a gamma distributed infectious period, with the appropriate correction [22] , [23] , while varying the shape parameter from the exponential case to a a k = 1 high value of (see supplementary material Figure S2 for details). Results were k = 6 qualitatively similar.",
+            "cite_spans": [
+                {
+                    "start": 382,
+                    "end": 386,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 532,
+                    "end": 536,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 539,
+                    "end": 543,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 661,
+                    "end": 670,
+                    "text": "Figure S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "To calculate the risk each airport poses to an initiation of a COVID-19 outbreak, we assume a fraction of the population is infected. We assume that is small when our q q method is used to mitigate risk of outbreak initiation or resurgence, probably in the order of magnitude of , since otherwise control measures including complete flight 0 0",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "restriction are likely to be implemented. We denote the number of individuals travelling from airport to airport by Therefore, the probability of no outbreak initiation from k i . n k,i airport (to any airport it is connected to) is where goes over k",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "i the range of airports connected to airport . Since is small, this is well approximated k q by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": ". As raising to a positive power preserves order",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "implies ), we can conclude the relative order of risk between two a > b > 0 a q > b q airports and , and , does not depend on (as long as is small enough to k l \u03c0 k \u03c0 l q q preserve the approximation above). This independence of enables us to rank the risk q of outbreak initiation, between different airports regardless of the value of . For , 1 \u2212 \u03c0 k q ease of presentation, in our results we choose a value of yielding low numbers 0 q = 1 \u22126 of infected individuals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "Lastly, we turn to highlight two low-income regions; Africa and India. For each region, we estimated the probability of an outbreak conditioned on infected individuals arriving in an airport in that region. The calculation of the probability of arrival is identical to the one described above, with the exception of restricting flights only to those destined to said regions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "For reproducibility purposes, we provide complete access to our code on GitHub, with detailed instructions on running it at https://github.com/yairdaon/infections . Code was run using python 3.7.5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Outbreak probability"
+        },
+        {
+            "text": "We calculate the probability of COVID-19 infected individuals initiating an outbreak for each airport found in our dataset. Briefly, we assume a low prevalence of COVID-19 in each country, and use the number of passengers transferring from and to different airports to calculate the probability of arrival of infected individuals to each destination (Figure 1.a) ; in each destination, we scale by the local density; calculate the risk of R 0 an outbreak; and, finally, combine these estimates to yield the risk each airport poses for a COVID-19 outbreak initiation (Figure 1 .b, see Methods for detailed explanation). We heuristically examine our method by identifying which places have the highest risk of transmission from Wuhan Tianhe International (WUH) Airport. Reassuringly, focal locations to the COVID-19 outbreak appeared among the top-5 airports most likely to have an outbreak originating in WUH, including Beijing, Shanghai and Shenzhen.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 350,
+                    "end": 362,
+                    "text": "(Figure 1.a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 566,
+                    "end": 575,
+                    "text": "(Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . Figure 1 : Global airport connectivity and risk of outbreak initiation. a) A global map, overlaid with connections between airports (red). Each connection represents the risk of a COVID-19 outbreak, to which the curve opacity is proportional. b) The probability of a major outbreak to travel from an airport. Note that for visualization purposes, the color scale is truncated to [0,0.75].",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 78,
+                    "end": 86,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20067496 doi: medRxiv preprint Figure 2 : Airport connectivity and risk of outbreak initiation in Africa. a) A global map, overlaid with connections between airports (red). Each connection represents the risk of a COVID-19 outbreak in Africa, to which the curve opacity is proportional. b) The probability of a major outbreak to travel from an airport to Africa. Note that for visualization purposes, the color scale is truncated to [0,0.1].",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20067496",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20067496 doi: medRxiv preprint Figure 3 : Airport connectivity and risk of outbreak initiation in India. a) A global map, overlaid with connections between airports (red). Each connection represents the risk of a COVID-19 outbreak in India, to which the curve opacity is proportional. b) The probability of a major outbreak to travel from an airport to India. Note that for visualization purposes, the color scale is truncated to [0,0.5].",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 122,
+                    "text": "16.20067496",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04. 16.20067496 doi: medRxiv preprint We start by examining the global risk of outbreak by airport. That is, every airport is assigned a risk of initiating an outbreak in any location, according to the ariport's flight patterns and the destination's risk of outbreak. First, we observe the strong connectivity clusters focused in Europe, east Asia, and the United States (Figure 1.a) . We further note that risk is high in east Asia with all but two of the top ten highest-risk airports originating in that region (the exceptions being London Heathrow and Dubai airport; Figure 1 ). Calculating the average risk of the ten highest-risk airports in each continent yields the following risk order: Asia (0.51), Europe (0.28), North America (0.23), South America (0.14), Africa (0.06), and Oceania (0.04).",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 144,
+                    "text": "16.20067496 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 478,
+                    "end": 490,
+                    "text": "(Figure 1.a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 678,
+                    "end": 686,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Since the locations most vulnerable to be severely affected by a COVID-19 outbreak are low-and middle-income countries [13] , we turned our focus to examine the risk of initiating an outbreak in two locations of high interest: Africa and India. Africa is relatively disconnected from the rest of the world. Its strongest connections to locations outside the continent include connection to central Europe, with a relatively strong connectivity to France (mainly through Morocco), England, and the Arab peninsula (Figure 2 .a). The risk posed by different airports to initiate a COVID-19 outbreak in Africa is highest at Johannesburg, Paris, Dubai, London, Abuja (Nigeria), Jedda (Saudi Arabia), Frankfurt, Amsterdam, Cairo and Istanbul (Figure 2.b) . Contrary to Africa, in India we do observe the largest risk to initiate an outbreak arising from domestic flights, originating within India itself. Of the ten highest-risk airports with respect to India, eight are within the borders of India (the exceptions being airports in Dubai and Singapore). The same trend continues in the following twenty highest-risk airports -fifteen of the top twenty are in India. We further investigated the seasonal changes in the connectivity between airports. These did not yield substantial differences (see supplementary material Figure S1 ).",
+            "cite_spans": [
+                {
+                    "start": 119,
+                    "end": 123,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 512,
+                    "end": 521,
+                    "text": "(Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 736,
+                    "end": 748,
+                    "text": "(Figure 2.b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1316,
+                    "end": 1325,
+                    "text": "Figure S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Our study highlights the importance of quantifying the risk of COVID-19 outbreaks through the introduction of COVID-19 cases from international air travel. We show that (a) East Asia is the area most prone to initiating an outbreak; (b) West Europe is the largest threat to outbreak initiation in Africa; and (c) India's population density and frequent domestic travel put it at high risk for outbreaks from infected passengers arriving from within the country. The estimates of risks in our results greatly vary between airports. For example, the risk estimated for Beijing Capital airport -the airport . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "with the highest risk to initiate an outbreak -is approximately 0.74. On the other hand, Shanghai Hongqiao airport, ranked 17th, has a risk estimate which is lower by a factor of 2. The variability is even more extreme when we consider only the risk to initiate an outbreak in Africa. This risk is halved between the top ranked airport (Johannesburg, 0.1) to the fifth (Abuja, 0.05). When considering the risk of initiating an outbreak in India, it is halved between New Delhi airport (0.42) and the fourth ranked Hyderabad airport (0.19). Therefore, implementation of epidemiological control measures to prevent the spread of COVID-19 is likely not to be optimal if applied uniformly to different locations. Instead, prioritization of thorough screening of infected hosts could be performed based on an airport's risk to initiate a COVID-19 outbreak. Rapid, non-laboratory based methods of COVID-19 infection detection are still lacking, and screening relies on manifestation of symptoms (e.g. body temperature). Hence, individuals with asymptomatic or paucisymptomatic infections may still slip through even high coverage rates of screening at airports, until newer methods of screening are developed. Current estimates for the frequency of such individuals and their infectivity are still uncertain [24] , [25] , but high frequency of such individuals may regardless force the introduction of new control measures [26] .",
+            "cite_spans": [
+                {
+                    "start": 1302,
+                    "end": 1306,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1309,
+                    "end": 1313,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1417,
+                    "end": 1421,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Furthermore, we compare the risks of two locations potentially vulnerable to the effects of a COVID-19 outbreak -Africa and India. We observe that western European cities are considerably more prone to initiate an outbreak in Africa than cities within Africa itself. In India, the opposite is true -the cities most prone to initiate an outbreak in India are within the borders of the country. This contrast is surprising, considering that India and Africa are similar in terms of economic development and population size. One reason for this might be India's high inner connectivity and population density, which makes outbreaks likely in many Indian cities (see supplementary material Figure S4 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 686,
+                    "end": 695,
+                    "text": "Figure S4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The transmission of various viral pathogens is affected by seasonal changes in temperature and humidity [27] . Unfortunately, such effects have yet to be accurately estimated for SARS-COV-2, although some initial investigations in this direction have been made recently [28] - [30] . Hence, our study did not consider the potential effects that weather can have on the estimated risk. However, if such changes will be estimated in the future, they could be easily incorporated in our framework, by scaling the different values according to the estimated effects of weather conditions in each R 0 location, and recalculating the risk. This could potentially change some of the risk estimates we present, especially of regions mostly connected to either the Northern or Southern hemisphere. In such regions, the differences in weather are expected to be . CC-BY-NC 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 104,
+                    "end": 108,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 270,
+                    "end": 274,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 277,
+                    "end": 281,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "the greatest in different seasons, and these are indeed often expressed in different seasonality patterns of infectious diseases [31] .",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 133,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Application of the risk estimation we perform, and other assessments relying on air travel data, can be utilized in real-time only if flight travel data is publicly available and easily accessible. Unfortunately, we were not able to obtain such data, and our model relied on previously modelled estimates (see Methods). Therefore, we emphasize the need in recent, or even live air travel data, and its importance to facilitate research and improved decision making for international COVID-19 outbreak control. Such data are crucial for real time management of crises of a scale we are currently observing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "To conclude, our method provides an estimate of the risk to initiate a COVID-19 outbreak posed by travel from different airports. It combines air travel volume with destination population density, and does not rely on assumptions on COVID-19 incidence, as long as it is not very high. We note that as much as connectivity between different locations is important, it is only one component determining the risk of an outbreak. Our risk measure combines connectivity weighted by the probability to initiate an outbreak in a non-linear fashion, giving rise to a realistic risk measure for outbreaks. Our results demonstrate the heterogeneity in the risk of outbreak initiation on both global, as well as more local scales. As the COVID-19 pandemic will subside, full air travel shutdown will be deemed costly and at times infeasible. Therefore, we suggest future control and screening measures to be applied differentially, according to the estimated risks different locations pose to outbreak initiation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "This work was supported by The Raymond and Beverly Sackler Post-Doctoral Scholarship (YD) and by a Junior Research Fellowship from Christ Church, Oxford (RNT).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Funding"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in Wuhan",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Huangcl",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Others",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China",
+            "volume": "395",
+            "issn": "10223",
+            "pages": "497--506",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "WHO Director-General's opening remarks at the media briefing on COVID-19-11",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Geneva Switz",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Did the hesitancy in declaring COVID-19 a pandemic reflect a need to redefine the term?",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Green",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Organization and others",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Coronavirus disease 2019 ( COVID-19) : situation report",
+            "volume": "51",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Travel Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The Estimate of the Basic Reproduction Number for Novel Coronavirus disease (COVID-19): A Systematic Review and Meta-Analysis",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Alimohamadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Taghdir",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sepandi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Prev. Med. Pub. Health",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Public health responses to COVID-19 outbreaks on cruise ships-worldwide",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Moriarty",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "MMWR Morb. Mortal. Wkly. Rep",
+            "volume": "69",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "The effect of travel restrictions on the spread of the 2019 novel coronavirus (COVID-19) outbreak",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chinazzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "World Health Organization declares global emergency: A review of the 2019 novel coronavirus (COVID-19)",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sohrabi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int. J. Surg",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Routes for COVID-19 importation in Brazil",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "D S"
+                    ],
+                    "last": "Candido",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Travel Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Early Release-Identifying Locations with Possible Undetected Imported Severe Acute Respiratory Syndrome Coronavirus 2 Cases by Using Importation Predictions",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Salazar",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Niehus",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Taylor",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Buckee",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Potential for global spread of a novel coronavirus from China",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Bogoch",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Watts",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Thomas-Bachli",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huber",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Kraemer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Travel Med",
+            "volume": "27",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Preparedness and vulnerability of African countries against importations of COVID-19: a modelling study",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gilbert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "10227",
+            "pages": "871--877",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Assessing spread risk of Wuhan novel coronavirus within and beyond China",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Modeling monthly flows of global air travel passengers: An open-access data resource",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tatem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "J. Transp. Geogr",
+            "volume": "48",
+            "issn": "",
+            "pages": "52--60",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Geography and macroeconomics: New data and new findings",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Nordhaus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Proc. Natl. Acad. Sci",
+            "volume": "103",
+            "issn": "",
+            "pages": "3510--3517",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Gridded population of the world, version 4 (GPWv4): population density",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "I E S I N"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "The scaling of contact rates with population density for the infectious disease models",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nigmatulina",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Eckhoff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Math. Biosci",
+            "volume": "244",
+            "issn": "2",
+            "pages": "125--134",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "COVID-19 outbreak on the Diamond Princess cruise ship: estimating the epidemic potential and effectiveness of public health countermeasures",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sj\u00f6din",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Travel Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Sustained transmission of Ebola in new locations: more likely than previously thought",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jalava",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Obolski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Lancet Infect. Dis",
+            "volume": "19",
+            "issn": "10",
+            "pages": "1058--1059",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "On the spread of a disease with gamma distributed latent and infectious periods",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Watson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1980,
+            "venue": "Biometrika",
+            "volume": "67",
+            "issn": "1",
+            "pages": "191--198",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Increased frequency of travel in the presence of cross-immunity may act to decrease the chance of a global pandemic",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Pelerman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Obolski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Philos. Trans. R. Soc. B",
+            "volume": "374",
+            "issn": "1775",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Estimating the asymptomatic proportion of coronavirus disease 2019 (COVID-19) cases on board the Diamond Princess cruise ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "10",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Novel coronavirus outbreak in Wuhan, China, 2020: Intense surveillance Is vital for preventing sustained transmission in new locations",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Clin. Med",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Global patterns in monthly activity of influenza virus, respiratory syncytial virus, parainfluenza virus, and metapneumovirus: a systematic analysis",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Lancet Glob. Health",
+            "volume": "7",
+            "issn": "8",
+            "pages": "1031--1045",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "The role of absolute humidity on transmission rates of the COVID-19 outbreak",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Role of temperature and humidity in the modulation of the doubling time of COVID-19 cases",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Oliveiros",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Caramelo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ferreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Caramelo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "High temperature and high humidity reduce the transmission of covid-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Available SSRN 3551767",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Seasonality of infectious diseases",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Fisman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Annu Rev Public Health",
+            "volume": "28",
+            "issn": "",
+            "pages": "127--143",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {},
+    "back_matter": []
+}

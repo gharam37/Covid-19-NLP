@@ -1,0 +1,2841 @@
+{
+    "paper_id": "fcbf80ca769abbd224e836ac11c258aebc9b5226",
+    "metadata": {
+        "title": "De novo 3D models of SARS-CoV-2 RNA elements and small- molecule-binding RNAs to guide drug discovery",
+        "authors": [
+            {
+                "first": "Ramya",
+                "middle": [],
+                "last": "Rangan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {
+                        "postCode": "94305",
+                        "settlement": "Stanford",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Andrew",
+                "middle": [
+                    "M"
+                ],
+                "last": "Watkins",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University School of Medicine",
+                    "location": {
+                        "postCode": "94305",
+                        "settlement": "Stanford",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Wipapat",
+                "middle": [],
+                "last": "Kladwang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University School of Medicine",
+                    "location": {
+                        "postCode": "94305",
+                        "settlement": "Stanford",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Rhiju",
+                "middle": [],
+                "last": "Das",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {
+                        "postCode": "94305",
+                        "settlement": "Stanford",
+                        "region": "CA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The rapid spread of COVID-19 motivates development of antivirals targeting conserved molecular machinery of the SARS-CoV-2 virus. The SARS-CoV-2 genome includes conserved RNA elements that offer potential targets for RNA-targeting small-molecule drugs, but 3D structures of most of these elements have not been experimentally characterized. Here, we provide a dataset called 'FARFAR2-SARS-CoV-2', a collection of 3D coordinates modeled using Rosetta's FARFAR2 algorithm, including de novo models for thirteen RNA elements in SARS-CoV-2 and homology models for a fourteenth. These elements comprise SL1, SL2, SL3, SL4, SL5, putative SL6 and SL7 in the extended 5\u2032 UTR, as well as the entire extended 5\u2032 UTR; the frameshifting element (FSE) from the SARS-CoV-2 ORF1a/b gene and a putative dimer of FSE; and the extended pseudoknot, hypervariable region, and the s2m of the 3\u2032 UTR, as well as the entire 3\u2032 UTR. For five of these elements (SL1, SL2, SL3, FSE, s2m), convergence of lowest predicted energy structures supports their accuracy in capturing low energy states that might be targeted for small molecule binding. To aid efforts to discover small molecule RNA binders guided by computational models, we provide a second benchmarking dataset called 'FARFAR2-Apo-Riboswitch', which consists of similarly prepared Rosetta-FARFAR2 models for RNA riboswitch aptamer regions that bind small molecules. Both datasets include up to 400 3D models for each RNA element, which may facilitate drug discovery approaches targeting dynamic ensembles of low-energy excited states of RNA molecules.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The COVID19 outbreak has rapidly spread through the world, presenting an urgent need for therapeutics targeting the betacoronavirus SARS-CoV-2. RNA-targeting antivirals have potential to be effective against SARS-CoV-2, as the virus's RNA genome harbors conserved regions predicted to have stable secondary structures 1 that have been shown to be essential for the life cycle of related betacoronaviruses. 2 Efforts to identify small molecules that target stereotyped 3D RNA folds have advanced over recent years, 3 making RNA structures like those in SARS-CoV-2 potentially attractive targets for small molecule drugs.",
+            "cite_spans": [
+                {
+                    "start": 406,
+                    "end": 407,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 514,
+                    "end": 515,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Several RNA regions in betacoronavirus genomes, including the 5\u00b4 UTR, the frameshifting element (FSE), and 3\u00b4 UTR, feature RNA structures with likely functional importance. These regions include a series of five conserved stem loops in the 5\u00b4 UTR, the frameshifting element along with a proposed dimerized state, a pseudoknot in the 3\u00b4 UTR proposed to form two structures, and the hypervariable region in the 3\u2032 UTR, which includes an absolutely conserved octanucleotide and the stem-loop IIlike motif ('s2m'). An NMR structure of stem-loop 2 in the 5\u00b4 UTR has been solved, adopting a canonical CUYG tetraloop fold. 4 A crystal structure for s2m in the 3\u2032 UTR has been solved for the original SARS virus, SARS-CoV-1. 5 With nearly complete sequence conservation compared to the SARS-CoV-2 reference genome, this structure is expected to be maintained in SARS-CoV-2. Beyond these regions, however, 3D structures for structural domains in the 5\u2032 UTR, FSE, and 3\u2032 UTR have not been solved.",
+            "cite_spans": [
+                {
+                    "start": 616,
+                    "end": 617,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 717,
+                    "end": 718,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In advance of detailed experimental structural characterization, computational predictions for the 3D structural conformations adopted by conserved RNA elements may aid the search for RNA-targeting antivirals. Representative conformations from these RNA molecules' structural ensembles can serve as starting points for virtual screening of small-molecules drug candidates. For example, in prior work by Stelzer, et al., 6 virtual screening of a library of compounds against an ensemble of modeled RNA structures led to the de novo discovery of a set of small molecules that bound a structured element in HIV-1 (the transactivation response element, TAR) with high affinity. Such work motivates our modeling of not just a single 'native' structure but an ensemble of states for SARS-CoV-2 RNA regions. As with HIV-1 TAR, many of the SARS-CoV-2 elements are unlikely to adopt a single conformation but instead may sample conformations from a heterogeneous ensemble. Furthermore, transitions among these conformations may be implicated in the viral life cycle, as they change longrange contacts with other RNA elements or form interactions with viral and host proteins at different steps of replication, translation, and packaging. A possible therapeutic strategy is therefore to find drugs that stabilize an RNA element in a particular conformation incompatible with conformational changes and/or changing interactions with biological partners at different stages of the complete viral replication cycle. Consistent with this hypothesis, prior genetic selection and mutagenesis experiments stabilizing single folds for stem loops in the 5\u2032 UTR and the pseudoknot in the 3\u2032 UTR demonstrate that changes to these RNA elements' structural ensembles can prove lethal for viral replication. [7] [8] [9] Here, we provide de novo modeled structure ensembles for key RNA elements in the SARS-CoV-2 genome obtained from Rosetta's protocol for Fragment Assembly of RNA with Full-Atom Refinement, version 2 (FARFAR2). 10 These structures include de novo models for stem loops 1 to 7 (SL1-7) in the extended 5\u2032 UTR, the frameshifting element and its dimerized form, the 3\u2032 UTR pseudoknot, and the 3\u2032 UTR hypervariable region, along with homology models of SL2 and s2m. The use of Rosetta FARFAR2 is motivated by extensive testing: FARFAR2 has been benchmarked on all community-wide RNA-Puzzle modeling challenges to date, [11] [12] [13] achieving accurate prediction of complex 3D RNA folds for ligand-binding riboswitches and aptamers, and producing models with 3-14 \u00c5 RMSD across six additional recent blind modeling challenges. 10 In addition to providing structural ensembles for SARS-CoV-2 RNA elements, we provide analogous FARFAR2 de novo and homology models for 10 riboswitch aptamers, in the hopes of providing a benchmark dataset for virtual screening approaches that make use of computational RNA models.",
+            "cite_spans": [
+                {
+                    "start": 420,
+                    "end": 421,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1784,
+                    "end": 1787,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1788,
+                    "end": 1791,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1792,
+                    "end": 1795,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 2005,
+                    "end": 2007,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 2408,
+                    "end": 2412,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 2413,
+                    "end": 2417,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 2418,
+                    "end": 2422,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 2617,
+                    "end": 2619,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We generated ensembles for SARS-CoV-2 RNA elements using Rosetta's FARFAR2 protocol, a collection of models we term the FARFAR2-SARS-CoV-2 dataset. Beginning with a sequence and secondary structure, FARFAR2 generates models through Monte Carlo substitutions of 3-residue fragments sampled from previously solved RNA structures, followed by refinement in a highresolution physics-based free energy function, which models hydrogen bonding, solvation effects, nucleobase stacking, torsional preferences and other physical forces known to impact macromolecules structure. 10 FARFAR2 3D modeling requires an input secondary structure. Here, most secondary structures for SARS-CoV-2 RNA elements were obtained from homologies to secondary structures previously probed in related betacoronaviruses, with the exception of stem loops 6-7 in the extended 5\u2032 UTR, 4 which were generated from computational secondary structure modeling. We emphasize that these 3D model collections reflect a single secondary structure for each RNA element (or two secondary structures for FSE; see below). Future experimental work that elucidates additional secondary structures or tertiary contacts may prompt further 3D modeling of alternative states, but such wet lab experiments are currently not possible in our laboratory due to pandemic-related shutdowns.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "For systems larger than 50 nucleotides, we generated large model sets and clustered the 400 lowest energy structures with a 5 \u00c5 RMSD clustering radius, the procedure used for similarly sized systems in our recent FARFAR2 modeling benchmark. (Here and below, RMSD was computed as the allheavy-atom RMSD between two models, as in all recent Rosetta work on RNA modeling.) For smaller systems, we clustered the 400 lowest energy structures with a 2 \u00c5 RMSD clustering radius, analogous to the procedure used for similarly sized systems in the FARFAR2 study. We note here that the clustering method follows the protocol used in the FARFAR2 and other Rosetta RNA studies, where cluster centers are drawn from the very lowest energy models observed (see Methods). We make available models across up to 10 clusters in the resulting FARFAR2-SARS-CoV-2 data set to help efforts in virtual screening that take advantage of ensembles.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "We note that these models and their frequency in clusters are not necessarily an accurate representation of the thermodynamic ensemble obtained by the RNA due to biases in Rosetta FARFAR2 sampling and inaccuracies in the Rosetta all-atom free energy function. Nevertheless, the models offer a starting point of physically realistic conformations for virtual ligand screening and more sophisticated approaches to thermodynamic ensemble modeling.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "In Figures 1-4 , we focus on simulations that were sufficiently converged to produce multipleoccupancy clusters, a hallmark of FARFAR2 sampling being able to discover lowest energy states, as evaluated in Rosetta's all-atom energy function. Other runs with poorer convergence are provided in Supplementary Figures 1-3 ; these cases would need more computer power to discover lowest energy states. In Table 1 , we report the E-gap: the difference in Rosetta energy units (R.E.U.) for best-scoring models in each cluster compared to the top-scoring model in the simulation overall. Rosetta energy functions have been fit such that R.E.U. estimate energies in kcal/mol, 14 so E-gap values similar to or smaller than 3.0 indicate structures that are predicted to make up a significant fraction of the ground state ensemble and that may be trapped by small molecule drugs without a major cost in binding affinity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 14,
+                    "text": "Figures 1-4",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 292,
+                    "end": 317,
+                    "text": "Supplementary Figures 1-3",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 400,
+                    "end": 407,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "For each simulation, we additionally report a convergence estimate in Table 1 , estimated as the mean pairwise RMSD of the top 10 cluster centers predicted by FARFAR2. Prior work aiming at accurate prediction of single native crystal structures has demonstrated that convergence is a predictor for modeling accuracy, 10, 15-16 with prior tests suggesting that models that have 7.5 \u00c5 convergence or lower have mean single-structure prediction accuracy of at least 10 \u00c5, and models with 5 \u00c5 convergence or lower have single-structure prediction accuracy of at least 8 \u00c5. 10 In this work, we are however not assuming that the RNA targets form a single 'native' structure. Instead, we take this convergence measure as a proxy for whether sampling may have been adequate to generate a useful model set. As a more direct measure of the thoroughness of sampling, we also present the occupancies of each of the top 10 clusters. Conformations sampled repeatedly in independent Rosetta-FARFAR2 runs (cluster membership greater than 1) indicate some level of convergence in sampling and those conformations are more likely to be realistic low-energy structures. In Figs. 1-4 below, we show cluster members as a cloud of translucent structures behind each cluster's lowest energy conformation to visually convey the level of convergence; lack of such a cloud indicates a 'singlet' in which the cluster involves only one member. We include up to 50 representative top-scoring models in each cluster as the model collection for each RNA element, with structures available in the Github repository: https://github.com/DasLab/FARFAR2-SARS-CoV-2.",
+            "cite_spans": [
+                {
+                    "start": 569,
+                    "end": 571,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 70,
+                    "end": 77,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "With these caveats and metrics of convergence in mind, a description of models from the extended 5\u2032 UTR, frameshifting element, and 3\u2032 UTR follows. Fig. 1 presents models for the stem loops that make up the extended 5\u00b4 UTR. Also called the 5\u2032proximal region, this region extends the 5\u00b4 UTR by ~100 residues to bracket potential structures that involve the beginning of the coding region. The assumed secondary structure depicted in Fig. 1A is largely based on previous dissection of betacoronavirus secondary structures by several groups. 2, 17 More specifically, secondary structures for SL1-5 in the 5' UTR are based on homology to prior betacoronaviruses, where these conserved stems have been confirmed through genetic experiments and sequence alignments in related betacoronaviruses. (We note for non-coronavirus researchers here that SL1, SL2, SL4, and SL5 have also been termed SLI, SLII, SLIII, and SLIV in an important set of studies. [18] [19] [20] Some of these stems have structural preferences that have proven critical to the viral life cycle based on genetic experiments in other betacoronaviruses; these preferences have the potential to be altered through the binding of small-molecule drugs. Prior genetic selection experiments have demonstrated a preference for mutations that destabilize SL1. The lower part of this stem must unpair to allow for the formation of a long-range RNA contact between the 5\u2032 and 3\u2032 UTRs. 9 The stem must also presumably unfold to enable cap-dependent initiation of translation by the human ribosome. The loop in SL2 has sequence features across betacoronaviruses consistent with a U-turn conformation, and mutations that disrupt this structure are not viable, leading to a loss of subgenomic RNA synthesis. 7 SL3 presents the transcription regulation sequence of the leader (TRS-L), which must be available to base-pair with TRS-B binding partners in the negative-strand viral genome to facilitate sub-genomic RNA synthesis. 21 SL4 has been shown to be functionally important, and also harbors an upstream open reading frame (uORF) across many betacoronaviruses. Here computational secondary structure modeling returned an additional stem immediately 3\u2032 of SL4, and we have modeled them together as SL4ab. SL5 is a well-established domain that, in SARS-related viruses, has a long stem elaborated with a 4-way junction; this element has been proposed to harbor packaging signals, and it harbors the AUG start codon for the genome's first gene product, the ORF1a/b polyprotein. Stems SL6 and SL7, downstream of the start codon, were modeled through computational secondary structure prediction. SL6 and SL7, computationally predicted to occur downstream of the AUG start codon, are included as potentially analogous to stems discovered to be important in bovine coronavirus but not yet established in SARS-related viruses. 22 We first produced models for the full extended 5\u2032 UTR (over 10,000 FARFAR2 models), with the topscoring structure depicted in Supplementary Figure 1 . With the current level of sampling, this and other lowest energy structures appear only once amongst our models (Table 1) , reducing any confidence that these models capture lowest energy conformations in reality. A construct of this size would require substantially more models to achieve sufficient modeling convergence. Nevertheless, the top-scoring models suggest the potential for compact RNA structures for the 5\u00b4 UTR mediated by potential tertiary contacts between stem-loops. While such tertiary contacts are of potential interest, significantly more computational power would need to be expended to have confidence that such collapsed states are well-defined low energy states and could act as therapeutic targets. We therefore turned to smaller segments of the extended 5\u00b4 UTR for which Rosetta-FARFAR2 had a reasonable prospect of achieving convergent models.",
+            "cite_spans": [
+                {
+                    "start": 539,
+                    "end": 541,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 542,
+                    "end": 544,
+                    "text": "17",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 944,
+                    "end": 948,
+                    "text": "[18]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 949,
+                    "end": 953,
+                    "text": "[19]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 954,
+                    "end": 958,
+                    "text": "[20]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1436,
+                    "end": 1437,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 2870,
+                    "end": 2872,
+                    "text": "22",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 148,
+                    "end": 154,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 432,
+                    "end": 439,
+                    "text": "Fig. 1A",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2999,
+                    "end": 3021,
+                    "text": "Supplementary Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 3136,
+                    "end": 3145,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Using Rosetta-FARFAR2 to model ensembles of SARS-CoV-2 structures: updates and caveats"
+        },
+        {
+            "text": "For each stem-loop in the 5\u2032 UTR and initial stretch of the ORF1a/b coding region, we generated at least 200,000 FARFAR2 models. In Fig. 1B -G, we depict clusters for each 5\u2032 UTR stem-loop from simulations that produced multiple-occupancy clusters, including SL1, SL2, SL3, SL4ab, SL6, and SL7. As expected for these smaller RNA segments, all these stem-loops had excellent modeling convergence. Most clusters had occupancies of greater than 1, indicating that numerous independent de novo modeling trajectories resulted in conformations similar to within 2 \u00c5 RMSD. Furthermore, the mean pairwise RMSD of 10 lowest energy cluster centers (Table 1) approached 5 \u00c5 or better, suggesting that if a single dominant structure exists for these elements, our average model accuracy would be around 8 \u00c5 RMSD or better. Nevertheless, SL1-3 have four or more clusters with E-gap values less than 1 R.E.U., suggesting the presence of many distinct structures at a 2 \u00c5 clustering radius that may be trapped by a small molecule without substantial energetic penalty.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 132,
+                    "end": 139,
+                    "text": "Fig. 1B",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 638,
+                    "end": 647,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Models of SARS-CoV-2 extended 5\u00b4 UTR"
+        },
+        {
+            "text": "In each of these RNA elements, stereotyped configurations of apical loops are modeled by Rosetta-FARFAR2 (Figs. 1B-G). However, it is important to note that our modeling of SL2 does not recover structures with the atomic level features of the previously reported canonical CUYG tetraloop, whose structure was determined by NMR for the SARS-CoV-1 sequence 4 (Fig. 1C ). We present a homology model of SL2 based on the SARS-CoV-1 sequence as an additional cluster in our data set ( Fig. 1C , see Methods). Our de novo FARFAR2 models approach 3.1 \u00c5 RMSD to this homologydirected model, consistent with our convergence estimate above. Nevertheless, there is still an atomic level discrepancy between the NMR structure and FARFAR2 clusters. This difference likely reflects limitations in Rosetta's high-resolution energy function, with the E-gap value for the homology-directed SL2 structure over 20 R.E.U. worse than the top-scoring de novo model. The primary issue is that the Rosetta energy function assigns un-stacked base pairs, as in the C and G nucleotides of the NMR structure of the CUYG tetraloop, a substantial desolvation penalty without stacking bonuses to compensate. The fine structural discrepancy may additionally reflect limitations in Rosetta FARFAR2 sampling, which might be resolved by bringing to bear more computational expensive sampling methods like stepwise Monte Carlo (SWM). 23 The SL5 element is a long stem loop in all betacoronaviruses whose tip has been elaborated into a 4-way junction in SARS-CoV-2 and related subgroups. 2 Due to the larger size and complexity of SL5, our 3D models for this domain did not converge sufficiently, i.e., each of the top 10 lowest energy models were 'singlets' with no other conformations discovered within 5 \u00c5 RMSD among the top 400 lowest energy models (Table 1) . Nevertheless, the modeling did suggest the potential for drug-binding pockets between helices that are brought into proximity by the four-way junction ( Fig.  2A) . It was of interest to test whether the secondary structure of SL5 might be well-defined even if . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint our 3D modeling did not converge. To test the secondary structure of this stem-loop, we collected DMS and SHAPE data for this construct (see Methods). Secondary structure predictions from RNAstructure 24 guided by these DMS and SHAPE reactivity data (Fig. 2B ) recovered the same secondary structure developed from homology modeling to SL5 elements in other betacoronaviruses, as depicted in Fig. 1A , supporting the accuracy of this model as the dominant secondary structure. Fig. 3 presents Rosetta-FARFAR2 models for the SARS-CoV-2 frameshifting element (FSE). In SARS-CoV-1, the FSE pseudoknot structure and its dimerization domain have been shown to be critical for a (-1) ribosomal frameshifting event that leads to the production of ORF1a and ORF1b proteins from the same genomic region (Fig. 3A) . For this reason, we present models for both the monomer frameshifting element along with a dimerized system. We generated over 200,000 FARFAR2 models for the monomeric frameshifting element, with 100,000 models separately modeled with each of two similar secondary structures reported in the literature, which differ by a single base pair (Fig. 3) . 1, 25 The frameshifting element simulation reached 14 \u00c5 convergence and yielded six clusters with E-gap values below 8 R.E.U., with five of these clusters having more than one cluster member at a 5 \u00c5 RMSD clustering radius.",
+            "cite_spans": [
+                {
+                    "start": 1398,
+                    "end": 1400,
+                    "text": "23",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1551,
+                    "end": 1552,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 3465,
+                    "end": 3467,
+                    "text": "1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 3468,
+                    "end": 3470,
+                    "text": "25",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 357,
+                    "end": 365,
+                    "text": "(Fig. 1C",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 480,
+                    "end": 487,
+                    "text": "Fig. 1C",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1816,
+                    "end": 1825,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1981,
+                    "end": 1990,
+                    "text": "Fig.  2A)",
+                    "ref_id": null
+                },
+                {
+                    "start": 2559,
+                    "end": 2567,
+                    "text": "(Fig. 2B",
+                    "ref_id": null
+                },
+                {
+                    "start": 2701,
+                    "end": 2708,
+                    "text": "Fig. 1A",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2786,
+                    "end": 2792,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 3103,
+                    "end": 3112,
+                    "text": "(Fig. 3A)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 3454,
+                    "end": 3462,
+                    "text": "(Fig. 3)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Models of SARS-CoV-2 extended 5\u00b4 UTR"
+        },
+        {
+            "text": "Despite the presence of various multiple-occupancy clusters, compared to the smaller stem-loops modeled in the 5\u2032 UTR, the frameshifting element models were less converged. The majority of variation between top models arises from different orientations of the 5\u2032 \"slippery sequence,\" which forms a weak stem-loop of variable orientation in Rosetta-FARFAR2 simulations. The convergence of the pseudoknot region excluding this 5\u00b4 slippery sequence was tighter, 8.7 \u00c5, suggesting that lowenergy conformations of this pseudoknot element are captured by the current models. Models with both of the assumed secondary structures produced low energies; they contribute to distinct but similar clusters. We additionally generated over 20,000 FARFAR2 models for the dimerized frameshifting element. Modeling of the dimerized frameshifting element did not converge on a welldefined 3D structure (each of the 10 lowest energy conformations were 'singlets' with no other conformations discovered within 5 \u00c5 RMSD; Table 1 and Supplementary Figure 2 ). Fig. 4 presents models for structured regions of the 3\u2032 UTR. The 3\u2032 UTR includes a switch-like pseudoknot element on the 5\u2032 end, a hypervariable region, and the stem-loop II-like motif (Fig. 4A ); all these regions have secondary structures built based on homology to other betacoronaviruses. 2, 17 The 3\u2032 UTR pseudoknot along with its mutually exclusive stem-loop structure have suggested functional roles in viral RNA synthesis, with mutations that destabilize either the pseudoknot or the stem-loop structure proving inviable in related betacoronaviruses. 8 The structure of the stem-loop IIlike motif resembles that of an rRNA loop, leading to its proposed role in recruiting host translation machinery. 5 We generated over 10,000 models for the full 3\u00b4 UTR. Analogous to the models generated for the extended 5\u2032 UTR, this simulation was far from reaching convergence (Table 1) , but suggested the possibility of stereotyped RNA 3D structure, perhaps recognized by factors such as the virus . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint replicase (Supplementary Figure 3) . We additionally generated over 20,000 models for two large subregions of the 3\u00b4 UTR, the hyper-variable region and a region including the 3\u2032 UTR pseudoknot (Supplementary Figure 3) . Here we built models for the 3\u2032 UTR pseudoknot based on the secondary structure forming the pseudoknot P1Pk as depicted in Fig. 4A . Future simulations of this region should also include models based on the alternative secondary structure for this switch-like element forming a stem extending P0b. In both cases, we were not able to observe convergence; none of the top 10 lowest energy conformations were similar to each other or to any of the other top 400 lowest energy conformations, as evaluated by RMSD with cutoff 5 \u00c5. This was expected: with nearly 150 nucleotides in the 3\u2032 UTR pseudoknot and with the hyper-variable region having limited homology to prior structures, these two modeling cases were the largest sub-domains modeled in this report, and likely will remain challenging to model even with more computational power. Modeling of smaller sub-domains of the 3\u2032 UTR and/or acquisition and incorporation of experimental data will likely be critical to model reasonable starting ensembles for virtual docking algorithms. As a preview of such modeling, we used the crystal structure of the SARS stem-loop II-like motif (s2m) to build over 200,000 homology models for the SARS-CoV-2 s2m with FARFAR2 (Fig. 4B , see Methods). 5, 26 With near-identical sequences, the SARS s2m template crystal structure is already a near-complete model for the SARS-Cov-2 domain, such that the FARFAR2 homology models for this region are highly converged (0.21 \u00c5).",
+            "cite_spans": [
+                {
+                    "start": 1331,
+                    "end": 1333,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1334,
+                    "end": 1336,
+                    "text": "17",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1597,
+                    "end": 1598,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1746,
+                    "end": 1747,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 3710,
+                    "end": 3712,
+                    "text": "5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 3713,
+                    "end": 3715,
+                    "text": "26",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1000,
+                    "end": 1007,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1026,
+                    "end": 1034,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1038,
+                    "end": 1044,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1223,
+                    "end": 1231,
+                    "text": "(Fig. 4A",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1910,
+                    "end": 1919,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 2278,
+                    "end": 2287,
+                    "text": "Figure 3)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2461,
+                    "end": 2470,
+                    "text": "Figure 3)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 2596,
+                    "end": 2603,
+                    "text": "Fig. 4A",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 3685,
+                    "end": 3693,
+                    "text": "(Fig. 4B",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Models of SARS-CoV-2 frameshifting element"
+        },
+        {
+            "text": "While there are not yet extended benchmarks for using FARFAR2 model ensembles for small molecule virtual screening, recent RNA-puzzles blind prediction trials have shown that FARFAR2 models in combination with conservation information enables manual identification of ligand binding sites in 3D models of bacterial 'riboswitch' aptamers at nucleotide resolution. [11] [12] [13] To guide use of FARFAR2 models for virtual screening, we have therefore collected a data set termed FARFAR2-Apo-Riboswitch, containing models of RNA elements that are known to bind small molecules, depicted in Fig. 5 . These targets include binders for diverse ligands, from S-adenosyl methionine (SAM) to glycine, cobalamin, 5-hydroxytryptophan, the cyclic dinucleotides c-di-AMP (the ydaO riboswitch), the alarmone nucleotide ZMP (AICAR monophosphate), glutamine, and guanidinium. Each RNA was modeled without ligands present during fragment assembly or refinement, to mimic the protocols that would be used in virtual drug screening in which modeling of apo RNA structures are used for computational docking of ligands. Three of these model sets for SAM-I, SAM-I/IV, and SAM-IV made use of homology to previous riboswitch structures' ligand binding sites (Homology, Figs. 5A-C), for historical reasons: the actual RNA-Puzzles challenges (or in the case of SAM-IV, an 'unknown RFAM' challenge for the RNA-Puzzles, involving tests based on cryoEM 27 ) were posed at times in which crystal structures of riboswitch aptamers with homologous SAM binding sites were available. These model sets should therefore serve as 'positive controls' for virtual drug screening protocols, which should unambiguously identify homology-guided SAM binding sites as good aptamers for SAM.",
+            "cite_spans": [
+                {
+                    "start": 363,
+                    "end": 367,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 368,
+                    "end": 372,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1426,
+                    "end": 1428,
+                    "text": "27",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 588,
+                    "end": 594,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Models of riboswitch aptamers as a benchmark for virtual drug screening methods"
+        },
+        {
+            "text": "The modeling also included riboswitch aptamer cases (De novo, Figs. 5D-J) in which the ligand binding sites were not modeled by homology, in closer analogy to virtual screening approaches that might make use of the FARFAR2-SARS-CoV-2 models. These models include cases such as the ydaO riboswitch, where modeling did not achieve a model closer than 10.0 \u00c5 RMSD to the RNA . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint crystallized with two cyclic-diAMP ligands, perhaps owing to the large ligand and the substantial degree to which contacts with that ligand may organize the crystallized conformation. It will be interesting to see if these models still allow recognition of small molecule binding sites by computational methods. We provide in Table 2 additional metrics for these model sets, including the same RMSD convergence estimates, cluster occupancy, and E-gap numbers as for our FARFAR2-SARS-CoV-2 models as well as RMSD to experimentally determined ligand-bound structures. It will be interesting to see if these metrics give any correlation with the ability of virtual screening methods to discover known native ligands for these RNA elements, which will be useful in evaluating the likelihood of success of such methods in discovering molecules for the FARFAR2-SARS-CoV-2 models.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 918,
+                    "end": 925,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Models of riboswitch aptamers as a benchmark for virtual drug screening methods"
+        },
+        {
+            "text": "We provide a collection of 3D models for elements comprising the extended 5\u2032 UTR, frameshifting element, and 3\u2032 UTR of the SARS-CoV-2 RNA genome. We hope that this FARFAR2-SARS-CoV-2 dataset provides a starting point for virtual screening approaches seeking compounds that stabilize individual SARS-CoV-2 RNA conformations, preventing access to alternative conformations required for viral replication. Models for the 5\u2032 UTR SL1-4 and the frameshifting element appear to be especially promising candidates for small-molecule drug discovery. Modeling of these elements gave ensembles converging sufficiently to produce multiple representatives in clusters with 5 \u00c5 RMSD, and these elements all harbor sequences conserved across betacoronaviruses and structures having documented functional roles in the replication and/or translation of betacoronavirus genomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The structural ensembles presented here have a number of limitations. First, these ensembles are not true thermodynamic ensembles in that the structure occupancies do not necessarily reflect the underlying probabilities of occurrence for each conformational state. Additionally, some of the simulation ensembles described here did not achieve sufficient convergence to provide confidence in the resulting models (3\u2032 UTR hypervariable region, 3\u2032 UTR pseudoknot) -that is, independent modeling runs did not converge to similar low-energy structures. It is possible that these RNA elements do not have well-defined 3D structures in solution unless bound tightly to partners such as the replicase complex. Alternatively or in addition, our modeling methods and currently available computational power are not well-suited to regions of this size. While additional sampling may alleviate this problem, these regions have more de novo modeled positions than most prior FARFAR2 benchmark cases and may remain challenging for current de novo RNA modeling approaches.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Given these limitations in de novo modeling, we felt that it was important to provide analogous models of RNAs of known structure. Virtual screening approaches appear poised to make good use of computational models of RNA, but have so far, to our knowledge, not been used on de novo predicted models. To provide benchmark structural ensembles for such efforts, we have therefore used the same Rosetta-FARFAR2 modeling method and model selection procedure for a variety of RNA riboswitches with known small-molecule ligands. We hope this FARFAR2-Apo-riboswitch data set provides an opportunity for testing the accuracy of virtual screening approaches that use FARFAR2 model sets. With the current need for SARS-CoV-2 antiviral discovery, we believe this is . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint an opportune time to explore and evaluate new approaches for virtual screening of small-molecule drug candidates that target structured RNA.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "For each target, FARFAR2 simulations were executed as previously described, 10 providing sequence and secondary structure information to the rna_denovo application provided with Rosetta 3.12. Clustering was achieved via the rna_cluster application, examining the top 400 structures by energy with a cluster radius of 5.0 or 2.0 \u00c5 depending on the structural element as described above. Specifically, the rna_cluster application iterates through unclustered structures from best to worst energy, either assigning them to an existing cluster center (if the all-heavy-atom RMSD of the model is within the clustering radius of the cluster center) or starting a new cluster. Homology modeling with FARFAR2 for the 5\u2032 UTR SL2 and the 3\u2032 UTR stem-loop II-like motif (s2m) was carried out using the approach outlined in ref. 26 For the 5\u2032 UTR SL2, PDB ID 2L6I 4 was used as a template for positions 45 to 59. For the 3\u2032 UTR s2m, PDB ID 1XJR 5 was used as a template for positions -144 to -104; here, nucleotide numbering maps to the 3\u2032 UTR secondary structure in Fig. 4 .",
+            "cite_spans": [
+                {
+                    "start": 76,
+                    "end": 78,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 817,
+                    "end": 819,
+                    "text": "26",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1055,
+                    "end": 1061,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Rosetta modeling"
+        },
+        {
+            "text": "The DNA template for stem-loop 5 RNA was amplified from a gBlock sequence for the extended 5\u2032 UTR (primers and gBlock sequences ordered from Integrated DNA Technologies, sequences in Table S1 ). The primers were designed to add a Phi2.5 promoter sequence (TTCTAATACGACTCACTATT) at the amplicon's 5' end and a 20 base-pair Tail2 sequence (AAAGAAACAACAACAACAAC) at its 3' end. The PCR reaction contained 5 ng of gBlock DNA template, 2 \u03bcM of forward and reverse primer, 0.2 mM of dNTPs, 2 units of DNA Phusion DNA polymerase, and 1X of HF buffer. The reaction was first denatured at 98 \u00b0C for 30 s. Then for 35 cycles, the sample was denatured at 98 \u00b0C for 10 sec, annealed at 64 \u00b0C for 30 sec, and extended at 72 C for 30 \u00b0C. This was followed by an incubation at 72 \u00b0C for 10 min for a final extension. Assembly products were verified for size via agarose gel electrophoresis and subsequently purified using Agencourt RNAClean XP beads. Purified DNA was quantified via NanoDrop (Thermo Scientific) and 8 pmol of purified DNA was then used for in vitro transcription with T7 RNA polymerase (New England Biolabs Inc.). The resulting RNA was purified with Agencourt RNAClean XP beads supplemented with an additional 12% of PEG-8000 and quantified via NanoDrop. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint NaCl, 1.5 \u03bcL of oligo-dT Poly(A)Purist MAG beads (Ambion), and 0.065 pmol of 5' Fluorescein (FAM)-labeled Tail2-A20 primer were added (sequence in Table S1 ), and the solution was mixed and incubated for 15 minutes. The magnetic beads were then pulled down by placing the mixture on a 96-post magnetic stand, washed twice with 100 \u03bcL of 70% EtOH, and air dried for 10 minutes before being resuspended in 2.5 \u03bcL RNase free H2O.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 183,
+                    "end": 191,
+                    "text": "Table S1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1546,
+                    "end": 1554,
+                    "text": "Table S1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Chemical reactivity experiments"
+        },
+        {
+            "text": "For cDNA synthesis, 2.5 \u03bcL resuspension of purified, polyA magnetic beads carrying chemically modified RNA was mixed with 2.5 \u03bcL of reverse transcription premix with SuperScript-III (Thermo Fisher). The reaction was incubated at 48 \u00b0C for 45 minutes. The RNA was then degraded by adding 5 \u03bcL of 0.4 M NaOH and incubating the mixture at 90 \u2103 for 3 minutes. The degradation reaction was placed on ice and quickly quenched by the addition of 2 \u03bcL of an acid quench solution (1.4 M NaCl, 0.6 M HCl, and 1.3 M NaOAc). Bead-bound, FAM labeled cDNA was purified by magnetic bead separation, washed twice with 100 \u03bcL of 70% EtOH, and air-dried for 10 minutes. To elute the bound cDNA, the magnetic beads were resuspended in 10.0625 \u03bcL ROX/Hi-Di (0.0625 \u03bcL of ROX 350 ladder [Applied Biosystems] in 10 \u03bcL of Hi-Di formamide [Applied Biosystems]) and incubated at room temperature for 20 minutes. The resulting eluate was loaded onto capillary electrophoresis sequencers (ABI-3100 or ABI-3730) either on a local machine or through capillary electrophoresis (CE) services rendered by ELIM Biopharmaceuticals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Chemical reactivity experiments"
+        },
+        {
+            "text": "CE data was analyzed using the HiTRACE 2.0 package (https://github.com/ribokit/HiTRACE) 28 , following the recommended steps for sequence assignment, peak fitting, background subtraction of the no-modification control, correction for signal attenuation, and reactivity profile normalization. Secondary structures were predicted using the Biers (https://github.com/ribokit/Biers) wrapper for RNAStructure 24 with default settings, making one prediction guided by the normalized DMS reactivity profile and another guided by the normalized 1M7 reactivity profile.",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 90,
+                    "text": "28",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Chemical reactivity experiments"
+        },
+        {
+            "text": "The supplementary file includes depictions of top 10 clusters for the full extended 5\u2032 UTR, frameshift element dimer, full 3\u2032 UTR, hypervariable region, and an extended 3\u2032 UTR pseudoknot construct. FARFAR2-SARS-CoV-2 models are included at https://github.com/DasLab/FARFAR2-SARS-CoV-2. FARFAR2-Apo-Riboswitch models are included at https://github.com/DasLab/FARFAR2-Apo-Riboswitch.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data availability"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint Figure 2 . A) Top 10 clusters for SL5 from FARFAR2 modeling. 3D Modeling did not converge, with only one member per cluster with a 5 \u00c5 clustering radius. B) Secondary structures for the SARS-CoV-2 SL5 predicted from RNAstructure 24 guided by DMS and SHAPE reactivity data validate the SL5 secondary structure modeled based on homology to literature models (Fig. 1A) . DMS and SHAPE reactivity are colored for each position, with red indicating high reactivity, white indicating low reactivity, and grey indicating positions that cannot be modified.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 362,
+                    "end": 370,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 718,
+                    "end": 727,
+                    "text": "(Fig. 1A)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Figures"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint a Mean pairwise all-heavy-atom RMSD between 10 lowest energy models discovered. b Rosetta all-atom energy gap of cluster's lowest energy model compared to lowest energy model discovered in run. REU = Rosetta energy units, calibrated so that 1.0 corresponds approximately to 1 kBT. c Number of models that appear in each cluster. Clustering was carried out on top 400 models ranked by Rosetta all-atom energy, based on a 5.0 \u00c5 threshold.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figures"
+        },
+        {
+            "text": ". CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figures"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "RNA genome conservation and secondary structure in SARS-CoV-2 and SARS-related viruses",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rangan",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Zheludev",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Group-specific structural features of the 5'-proximal sequences of coronavirus genomic RNAs",
+            "authors": [
+                {
+                    "first": "S.-C",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "C L"
+                    ],
+                    "last": "Olsthoorn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Virology",
+            "volume": "401",
+            "issn": "1",
+            "pages": "29--41",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "How We Think about Targeting RNA with Small Molecules",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Costales",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Childs-Disney",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Haniff",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Disney",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Med. Chem",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The solution structure of coronaviral stem-loop 2 (SL2) reveals a canonical CUYG tetraloop fold",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Giedroc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "FEBS Lett",
+            "volume": "",
+            "issn": "7",
+            "pages": "1049--1053",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The structure of a rigorously conserved RNA element within the SARS virus genome",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Robertson",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Igel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Baertsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Haussler",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ares",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jr",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Scott",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "PLoS Biol",
+            "volume": "3",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Discovery of selective bioactive small molecules by targeting an RNA dynamic ensemble",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Stelzer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Kratz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Swanson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gonzalez-Hernandez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Andricioaei",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Markovitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Al-Hashimi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nature Chemical Biology",
+            "volume": "7",
+            "issn": "8",
+            "pages": "553--559",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A U-turn motifcontaining stem-loop in the coronavirus 5' untranslated region plays a functional role in replication",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Millership",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Leibowitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Giedroc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "RNA",
+            "volume": "13",
+            "issn": "5",
+            "pages": "763--780",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Characterization of the RNA components of a putative molecular switch in the 3' untranslated region of the murine coronavirus genome",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Goebel",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hsue",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Dombrowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Masters",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "J. Virol",
+            "volume": "78",
+            "issn": "2",
+            "pages": "669--682",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Structural lability in stem-loop 1 drives a 5' UTR-3' UTR interaction in coronavirus replication",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Makkinje",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Williamson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Leibowitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Giedroc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "J. Mol. Biol",
+            "volume": "377",
+            "issn": "3",
+            "pages": "790--803",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "FARFAR2: Improved de novo Rosetta prediction of complex global RNA folds",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Watkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "RNA-Puzzles Round II: assessment of RNA",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Adamiak",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-F",
+                    "middle": [],
+                    "last": "Blanchet",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Boniecki",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bujnicki",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chojnowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "F.-C",
+                    "middle": [],
+                    "last": "Chou",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Cordero",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cruz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Ferr\u00e9-D&apos;amar\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Dokholyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Dunin-Horkawicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kladwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krokhotin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lach",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Magnus",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Major",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Mann",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Masquida",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Matelska",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Meyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Peselis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Popenda",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Purzycka",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serganov",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Stasiewicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Szachniuk",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tandon",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zok",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Westhof",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "RNA",
+            "volume": "2015",
+            "issn": "6",
+            "pages": "1066--1084",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "RNA-Puzzles Round III: 3D RNA structure prediction of five riboswitches and one ribozyme",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zok",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Westhof",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "RNA",
+            "volume": "2017",
+            "issn": "5",
+            "pages": "655--672",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "RNA-Puzzles: a CASP-like evaluation of RNA three-dimensional structure prediction",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cruz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-F",
+                    "middle": [],
+                    "last": "Blanchet",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Boniecki",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bujnicki",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Dokholyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Flores",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lavender",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Lisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Major",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mikolajczak",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Patel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Philips",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Puton",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Santalucia",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sijenyi",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hermann",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Rother",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rother",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serganov",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Skorupski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Soltysinski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sripakdeevong",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Tuszynska",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Weeks",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Waldsich",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wildauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Leontis",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Westhof",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "RNA",
+            "volume": "2012",
+            "issn": "4",
+            "pages": "610--625",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The Rosetta All-Atom Energy Function for Macromolecular Modeling and Design",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Alford",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Leaver-Fay",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jeliazkov",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "O&apos;meara",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Dimaio",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Shapovalov",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Renfrew",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Mulligan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kappel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Labonte",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pacella",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bonneau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bradley",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Dunbrack",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jr",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Baker",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kuhlman",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kortemme",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. Chem. Theory Comput",
+            "volume": "13",
+            "issn": "6",
+            "pages": "3031--3048",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.14.041962"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "De novo computational RNA modeling into cryo-EM maps of large ribonucleoprotein complexes",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kappel",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Larsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Skiniotis",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Puglisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Puglisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Methods",
+            "volume": "15",
+            "issn": "11",
+            "pages": "947--954",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Ribosolve: Rapid determination of three-dimensional RNA-only structures",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kappel",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kladwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pintilie",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Topkar",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rangan",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Zheludev",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Watkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Yesselman",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "The structure and functions of coronavirus genomic 3' and 5' ends",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Leibowitz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Virus Res",
+            "volume": "206",
+            "issn": "",
+            "pages": "120--133",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "A cis-acting function for the coronavirus leader in defective interfering RNA replication",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hofmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Sethna",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brian",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Stem-loop III in the 5' untranslated region is a cis-acting element in bovine coronavirus defective interfering RNA replication",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Raman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bouma",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "J Virol",
+            "volume": "77",
+            "issn": "12",
+            "pages": "6720--6750",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Discontinuous subgenomic RNA synthesis in arteriviruses is guided by an RNA hairpin structure located in the genomic leader region",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Raman",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A. ; E"
+                    ],
+                    "last": "Brian",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Posthuma",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Gultyaev",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Snijder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "J. Virol",
+            "volume": "79",
+            "issn": "19",
+            "pages": "6312--6324",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "An RNA stem-loop within the bovine coronavirus nsp1 coding region is a cis-acting element in defective interfering RNA replication",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nixon",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Senanayake",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Brian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "J Virol",
+            "volume": "81",
+            "issn": "14",
+            "pages": "7716--7740",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "RNAstructure: software for RNA secondary structure prediction and analysis",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Watkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Geniesse",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kladwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zakrevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Jaeger",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "BMC Bioinformatics",
+            "volume": "2018",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Structural and functional conservation of the programmed -1 ribosomal frameshift signal of SARS-CoV-2",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Dinman",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Using Rosetta for RNA homology modeling",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Watkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rangan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Methods Enzymol",
+            "volume": "623",
+            "issn": "",
+            "pages": "177--207",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Cryo-EM structure of a 40 kDa SAM-IV riboswitch RNA at 3.7 A resolution",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kappel",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pintilie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Mou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Schmid",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chiu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat Commun",
+            "volume": "10",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "HiTRACE: highthroughput robust analysis for capillary electrophoresis",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yoon",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hum",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kladwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Bioinformatics",
+            "volume": "27",
+            "issn": "13",
+            "pages": "1798--805",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "YbxF and YlxQ are bacterial homologs of L7Ae and bind K-turns but not K-loops",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Baird",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hamma",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Ferre-D&apos;amare",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "RNA",
+            "volume": "2012",
+            "issn": "4",
+            "pages": "759--70",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Structural basis for diversity in the SAM clan of riboswitches",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Trausch",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Edwards",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Reyes",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Ross",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Knight",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Batey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proc Natl Acad Sci",
+            "volume": "111",
+            "issn": "18",
+            "pages": "6624--6633",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Structural insights into ligand recognition by a sensing domain of the cooperative glycine riboswitch",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serganov",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Patel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Mol Cell",
+            "volume": "40",
+            "issn": "5",
+            "pages": "774--86",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Structural insights into ligand binding and gene expression control by an adenosylcobalamin riboswitch",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Peselis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serganov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nat Struct Mol Biol",
+            "volume": "19",
+            "issn": "11",
+            "pages": "1182--1186",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Recurrent RNA motifs as scaffolds for genetically encodable small-molecule biosensors",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Porter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Polaski",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Morck",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Batey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Nat Chem Biol",
+            "volume": "13",
+            "issn": "3",
+            "pages": "295--301",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "c-di-AMP binds the ydaO riboswitch in two pseudo-symmetry-related pockets",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Patel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nat Chem Biol",
+            "volume": "10",
+            "issn": "9",
+            "pages": "780--786",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Metal Ion-Mediated Nucleobase Recognition by the ZTP Riboswitch",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Trausch",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Marcano-Velazquez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Matyjasik",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Batey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Chem Biol",
+            "volume": "22",
+            "issn": "7",
+            "pages": "829--866",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Structural and Dynamic Basis for Low-Affinity, High-Selectivity Binding of L-Glutamine by the Glutamine Riboswitch",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xue",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Peselis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serganov",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Al-Hashimi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Patel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Cell Rep",
+            "volume": "13",
+            "issn": "9",
+            "pages": "1800--1813",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "RNA modification, 1.2 pmol of RNA was denatured in 50 mM Na-HEPES pH 8.0 at 90 \u00b0C for 3 minutes and cooled at room temperature for 10 minutes. The RNA was then folded with the addition of MgCl2 to a final concentration of 10 mM in 15 \u03bcL and incubated at 50 \u00b0C for 30 minutes, then left at room temperature for 10 minutes. For chemical modification of folded RNA, fresh working stocks of dimethyl sulfate (DMS) and 1-methyl-7-nitroisatoic anhydride (1M7) were prepared. For DMS, 1 \u03bcL of DMS was mixed with 99 \u03bcL of 100% EtOH. The 100 \u03bcL solution was then added to 100 \u03bcL RNase free H2O for a final volume of 200 \u03bcL. For 1M7, 4.24 mg of 1M7 was dissolved in 1 mL of anhydrous DMSO. For a no-modification control reaction, 5 \u03bcL of Rnase free H2O was added to 15 \u03bcL of folded RNA. Samples were incubated at room temperature for 15 minutes. Then, 5 \u03bcL of 5 M",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "A) 5\u2032 UTR secondary structure, with each modeled stem colored. In bold are positions that are completely conserved across a set of SARS-related virus sequences. 1 B-G) Top 10 clusters for SL1, SL2, SL3, SL4ab, SL6, and SL7. The top-scoring cluster member in each case is depicted with solid colors, and the top cluster members (up to 10) are depicted as transparent structures.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "A) Frameshifting element secondary structure, depicting two secondary structures used for FARFAR2 modeling. In bold are positions that are completely conserved across a set of SARSrelated virus sequences. 1 B) Top 10 frameshifting element clusters. The top-scoring cluster member in each case is depicted with solid colors, and the top cluster members (up to 10) are depicted as transparent structures.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "A) 3\u2032 UTR secondary structure, colored by domain. In bold are positions that are completely conserved across a set of SARS-related virus sequences. 1 B) Top 2 clusters for the stem-loop II-like motif, with models built based on homology to template structure 1XJR 5 . The topscoring cluster member in each case is depicted with solid colors, and the top cluster members (up to 10) are depicted as transparent structures.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Top two clusters for the following small-molecule binding RNA riboswitches and aptamers, along with their native structure (left in each panel, with ligand in pink spheres), beginning with three template-guided modeling challenges: A) SAM-I riboswitch, B) SAM-I/IV riboswitch, C) SAM-IV riboswitch, D) glycine riboswitch, E) cobalamin riboswitch, F) 5HT riboswitch, G) cyclic diGMP ydaO riboswitch , H) ZMP riboswitch, I) glutamine riboswitch, J) guanidinium riboswitch. The top-scoring cluster member in each case is depicted with solid colors, and the top cluster members (up to 10) are depicted as transparent structures.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "FARFAR2-SARS-CoV-2 models International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.SARS-CoV-2 3\u00b4 UTR beginning with bulged hairpin (-361 --1). CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint3\u00b4 UTR hypervariable region (-213 --20)3\u00b4 UTR stem-loop II-like motif, homology modeled from PDB ID: 1XJR 5 (-148 --99) Mean pairwise all-heavy-atom RMSD between 10 lowest energy models discovered. b Rosetta all-atom free energy gap of cluster's lowest energy model compared to lowest energy model discovered in run. REU = Rosetta energy units, calibrated so that 1.0 corresponds approximately to 1 kBT. c Number of models that appear in each cluster. Clustering was carried out on top 400 models ranked by Rosetta all-atom free energy, based on 5.0 \u00c5 threshold, except for small RNAs (SL1-4, SL6-7), where 2.0 \u00c5 threshold was applied.. CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "FARFAR2-Apo-Riboswitch models SAM-I/IV riboswitch, RNA-Puzzle 8. PDB ID: 4L81 30 SAM-IV riboswitch, RNA-Puzzle Unknown Rfam 15. PDB ID: 6UET 27 . CC-BY 4.0 International license author/funder. It is made available under aThe copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprintGlycine riboswitch, RNA-Puzzle 3. PDB ID: 3OXE 31 Cobalamin riboswitch, RNA-Puzzle 6. PDB ID: 4GXY 32 5HT riboswitch, RNA-Puzzle 9. PDB ID: 5KPY 33 . CC-BY 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint ZMP riboswitch, RNA-Puzzle 13. PDB ID: 4XW7 35 Glutamine riboswitch (bound), RNA-Puzzle 14. PDB ID: 5DDP 36 . CC-BY 4.0 International license author/funder. It is made available under aThe copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.14.041962 doi: bioRxiv preprint Guanidinium riboswitch, RNA-Puzzle 21. PDB ID: 5NWQ 37",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank I. Zheludev for extensive discussions of RNA elements to prioritize for structural characterization. We thank Sergey Lyskov and Jeff Gray for expedited access to the ROSIE cluster to pilot Rosetta modeling efforts. We acknowledge funding from the National Science Foundation Graduate Research Fellowship Program under grant no. 1650114 and National Institutes of Health (R21 CA219847 and R35 GM122579). The computing for this project was performed on the Sherlock cluster. We would like to thank Stanford University and the Stanford Research Computing",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

@@ -1,0 +1,907 @@
+{
+    "paper_id": "f9ae72c202187611f74d823093553e1d744273e4",
+    "metadata": {
+        "title": "Model calibration, nowcasting, and operational prediction of the COVID-19 pandemic",
+        "authors": [
+            {
+                "first": "J",
+                "middle": [
+                    "D"
+                ],
+                "last": "Annan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Blue Skies Research Ltd",
+                    "location": {
+                        "addrLine": "The Old Chapel, Albert Hill",
+                        "postCode": "BD24 9HE",
+                        "settlement": "Settle",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "J",
+                "middle": [
+                    "C"
+                ],
+                "last": "Hargreaves",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Blue Skies Research Ltd",
+                    "location": {
+                        "addrLine": "The Old Chapel, Albert Hill",
+                        "postCode": "BD24 9HE",
+                        "settlement": "Settle",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We present a simple operational nowcasting/forecasting scheme based on a joint state/parameter estimate of the COVID-19 epidemic at national or regional scale, performed by assimilating the time series of reported daily death numbers into a simple SEIR model. This system generates estimates of the current reproductive rate, R t , together with predictions of future daily deaths and clearly outperforms a number of alternative forecasting systems that have been presented recently. Our current 5 (14th April 2020) estimates for R t are, respectively, UK 0.49 (0.0 -1.02), Spain 0.55 (0.33 -0.77), Italy 0.90 (0.74 -1.06) and France 0.67 (0.40 -0.94) (mean and 95% credible intervals). Thus, we believe that the epidemics have been successfully suppressed in each of these countries, with high probability. Our approach is trivial to set up for any region and generates results in a few minutes on a laptop. We believe it would be straightforward to set up equivalent frameworks using more complex and realistic models, and hope that some experts in the field of epidemiological modelling will consider investigating this approach 10 further.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Bayes' Theorem describes how a prior estimate can be updated in the light of observational evidence:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In the above, p(\u0398|O) is the posterior estimate of the state \u0398 conditioned on the evidence O, p(\u0398) is our prior belief before accounting for the evidence, and p(O|\u0398) is the likelihood function that measures the probability of obtaining the particular observations, as a function of the state variables/parameters \u0398. Having obtained p(\u0398|O) at the forecast time (i.e., the present, 5 for real-time forecast), we are in a position to present any parameters of interest contained within \u0398 and also generate a forecast for variables of interest. In this work, we focus on the the current reproductive rate of the epidemic, R t , as the main parameter of interest, and also on the reported number of daily deaths, both as being the most reliable source of data (i.e., our observations O in the application of Bayes' Theorem above) and also the primary forecast variable of interest to the public and policy makers. However, the model we are using also naturally calculates other variables that could be of great interest such as case numbers, 10 from which healthcare demands could be estimated.",
+            "cite_spans": [
+                {
+                    "start": 1036,
+                    "end": 1038,
+                    "text": "10",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "p(\u0398|O) p(O|\u0398)p(\u0398)/p(O)"
+        },
+        {
+            "text": "A range of techniques have been developed for applying Bayesian theory which trade-off flexibility, computational cost, precision, and ease of use. The Markov Chain Monte Carlo (MCMC) method (Metropolis et al., 1953; Hammersley and Handscomb, 1964; Hastings, 1970) is particularly convenient in terms of flexibility and ease of implementation, and although it requires O(10000) model simulations, this is easily affordable for the simple model that we are using. 15 The approach we present here is based on fitting a simple homogeneous SEIR model to data. While the MCMC method (using the package 'MCMCpack' in the R language) is easy to set up and use, it seems likely that more efficient methods might be possible. In particular, it should be possible to exploit the log-linear behaviour exhibited in the dynamics to use much more efficient approaches such as Kalman Filtering, and thus we expect the principles of model calibration and initialisation demonstrated here could be readily applied to more computationally demanding models. 20 2 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 191,
+                    "end": 216,
+                    "text": "(Metropolis et al., 1953;",
+                    "ref_id": null
+                },
+                {
+                    "start": 217,
+                    "end": 248,
+                    "text": "Hammersley and Handscomb, 1964;",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 249,
+                    "end": 264,
+                    "text": "Hastings, 1970)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 463,
+                    "end": 465,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "p(\u0398|O) p(O|\u0398)p(\u0398)/p(O)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org /10.1101/2020.04.14.20065227 3 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 115,
+                    "text": "/10.1101/2020.04.14.20065227",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "p(\u0398|O) p(O|\u0398)p(\u0398)/p(O)"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 2 Methods",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 95,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 96,
+                    "end": 106,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "p(\u0398|O) p(O|\u0398)p(\u0398)/p(O)"
+        },
+        {
+            "text": "The model we are using is a 6-box SEIR model (https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_ SEIR_model) originating from the webpages of Thomas House, Reader in the School of Mathematics at the University of Manchester who specialises in mathematical epidemiology. Rather than describing the equations we simply present our imple-5 mentation in the R language:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "#The basic dynamics is a 6-box version of SEIR based on this post from Thomas House: #https://personalpages.manchester.ac.uk/staff/thomas.house/blog/modelling-herd-immunity.html #There are two E and I boxes, the reasons for which we #could speculate on but it's not our model so we won't :-) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "The model is initialised with a state vector for the 6 boxes, and also requires three rate parameters, \u03b2, \u03c3 and \u03b3 which are simple functions of the three parameters more commonly discussed in the context of epidemiology: the reproductive rate R, the latent period L p and infectious period I p . In order to calculate daily deaths from the infected population, we use the Gamma distribution for time to death described by Ferguson et al. (2020) , except with the minor modification that we marginally reduce 10 the mean time from 18.8 to 15 days, having found that this shorter time scale simulates the Hubei epidemic slightly better.",
+            "cite_spans": [
+                {
+                    "start": 422,
+                    "end": 444,
+                    "text": "Ferguson et al. (2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "})}"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The fundamental scenario common to all of our simulations is that the model parameters are assumed constant in time apart from the reproductive rate which is piecewise constant, having a value R 0 prior to the introduction of social controls and R t subsequent to that date. For the initial reproductive rate R 0 we use a Gaussian prior of N(3,1 2 ) to include a wide range of plausible values, and for R t we use N(1,0.5 2 ) in in order to represent the expectation that the controls will have a substantial 5 effect albeit we are uncertain whether these achieve suppression (R t < 1) or merely mitigation (R 0 > R t > 1). Using a prior centred on unity means that one can easily discern from the posterior predictive distribution whether the observed data are more consistent with suppression or mitigation even before the effect of the policies is known with high confidence. An alternative approach might be to use an uncertain scaling factor \u03b1 such that R t = \u03b1R 0 but the interpretation of results would be marginally less clear and the prior choice on \u03b1 slightly less natural for us. We expect that the optimisation technique would 10 however perform similarly well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Uncertain parameters"
+        },
+        {
+            "text": "The starting size of the epidemic is also taken to be uncertain with a very broad prior that ensures the specification of start date is not critical so long as a reasonable choice is made. In practice this parameter tends to vary inversely with R 0 in the posterior, in order to achieve a reasonable timing during the early stages of the epidemic. We have also allowed some uncertainty in the latent period, although this is probably not necessary and it is unsurprising to find that in the posterior it 15 varies with R 0 . In the setup of the system we have also included the infectious period and mortality rate as uncertainties within the MCMC procedure, but in practice we have chosen to constrain these with tight priors as they are not identifiable with the other parameters and including them has not been necessary in our applications which focus primarily on numbers of deaths.",
+            "cite_spans": [
+                {
+                    "start": 504,
+                    "end": 506,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Uncertain parameters"
+        },
+        {
+            "text": "The modelling of uncertainties leading to model-data discrepancy is fundamental to the specification and calculation of the 20 likelihood in the Bayesian updating. We consider three major sources of model-data discrepancy. Note that these uncertainties are attached to the model outputs (predictions), rather than the observed values per se, in order to perform the likelihood calculation correctly. We also remark at this point that the model-data comparison is performed in log-space due to the largely 5 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Observational uncertainties and model error"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 log-linear dynamics, and so all of these uncertainties are treated as multiplicative terms on the values (additive errors in log space).",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Firstly and most straightforwardly, sampling uncertainty arises due to the stochastic nature of deaths occurring in a specific interval such as a day. We assume that if the expected number of deaths is n then the relative sampling uncertainty on this value is approximately \u221a n/n, arising as the standard deviation of the Central Limit Theorem approximation to the binomial 5 distribution where the probability of \"success\" (a tasteless term in the circumstances) is some unknown p < 0.1 and the number of \"trials\", i.e. the population of dangerously ill patients who could die in the next day, is n/p. In practice we round this term up slightly to (1 + \u221a n)/n which further downweights the very sparse and noisy data that are seen for small numbers of deaths at the start of an outbreak, without significantly affecting larger values.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Data reporting errors have been much discussed in the UK context and there is clear evidence of them having a weekly pattern 10 due presumably to working practices in the medical sector. In particular, the \"Monday dip\" in recent weeks been substantially greater than can be accounted for via sampling uncertainties alone and therefore as our second source of uncertainty we include an additional factor for these reporting errors, for which we use a Gaussian distribution with a magnitude of 20% of the expected value (again at one standard deviation). We make no attempt to either directly correct for these reporting errors or to account for their somewhat periodic and skewed nature. 15 Perhaps the most subtle and important source of model-data discrepancy is the inadequacy of the model itself. Even if the model is perfectly initialised, with the best possible choice of parameter values, it is inevitable that it will diverge from reality to a greater extent than could be accounted for by stochastic factors. There are in fact no 'true' parameters for which the model can track reality indefinitely. This failure does not just affect the forecast, but also prevents the model from 'shadowing' (Smith, 2006) an indefinitely long historic time series of observations. However, a consequence of the (log-)linear and deterministic 20 nature of the model is that, in the limit of an infinite data stream of unlimited precision, the posterior probability distribution under a standard Bayesian updating methodology will converge to a point estimate and a point forecast which therefore will not validate. This ubiquitous problem in data assimilation and parameter estimation has a number of possible solutions. Here we treat the model inadequacy in a simple way as a multiplicative error that increases linearly with time at the rate of 3% per day. This is necessarily a rather subjective approach and the calibration of this number is rather subjective. An error term of 25 1% per day or less would be too small to significantly influence results within the time scale of interest, and a value of 10% per day would render the model largely useless. As well as inflating the forecast spread, this error also grows in time backwards from the forecast time during the calibration process. What this means in practice is that observations sufficiently distant in time from the present have little influence on the calibration, and that the posterior certainty is bounded even for an unlimited time series of perfect observations.",
+            "cite_spans": [
+                {
+                    "start": 687,
+                    "end": 689,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1201,
+                    "end": 1214,
+                    "text": "(Smith, 2006)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "These three error terms are independent, Gaussian and additive in log-space and therefore can be added in quadrature to give a total uncertainty on model predictions. They apply to the model prediction at observation times in the likelihood calculation, and are also included in the presentation of our forecasts. In practice however, the forecast uncertainty is usually dominated by our uncertainty in the current value of R t .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "30"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We use daily death numbers as our sole source of data in the Bayesian updating procedure. In principle other data such as numbers of infections can easily be used if available, but in practice these appear to be so unreliable and strongly biased due to under-sampling that we do not use them. Our data are drawn largely from http://www.worldometer.com, with some minor adjustments. Regional data for Hubei have been obtained from https://www.kaggle.com/imdevskp/corona-virus-report# 5 covid_19_clean_complete.csv. The Hubei data set did not include the earliest deaths and these were added by hand based on the Wikipedia page https://en.wikipedia.org/wiki/2019-20_coronavirus_pandemic_in_mainland_China. Due to the log-space model-data comparison, zeros are problematic. Erroneous zeros due to missing data during the epidemic are removed by a simple local smoothing, and zeros in the early stage of the epidemic are treated as half a death in the likelihood to avoid numerical problems. The number of fictitious deaths created through this process is never more than a handful in any of our 10 applications, and we do not believe that this minor pre-processing affects our results other than to make the estimation process slightly more straightforward.",
+            "cite_spans": [
+                {
+                    "start": 1092,
+                    "end": 1094,
+                    "text": "10",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "We have validated our system by hindcasting epidemic growth in multiple countries and regions. A representative selection of our results, focussing on countries which have experienced significant epidemics, are reported here. Our validation approach 15 follows the basic paradigm of issuing a hypothetical forecast at a date in the past by withholding data subsequent to that forecasting date, which can then be used as validation. The performance of our system was so robust that we have not felt the need to perform quantitative analyses of the goodness of fit, and here we simply show a selection of forecasts along with the observations that were subsequently made.",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 252,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Validation, nowcasts, and forecasts"
+        },
+        {
+            "text": "The initial outbreak in the city of Wuhan in Hubei province, China, provides the most comprehensive test of the long-term 20 forecasting performance due to the long time series available. As can be seen from Figure 1a , the strong decline in deaths was predicted (albeit with much uncertainty) as early as the 9th February, due to the deviation of reported deaths below the exponential continuation of the early growth rate. While the cluster of high death numbers just before the 16th Feb raised the forecast in Figure 1b somewhat, reality was still captured within its uncertainty range. Subsequent forecasts predicted the exponential decline very accurately.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 208,
+                    "end": 217,
+                    "text": "Figure 1a",
+                    "ref_id": null
+                },
+                {
+                    "start": 513,
+                    "end": 522,
+                    "text": "Figure 1b",
+                    "ref_id": null
+                }
+            ],
+            "section": "Validation, nowcasts, and forecasts"
+        },
+        {
+            "text": "Figure 2b contains our current forecast for daily deaths in the UK, along with our estimate for the current reproductive rate R t which is assumed in the model to have applied since the date of the 'lockdown' on 23rd March, and also the original reproductive rate R 0 that applied prior to that date. Figure 2a shows an equivalent forecast initialised on Sunday April 5th, together with the data that have been reported since that date but which were not known to the algorithm. According to our results, R t is now very likely less than 1 and the number of deaths will fall steadily in the future so long as their reporting is on 30 a consistent basis with the past. The possibility that the 'Monday problem' has suppressed recent data should not be completely discounted, but even if this is the case, it is hard to reconcile a value for R t of greater than unity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 301,
+                    "end": 310,
+                    "text": "Figure 2a",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "25"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "7"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 We have also simulated the epidemics in a number of European countries, and present results from the countries wth the three largest epidemics: France, Italy and Spain. As shown in Figures 4a and 5a (and also consistent with our results for Hubei), the downturn in deaths is confidently predicted with between two and three weeks of data subsequent to the lockdown. This gives us some confidence that our UK forecast is credible.",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 258,
+                    "end": 275,
+                    "text": "Figures 4a and 5a",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "Our results for the UK, Spain, Italy, and France are summarised in Table 2 , together with equivalent forecasts generated by 5 the MRC/IC Centre for Global Infectious Disease Analysis (https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/ covid-19/covid-19-weekly-forecasts/). In each of the previous forecasts for which subsequent data are available, these data are consistent with our forecasts but frequently lie outside the uncertainty bounds of the MRC forecasts.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 67,
+                    "end": 74,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "It is unclear to us why the MRC approach has performed quite so poorly. We suspect it may be due to a lack of memory in their system. Deaths over the coming week cannot possibly be deduced from the past few days alone, as they depend on 10 the time series of infections stretching back over several weeks and integrating this information requires the use of a model with appropriate time delays. An alternative forecasting system has been presented by the The Institute for Health Metrics and Evaluation (IHME, https://covid19.healthdata.org/united-kingdom) and their approach, which is outlined in Murray et al.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "(2020) appears to include a highly detailed statistical model. While the extra information they consider, or example relating to hospital bed demand, could be very useful to know, the basic trajectory of the number of deaths is very poorly predicted by 15 their model. Their forecasts of deaths issued on the 9th April predicted a steep rise for the UK and extraordinarily steep falls for both Italy and Spain, outside the range of what could be plausibly simulated by a mechanistic model. The fairly stable death rates in all three European countries (trending down gradually in Italy and Spain), which have been observed subsequently to 8 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 253,
+                    "end": 255,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 9 . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "10"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 Figure 6 . Forecast for Sweden. Plot legend as for Figure 1 their forecast date and which were correctly predicted by our mechanistic model, lie outside of the uncertainty bounds of the IHME forecasts a mere 4 days after their issue.",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 77,
+                    "end": 85,
+                    "text": "Figure 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 128,
+                    "end": 136,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "It could perhaps be argued that our results have been largely obtained through a judicious choice of prior on R t which imposes a sharp reduction in growth rate. Sweden provides a useful test of this possibility, since although it has taken some actions it has not imposed strict controls to suppress the epidemic. Therefore, we can use Sweden as a test of our system's 5 ability to detect failure or absence of controls. In this test, we assume imposition of controls in Sweden at around the same time as in the rest of Europe (17 March), and calibrate our model as before, with an assumed R t \u2208 N (1, 0.5 2 ) subsequent to that date. The results are shown in Figure 6 . These results demonstrates that the prior on R t is sufficiently vague that the data easily dominates it and generates a result showing essentially no change in the growth rate over the interval for which we have data. Our results for Sweden are also consistent with the latest forecast from MRC. Therefore, we are confident that we are 10 have not been merely fixing our earlier results though the choice of prior for R t , but have in fact been detecting real changes in R which emerges from the data.",
+            "cite_spans": [
+                {
+                    "start": 1009,
+                    "end": 1011,
+                    "text": "10",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 661,
+                    "end": 669,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We are surprised that calibration methods are not more widely used by epidemiological modellers in order to better simulate real epidemics. For example, the widely-discussed paper, Ferguson et al. (2020), appears to have made no attempt to calibrate 15 the exponential growth rate that had been observed in both case and death data in the UK, merely (according to the description of the authors) setting the initial size of their modelled epidemic to match the number of deaths by mid-March. By this time,",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 252,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "11"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 there was already ample evidence in the piblic domain that the 5-day doubling time assumed by their choice of parameters was a substantial underestimate of the growth rate both in deaths (albeit with little data) and also diagnosed infections. Similarly, Davies et al. (2020) used alignment with observed deaths (up to 27th March) to choose the starting date of their model simulations, but do not appear to have considered calibrating the growth rate even though by that time it must have been apparent to all researchers that the empirical rate was very much at the high end of all prior expectations. It seems extremely remiss that 5 such simple calibration is not performed routinely, and it may well have played a significant r\u00f6le in the tardy and complacent response of the UK government in the early stages of the epidemic. Compared to the expert prediction of a 5-day doubling time, simple modelling suggests that the 3-day doubling that has been widely observed will, in the absence of strong controls on behaviour, result in the peak of the epidemic being roughly a month earlier and twice as high, resulting in a hugely increased demand on healthcare resources while giving far less time to prepare. Coincident with this, the higher implied value for R also 10 makes the epidemic rather harder to control. We urge epidemiological modellers to consider more seriously the calibration and initialisation of their models when attempting to provide policy-relevant guidance.",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 332,
+                    "end": 352,
+                    "text": "Davies et al. (2020)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        },
+        {
+            "text": "We have presented a simple data assimilation method that simultaneously calibrates and initialises a SEIR model for nowcasting and forecasting the COVID-19 epidemic at national and regional scale. We have shown that this method generates valid 15 forecasts and an initial assessment of its performance shows it to be rather more reliable than the forecasts generated by both the MRC/IC Centre for Global Infectious Disease Analysis and the Institute for Health Metrics and Evaluation. We suggest that these centers, and others like them, might like to consider the potential of model calibration for improving their forecasts.",
+            "cite_spans": [
+                {
+                    "start": 244,
+                    "end": 246,
+                    "text": "15",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Code for the generation of these analyses will be made available on Github: https://github.com/jdannan/COVID-19-operational-forecast.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Code availability"
+        },
+        {
+            "text": "Daily nowcast/forecasts for the UK are published on Twitter: https://twitter.com/jamesannan.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "20"
+        },
+        {
+            "text": "This work was not funded by anyone. We appreciate numerous comments on our blog and also via Twitter which have helped greatly in improving the presentation of this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "12"
+        },
+        {
+            "text": "(which was not peer-reviewed) The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 95,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 96,
+                    "end": 106,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "12"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "CMMID COVID-19 Working Group, et al. The effect of non-pharmaceutical interventions on covid-19 cases, deaths and demand for hospital services in the uk: a modelling study. medRxiv",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nicholas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adam",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rosalind",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amy",
+                    "middle": [],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Gimma",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Impact of non-pharmaceutical interventions (npis) to reduce covid-19 mortality and healthcare demand. imperial college covid-19 response team",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Monte Carlo methods",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hammersley",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Handscomb",
+                    "suffix": ""
+                }
+            ],
+            "year": 1964,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Assimilation of paleo-data in a simple Earth system model",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hargreaves",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Annan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Climate Dynamics",
+            "volume": "19",
+            "issn": "5-6",
+            "pages": "371--381",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Monte Carlo simulation methods using Markov chains and their application",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Hastings",
+                    "suffix": ""
+                }
+            ],
+            "year": 1970,
+            "venue": "Biometrika",
+            "volume": "57",
+            "issn": "",
+            "pages": "97--109",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Equations of state calculations by fast computing machines",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Metropolis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Rosenbluth",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Rosenbluth",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Teller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Teller",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "IHME COVID-19 health service utilization forecasting team, et al. Forecasting COVID-19 impact on hospital beddays, ICU-days, ventilator-days and deaths by US state in the next 4 months. medRxiv",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.27.20043752"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Predictability past predictability present. Predictability of weather and climate",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "217--250",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Hindcast/validation and current forecast for UK. Plot legend as forFigure 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "2 week hindcast/validation and forecast for France. Plot legend as forFigure 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "2 week hindcast/validation and forecast for Spain Plot legend as forFigure 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "2 week hindcast/validation and forecast for Italy. Plot legend as forFigure 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Figure 1. Hindcasts of the Hubei outbreak. Median shown as magenta line, green plume is 5-95% credible interval. Date of lockdown shown as vertical line, with estimated R0 and Rt values shown on plots as mean \u00b1 one standard deviation. Red circles are daily death reports used in each forecast, blue circles are withheld data points that are used as validation.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "<-function(t,state,parameters){",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Current R values estimated by our forecasting systems, and comparison with forecasts issued by the MRC/IC Centre for Global Infectious Disease Analysis. In all of the hindcasts listed, subsequently observed deaths have been consistent with all of our forecasts.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "13"
+        },
+        {
+            "text": "The copyright holder for this preprint . https://doi.org /10.1101 /10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 65,
+                    "text": "/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not peer-reviewed)"
+        }
+    ]
+}

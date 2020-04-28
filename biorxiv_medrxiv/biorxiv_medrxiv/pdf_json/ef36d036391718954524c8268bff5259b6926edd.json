@@ -1,0 +1,1715 @@
+{
+    "paper_id": "ef36d036391718954524c8268bff5259b6926edd",
+    "metadata": {
+        "title": "Modeling COVID-19: Forecasting and analyzing the dynamics of the outbreak in Hubei and Turkey",
+        "authors": [
+            {
+                "first": "Ibrahim",
+                "middle": [
+                    "Halil"
+                ],
+                "last": "Aslan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Batman University",
+                    "location": {
+                        "addrLine": "West Ramada Batman",
+                        "postCode": "72000",
+                        "country": "Turkey"
+                    }
+                },
+                "email": "ibrahimhalil.aslan@batman.edu.tr"
+            },
+            {
+                "first": "Mahir",
+                "middle": [],
+                "last": "Demir",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Michigan State University East Lansing",
+                    "location": {
+                        "postCode": "48823",
+                        "region": "MI",
+                        "country": "USA"
+                    }
+                },
+                "email": "demirmah@msu.edu"
+            },
+            {
+                "first": "Michael",
+                "middle": [
+                    "Morgan"
+                ],
+                "last": "Wise",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Tennessee at Knoxville Knoxville",
+                    "location": {
+                        "postCode": "37996",
+                        "region": "TN",
+                        "country": "USA"
+                    }
+                },
+                "email": "mwise9@vols.utk.edu"
+            },
+            {
+                "first": "Suzanne",
+                "middle": [],
+                "last": "Lenhart",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Tennessee at Knoxville Knoxville",
+                    "location": {
+                        "postCode": "37996",
+                        "region": "TN",
+                        "country": "USA"
+                    }
+                },
+                "email": "lenhart@math.utk.edu"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "As the pandemic of Coronavirus Disease 2019 (COVID-19) rages throughout the world, accurate modeling of the dynamics thereof is essential. However, since the availability and quality of data varies dramatically from region to region, accurate modeling directly from a global perspective is difficult, if not altogether impossible. Nevertheless, via local data collected by certain regions, it is possible to develop accurate local prediction tools, which may be coupled to develop global models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "In this study, we analyze the dynamics of local outbreaks of COVID-19 via a coupled system of ordinary differential equations (ODEs). Utilizing the large amount of data available from the ebbing outbreak in Hubei, China as a testbed, we estimate the basic reproductive number, R0 of COVID-19 and predict the total cases, total deaths, and other features of the Hubei outbreak with a high level of accuracy. Through numerical experiments, we observe the effects of quarantine, social distancing, and COVID-19 testing on the dynamics of the outbreak. Using knowledge gleaned from the Hubei outbreak, we apply our model to analyze the dynamics of outbreak in Turkey. We provide forecasts for the peak of the outbreak and the total number of cases/deaths in Turkey, for varying levels of social distancing, quarantine, and COVID-19 testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In late 2019, the city of Wuhan in the province of Hubei, China experienced an outbreak of Coronavirus Disease 2019 , the disease caused by the novel coronavirus SARS Coronavirus 2 (SARS-CoV-2). This outbreak quickly spread to all states of China and across the globe, being declared a pandemic by the World Health Organization (WHO) on 11 March 2020. The authorities imposed a strict lock-down on the city of Wuhan and other cities of the Hubei province on 23 January 2020 (World Health Organization, 2020b) . In the face of over sixty-seven thousand cases and over three thousand deaths, the authorities continued strict enforcement of these measures (Chinese physicians, 2020; Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE, 2020). Finally, on 23 March 2020, Hubei reached a significant milestone as the province's health commission reported no new cases for seven consecutive days (World Health Organization, 2020b; The New York Times, 2020) . Shortly thereafter, after over two months of severe restrictions on the movements of the Hubei population, the \"2020 Hubei Lockdowns\" were relaxed as the Hubei outbreak began to wane, inspiring hope that the global pandemic might be able to be controlled.",
+            "cite_spans": [
+                {
+                    "start": 474,
+                    "end": 508,
+                    "text": "(World Health Organization, 2020b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 894,
+                    "end": 928,
+                    "text": "(World Health Organization, 2020b;",
+                    "ref_id": null
+                },
+                {
+                    "start": 929,
+                    "end": 954,
+                    "text": "The New York Times, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Previous studies of COVID-19 provided the evidence of human-to-human transmission and revealed its similarity and differences from SARS (Chan et al., 2020; Huang et al., 2020; Xu et al., 2020) . However, data-driven simulation-based studies are needed to understand the dynamics of the ongoing outbreak. Indeed, it is of the utmost importance to use these tools to investigate the effectiveness of public health strategies, such as the number of COVID-19 tests carried out to detect the infected, the level of quarantine/social distancing, and its efficiency in the transmission of studies investigate dynamics of this pandemic from a global perspective (see, e.g., (Imai, Dorigatti, Cori, Riley, & Ferguson, 2020; Read, Bridgen, Cummings, Ho, & Jewell, 2020; Riou & Althaus, 2020; Shen, Peng, Xiao, & Zhang, 2020; Zhao et al., 2020; Cao et al., 2020) ). Nevertheless, the large variations in both quality and availability of data from region to region make direct global modeling of the dynamics of this pandemic exceedingly difficult.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 155,
+                    "text": "(Chan et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 156,
+                    "end": 175,
+                    "text": "Huang et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 176,
+                    "end": 192,
+                    "text": "Xu et al., 2020)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 666,
+                    "end": 714,
+                    "text": "(Imai, Dorigatti, Cori, Riley, & Ferguson, 2020;",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 715,
+                    "end": 759,
+                    "text": "Read, Bridgen, Cummings, Ho, & Jewell, 2020;",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 760,
+                    "end": 781,
+                    "text": "Riou & Althaus, 2020;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 782,
+                    "end": 814,
+                    "text": "Shen, Peng, Xiao, & Zhang, 2020;",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 815,
+                    "end": 833,
+                    "text": "Zhao et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 834,
+                    "end": 851,
+                    "text": "Cao et al., 2020)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As a result, in this study, we develop a model for dynamics of the pandemic from a local perspective. The many \"hotspots\" of COVID-19 combined with the many travel restrictions in place throughout the world further suggest that local models might provide more practical insights into the dynamics than their global counterparts. Indeed, it stands to reason that accurate models for local regions can be coupled to develop reasonable models for larger regions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As of 23 March 2020, around one-quarter of the global COVID-19 cases and consequent deaths occurred in Hubei. The large proportion of data available from Hubei combined with the region's recent achievements toward managing their local outbreak suggest that the data from this region presents an excellent picture of the lifetime of an outbreak of COVID-19. Indeed, as countries worldwide close their borders, cities and regions, and impose their own \"shelterin-place,\" quarantine, or lockdown orders in the face of the pandemic, the large amount of data available from Hubei provides an excellent testbed for modeling the dynamics of a local outbreak of COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this study, we start by developing a SEIQR type deterministic model which uses a system of ordinary differential equations to analyze the dynamics of the outbreak, in particular highlighting the effect of testing and the effects of quarantine and social distancing in Hubei. We present estimates of the basic reproductive number R 0 of COVID-19 in Hubei and perform a sensitivity analysis to deduce which parameters play significant roles in the transmission and control of the outbreak in Hubei. In addition, we also provide 15-day forecasts of the fatality rate of the outbreak, the number of cases, and the number of deaths depending on the data (Chinese physicians, 2020; Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE, 2020; World Health Organization, 2020b) and outputs of our SEIQR model. Finally, building on knowledge obtained from the Hubei outbreak, we apply our model to the outbreak in Turkey. We forecast the peak of the outbreak and the total number of cases/deaths in Turkey, utilizing the extant COVID-19 data from Turkey ((Ministry of Health (Turkey), 2020)).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A deterministic compartmental model has been developed by using ordinary differential equations (ODEs) to understand the dynamics of COVID-19 in Hubei, China (Chubb & Jacobsen, 2010; Keeling & Rohani, 2008; Kot, 2001 ). In the model, the total population N (t) at time t is divided into the following six compartments: susceptible S(t), susceptible 3 in quarantine (isolated class) S q (t), exposed E(t), infected (asymptomatic or having mild symptoms) I(t), reported (infected) cases (hospitalized if get severe symptoms or quarantined if get mild symptoms) I q (t), and recovered R(t). Note that all individuals who, upon testing, test positive are immediately isolated. The transition flows among compartments are given in Figure 1 . The rate of reported cases i q denotes the number of individuals who transition from the infected class I to the reported class I q per day; it is also directly related to the daily number of COVID-19 tests carried out during the outbreak. Figure 1 : Flow diagram illustrating the disease transitions among the compartments Susceptible individuals make the transition to the S q (t) compartment with a rate of",
+            "cite_spans": [
+                {
+                    "start": 158,
+                    "end": 182,
+                    "text": "(Chubb & Jacobsen, 2010;",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 183,
+                    "end": 206,
+                    "text": "Keeling & Rohani, 2008;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 207,
+                    "end": 216,
+                    "text": "Kot, 2001",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 726,
+                    "end": 734,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 977,
+                    "end": 985,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Note that the main indicator of quarantine is the number of reported cases I q . When the number of reported cases increases in a state or country, then the quarantine is imposed or naturally taken as an option. Thus, when the number of reported cases increases, then percentage or amount of people quarantined will increase. If the number of reported cases falls to zero, the transition rate from S to S q is zero and from S q to S is q s . The individuals in S and S q compartments transition to compartment E (exposed) with a force of infection given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "and disease transmission rate \u03b2. Note that, since the individuals in S q transition to E compartment less frequently, a reduction factor r is taken into count in the model. After an incubation period of 1/\u03b1, the individuals in E compartment transition to I compartment (infected) with rate \u03b1. The individuals in I compartment will either transition to R compartment (recovered) with a rate of \u03b3 i or I q compartment with a rate of i q , or die due to the disease with a rate of \u00b5 i . The individuals in I q (reported (infected) individuals, who are hospitalized or quarantined) compartment either transition to R compartment with a rate of \u03b3 q or die due to disease with a rate of \u00b5 q . The following (ODEs) system represents dynamical behavior of the system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The left hand side of the system (1) represents the rate of change per day. In the system (1), we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Hence, the feasible region of the system (1) is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "This implies all the compartments stay non-negative. The parameter values used in the model are given in Table 1 with their description and units. . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 105,
+                    "end": 112,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Model formulation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint 3 Diseases free equilibrium and stability analysis One of major concepts in an outbreak is disease free equilibrium (DFE), where the entire population is susceptible (Keeling & Rohani, 2008; Diekmann, Heesterbeek, & Roberts, 2010 ). For the system (1), the DFE can be denoted",
+            "cite_spans": [
+                {
+                    "start": 310,
+                    "end": 334,
+                    "text": "(Keeling & Rohani, 2008;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 335,
+                    "end": 373,
+                    "text": "Diekmann, Heesterbeek, & Roberts, 2010",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "To able to get the DFE for the system (1), we set the right hand side of the system (1) to zero and substitute the DFE into the system. Hence, the DFE is found as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "We then analyze whether the DFE is stable or not. Next-generation matrix (NGM) is used (Van den Driessche & Watmough, 2002; Diekmann et al., 2010; Van den Driessche & Watmough, 2008) to determine the stability of DFE. We rewrite our system (1) as:",
+            "cite_spans": [
+                {
+                    "start": 96,
+                    "end": 123,
+                    "text": "Driessche & Watmough, 2002;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 124,
+                    "end": 146,
+                    "text": "Diekmann et al., 2010;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 147,
+                    "end": 182,
+                    "text": "Van den Driessche & Watmough, 2008)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "where x = (S * , S * q , E * , I * , I * q , R * ) and i = 1, ..., 6 and Hence, F and V are calculated for the system of (1):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Notice that individuals which transition to E compartment are the only newly infected cases. Therefore, the Jacobian at the DFE for the infected classes (first three components, x) are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 and",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Then, we compute the next generation matrix (NGM) as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The spectral radius of the NGM is the basic reproduction number, R 0 defined as the average number of secondary cases arising from an average primary infected case in an entirely susceptible population. The DFE is locally stable if R 0 < 1 (Van den Driessche & Watmough, 2002; Diekmann et al., 2010) . The spectral radius of the NGM given in (2)",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 276,
+                    "text": "Driessche & Watmough, 2002;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 277,
+                    "end": 299,
+                    "text": "Diekmann et al., 2010)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Since we do not consider the individuals in S q compartment as a part of the DFE, we do not see any effect of quarantine on R 0 . However, s q indirectly changes the other parameter values such as \u03b2, i q , therefore, R 0 value changes with s q indirectly. Note that \u03b1, \u03b2 are positively correlated with R 0 and i q , \u03b3 i , \u00b5 i , d are negatively correlated with R 0 for the system (1). Note that we might control the disease with increasing quarantine rate of infected individual i q . Thus, if",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "then the DFE is locally stable and the disease dies out when sufficiently close to DFE. Biologically, if the infected individuals can be detected in a sufficiently short time another word, the number of test to detect the number of cases increase, then the disease can be controlled.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "In this part, we estimate the parameters in the system (1), so we fit our model with the daily reported cumulative number of cases and deaths, which are provided by (World Health Organization, 2020b) and (Chinese physicians, 2020). We use the Ordinary Least Squares (OLS) method and minimize the sum of the squares of differences between the daily reported data and those predicted by our model. The goodness of the fit is measured by computing the associated relative error of the fit using the formula",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter estimation"
+        },
+        {
+            "text": "where C i and\u0108 l are exact and estimated cumulative(infected) cases, and D i andD l are exact and estimated cumulative deaths. To estimate the number of COVID-19 deaths, we sum the number of deaths coming from the infected class I and the reported (infected) class I q . Note that the natural deaths in the infected class I and the reported (infected) class I q are also included in the total number of deaths. We used an ode45 solver with fmincon from the Optimization Toolbox of MATLAB. By using the initial conditions: S(0) = 59, 000, 000, S q (0) = 0, I q (0) = 258, and R(0) = 0, we estimate all the parameters of the model together with estimating the initial number of exposed E and infected I, except the natural death rate d, recruitment rate \u03a0, and incubation period \u03b1. We used 4.2 days for the average incubation period . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter estimation"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 that is provided by (Nishiura et al., 2020; Guan et al., 2020; Sanche et al., 2020) . The natural death and recruitment rate are provided by (World Health Organization, 2020a).",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 129,
+                    "end": 152,
+                    "text": "(Nishiura et al., 2020;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 153,
+                    "end": 171,
+                    "text": "Guan et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 172,
+                    "end": 192,
+                    "text": "Sanche et al., 2020)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter estimation"
+        },
+        {
+            "text": "The simulation results obtained for the cumulative number of (infected) cases C and cumulative deaths D by fitting the model with the data from January 20, 2020 to March 23, 2020 are depicted in Figure 2 . These figures show a reasonably good fit with the total relative error 0.06 (6%). Most of the error comes from the fit of cumulative cases, especially around February 12, 2020. In February, China began to report clinically diagnosed cases in addition to laboratory-confirmed cases, and on February 12, 2020, 13,332 clinically (rather than laboratory) cases reported even though they were diagnosed in the preceding days and weeks. Due to the very small number of cases reported after March 23, 2020, we chose to fit the model using only data from before this date. Table 1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 195,
+                    "end": 203,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 771,
+                    "end": 778,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Parameter estimation"
+        },
+        {
+            "text": "In this section, we discuss 15-day forecasting of the outbreak, the effect of quarantine, and the effect of testing in Hubei. We also conduct a sensitivity analysis to see which parameters play important role in the dynamics of the outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulations"
+        },
+        {
+            "text": "When we look at the change in the quarantine class, nearly the entire province of Hubei was quarantined by February 15, 2020 (See Figure 3 , February 15 corresponds the day 25 in the figure). The percentage of the population transitioning from the susceptible class to the quarantine class attains its maximum level between January 27, 2020 and February 10, 2020, and by February 15, almost all of the population were in quarantine. This result makes sense since the state government imposed a quarantine in the state on January 23, 2020, initially recommending quarantine and finally forcing the people into quarantine to guarantee social distancing. This action seems to have worked to great effect, reducing the contact rate by about 98.9% (See Table 1 for the parameter, r, the reduction rate due to the quarantine).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 130,
+                    "end": 138,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 748,
+                    "end": 755,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Effect of quarantine (Self-isolation)"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Effect of quarantine (Self-isolation)"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint When we reduce the quarantine rate, s q from 0.096 to 0.0864 (10% reduction) and do not change the remaining parameters, the number of cases and deaths would be about 141090 and 6562, respectively. Similarly, when we increase the quarantine rate, s q from 0.096 to 0.1056 (10% increase), the number of cases and deaths would be about 39334 and 1829, respectively. Thus, any change in the quarantine rate makes very significant change in total number of cases and deaths. Furthermore, see the sensitivity analysis section below, the quarantine rate is a significant parameter in the dynamics of the outbreak as well as its efficiency, which is explained by the parameter, r is also significant in the dynamic of the outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Effect of quarantine (Self-isolation)"
+        },
+        {
+            "text": "We used parameters in Table 1 for 15-day forecasting. Figure 4 shows the estimated number of infected cases for 80 days. The plot on the left depicts the estimated number of exposed and the right plot depicts the estimated number of reported (infected) cases I q . As it can be seen, the number of individuals in each of these classes tends to zero, which implies that the outbreak is almost over, and so new cases may not be recorded in Hubei. As it can be seen from the change in infected class, the outbreak reaches its peak about February 9, 2020. The infected class I also shows how many people were out with no symptoms or mild symptoms during the outbreak. Figure 4 : The plot on the left depicts the number of exposed cases and the plot on the right depicts the number of infected cases with initial conditions S(0) = 59, 000, 000, S q (0) = 0, E(0) = 142, I(0) = 69, I q (0) = 258, R(0) = 0 for 80 days In Figure 5 , the plot on the left shows the estimated number of cumulative reported (infected) cases and the right . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 22,
+                    "end": 29,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 54,
+                    "end": 62,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 664,
+                    "end": 672,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 915,
+                    "end": 923,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "15-day Forecasting"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint plot shows the estimated number of cumulative deaths. As of 30 March 2020, there were no reported cases in Hubei in the past week and the total number of cases and total number of deaths were 67801 and 3187, respectively. Our model (1), predicts the number of cases and deaths with high accuracy with 6 percent relative error. We estimated the fatality rate of the outbreak in Hubei as approximately 4.8% with the estimated number of cases, about 67994 and deaths, about 3254. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "15-day Forecasting"
+        },
+        {
+            "text": "Several parameters play important roles in the model (1). These parameters were estimated with existing data as of (Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE, 2020). In order to determine the set of parameters that are statistically significant regarding the number of cumulative infected cases, we conduct a sensitivity analysis of the model. We utilized a Latin Hypercube Sampling (LHS) and the Partial Rank Correlation Coefficients (PRCC) method (Marino, Hogue, Ray, & Kirschner, 2008) . We use a range given in Table 2 to sample parameters from a uniform distribution, then use these samples as input variables when we run the system (1) with initial conditions S(0) = 1000, S q (0) = 0, E(0) = 10, I(0) = 3, I q (0) = 0, R(0) = 0 for 90 days. The number of cumulative infected cases is the output variables in sensitivity analysis. Table 2 shows PRCC values, p-values and the range for each corresponding parameters. The sensitivity analysis indicates that \u03b2, s q , i q , and r are statistically more significant parameters depending on the . CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 463,
+                    "end": 502,
+                    "text": "(Marino, Hogue, Ray, & Kirschner, 2008)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 529,
+                    "end": 536,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 851,
+                    "end": 858,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Sensitivity analysis"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 high PRCC values in the dynamics of the outbreak. Therefore, it is of interest to study how the number of cumulative infected cases changes when s q , i q , r, and \u03b2 are varied and other parameters are held the same as in Table 1 and the initial condition same as before. Figure 6 shows the results of these experiments, how the number of cumulative cases changes for different values of s q , i q , r, and \u03b2. It is also important to analyze how R 0 value varies with \u03b2 and i q . Thus, we vary \u03b2 in the range [1, 10] and i q in the range [0.1, 4] while keeping all other parameters the same in Table 1 . Figure 7 shows the boxplot of \u03b2 and i q . We observe i q affects R 0 in a wider range compare to \u03b2. Thus, the range of R 0 will change roughly between 3 and 8. In addition, the value of R 0 drops below 1 when i q is above 5.1.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 345,
+                    "end": 352,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 395,
+                    "end": 403,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 717,
+                    "end": 724,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 727,
+                    "end": 735,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Sensitivity analysis"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sensitivity analysis"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint The rate of reported (infected) cases, i q is related to the number of tests given during the outbreak to identify the infected people. Thus, increasing the number of tests will increase the rate of case reporting i q . This will reduce the number of cases (see Figure 6 ) and, consequently, the number of deaths due to the outbreak. When we increase the rate of reported (infected) cases i q by about 10%, the number of cases and number of deaths are estimated to be 36040 and 1639, respectively. Decreasing the rate about 10%, the number of cases and number of deaths are estimated to be 14084 and 6724, respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 406,
+                    "end": 414,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Sensitivity analysis"
+        },
+        {
+            "text": "In the part, we fit the model (1) with available COVID-19 data from Turkey ((Ministry of Health (Turkey), 2020)). We fit the model (1) with Turkish data from March 10, 2020 to April 10, 2020, and get about 5.9% relative error in the fit by using the equation (3). We estimate the four parameters i q , s q , \u03b2, and r, which are not only the most significant parameters in the dynamics of outbreak, but also are specific to each country since they are related to the number of COVID-19 tests administered i q , the number of individuals in quarantine s q , the contact rate of individuals \u03b2, and the efficiency of quarantine r in each country. Therefore, by using the initial conditions: S(0) = 83, 000, 000, S q (0) = 0, I q (0) = 1, and R(0) = 0, we estimate these four parameters together with the initial number of exposed and infected individuals. We do not estimate the rest of the parameters, employing the parameters in Table 1 . Therefore, our results in this section will depend on observed dynamics of the outbreak in Hubei as well as the available Turkish data (((Ministry of Health (Turkey), 2020)). Note that the quarantine rate and the rate of reported cases (which, we stress, is related to number of COVID-19 tests) can be increased, and the increase still may have significant effect toward the reduction of the number of cases (See Figure 6 , sensitivity analysis), but increasing the reduction rate r does not make very significant changes by way of the number of cases in Turkey since it is very close to its maximum level (See Figure 6 , sensitivity analysis part). Thus, we will vary only the quarantine rate s q and the rate of reported cases i q in forecasting the peak of the outbreak and the number of cases/deaths in Turkey.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 927,
+                    "end": 934,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1350,
+                    "end": 1358,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1548,
+                    "end": 1556,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https: //doi.org/10.1101 //doi.org/10. /2020 The rate of reported cases is about 1.8; this rate is larger than what we observed in Hubei. This implies that in terms of numbers of COVID-19 tests conducted per day, Turkey is now doing a better job than Hubei, China at a comparable time in Hubei's outbreak. The efficiency of quarantine also seems to be very good in Turkey, given the approximately 85% reduction in the contact rate of COVID-19 obtained by our parameter estimation. On the other hand, the quarantine rate is about 0.088, which is small when compared with the quarantine rate in Hubei (the rate was 0.096 in Hubei). In Hubei, the population transitioned to quarantine class very quickly (almost in two weeks), but in Turkey the movement to quarantine has been very slow in comparison (see Figure 8 ), suggesting why the contact rate is higher in Turkey when we compare to the contact rate in Hubei (See Table 1 and 3 for these rates). It is still possible to increase the quarantine rate (the rate, per day, of transition to quarantine class) and the number of COVID-19 tests given each day in Turkey to make a reduction in the number of cases and deaths (See Figures 9 and  10 ). In Figures 9 and 10 , the red curves are obtained using base parameters from Table 1 and 3, and the other curves obtained by varying the quarantine rate s q and the rate of reported cases i q . When we use the base parameter values which are obtained from our fitting, Turkey then will have about 203,700 cases and 8,269 deaths. If Turkey can increase the number of individuals in quarantine and the number of daily COVID-19 tests, then, depending on the magnitude of the increases, the number of cases and deaths can decrease significantly (see Figures 9 and 10 ). When we look at trajectories of cumulative cases and deaths in Figures 9 and 10 , in the worst-case scenario (the black curves) of the study, Turkey will have about 281,500 cases and 11,430 deaths. These projections decrease to 148,100 cases and 6,005 deaths if Turkey can increase the number of individuals in quarantine and the number of COVID-19 tests.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 102,
+                    "text": "//doi.org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 122,
+                    "text": "//doi.org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 881,
+                    "end": 889,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 995,
+                    "end": 1002,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1252,
+                    "end": 1269,
+                    "text": "Figures 9 and  10",
+                    "ref_id": null
+                },
+                {
+                    "start": 1276,
+                    "end": 1292,
+                    "text": "Figures 9 and 10",
+                    "ref_id": null
+                },
+                {
+                    "start": 1350,
+                    "end": 1357,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1819,
+                    "end": 1835,
+                    "text": "Figures 9 and 10",
+                    "ref_id": null
+                },
+                {
+                    "start": 1902,
+                    "end": 1918,
+                    "text": "Figures 9 and 10",
+                    "ref_id": null
+                }
+            ],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint Figure 9 : Cumulative number of (infected) cases depending on different quarantine rate s q and rate of reported cases i q . Left graph shows the cumulative number of cases between day 1 to day 40, and right plot shows the cumulative number of cases between day 1 to day 150 in the outbreak in Turkey.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 152,
+                    "text": "Figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "Figure 10: Cumulative number of deaths depending on different quarantine rate s q and rate of reported cases i q . Left graph shows the cumulative number of deaths between day 1 to day 40, and right plot shows the cumulative number of deaths between day 1 to day 150 in the outbreak in Turkey.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "The peak of the outbreak in Turkey is also very sensitive to the quarantine rate s q and the rate of reported cases i q . Depending on the change in quarantine rate and the rate of reported cases i q , the peak of outbreak in Turkey can be seen between the day 42 (April 20,2020) and day 48 (April 26, 2020), and the outbreak will almost die out by the day 150 (at the end of July 2020, see Figure 11 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 391,
+                    "end": 400,
+                    "text": "Figure 11",
+                    "ref_id": null
+                }
+            ],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.11.20061952 doi: medRxiv preprint Figure 11 : Projected (simulated) peak of outbreak in Turkey depending on different quarantine rate s q and rate of reported cases, i q",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 144,
+                    "end": 153,
+                    "text": "Figure 11",
+                    "ref_id": null
+                }
+            ],
+            "section": "Forecasting the peak of the outbreak, number of cases/deaths in Turkey"
+        },
+        {
+            "text": "Our analysis suggests that quarantine greatly reduced the number of cases and deaths seen in Hubei's COVID-19 outbreak. In addition, while quarantine does not appear in the representation of R 0 , it still indirectly reduces R 0 . We also saw that the dynamics of the outbreak is very sensitive to the quarantine rate s q and contact rate \u03b2, as indicated by our sensitivity analysis. The basic reproductive number is estimated as 5.49 and the study shows that any change in \u03b2 or i q directly affects the basic reproductive number.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": "The quarantine decidedly reduces the number of cases and deaths. Increasing (or decreasing) the speed of movement from the susceptible class to the quarantine class by about 10% would double (or half) the number of cases and deaths due to the outbreak (This speed of movement is controlled by the rate s q ). Of course, the efficiency of the quarantine is also very important. In our model, the efficiency of the quarantine measured by the reduction rate, r. The reduction rate shows how much reduction is effected in the contact of COVID-19 thanks to the quarantine. Based on our sensitivity analysis, this parameter is very important (see Figure 6 ). Our model shows that the quarantine in Hubei was almost perfect since it caused about 98.9 percent reduction in the contact rate of COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 641,
+                    "end": 649,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": "Another important parameter that plays a crucial role in the dynamics of the outbreak is the rate of reported (infected) cases i q which is directly related to the number of tests given to detect infected individuals. Similar to the quarantine rate s q , the rate of reported (infected) cases i q could double (half) when we have 10% reduction (or increase) in the rate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": "As of 30 March 2020, there were no reported cases in Hubei in the past week and the total number of cases and total number of deaths were 67801 and 3187, respectively. Based on our 15-days forecasting, the number of cases in Hubei was projected to be about 67994 and the number of deaths was projected to be about 3254. Thus, we estimate the fatality rate of the outbreak to be about 4.8% in Hubei. Our model gives about 6% relative error and we are confident that using the model will be helpful for forecasting local outbreaks of the pandemic in other regions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": "From existing COVID-19 data from Turkey and the dynamics of our model understood from the Hubei analysis, the outbreak in Turkey is expected to reach its peak between April 20 and April 26 depending on the number of individuals (amount of people) in quarantine and the number of COVID-19 tests carried out each day in Turkey. The daily number of tests given in Turkey is large when we compare to the rates of reported cases in Hubei. As we showed in the sensitivity analysis, increasing the number of COVID-19 tests and the number of individuals in quarantine will significantly reduce the number of cases (and deaths). Based on our forecasting, the number of cases will be about 203,700 with the range 148,100 and 281,500, and the number of deaths will be about 8,269 with the range 6,005 and 11,430 depending on quarantine rate, s q and the rate of reported cases, i q in Turkey. Thus, in any cases that are given in Figure 9 and 10, the fatality rate of COVID-19 will be about 4.1% in Turkey.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 919,
+                    "end": 927,
+                    "text": "Figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion and Discussion"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10. 1101 /2020 ",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 102,
+                    "text": "1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 103,
+                    "end": 108,
+                    "text": "/2020",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion and Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Small changes in quarantine rate make significant changes in the total number of cases and deaths in Turkey. The efficiency of the quarantine in Turkey is about 85 percent, meaning that it causes 85 percent reduction in the contact rate of COVID-19. Thus, the quarantine rate, s q and its efficiency is very important to be able to contain the outbreak (See Table 3 for reduction rate, r and Figure 6 for the effect of reduction rate in the total number of cases). As of April 10, 2020, the number of COVID-19 tests given each day in Turkey had increased to 30,000 ((Ministry of Health (Turkey), 2020)). If the number is increased further, then it also will decrease the total number of cases and deaths in Turkey (See Figure 9 and 10). Indeed",
+            "authors": [],
+            "year": null,
+            "venue": "The quarantine rate is 0.088 in Turkey, a low number when we compare with the quarantine rate in Hubei, China (it was 0.096 in Hubei)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Estimating the effective reproduction number of the 2019-ncov in china",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pfeiffer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Zeng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster. The Lancet. Chinese physicians. (2020). ncov.dxy.cn",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": ".-W",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kok",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-H",
+                    "middle": [],
+                    "last": "To",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": ".-W",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Mathematical modeling and the epidemiological research process",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chubb",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jacobsen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "European Journal of Epidemiology",
+            "volume": "25",
+            "issn": "1",
+            "pages": "13--19",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE. (2020). as",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The construction of next-generation matrices for compartmental epidemic models",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of the Royal Society Interface",
+            "volume": "7",
+            "issn": "47",
+            "pages": "873--885",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "others (2020). Clinical characteristics of 2019 novel coronavirus infection in china",
+            "authors": [
+                {
+                    "first": "W.-J",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z.-Y",
+                    "middle": [],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W.-H",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-Q",
+                    "middle": [],
+                    "last": "Ou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-X",
+                    "middle": [
+                        ","
+                    ],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Clinical features of patients infected with 2019 novel coronavirus in wuhan, china",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Estimating the potential total number of novel coronavirus cases in wuhan city",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cori",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Modeling infectious diseases in humans and animals",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biometrics",
+            "volume": "64",
+            "issn": "3",
+            "pages": "993--993",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Elements of mathematical ecology. Cambridge",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A methodology for performing global uncertainty and sensitivity analysis in systems biology",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Marino",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Hogue",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ray",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Kirschner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Journal of Theoretical Biology",
+            "volume": "254",
+            "issn": "1",
+            "pages": "178--196",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Coronavirus disease 2019 (covid-19) daily data",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Serial interval of novel coronavirus (2019-ncov) infections. medRxiv",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Linton",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Akhmetzhanov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Novel coronavirus 2019-ncov: early estimation of epidemiological parameters and epidemic predictions",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Pattern of early human-to-human transmission of wuhan 2019-ncov",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Riou",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Althaus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "The novel coronavirus, 2019-ncov, is highly contagious and more infectious than initially estimated",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sanche",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Romero-Severson",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hengartner",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.03268"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Modelling the epidemic trend of the 2019 novel coronavirus outbreak in china",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Reproduction numbers and sub-threshold endemic equilibria for compartmental models of disease transmission",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Van Den Driessche",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Watmough",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Mathematical biosciences",
+            "volume": "180",
+            "issn": "1-2",
+            "pages": "29--48",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Further notes on the basic reproduction number",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Van Den Driessche",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Watmough",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Mathematical epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Crude birth and death rate data by country",
+            "authors": [],
+            "year": 2020,
+            "venue": "World Health Organization",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "novel coronavirus (covid-2019) situation reports",
+            "authors": [],
+            "year": 2020,
+            "venue": "World Health Organization",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Evolution of the novel coronavirus from the ongoing wuhan outbreak and modeling of its spike protein for risk of human transmission",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science China Life Sciences",
+            "volume": "",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-ncov) in china, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ran",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": ":=Rate of transfer of individuals into compartment i by all other means \u2022 V \u2212 i (x):= Rate of transfer of individuals out of compartment i by all other means.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Fitting the model to the data from January 20, 2020 to March 23, 2020 in Hubei: the cumulative number of (infected) cases and deaths (Parameter values used are as given in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Transitions from the susceptible class to the quarantine class during the outbreak in Hubei",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The plot on the left depicts the simulated cumulative number of infected cases due to the outbreak and the plot on the right depicts the simulated cumulative number of deaths in Hubei",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Number of cases at final time with respect to each parameters Figure 6 shows that an increase in the quarantine rate, s q , sharply decreases the number of cumulative cases, in range [0.005, 0.2] and the quarantine rate of infected individuals, i q , decreases the number of new cases mostly in range [1.5, 4.5]. Increasing the reduction rate r, due to the quarantine, increases the number of cumulative cases mostly in range [0.1, 0.6] and the disease transmission rate, \u03b2 increases the number of cases mostly in range [4, 10].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Change in R 0 when we vary \u03b2 with the rage [1,10], or i q with the range [0.1, 4].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Transitions from the susceptible class to the quarantine class during the outbreak in Turkey after the first cases reported on March 10, 2020",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Parameter descriptions and values",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Results of sensitivity analysis with partial rank correlation coefficient (PRCC) and p-value with the range of parameters that we made the sensitivity analysis",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Parameter descriptions and values of the model (1) with Turkish data.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors would like to acknowledge the generous support of the Turkish Ministry of National Education in the study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "The authors declared no competing interests.Authors' Contributions All authors contributed equally to this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of Interests"
+        }
+    ]
+}

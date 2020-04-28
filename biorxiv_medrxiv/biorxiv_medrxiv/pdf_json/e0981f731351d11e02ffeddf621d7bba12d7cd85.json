@@ -1,0 +1,539 @@
+{
+    "paper_id": "e0981f731351d11e02ffeddf621d7bba12d7cd85",
+    "metadata": {
+        "title": "Estimating the Growth Rate and Doubling Time for Short-Term Prediction and Monitoring Trend During the COVID-19 Pandemic with a SAS Macro",
+        "authors": [
+            {
+                "first": "Stanley",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kaiser Permanente Colorado",
+                    "location": {
+                        "addrLine": "2550 S. Parker Road",
+                        "postCode": "80014",
+                        "settlement": "Aurora",
+                        "region": "CO"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Christina",
+                "middle": [],
+                "last": "Clarke",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kaiser Permanente Colorado",
+                    "location": {
+                        "addrLine": "2550 S. Parker Road",
+                        "postCode": "80014",
+                        "settlement": "Aurora",
+                        "region": "CO"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Susan",
+                "middle": [],
+                "last": "Shetterly",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kaiser Permanente Colorado",
+                    "location": {
+                        "addrLine": "2550 S. Parker Road",
+                        "postCode": "80014",
+                        "settlement": "Aurora",
+                        "region": "CO"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Komal",
+                "middle": [],
+                "last": "Narwaney",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Kaiser Permanente Colorado",
+                    "location": {
+                        "addrLine": "2550 S. Parker Road",
+                        "postCode": "80014",
+                        "settlement": "Aurora",
+                        "region": "CO"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Coronavirus disease has spread around the world causing tremendous stress to the US health care system. Knowing the trend of the COVID-19 pandemic is critical for the federal and local governments and health care system to prepare plans. Our aim was to develop an approach and create a SAS macro to estimate the growth rate and doubling time in days if growth rate is positive or half time in days if growth rate is negative. We fit a series of growth curves using a rolling approach. This approach was applied to the hospitalization data of Colorado State during March 13 th and April 13 th . The growth rate was 0.18 (95% CI=(0.11, 0.24)) and the doubling time was 5 days (95% CI= (4, 7)) for the period of March 13 th -March 19 th ; the growth rate reached to the minimum -0.19 (95% CI= (-0.29, -0.10)) and the half time was 4 days (95% CI= (2, 6)) for the period of April 2 nd -April 8 th . This approach can be used for regional short-term prediction and monitoring the regional trend of the COVID-19 pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In December 2019, an outbreak of coronavirus disease (COVID-19) caused by the novel coronavirus (SARS-CoV-2) began in Wuhan, China and has now spread across the world [1, 2] . In the United States, the cumulative number of identified COVID-19 cases was 186,101 as of March 31st, 2020; among the identified cases, 3603 died [3] . To slow the spread of COVID-19, federal and local governments have issued mitigation measures such as case isolation, quarantine, school closures and closing non-essential businesses. The COVID-19 pandemic imposes tremendous challenges to the US health care system, particularly given concerns that the need for hospital beds and ICU beds could exceed capacity [4] [5] [6] . Predicting the future numbers of COVID-19 cases and healthcare utilization is critical for governments and health care systems preparation plans [4, 6, 7] . Two useful and critical quantities for prediction are the growth rate [8] and the doubling time of number of events [9] . The growth rate is the percent change of daily events (e.g, COVID-19 cases, number of patients hospitalized or number of deaths). The doubling time is the length of time required to double the number of daily events.",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 170,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 171,
+                    "end": 173,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 690,
+                    "end": 693,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 694,
+                    "end": 697,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 698,
+                    "end": 701,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 849,
+                    "end": 852,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 853,
+                    "end": 855,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 856,
+                    "end": 858,
+                    "text": "7]",
+                    "ref_id": null
+                },
+                {
+                    "start": 977,
+                    "end": 980,
+                    "text": "[9]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "Our goal was to develop an approach and create a SAS macro using observed data to estimate the growth rate and doubling time in days for short-term prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "In the United States, there are several barriers for testing people for COVID-19 such as shortages of swabs and testing kits and restrictions on who should get tested. Therefore, the number of COVID-19 cases is often under-identified and under-reported. However, the number of hospitalized COVID-19 patients (hospitalizations) and number of deaths due to COVID-19 are more reliable than the reported number of COVID-19 cases [10] . In this paper, we used the number of daily hospitalized COVID-19 patients to calculate the growth rate and doubling time in days.",
+            "cite_spans": [
+                {
+                    "start": 425,
+                    "end": 429,
+                    "text": "[10]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "A rolling growth curve approach (RGCA)"
+        },
+        {
+            "text": "We assumed a growth curve of daily hospitalizations over a period of \u074a days from day \u202b\u0750\u202c (start day) to day \u202b\u0750(\u202c \u074a \u0d46 1 ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A rolling growth curve approach (RGCA)"
+        },
+        {
+            "text": "We fit two models: a) using equation (1) where \u202b\u074e\u202c is the estimated growth rate from the last period. As the growth rate changes over time, the prediction is only appropriate for short-term prediction (e.g., within 7 days) and updated growth rates should be used.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A rolling growth curve approach (RGCA)"
+        },
+        {
+            "text": "We estimated a series of growth rates using RGCA with a length of 7 days. The estimated growth rates and 95% CIs were plotted over time using the mid-day of a 7 day period ( Figure 1 ). The growth rate peaked with a value of 56.2% at the mid-day of March 18 th for the period March 15 th and March 21 st . Between March 18 th and April 1 st , although the growth rate continuously decreased, the daily number of hospitalizations increased because of positive growth rates. We started to observe negative growth rates after April 1 st , except for a positive growth rate on April 9 th . The growth rate reached its minimum at the mid-day of April 5 th (period April 2 nd -April 8 th ) with a value of -19.2%. The growth rate then increased after April 5 th . Note that a negative growth rate represents a reduction in number of hospitalizations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 174,
+                    "end": 182,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "RESULTS"
+        },
+        {
+            "text": "The doubling time (growth rate>0) and half time (growth rate<0) in days over time are displayed in Figure 2 . Before April 1 st , the y-axis represents the doubling time in days because of positive growth rates. After April 1 st , except for a positive growth rate on April 9 th , the y-axis represents a half-time because of negative growth rates. On April 1 st , the reduction rate was very small (0.5%) which resulted in a high half-time, 128 days with very wide 95% CIs (not shown in the figure). On April 8 th , there was a small reduction rate (1.2%) resulting in 55 days of half time.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 99,
+                    "end": 107,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "RESULTS"
+        },
+        {
+            "text": "Using the estimated growth rate from the last period April 7 th -April 13 th ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS"
+        },
+        {
+            "text": ", the predicted numbers of daily hospitalizations for April 14 th and 15 th were 35 and 34, respectively. SAS programs are available for conducting these analyses (Appendix A and Appendix B).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS"
+        },
+        {
+            "text": "These models can be similarly applied to death data if they are available and not sparse. When COVID-19 testing is widely available to the public and the number of COVID-19 testing is less selective, these models can also be used to directly estimate the growth rate and the doubling time for COVID-19 cases. Due to a lag in reporting hospitalization, it is recommended to exclude the recent 1-2 days' hospitalization data in fitting the growth curves. This paper illustrates that hospitalization data can be used to estimate the growth rate and doubling (or half) time to aid predicting future hospitalizations, deaths and COVID-19 cases. Because a series of growth curves were fit, the RGCA approach can also be used for real-time monitoring of the epidemic trend as shown in Figure 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 778,
+                    "end": 786,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Colorado state issued three social distancing guidelines: a voluntary social distancing on March 17 th , closing educational facilities on March 23 rd , and closing non-essential services on March 26 th (Figure 1 ). It takes some time (e.g., 2 weeks) for these mitigation measures to have impact. Although the effectiveness of these mitigation measures has not been investigated formally, it is believed that they helped to slow the spread of COVID-19 and reduced number of hospitalizations and death in Colorado and across the United States. . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 203,
+                    "end": 212,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.08.20057943 doi: medRxiv preprint APPENDIX A /************************************************************* * Title: . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.08.20057943 doi: medRxiv preprint title 'Growth rate and doubling time for each interval'; proc print data = r_doubling_time; var start_day end_day mid_day r r_lowercl r_uppercl doubling_time doubling_time_lowercl doubling_time_uppercl;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "format start_day end_day mid_day mmddyy10.; run; ods listing gpath=\"&codeanddat\"; title1 'Estimated growth rate (r) and 95% Confidence Intervals'; title2 'Using CO Hospitalization data between March 13th-April 13th'; proc sgplot data=r_doubling_time; band x = mid_day lower = r_LowerCL upper = r_UpperCL/ fillattrs = (color = graydd) name='band95' legendlabel='95% CI'; series x = mid_day y = r/ lineattrs = (color = red thickness = 3px) name = 'line' legendlabel = 'growth rate'; yaxis labelpos = center label = \"growth rate per day\" thresholdmax=.8; xaxis labelpos = center label = \"Mid day of a seven day period\" thresholdmax=.8; keylegend 'line' 'band95' / position = topright location = inside across = 1 opaque noborder valueattrs=(color = gray33); run;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "title 'Estimated doubling time (or half time when r<0) in days (D) and 95% CIs'; title2 'Using CO Hospitalization data between March 13th-April 13th'; proc sgplot data=r_doubling_time; band x = mid_day lower = doubling_time_LowerCL upper = doubling_time_UpperCL/ fillattrs = (color = graydd) name = 'band95' legendlabel = '95% Confidence Interval'; series x = mid_day y = doubling_time/ lineattrs = (color = blue thickness = 3px) name = 'line' legendlabel = 'doubling time'; yaxis labelpos = center label = \"doubling time in days\" thresholdmax = .8 min=0 max=30; xaxis labelpos = center label = \"Mid day of a seven day period\" thresholdmax = .8;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.08.20057943 doi: medRxiv preprint position = topleft location = inside across = 1 opaque noborder valueattrs = (color = gray33); run;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "/************************************************************* * Title: * Programmer: Stanley Xu and Christina Clarke Institute for Health Research * Kaiser Permanente Colorado * * Date Created: 4/3/2020 * Description: This macro is designed to calculate a predicted * growth and doubling time of a disease given observed * data. In particular, these models were based on observed * deaths since the true denominator is often unknown given * testing may not be done on all symptomatic or asymtomatic * individuals. Further, hospitalizations could be used if they * are known. * * Input: indat = input dataset with the number of deaths and date of those deaths during a date range * that is to be modeled. * dateofevent = variable name of te date the deaths occurred from the indat dataset * numevents = variable name that has the number of deaths that occurred on each date of death * from the indat dataset * int_length -number of days in each interval -our * example examined 7 day intervals to create piece-wise growth intervals * * * Output: * * References: * * Changes to the code log : cclarke CH001 remove the state variable option **************************************************************/ %macro Calc_GrowthRates(indat, dateofevent, numevents, int_length); *First, we need to get the start and end dates from the input dataset.; proc sql noprint; select distinct min(&dateofevent) ,max(&dateofevent) into :fup_start ,:fup_end from &indat ; quit; /*For QA -Prints the first and last date found in the input data file which will appear in the log*/ data _null_; start = &fup_start; endloop = &fup_end-&int_length+1;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "format start endloop date9.;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "put \"Looping through the starting date and the last date -&int_length +1 days:\"; put start = endloop =; run; %do start_day = &fup_start %to (&fup_end-&int_length+1); /*Hold onto the current start day to append to some of the final datasets so they do not get overwritten*/ %let stdyfmt = %sysfunc(putn(&start_day,date9.)); /*Using the input dataset, calculate the last day that will be considered in these calculations for each interval. /*This model will estimate r, the growth rate. Create one dataset for each iteration of the start day.*/ proc nlin data=CGR_dat02 list noitprint; parms r 0.75; model &numevents = start_new_event*((1+r)**(&dateofevent -&start_day)); output out = preddeath_start_&stdyfmt . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint /*Add the current doubling time and growth rate to an overall dataset to print charts*/ proc append base = r_doubling_time new = r_doubling_time0 force; run; quit; %end; /*Print the resulting data*/ %do start_day = &fup_start %to (&fup_end-&int_length+1); %let stdyfmt = %sysfunc(putn(&start_day,date9.)); TITLE \"Observed and predicted events and 95% CI for the interval beginning on &stdyfmt\"; proc print data=preddeath_start_&stdyfmt noobs; var &dateofevent &numevents pred lower95 upper95;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "format &dateofevent mmddyy10.; run; %end;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "*Now look at the short-term future predictions based on the last date of deaths from the incoming dataset. The . CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.08.20057943 doi: medRxiv preprint corresponding number of deaths will also be used.; /*First, get the number of deaths/events on the last day (k) of the last period for estimating the growth rate*/ proc sql noprint; select distinct &numevents into :y_k from &indat where &dateofevent = &fup_end ; quit; /*Next, get r_k from the doubling time, which is the estimated growth rate from the last period*/ proc sql noprint; select distinct r ,r_lowerCL ,r_upperCL into :r_k, :r_k_lower, :r_k_upper from r_doubling_time where end_day = &fup_end ; quit; %put &fup_end &y_k &r_k &r_k_lower &r_k_upper; data prediction; k=&fup_end; do i=1 to &int_length; m = k + i; y_m = round(&y_k*((1+&r_k))**(m-k)); y_m_lowerCL = round(&y_k*((1+&r_k_lower))**(m-k)); y_m_upperCL = round(&y_k*((1+&r_k_upper))**(m-k)); output; end; format m date9.; keep m y_m y_m_lowerCL y_m_upperCL; run;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "title \"Predicted number of deaths for the next &int_length days\"; proc print data=prediction noobs; run; %mend Calc_GrowthRates;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        },
+        {
+            "text": "is the (which was not peer-reviewed) The copyright holder for this preprint . https://doi.org/10.1101/2020.04.08.20057943 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX B"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Novel Coronavirus",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cdc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Director-General's opening remarks at the media briefing on COVID-19 -11",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Who",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Who",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "CDC",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "IHME COVID-19 health service utilization forecasting team. Forecasting COVID-19 impact on hospital bed-days, ICU-days, ventilator days and deaths by US state in the next 4 months",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.27.20043752"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Impact of non-pharmaceutical interventions (NPIs) to reduce COVID-19 mortality and healthcare demand",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Nedjati-Gilani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.25561/77482"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "American hospital capacity and projected need for COVID-19 patient care. Health Aff (Millwood)",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Tsai",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Jacobson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1377/hblog20200317.457910"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Estimated growth rate with 95% CIs over time using hospitalization data from Colorado State.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Estimated doubling (or half) time in days with 95% CIs over time using hospitalization data from Colorado State.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "---------------------------------------------------------&codeanddat.\\COVID_growthrate.sas\"; /*import the death file*/ PROC IMPORT OUT = events DATAFILE = \"&codeanddat.\\Cumulative_CO_HOSP_4_13_2020.xlsx\" DBMS = XLSX REPLACE; RUN; proc print data=events; run;",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ", the number of daily hospitalizations increases. For example, if \u202b\u074e\u202c =0.4, the growth rate of hospitalizations is 40% more for each day. When growth rate , the number of daily hospitalizations has no change. When growth rate , the number of daily hospitalizations declines. When the number of hospitalizations doubles at",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "which estimates the growth rate \u202b\u0726\u202c , meaning that it takes D days from the start day \u202b\u0750\u202c for the number of daily hospitalizations to double. We used SAS PROC NLIN [11] to fit these two nonlinear models. Note that equation(2)is valid for days). We estimated the growth rate and the doubling time in days for the following periods for hospitalization data from Colorado State from March 13th -April 13th [12]: March 13 th -19 th ,14 th -20 th , 15 th -21 st ,\u2026, April 7 th -April 13 th The estimated growth rate from the last period of the RGCA approach (e.g., April 7 th -April 13 th ) can be used for future short-term prediction of hospitalizations. Let \u202b\u0755\u202c is the number of hospitalizations on this day. For the Colorado hospitalization data in this analysis,",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Petropoulos F, Makridakis S (2020) Forecasting the novel coronavirus COVID-19. PLoS ONE 15(3): e0231236. https://doi.org/10.1371/journal.pone.0231236 8. Du Z, Xu X, Wu Y, Wang L, Cowling BJ, Ancel Meyers L. Serial interval of COVID-19 among publicly reported confirmed cases. Emerg Infect Dis. 12. https://covid19.colorado.gov/case-data (accessed on April 14th 2020)",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "BY-NC-ND 4.0 International license It is made available under a author/funder, who has granted medRxiv a license to display the preprint in perpetuity.is the (which was not peer-reviewed) The copyright holder for this preprint .",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This research was supported by the Institute for Health Research, Kaiser Permanente Colorado. Xu was also supported by NIH/NCRR Colorado CTSI Grant Number UL1 RR025780.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

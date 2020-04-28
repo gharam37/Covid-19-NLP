@@ -1,0 +1,1387 @@
+{
+    "paper_id": "279246eb7bbe3706037ebf70a83409ed8cc013cc",
+    "metadata": {
+        "title": "The BathRC model: a method to estimate flow restrictor size for dual ventilation of dissimilar patients",
+        "authors": [
+            {
+                "first": "Andrew",
+                "middle": [],
+                "last": "Plummer",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Bath",
+                    "location": {
+                        "country": "UK (UoB"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jon",
+                "middle": [],
+                "last": "Du Bois",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Bath",
+                    "location": {
+                        "country": "UK (UoB"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Siu",
+                "middle": [
+                    "Man"
+                ],
+                "last": "Lee",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Royal United Hospital",
+                    "location": {
+                        "settlement": "Bath",
+                        "country": "UK (RUH"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Patrick",
+                "middle": [],
+                "last": "Magee",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Royal United Hospital",
+                    "location": {
+                        "settlement": "Bath",
+                        "country": "UK (RUH"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jens",
+                "middle": [],
+                "last": "Roesner",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Bath",
+                    "location": {
+                        "country": "UK (UoB"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Harinderjit",
+                "middle": [
+                    "S"
+                ],
+                "last": "Gill",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Bath",
+                    "location": {
+                        "country": "UK (UoB"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "With large numbers of COVID-19 patients requiring mechanical ventilation and ventilators being in short supply, in extremis two patients are having to share one ventilator. This possibility has been discussed for at least two decades, and careful matching of patient ventilation requirements is advised. However, with a large range of lung compliance and other characteristics, which may also vary with time, good matching is difficult to achieve. Adjusting the impedance of the flow path between ventilator and patient gives the opportunity to control the airway pressure and hence flow and volume individually for each patient. Several groups are now investigating this, in particular the addition of a flow restrictor in the inspiration tube for the patient who is more compliant, or requires a lower tidal volume. In this paper, we show that a simple linear resistance-compliance model, termed the BathRC model, of the ventilator tubing system and lung allows direct calculation of the relationships between pressures, volumes, and required flow restriction. The BathRC model is experimentally validated using a GE Aisys CS2 ventilator connected to two test lungs. The pressureflow relationships for two restrictors are experimentally determined, and despite the need to approximate them with a linear resistance characteristic, their effect in the breathing circuit is accurately predicted by the simple model. The BathRC model is freely available for download; we do not condone dual ventilation, but this tool is provided to demonstrate that flow restriction can be readily estimated. This research is part of a larger test, simulation and design investigation on dual ventilation being undertaken at the UoB and RUH.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Modern ventilators often use a circle anaesthetic breathing system to supply oxygen-enriched air or anaesthetic gases to the patient via an inspiration tube, with expiratory gas returning via a separate expiration tube; exhaled carbon dioxide is either absorbed by an alkali or spilt out of an overflow valve. The splitting of both inspiratory and expiratory tubes, to allow two patients to be ventilated by the same ventilator, has been suggested a number of times, for example in Neyman & Irvin, 2006, and Paladino et al, 2008 . However, the potential for cross-flows between patients is a serious concern, and the ability to precisely control pressure and or/flow to each patient is lost. The former problem can be addressed by including additional non-return valves within each of the inspiration and expiration tubes. This has the effect of not only reducing gas contamination between patients, but also of reducing system dead-space for each half of the system, and the potential for CO2 rebreathing. A method of achieving individual control has not been demonstrated in practice, and COVID-19 patients require ventilation accurately tailored to their needs. In severe Acute Respiratory Distress Syndrome (ARDS), lung compliance can often reduce significantly, although evidence is emerging that COVID-19 is atypical in this regard (Gattinoni, 2020) .",
+            "cite_spans": [
+                {
+                    "start": 482,
+                    "end": 490,
+                    "text": "Neyman &",
+                    "ref_id": null
+                },
+                {
+                    "start": 491,
+                    "end": 507,
+                    "text": "Irvin, 2006, and",
+                    "ref_id": null
+                },
+                {
+                    "start": 508,
+                    "end": 528,
+                    "text": "Paladino et al, 2008",
+                    "ref_id": null
+                },
+                {
+                    "start": 1338,
+                    "end": 1355,
+                    "text": "(Gattinoni, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Interest in 'Dual Patient Ventilation' (DPV) has been stimulated by the COVID-19 pandemic. In March 2020, this approach was introduced in New York, adopting the 'Columbia Protocol ' [1] . This relies on careful matching of patient characteristics, and its effectiveness would be sensitive to changes in in patient compliance. A new experimental study by Tronstad et al (2020) in relation to COVID-19 concludes: \"We found large discrepancies in delivered tidal volumes for paired test lungs with compliance differences, little influence from differences in airway resistances, and that higher PEEP settings could strongly influence the tidal volume balance between the test lungs. \u2026 From this study and from a technical point of view, we were not able to identify reliable settings, adjustments or any simple measures to overcome the hazards of the technique.\"",
+            "cite_spans": [
+                {
+                    "start": 180,
+                    "end": 185,
+                    "text": "' [1]",
+                    "ref_id": null
+                },
+                {
+                    "start": 354,
+                    "end": 375,
+                    "text": "Tronstad et al (2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A possible way of allowing DPV for patients with different characteristics -particularly different tidal volume requirements and/or different lung compliance -is to alter the impedance (i.e. resistance or compliance) of the breathing loop to which they are connected, in order to share the delivered tidal volume more appropriately. Increasing the resistance in the inspiration tube for the patient with the higher lung compliance or requiring a lower tidal volume seems plausible. This is the subject of this paper. A team from Hospital Geel, Belgium, have been experimenting with the same technique [2], and a simulation study has been published from a group in (mostly) London, UK, in the last few days (Sol\u00eds-Lemus et al, 2020) . This latter paper succinctly reviews previous work on DPV and the challenges involved.",
+            "cite_spans": [
+                {
+                    "start": 706,
+                    "end": 731,
+                    "text": "(Sol\u00eds-Lemus et al, 2020)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In our research, we have undertaken tests using two GE Aisys CS2 ventilators, taking pressure and flow measurements using Fluke Gas Flow Analysers within single and dual ventilation set ups with test lungs. Some tests were designed to measure individual component characteristics. 180 tests were carried out, acquiring 720 signal time histories. Only a small fraction of this data is used here. Experimental pressure-flow curves for two example restrictors are shown, and the resistancecompliance (RC) network model is validated in a two patient configuration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Mathematical modelling and simulation of both human respiratory and mechanical ventilation systems is invaluable to help understand novel scenarios such as DPV. Characterising lung mechanical properties using resistance and compliance has become common-place, and estimated values are available from studies such as Arnal et al 2018, although other modelling approaches are possible as reviewed in Carvalho and Zin, 2011 . Mechanical ventilation and other breathing equipment has been modelled and simulated at the University of Bath since the late 1980's. This has included detailed component modelling and validation (Jones, 2002) , and complete system models reported in Wilson et al, 2009 . Models were developed using the in-house software tool, Bathfp, and used to extensively study low flow breathing systems by Magee, 2014 . However, the hypothesis in this paper is that a very simple model is sufficient to predict behaviour adequately, and has the benefit of an analytical solution allowing direct calculation of the flow restrictor resistance required to achieve a specified tidal volume.",
+            "cite_spans": [
+                {
+                    "start": 398,
+                    "end": 420,
+                    "text": "Carvalho and Zin, 2011",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 619,
+                    "end": 632,
+                    "text": "(Jones, 2002)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 674,
+                    "end": 692,
+                    "text": "Wilson et al, 2009",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 819,
+                    "end": 830,
+                    "text": "Magee, 2014",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In DPV, it is important to prevent cross contamination between patients. The proposed circuit, Figure 1 , uses non-return valves in each breathing tube to stop inspiration or expiration back flows. The following hardware was used in the tests described here: 1. Aisys CS2 (Software version 8.0, GE Healthcare, Chicago, USA) anaesthetic ventilator. This is a pneumatic bellows-driven machine. It was operated in Pressure Control Mode (PCV), which is the most appropriate setting for DPV, as the settings for a single patient would not need to change for ventilating two identical patients. In this mode the adjustable settings are:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 95,
+                    "end": 103,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "System architecture and test hardware"
+        },
+        {
+            "text": "\u2022 PEEP (Positive end-expiratory pressure), the ventilator pressure during expiration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "System architecture and test hardware"
+        },
+        {
+            "text": "\u2022 Pinsp (the inspiration pressure in excess of PEEP).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "System architecture and test hardware"
+        },
+        {
+            "text": "\u2022 RR (the respiratory rate, breaths per minute).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "System architecture and test hardware"
+        },
+        {
+            "text": "\u2022 and I:E (inspiration to expiration time ratio). In PCV, the ventilator effectively controls the driving pressure to transition between PEEP and Pinsp+PEEP as quickly as possible at the required switching times; any limits or triggers which might alter this profile need to be disabled for dual patient use. 2. Silverknight 22mm breathing tube system (Intersurgical Ltd, Wokingham, UK, Figure 2 ) and Heat and Moisture Exchange (HME) filters (Clear-Therm 3, Intersurgical, Figure 3 ). 3. Non-return valves (Ref: 1950000, Intersurgical) -also known as one-way valves or check valves (Figures 2 and 3 ). As will be seen, these have a significant resistance and so have a notable effect of on the ventilation behaviour. 4. Two fixed test lungs (Test Lung 190, Siemens Healthineers, Erlangen, Germany) with different characteristics (Figures 2 and 3 ). 5. Two Fluke VT Plus HF Gas Flow Analysers (Fluke Biomedical, Everett, Washington, USA, Figure 3 ) 6. Flow restrictors. Two alternatives are used in the tests included here: a. A fixed restriction provided by an additional Intersurgical non-return valve of the same type as above. This has the benefit of medical approval. b. An adjustable flow restriction device of novel design, 3D-printed at the University of Bath ( Figure 4 ). Only results for the second of 5 discrete positions are shown in this paper.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 387,
+                    "end": 395,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 474,
+                    "end": 482,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 583,
+                    "end": 599,
+                    "text": "(Figures 2 and 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 830,
+                    "end": 846,
+                    "text": "(Figures 2 and 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 938,
+                    "end": 946,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1270,
+                    "end": 1278,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "System architecture and test hardware"
+        },
+        {
+            "text": "All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 1. Dual Patient Ventilation test system"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 1. Dual Patient Ventilation test system"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101 /2020.04.12.20062497 doi: medRxiv preprint HME Filter",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 118,
+                    "text": "/2020.04.12.20062497",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Figure 1. Dual Patient Ventilation test system"
+        },
+        {
+            "text": "Test lungs 1 and 2 Non-return valve the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ventilator"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ventilator"
+        },
+        {
+            "text": "The authors are not aware of a suitable variable flow restrictor with medical approval. 3D-printed components, at least using standard resins, are likely to be problematic in terms of sterilisation and life in the warm, moist environment of a breathing system. Typically, components will need be used continuously for about 2 weeks before disposal. A food grade ball valve has also been tested, as well as a constricted 22mm breathing tube, and these test results will appear in a later publication.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ventilator"
+        },
+        {
+            "text": "Note that, due to increased tube lengths and restrictions due to the non-return valves, the flow characteristics of the patient loops will not be the same as conventional individual ventilation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ventilator"
+        },
+        {
+            "text": "This is a highly simplified model with four terms for single patient ventilation: linear resistance and compliance for ventilator tubing system, and linear resistance and compliance for the patient. Different parameters can be used for inspiration and expiration phases, so there up to eight parameters per patient. The benefit of the RC model is that simple calculations are possible on how patient R and C variation will affect tidal volume, and how this might be corrected by adding a restrictor valve (or possibly other modifications). One scenario could be to calculate what inspiration restriction is required to operate with an increased ventilator pressure (necessitated by ventilator sharing) without increasing the patient's tidal volume undesirably.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "As shown in Figure 5 , the model consists of the patient lung/airway resistance (R) and compliance (C), and a resistance (Rv) and compliance (Cv) representing the properties of the ventilator tubing system. The airway flow rate, q. is related to the rate of change in airway pressure pp, according to:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 20,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "And flow from the ventilator, given by tubing pressure drop divided by resistance, is split between the patient and what is absorbed by tube compliance (including gas compressibility):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Combining equations (1) and (2), the gas volume reaching the patient's lungs, v, can be related to the ventilator pressure, p, by: Figure 5 . Linear lumped resistance-compliance (RC) network model All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 131,
+                    "end": 139,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101 /2020.04.12.20062497 doi: medRxiv preprint Physically realistic parameter values lead to a very small second derivative term, so:",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 140,
+                    "text": "/2020.04.12.20062497 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Due to ventilator or patient properties, the inspiration and expiration parameters may be different. Therefore, the first order response represented by (2) may have different inspiration and expiration time constants, given by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "In pressure control, the ventilator pressure p approximates a series of square pulses. The lung volume during inspiration at time t, in addition to the Functional Residual Capacity (FRC) of the patient's lungs, is given by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "where Viss is the steady state asymptote of the inspiration phase, Vmin is the minimum volume, which occurs at the start of inspiration, and Ts is the time at which the ventilator switches from high to low pressure. During expiration the volume is given by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "where Vess is the steady state asymptote of the expiration phase, Vmax is the maximum volume, which occurs at the start of expiration, and T is the period for the full breathing cycle. These functions are illustrated in Figure 6 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 220,
+                    "end": 228,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "The steady state volumes are given by the product of compliance and pressure:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "where Pe is the low pressure setting of the ventilator (PEEP, Positive End-Expiratory Pressure), and Pi is the high pressure used for inspiration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Maximum volume is reach at the end of inspiration, i.e. at t = Ts, and minimum volume is reached at the end of expiration, i.e. at t = T, so (6) and (7) can be written at these particular times as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Define the following coefficients:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Figure 6. Lung volume waveform All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101 /2020.04.12.20062497 doi: medRxiv preprint Thus the minimum and maximum volumes are related to the ventilator pressures by:",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 140,
+                    "text": "/2020.04.12.20062497 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "So the maximum and minimum volume and tidal volume (VT) can be calculated:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "Equation (17) is equivalent to:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A linear lumped resistance-compliance (RC) network model: the BathRC model"
+        },
+        {
+            "text": "The resistance required to achieve a specified tidal volume \u0303 can be found. From (10), (14), and (18):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Calculating inspiration restrictor resistance"
+        },
+        {
+            "text": "Hence \u0303 can be found from (18), and the new inspiration time constant can be found from (9):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Calculating inspiration restrictor resistance"
+        },
+        {
+            "text": "From (5), the additional resistance, , in the inspiration line can be found:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Calculating inspiration restrictor resistance"
+        },
+        {
+            "text": "Alternatively, if the original tidal volume is required to be maintained but with an increased ventilator pressure Pi, equation (21) can be used with a new value for the end-inspiratory steady state volume Viss given by (8), and (22) can be again used to find the restrictor resistance for the new inspiratory time constant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Calculating inspiration restrictor resistance"
+        },
+        {
+            "text": "As this model does not need a time-marching numerical solution, results can be determined by calculations in, for example, a spreadsheet. A view of such an implementation is given in Appendix 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Calculating inspiration restrictor resistance"
+        },
+        {
+            "text": "Measurements of human airway resistance (R) and lung compliance (C) are available from various studies. Arnal et al 2018 found median values for normal lungs of C = 0.054 L/(cmH20), and slightly different inspiration and expiration resistances, Ri = 13 cmH20/(L/s) and Re = 12 cmH20/(L/s). The median value for ARDS patients was found to be C = 0.039 L/(cmH20), with little change in resistance, and a lower quartile of C = 0.032 L/(cmH20).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameterisation"
+        },
+        {
+            "text": "For the test lungs, parameters were estimated by fitting data from specific tests, giving the values in Table 1 . The same values were used for inspiration and expiration. Individual tests have been carried out on lengths of tubing, HME filters and other components. These allowed Rv and Cv to be estimated.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 104,
+                    "end": 111,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Parameterisation"
+        },
+        {
+            "text": "The compliance value was measured as 0.5 mL/(cmH20) per metre of tube length, a value consistent with air compressibility combined with deformation of the low-modulus tube wall.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameterisation"
+        },
+        {
+            "text": "A series of tests was carried out to determine the pressure-flow characteristics of the flow restrictors. The restrictors were placed in the inspiration line of a test lung loop so they experienced a realistic unidirectional flow regime, and the two gas flow analysers were inserted in the lines either side of the component (Figure 7) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 325,
+                    "end": 335,
+                    "text": "(Figure 7)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Flow restrictor characterisation"
+        },
+        {
+            "text": "A minimum of 15 cycles of data were collected at 3 different Pinsp pressures, and with some filtering produced the pressure-flow curves in Figure 8 for the fixed restrictor (non-return valve) and Figure 9 for the adjustable restrictor. The 'mean Q' plotted on the horizontal axis is the average flowrate measured from the two flowmeters. Lines of best fit are shown as well, based on a quadratic function: \u2206 = 2 2 + 1 + 0",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 139,
+                    "end": 147,
+                    "text": "Figure 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 196,
+                    "end": 204,
+                    "text": "Figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Flow restrictor characterisation"
+        },
+        {
+            "text": "The different best-fit lines are generated by forcing one or more of the coefficients to zero. With C2=0, the function becomes linear. With C0=0 as well, the function becomes proportional, and it is this fit that is used, C1 being the resistance value. In both cases there are clear errors caused by assuming flow and pressure are proportional. The characteristic for the non-return valve is nearly linear, but there is a cracking pressure of about 1 cmH20. The adjustable valve has a pressure drop which is proportional to the square of the flow. The significance of the linear resistance approximation will be can be judged in Section 4. Resistance, cmH20/(L/s) Compliance, L/(cmH20), Test lung 1 (R, C) 12 0.040 Test lung 2(R, C) 12 0.030 Ventilator tubing system (Rv, Cv) 22 0.004 Fixed flow restrictor (Rr) 12 -Adjustable* flow restrictor (Rr) 33 -*Note: only used in at one setting in these tests (position 1) Figure 7 . Flow restrictor testing All rights reserved. No reuse allowed without permission. the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 916,
+                    "end": 924,
+                    "text": "Figure 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "Flow restrictor characterisation"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101/2020.04.12.20062497 doi: medRxiv preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Flow restrictor characterisation"
+        },
+        {
+            "text": "Five sets of test results are presented and compared with the model predictions. In all cases the PEEP pressure is 5 cmH20, the respiration rate (RR) is 15 breaths per minute, and the I:E ratio is 1:2. As shown in Table 2 , two different Pinsp settings are used, and the inspiration tube for lung 1 either has no restriction, the fixed restrictor, or the adjustable restrictor. The connections to lung 2 remain the same in all tests, with no added restriction. the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 214,
+                    "end": 221,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Test results and model validation"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Test results and model validation"
+        },
+        {
+            "text": "In Figure 10a , it can be seen that the measured airway flow to both lungs jumps to a peak close to the start of inspiration, and then declines as the lung expands and its pressure increases. Similarly, peak negative (expiration) flow occurs at the start of the expiration phase. It can be seen that the flows for lung 1 are slightly more than lung 2, resulting in a higher tidal volume as seen in Table 2 . The model lung volume variations in Figure 10b for lung 1, and Figure 10c for lung 2, match the measured signals well. Note that the volume measurements are actually the integration of the flows, with small offset corrects to prevent drift.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 13,
+                    "text": "Figure 10a",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 398,
+                    "end": 405,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 444,
+                    "end": 454,
+                    "text": "Figure 10b",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 471,
+                    "end": 481,
+                    "text": "Figure 10c",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Test results and model validation"
+        },
+        {
+            "text": "In Test 2, the fixed restrictor is used for lung 1, and now the flows to and from lung 1 are now smaller than lung 2, as seen in Figure 11a . The tidal volume for lung 1 is now reduced by 22% from its unrestricted state. In Test 3, the adjustable restrictor is used for lung 1 which provide a higher resistance, and the lung 1 flows are reduced further (Figure 12a) , giving a tidal volume reduction of 36% from its unrestricted state. For Tests 1 to 3 there is no change in the parameters for lung 2, so the model predicts the same tidal volume in each case. However, the measured results indicate a slight increase in volume, amounting to an increase of nearly 5% from Test 1 to Test 3 (Table 2) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 129,
+                    "end": 139,
+                    "text": "Figure 11a",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 353,
+                    "end": 365,
+                    "text": "(Figure 12a)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 688,
+                    "end": 697,
+                    "text": "(Table 2)",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Test results and model validation"
+        },
+        {
+            "text": "To illustrate the change in behaviour and model fit at a different condition, Tests 4 and 5 use an inspiration pressure rise (Pinsp) of 15 instead of 25 cmH20. Comparing lung 1 flow without and with the fixed restrictor -Test 4 ( Figure 13 ) and Test 5 ( Figure 14) -shows the expected reduction in flow and a tidal volume drop of 20%, again associated with a small increase in lung 2 tidal volume (6%). An issue which can be seen in the flow plots in Figures 13a and 14a is the lung 1 flow measurement at around 4 s, where the flow sudden becomes zero. This is a low-flow drop out characteristic of that specific flow meter, but the influence on results is thought to be small. Table 2 , the RC model predicts the tidal volumes reasonably well for this range of conditions. For lung 1, in the five tests the measured tidal volume deviates from the predicted by 2.4%, -3.6%, 3.5%, -5.6% and-9.3% respectively. For lung 2, the measured tidal volume deviates from the predicted by 1.4%, 4.9%, 6.3%, -4.4% and 1.4% respectively. The largest absolute error is 31 mL. For comparison, in [1] a tidal volume change of up to \u00b1100 mL total for both patients together after their transfer from single to dual ventilation with nominally the same settings is considered acceptable.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 230,
+                    "end": 239,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 255,
+                    "end": 265,
+                    "text": "Figure 14)",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 452,
+                    "end": 471,
+                    "text": "Figures 13a and 14a",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 679,
+                    "end": 686,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Test results and model validation"
+        },
+        {
+            "text": "All rights reserved. No reuse allowed without permission. the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101/2020.04.12.20062497 doi: medRxiv preprint All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi.org/10.1101 /2020.04.12.20062497 doi: medRxiv preprint All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 140,
+                    "text": "/2020.04.12.20062497 doi: medRxiv preprint",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi. org/10.1101 org/10. /2020 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 98,
+                    "text": "org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 99,
+                    "end": 112,
+                    "text": "org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi. org/10.1101 org/10. /2020 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 98,
+                    "text": "org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 99,
+                    "end": 112,
+                    "text": "org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi. org/10.1101 org/10. /2020 All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 98,
+                    "text": "org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 99,
+                    "end": 112,
+                    "text": "org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is . https://doi. org/10.1101 org/10. /2020 ",
+            "cite_spans": [
+                {
+                    "start": 87,
+                    "end": 98,
+                    "text": "org/10.1101",
+                    "ref_id": null
+                },
+                {
+                    "start": 99,
+                    "end": 112,
+                    "text": "org/10. /2020",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "As seen in"
+        },
+        {
+            "text": "The University of Bath and the Royal United Hospital in Bath, UK, are investigating dual patient ventilation, where one ventilator is used to ventilate two patients simultaneously. To succeed, we believe it is essential to independently control the gas flow (tidal volume) that each patient receives. A possible solution is to use a flow restrictor in the line of a patient who would otherwise receive too much pressure or flow, resulting in barotrauma or volutrauma. Such a restrictor should ideally be adjustable. We have presented experimental results using a pair of test lungs showing that restricting the flow in one inspiration line does indeed reduce the tidal volume in the corresponding lung. Moreover, using a linear resistance-compliance network model, we have shown that the change of tidal volume can be predicted. In the five tests presented, the largest prediction error was 31 mL of tidal volume. In the form used, the model just needs an airway resistance and lung compliance estimate for each patient, and a resistance and compliance value for the ventilator tubing system. Likewise, an added flow restrictor should be characterised by a linear resistance i.e. a pressure drop proportional to flowrate. The good performance of the model is despite clear linearization errors for the two flow restrictors used in this study. All the parameter values used have been informed by individual component testing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "Some further observations on the results: 1) Non-return valves are used in the individual inspiration and expiration tubes, so four in total.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "The valves we used have a considerable resistance, 12 cmH20/(L/s), so contributing over half of the total flow path resistance (either inspiration or expiration) estimated to be 22 cmH20/(L/s). While this will mean the characteristics of the dual arrangement are markedly different from conventional single patient ventilation, the increased pressure loss within the flow path means that the airway flow and pressure will be less sensitive to changes in patient characteristics. 2) An unexpected result was that as the flow reduced to one test lung by the introduction of a flow restrictor, there was a small increase in flow to the other lung. For example, the most severe flow restrictor reduced tidal volume by 36% in the corresponding lung, but also caused the unaltered loop to provide 5% more volume to the other test lung. This is likely to be caused by the reduced pressure loss in the common part of the circuit at the ventilator, and effects within the ventilator itself. 3) Test lung 1 appears to have different time constants for inspiration and expiration, and the modelling approach would allow different inspiration and expiration airway resistances to be used to capture this and improve accuracy. As a general method however, minimising the number of parameters required is beneficial.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "A key part of this contribution is that the model is simple to implement, for example as a spreadsheet. An example is provided at the link on the first page. This allows clinicians to estimate the flow restriction needed to match patient requirements. The challenge remains, however, to source a flow restrictor which is medically acceptable, and ideally adjustable. The 3D printed designs that are emerging need to be proven to be inert, sterilisable, and durable in the breathing system environment. The fixed restrictor used in this study -in fact a non-return valve -is medically approved, and provided around 10% differentiation between the two loops. Two or more could be used in series to provide a greater restriction, but an adjustable flow restrictor would be far easier to use.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "2) The addition of sensors to give immediate feedback of the effect of flow restriction. There may be a shortage of ventilators, but providing pressure and flow sensing for both patients ought to be relatively straightforward.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "3) The ability of a ventilator to maintain the specified pressure when the flow demands have doubled due to dual ventilation needs to be assured, and the effectiveness of the CO2 scrubbing system. 4) A sensitivity analysis of tidal volume and other characteristics to changes in system parameters would be useful. For example, ventilator tubing compliance does not appear to be a significant factor, but this should be confirmed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "A team of academics at UoB, in collaboration with the RUH, are investigating some of these issues. For example, flow restrictor development is underway, and appropriate pressure and flow sensing systems have been prototyped. Ventilation characteristics are being studied with the help of physics-based simulation, using Simscape Gas Flow and Moist Air libraries (MathWorks, Natick, MA, USA), and Simcenter Amesim (Siemens, Plano, TX, USA) which grew out of our own Bathfp simulation tool [5] . This modelling work is supported by the experimental data set recently generated.",
+            "cite_spans": [
+                {
+                    "start": 488,
+                    "end": 491,
+                    "text": "[5]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        },
+        {
+            "text": "It should be noted that the Anesthesia Patient Safety Foundation (APSF) have recently recommended that ventilator sharing should not be undertaken. Some of the objections raised we are addressing in this work [4] . We recognise that no-one would choose to share a ventilator between two patients, but there may be some situations in the near future when there will be no choice. We also recognise the additional challenge this set-up will present to those caring for patients in these circumstances. We believe that manageability and safety mandates limiting the sharing to two patients and not more. Dual patient ventilation is a method of last resort.",
+            "cite_spans": [
+                {
+                    "start": 209,
+                    "end": 212,
+                    "text": "[4]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions and further work"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Parameters for Simulation of Adult Subjects During Mechanical Ventilation",
+            "authors": [
+                {
+                    "first": "J-M",
+                    "middle": [],
+                    "last": "Arnal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aude",
+                    "middle": [],
+                    "last": "Garnero",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mathieu",
+                    "middle": [],
+                    "last": "Saoli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Chatburn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Respiratory Care",
+            "volume": "63",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Respiratory system dynamical mechanical properties: Modelling in time and frequency domain",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Carvalho",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Zin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Biophys Rev",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12551-011-0048-5"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Covid-19 Does Not Lead to a \"Typical\" Acute Respiratory Distress Syndrome",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "as10.1164/rccm.202003-0817LE"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Modelling of Anaesthetic Breathing Systems using Bath fp",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Increasing ventilator surge capacity in disasters: ventilation of four adult-human-sized sheep on a single ventilator with a modified circuit",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "; L"
+                    ],
+                    "last": "Magee",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Silverberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Charchaflieh",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Eason",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wright",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Palamidessi",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Arquilla",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sinert",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Manoach",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Resuscitation",
+            "volume": "77",
+            "issn": "1",
+            "pages": "121--126",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.resuscitation.2007.10.016"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Simulated Single Ventilator / Dual Patient Ventilation Strategy for Acute Respiratory Distress Syndrome During the COVID-19 Pandemic",
+            "authors": [
+                {
+                    "first": "Jose",
+                    "middle": [],
+                    "last": "Sol\u00eds-Lemus",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edward",
+                    "middle": [],
+                    "last": "Costar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Denis",
+                    "middle": [],
+                    "last": "Doorly",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kerrigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Caroline",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Kennedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Frances",
+                    "middle": [],
+                    "last": "Tait",
+                    "suffix": ""
+                },
+                {
+                    "first": "Steven",
+                    "middle": [],
+                    "last": "Niederer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Vincent",
+                    "suffix": ""
+                },
+                {
+                    "first": "Steven",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Williams",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.07.20056309"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Kalv\u00f8y (2020) Splitting one ventilator for multiple patients -a technical assessment",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tronstad",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Martinsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Olsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Rosseland",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pettersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "\u00d8",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Martinsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "H\u00f8getveit",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A computer model of the artificially ventilated human respiratory system in adult intensive care",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wilson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Murphy",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Brook",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Breen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Miles",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Tilley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Ventilator-Sharing-Protocol-Dual-Patient-Ventilation-with-a-Single-Mechanical-Ventilator-for-Useduring-Critical-Ventilator-Shortages",
+            "authors": [],
+            "year": 2009,
+            "venue": "Med Eng Phys",
+            "volume": "31",
+            "issn": "9",
+            "pages": "1118--1151",
+            "other_ids": {
+                "DOI": [
+                    "Doi:10.1016/j.medengphy.2009.07.009"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Hospital Ventilator Sharing Protocol: Dual-Patient Ventilation with a Single Mechanical Ventilator for Use during Critical Ventilator Shortages 2",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dr",
+                    "middle": [],
+                    "last": "Janssen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "fa9cf42679c6 'Differential Multiventilation'. Dr. Mergeay, M.D., Dr. Michiel Stiers",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "GE Aisys CS2 Users' Reference Manual",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Test system components (with acknowledgement to GE Healthcare and Intersurgical) Dual-test lung ventilation system with two Fluke Gas Flow Analysers Adjustable flow restrictor, with flow model (right) All rights reserved. No reuse allowed without permission.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Pressure-flow characteristic for the fixed restrictor (non-return valve) Pressure-flow characteristic for the adjustable restrictor",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Test 1: Pinsp=25 cmH20, no flow restrictor. a) Measured airway flows b) Lung 1: modelled and measured volumes and pressures c) Lung 2: modelled and measured volumes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Test 2: Pinsp=25 cmH20, fixed flow restrictor. a) Measured airway flows b) Lung 1: modelled and measured volumes and pressures c) Lung 2: modelled and measured volumes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Test 3: Pinsp=25 cmH20, adjustable flow restrictor. a) Measured airway flows b) Lung 1: modelled and measured volumes and pressures c) Lung 2: modelled and measured volumes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Test 4: Pinsp=15 cmH20, no flow restrictor. a) Measured airway flows b) Lung 1: modelled and measured volumes and pressures c) Lung 2: modelled and measured volumes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Test 5: Pinsp=15 cmH20, fixed flow restrictor. a) Measured airway flows b) Lung 1: modelled and measured volumes and pressures c) Lung 2: modelled and measured volumes",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Model parameter values",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Test conditions, and predicted and measured tidal volumes, VT.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank Malcolm Thornton, and Andy Padkin of the RUH for prompting the investigation and enabling testing, and BMI Bath Clinic also for providing test facilities. From the University of Bath,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

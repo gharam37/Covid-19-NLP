@@ -1,0 +1,1231 @@
+{
+    "paper_id": "85e97e7b856aa681dd67c802852d39daf052f487",
+    "metadata": {
+        "title": "VPTMdb: a viral post-translational modification database",
+        "authors": [
+            {
+                "first": "Yujia",
+                "middle": [],
+                "last": "Xiang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "State Key Laboratory of Integrated Management of Pest Insects and Rodents",
+                    "institution": "Chinese Academy of Sciences",
+                    "location": {
+                        "settlement": "Beijing",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Quanzou",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Lilin",
+                "middle": [],
+                "last": "Zhao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "State Key Laboratory of Integrated Management of Pest Insects and Rodents",
+                    "institution": "Chinese Academy of Sciences",
+                    "location": {
+                        "settlement": "Beijing",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In viruses, post-translational modifications (PTMs) are essential for their life cycle. Recognizing viral PTMs is very important for better understanding the mechanism of viral infections and finding potential drug targets. However, a database of comprehensive PTM information on viruses is not available. Results: To fill this gap, we developed a viral post-translational modification database (VPTMdb) for collecting systematic information of viral PTM data. The VPTMdb contains 912 PTM sites that integrate 414 experimental-confirmed PTM sites with 98 proteins in 45 human viruses manually extracted from 162 publications and 498 PTMs extracted from UniProtKB/Swiss-Prot. Moreover, we created a novel sequence-based classifier named VPTMpre to help users predict viral protein phosphorylated sites. Finally, an online web server was implemented for users to download viral PTM data and predict phosphorylated sites of interest. Availability and Implementation: VPTMdb can be accessed at http://vptmdb.com:8787/VPTMdb/ author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": ". n e t",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Post-translational modifications (PTMs) play a critical role in current proteomics research and regulate protein functions by altering protein interactions, stability, activity, and subcellular localization. Posttranslation modifications of viral proteins are relevant throughout various stages of the pathogen life cycle, especially viral infections and genome replication. For example, during entry, the influenza virus carries unanchored ubiquitin chains to engage the host cell's aggresome system (Banerjee, et al., 2014) . Once inside the host cell, viral PTMs regulating infecting process of HSV-1 encode ICP0 protein to degrade host proteins via ubiquitination and sumoylation (Randow and Lehner, 2009 ). In the viral life circle, the HIV-1 Tat protein ser-16 phosphorylated site regulates HIV-1 transcription (Ivanov, et al., 2018) . Therefore, knowledge of viral PTMs is of great significant to understanding the molecular mechanisms underlying viral infections and recognizing potential drug targets. In recent years, several studies have identified multiple viral PTMs (Kulej, et al., 2017; Scaturro, et al., 2018; Zheng, et al., 2018) ; thus, establishing a database to provide relevant knowledge is important.",
+            "cite_spans": [
+                {
+                    "start": 501,
+                    "end": 525,
+                    "text": "(Banerjee, et al., 2014)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 684,
+                    "end": 708,
+                    "text": "(Randow and Lehner, 2009",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 817,
+                    "end": 839,
+                    "text": "(Ivanov, et al., 2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1080,
+                    "end": 1101,
+                    "text": "(Kulej, et al., 2017;",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1102,
+                    "end": 1125,
+                    "text": "Scaturro, et al., 2018;",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1126,
+                    "end": 1146,
+                    "text": "Zheng, et al., 2018)",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, few databases have been developed for systematically archiving and easily accessing the PTM sites data of viruses. VirPTM (Schwartz and Church, 2010 ) stores viral phosphorylated sites. ViralPhos (Huang, et al., 2013 ) is a support vector machine based predictor and database that provides outdated viral phosphorylated sites. To date, no databases have collected comprehensive PTM data of viral proteins.",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 157,
+                    "text": "(Schwartz and Church, 2010",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 205,
+                    "end": 225,
+                    "text": "(Huang, et al., 2013",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To bridge the existing knowledge gap, we have built a viral posttranslational modification database (VPTMdb) that first provides compre-hensive experimentally verified viral PTM site data, including phosphorylation, sumoylation, glycosylation, acetylation, methylation, ubiquitination, neddylation and palmitoylation, and it includes 162 studies that have been manually viewed to extract PTM sites. In total, 912 PTM sites from 45 human viruses were obtained, which include 414 manual checked sites from PubMed as well as 498 sites from UniProtKB/Swiss-Prot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In addition, to determine the functional association of viral PTM sites located in the human-virus protein-protein interaction (PPI) domains, human-virus PPI data were downloaded from the HPIDB 3.0 (Ammari, et al., 2016) and integrated into the VPTMdb database.",
+            "cite_spans": [
+                {
+                    "start": 198,
+                    "end": 220,
+                    "text": "(Ammari, et al., 2016)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Moreover, PTM was predicted in other species with machine learning approaches (He, et al., 2018; Huang and Li, 2018) . For viral protein serine modification sites identification, we implemented a novel feature-based classifier named VPTMpre into the VPTMdb to provide users with the ability to find viral protein phosphorylated sites. First, we compared several feature extraction methods using support vector machine via a 5-fold cross-validation method to obtain the best feature representative strategy. Second, for feature selection, we separately input the features extracted from the previous step into three machine learning predictors (support vector machine, random forest and na\u00efve Bayes). Using the minimum redundancy and maximum relevance (mRMR) algorithm (Hanchuan, et al., 2005) , the predictive performance of these three classifiers on different feature dimensions was compared. Subsequently, the features that performed well in all three classifiers were selected as the most meaningful and significant features and 68-dimensional features were obtained. The results of independent testing showed that 68D features performed author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 78,
+                    "end": 96,
+                    "text": "(He, et al., 2018;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 97,
+                    "end": 116,
+                    "text": "Huang and Li, 2018)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 768,
+                    "end": 792,
+                    "text": "(Hanchuan, et al., 2005)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.01.019562 doi: bioRxiv preprint better. Overall, VPTMpre represents a powerful tool to predict viral protein phosphorylated sites.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The online web server is available at http://vptmdb.com:8787/VPTMdb/, and users can browse and download viral PTM data freely. Support vector machine, random forest and na\u00efve Bayes were integrated into VPTMpre, and users are able to choose one machine learning model to predict possible phosphorylated sites of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There are three major steps in data collecting and pre-processing, which are described below.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "First, we queried PubMed using the keyword search terms: (virus name) and (eight modification types) for studies published before Jan 01, 2020. As a result, 6052 papers were obtained, each of which was manually retrieved using the following standards: (i) the viral posttranslational modifications were experimentally verified; and (ii) if two references contained the same PTM site, the earliest published study was retained. In total, 45 viruses, 162 papers and 414 PTMs were obtained.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "Subsequently, 498 viral PTM data points from UniProtKB/Swiss-Prot were integrated into VPTMdb. For experimentally validated virus PTM types, the sites were extracted manually from the articles mentioned above. The protein sequences, UniProt ID and PMID were mainly extracted from NCBI, UniProt and PubMed. Finally, human-virus proteinprotein interactions were collected from the HPIDB 3.0 based on viral strains in the VPTMdb.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "Identifying viral protein PTM sites by experimental methods is still expensive and time consuming. Thus, predicting them in silico using bioinformatics approaches is necessary. To this end, a sequence-based classifier named VPTMpre was created to predict viral post-translational modification serine sites. Because threonine and tyrosine data are too few to train the model, we only predicted serine sites in this study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of viral phosphorylation sites prediction"
+        },
+        {
+            "text": "Five main procedures were performed to build the VPTMpre predictor. (i) a balanced benchmark dataset was constructed using the Synthetic Minority Oversampling Technique (SMOTE) (Chawla, et al., 2002) sampling method (Supplementary Material Si1); (ii) various feature representative methods were compared to obtain an effective feature representation strategy, with support vector machine used as the base classifier in a 5-fold cross-validation approach to find the best feature groups; (iii) the predictive performance of three classifiers (svm, random forest, na\u00efve Bayes) on different feature dimensions was compared using the Minimum redundancy and maximum relevance (mRMR) method, and the features that performed well in all three classifiers were selected as the most meaningful and significant features; (iv) a 10-fold random independent test was performed to evaluate the predictive performance of the three different classifiers (svm, random forest, na\u00efve Bayes); and (v) VPTMpre was implemented in the online web server.",
+            "cite_spans": [
+                {
+                    "start": 177,
+                    "end": 199,
+                    "text": "(Chawla, et al., 2002)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Overview of viral phosphorylation sites prediction"
+        },
+        {
+            "text": "All viral phosphorylation experimentally verified serine sites in our database were used as positive samples, and those not marked by any phosphorylation information on the same protein were considered nega-tive samples. As a result, we obtained 182 phosphorylated serine residues as well as 2148 non-phosphorylated residues. Phosphorylated sites from UniProtKB/Swiss-Prot were regarded as the independent dataset, and they included 93 positive serine sites and 1878 negative serine sites. After using CD-HIT (identity set to 0.8) (Fu, et al., 2012) to remove redundant sequences, we obtained 129 positive sites and 1611 negative sites. The independent dataset contained 52 positive sites and 1072 negative sites ( Table 1) . These sequences were truncated to a 23-residue symmetrical window (-11 to 11) (Supplementary Data Table) .",
+            "cite_spans": [
+                {
+                    "start": 531,
+                    "end": 549,
+                    "text": "(Fu, et al., 2012)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 715,
+                    "end": 723,
+                    "text": "Table 1)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 824,
+                    "end": 830,
+                    "text": "Table)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Data preparation and processing"
+        },
+        {
+            "text": "In order to eliminate the prediction bias caused by data imbalance, we re-sampled the training data by SMOTE methods and obtained 260 positive sites and 260 negative sites, which consisted of the training dataset. The negative test set from UniProtKB/Swiss-Prot was randomly divided into twenty parts. We randomly select ten negative subsets from the twenty parts and combined them with ten replicate positive sets to constitute ten independent test datasets (Supplementary Materials Table S1 ). ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 484,
+                    "end": 492,
+                    "text": "Table S1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Data preparation and processing"
+        },
+        {
+            "text": "To achieve a better classification effect, a key step is feature extraction, which means that a protein sequence is encoded as a numeric vector for machine learning model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Feature representation"
+        },
+        {
+            "text": "AAC is the frequency of 20 amino acids for a given sequence (Liu, 2019) . This descriptor can be denoted as follows:",
+            "cite_spans": [
+                {
+                    "start": 60,
+                    "end": 71,
+                    "text": "(Liu, 2019)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Amino acid composition (AAC)."
+        },
+        {
+            "text": "Ri is the observed number of types i amino acid in a protein sequence. L is the length of protein. Thus 20 features were obtained, and sum of which is 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Amino acid composition (AAC)."
+        },
+        {
+            "text": "Binary profile. The binary profile transformed each amino acid into a 20-dimensional binary numerical vector. For instance, the alanine ('A') is deciphered as 10000000000000000000, cysteine ('C') is deciphered as 01000000000000000000, etc. Consequently, we obtained a 460dimensional vector for this binary profile feature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Amino acid composition (AAC)."
+        },
+        {
+            "text": "The conjoint triad feature is sequence information for proteins. Twenty amino acid types are clustered into seven classes to construct the C-triad feature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "First, protein sequences are encoded into a numerical vector using the AA groups list above. Subsequently, any three continuous AAs are regarded as a unit, and scanning along the sequences and counting the frequencies of each triad type is performed to obtain a 343-dimensional numerical vector.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "For example, a protein sequence S contains L AA residues, which are expressed as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.01.019562 doi: bioRxiv preprint Then, we scan along the sequence with a slide window in three continuous residues:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "Finally, the C-triad feature of a protein is defined as the frequency of the corresponding triad type in that protein:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "n i is the occurrence number of the i-th triad type (i= 1, 2, ..., 343).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": "More detailed information about C-triad can be found in (Shen, et al., 2007) .",
+            "cite_spans": [
+                {
+                    "start": 56,
+                    "end": 76,
+                    "text": "(Shen, et al., 2007)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conjoint triad (CTriad)."
+        },
+        {
+            "text": ". CTD clusters 20 amino acids into three groups: hydrophobic, neutral and polar. The CTD composition (CTD-C) calculates the composition values of hydrophobic, neutral and polar groups for a given sequence. The CTD transition (CTD-T) represents the percentage frequency of an amino acid of one particular property followed by an amino acid of another property. The CTD distribution (CTD-D) represents the distribution of each property for a given sequence. Each property has five distribution descriptors, which are the first residue, 25% residues, 50% residues, 75% residues, and 100% residues in the whole sequence of a given specific property. In this research, CTD-C, CTD-T, and CTD-D were used to encoded protein sequences and yielded 39, 39, and 195 features, respectively. More detailed information about CTD can be found in the literature (Govindan and Nair, 2011) .",
+            "cite_spans": [
+                {
+                    "start": 846,
+                    "end": 871,
+                    "text": "(Govindan and Nair, 2011)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Composition-Transition-Distribution (CTD)"
+        },
+        {
+            "text": "Enhanced grouped amino acid composition (EGAAC). EGAAC was first proposed by Chen et al. (Chen, et al., 2018) and is the improved version of GAAC features. GAAC divides 20 standard amino acids into five groups based on their physical and chemical properties. The formulation of GAAC is as follows:",
+            "cite_spans": [
+                {
+                    "start": 89,
+                    "end": 109,
+                    "text": "(Chen, et al., 2018)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Composition-Transition-Distribution (CTD)"
+        },
+        {
+            "text": "where L is the length of sequence, N(g) is the number of amino acids in group g, and N i is the occurrence number of i-th amino acid type.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Composition-Transition-Distribution (CTD)"
+        },
+        {
+            "text": "EGAAC scans along the sequence and calculates the GAAC values in a fixed-size window:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Composition-Transition-Distribution (CTD)"
+        },
+        {
+            "text": "where N(g,win) is the number of amino acids in group g within a fixedsize window win and N(win) is the window size. win ranges from 1 to 17. In this study, the window size was set to 5, and we finally obtained a 95dimensional vector.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Composition-Transition-Distribution (CTD)"
+        },
+        {
+            "text": "Z-scale is a feature descriptor that describes AAs' physicochemical properties. It was first published by Hellberg (Hellberg, et al., 1987) , who introduced three z-scales (z1-z3), and then Sandberg et al. (Sandberg, et al., 1998) improved the original z-scale features by adding two more z-scale values, using 26 properties of 87 AAs. In this study, we employed the z-scale using five scales(z1-z5). The five z-scales are based on lipophilicity (z1), bulk (z2), polarity/charge (z3), electronegativity and heat of formation(z4), electrophilicity and hardness(z5), yielding a 115-dimensional numerical vector.",
+            "cite_spans": [
+                {
+                    "start": 115,
+                    "end": 139,
+                    "text": "(Hellberg, et al., 1987)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 206,
+                    "end": 230,
+                    "text": "(Sandberg, et al., 1998)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Z-Scale (ZSCALE)."
+        },
+        {
+            "text": "Generally, high-dimension biological features may be noisy, which led to poor prediction performance. However, feature selection is a good strategy to overcome feature redundancy. Feature selection means using a reduction algorithm to select the major features that are able to improve the performance of specific classifiers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Feature selection and optimization"
+        },
+        {
+            "text": "In this work, six descriptors and their combined features' performance were compared using 5-fold cross validation in the training data with the Support Vector Machine (SVM) method. Subsequently, the Minimum redundancy and maximum relevance (mRMR) method was chosen to select the most meaningful features. To investigate the predictive performance of three classifiers, we compared the different dimensions of features in the svm, random forest, na\u00efve Bayes methods. The features that performed well in all three classifiers were selected as the most meaningful and significant features. The T-distributed Stochastic Neighbour Embedding algorithm was used to visualize the features(van der Maaten and Hinton, 2008).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Feature selection and optimization"
+        },
+        {
+            "text": "Sensitivity (Sn), Specificity (Sp), F1-score, and Mathews Correlation Coefficient (MCC) were applied to estimate the prediction performance (Supplementary Materials Si2) . In addition, the receiver operating characteristic (ROC) curve and the area under the ROC curve (AUC) were used to evaluate the overall performance of the model. The ROC curve is a continuous line plotted by the false positive rate (FPR) as the Xcoordinate and true positive rate (TPR) as the Y-coordinate. The higher the AUC value, the better the performance of the classifier.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 140,
+                    "end": 169,
+                    "text": "(Supplementary Materials Si2)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Performance evaluation"
+        },
+        {
+            "text": "The VPTMdb web interface was written in the R programming language using the Rshiny web development framework (Chang, et al., 2018) . The MySQL database management system was used to store structured PTM data. The base machine learning predictor (such as SVM) was supported by the caret R package (Kuhn, 2020) ; the ROC curve was analysed using ROCR (Sing, et al., 2005) ; and MRMR and t-SNE were analysed using mRMRe (De Jay, et al., 2013) and Rtsne (Krijthe, 2015) . Software ggplot2 was used to plot beautiful pictures (Wickham, 2016) . The website is free and can be browsed in most modern browsers. Figure 1A shows that the VPTMdb webserver consists of two parts: VPTM database and VPTMpre. The VPTM database currently includes 414 unique experimentally determined PTM sites with 8 modification types from 45 viruses. In summary, 162 manually checked references were collected in the database. Each entry in VPTMdb includes the (i) virus name, (ii) virus protein name in the UniProt database, (iii) viral modification site, (iv) residue sequences, and (v) PubMed id. PTM data from UniProtKB/Swiss-Prot contain two types: 199 phosphorylation sites and 299 glycosylation sites (N-lined and O-lined). author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 131,
+                    "text": "(Chang, et al., 2018)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 297,
+                    "end": 309,
+                    "text": "(Kuhn, 2020)",
+                    "ref_id": null
+                },
+                {
+                    "start": 350,
+                    "end": 370,
+                    "text": "(Sing, et al., 2005)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 418,
+                    "end": 440,
+                    "text": "(De Jay, et al., 2013)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 451,
+                    "end": 466,
+                    "text": "(Krijthe, 2015)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 522,
+                    "end": 537,
+                    "text": "(Wickham, 2016)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 604,
+                    "end": 613,
+                    "text": "Figure 1A",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Website implementation"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.01.019562 doi: bioRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Database contents"
+        },
+        {
+            "text": "The research on post-translational modification of viruses has been increasing over the past decade according to the 6052 literatures we downloaded from PubMed. The greatest number of publications was related to viral phosphorylation, followed by glycosylation and methylation (Supplementary Fig.S1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 277,
+                    "end": 298,
+                    "text": "(Supplementary Fig.S1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Database contents"
+        },
+        {
+            "text": "The statistics of experimentally verified sites in VPTMdb show that among eight PTM types, phosphorylated sites account for the most (484 sites, including 285 manually checked and 199 sites from Uni-ProtKB/Swiss-Prot) at more than 50% of the total database. The top five viruses in the number of manually checked modification sites are HAdV-2 (51 phosphorylation sites), EBOV (29 phosphorylation, 1 sumoylation, 2 ubiquitination, 8 acetylation sites), HIV-1 (21 phosphorylation, 4 sumoylation, 2 ubiquitination, 5 acetylation and 3 glycosylation sites), H1N1 (19 phosphorylation, 3 sumoylation, 2 ubiquitination, 6 acetylation and 2 glycosylation sites), and HCV (10 phosphorylation, 1 sumoylation, 1 ubiquitination, 1 methylation 4 palmitoylation and 14 glycosylation sites) (Fig. 1B) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 776,
+                    "end": 785,
+                    "text": "(Fig. 1B)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Database contents"
+        },
+        {
+            "text": "Human-virus PPI data were included in the VPTMdb, which are helpful to determine the potential function of PTMs during viral infections. PPI data in the VPTMdb contain 114 interactions with 93 proteins in 17 viruses. In the database first version, there are six post-translational modified proteins in PPI data. Figure 1C shows the distribution of six modified proteins in the protein-protein interaction network.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 312,
+                    "end": 321,
+                    "text": "Figure 1C",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Database contents"
+        },
+        {
+            "text": "The web server involves five easy-to-use main pages: 'Home', 'Browse', 'Prediction', 'Download', and 'Help'. Each of these pages enables users to search, browse, predict and download data without any prerequisite knowledge. In the 'Browse' section, users can search the PTM data conveniently by typing keywords in the search box and download data freely, what is more, virus-human protein-protein interaction data are provided and visualized. The 'Prediction' page provides VPTMpre, a sequence-based machine learning predictor for phosphorylation serine site prediction. All data about virus PTM are stored in the 'Download' page for batched downloading. The 'Help' page contains a detailed tutorial to help users learn about VPTMdb. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Database contents"
+        },
+        {
+            "text": "The data in Table 2 show that six features as well as their combinations were evaluated in SVM with a 5-fold cross-validation. AUC, F1-score and MCC were used as the performance evaluation indicators. The results declare that the z-scale, which captures the physical-chemical in-formation of amino acids, is the best among the six single features (AUC=0.957, F1-Score=0.887, MCC=0.810). For BINARY, EGAAC and CTriad, their AUC values also achieved above 90.00%. Moreover, when we fused the features, the result showed that ZSCALE combined author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 19,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Features comparison"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.01.019562 doi: bioRxiv preprint with AAC features improved the sensitivity, F1-score and AUC by 8.40%, 1.5%, 0.1% compared with individual z-scale features.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Features comparison"
+        },
+        {
+            "text": "However, the combination of EGAAC, BINARY, ZSCALE and CTriad features did not significantly enhance the model's performance, which suggests that high-dimensional features may include useless features that weaken the model performance. Among all the features, considering the three evaluation values of F1-score, MCC, AUC and dimensions, the AAC combined with the ZSCALE performed best, and the sensitivity, AUC and F1-score were higher than the single z-scale features. The independent test also shows that AAC combined with ZSCALE features significantly increased the AUC, F1-score, MCC, and Sn by 0.90%, 21.7%, 2.60%, and 25.0%, respectively (Supplementary Table S2 ). Now, it is important to answer two questions: (i) what is the difference between phosphorylated sites and non-phosphorylated sites and (ii) which features contribute most to the viral phosphorylation protein? To this end, we analysed the z-scale feature information between phosphorylated sites and non-phosphorylated sites. Then, we selected the most important features from the combined features with the mRMR method and using svm, random forest and na\u00efve Bayes to perform a predictive evaluation. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 659,
+                    "end": 667,
+                    "text": "Table S2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Features comparison"
+        },
+        {
+            "text": "In section 3.2, z-scale performed the best in the single feature comparison. The z-scale feature based on amino-acids' physical-chemical properties includes five z values. The distribution of amino acid residues around serine sites is able to determine the different physicochemical properties between phosphorylated sites and non-phosphorylated sites.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Z-scale feature analysis"
+        },
+        {
+            "text": "From Figure 2 , we can see that the z3 values of the phosphorylated sites are smaller than that of the non-phosphorylated sites, implying that a more negative charge occurred around viral protein phosphorylated sites than around non-phosphorylated sites. The results also showed that the z1, z2, z4, and z5 values of the phosphorylated sites are bigger than that of the non-phosphorylated sites. Overall, the different z-scale compositions surrounding the phosphorylated and non-phosphorylated sites indicates that it is reasonable to choose the z-scale as a feature for prediction. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 5,
+                    "end": 13,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Z-scale feature analysis"
+        },
+        {
+            "text": "VPTMdb provides three classifiers: support vector machine, random forest and na\u00efve Bayes. Different dimensional features may have different impacts on different predictors. Thus, we selected features of different dimensions using the mRMR algorithm and compared the three author/funder. All rights reserved. No reuse allowed without permission.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Features selection and performance evaluation"
+        },
+        {
+            "text": "The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.01.019562 doi: bioRxiv preprint classifiers' performance from the 5-fold cross validation (Supplementary Table S3 ). Figure 3A shows that the maximum AUCs of the svm and random forest are similar. For the random forest and svm, the AUCs increased when more features were selected (random forest: 14-135 features, with AUC > 0.90; svm: 27-135 features, with AUC > 0.90). However, we observed that the AUCs of na\u00efve Bayes (AUCs > 0.80) decreased when more features were added. From a statistical point of view, to prevent the curse of dimensionality, fewer and more meaningful features should be chosen. Taking the above results into consideration, for 68 features, the AUCs of the three predictors perform better, suggesting that 68D is the most meaningful feature among all the features.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 215,
+                    "end": 223,
+                    "text": "Table S3",
+                    "ref_id": null
+                },
+                {
+                    "start": 227,
+                    "end": 236,
+                    "text": "Figure 3A",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Features selection and performance evaluation"
+        },
+        {
+            "text": "To understand the effective of our 68-dimensional features, the Tdistributed Stochastic Neighbour Embedding (t-SNE) algorithm was used to visualize the positive and negative samples. A clear distinction was observed between the positive and negative samples, implying that our features selection results are effective (Fig. 3B) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 318,
+                    "end": 327,
+                    "text": "(Fig. 3B)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Features selection and performance evaluation"
+        },
+        {
+            "text": "To assess the robustness and performance of the svm, random forest and na\u00efve Bayes in 68D features, 10-fold random independent tests were performed. The model performance on independent datasets is shown in Figure 4 , random forest performed better, the average AUC, MCC, F1score of its are 0.744, 0.427, 0.656 respectively. Comparing random forest and PSI-blast (Supplementary Table S4 ), the MCC, acc and sp values of random forest are higher than PSI-blast for 6.92%, 2.8% and 19.1%. Taking all indicators into consideration, our method is stable and better performance. We implemented svm, random forest and na\u00efve Bayes into VPTMpre, users can choose them to predict phosphorylated sites of interest.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 207,
+                    "end": 215,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 378,
+                    "end": 386,
+                    "text": "Table S4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Features selection and performance evaluation"
+        },
+        {
+            "text": "In this work, we constructed a conformable viral post-translational modification database, i.e., VPTMdb, which integrated 414 experimentally validated PTM sites from PubMed and 498 public PTM sites from the UniProtKB/Swiss-Prot database. VPTMdb is the first database that systematically collected viral protein PTMs. Virus-human PPI data were also collected in the VPTMdb to determine PTM sites association functions. These viral protein PTM data provide unique insights into virushost interactions and are a valuable resource for biologists to recognize potential drug targets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Moreover, VPTMpre, a novel feature representative classifier, was developed to predict viral protein serine sites. We compared various feature extraction methods and selected the optimized features using the mRMR algorithm. The feature analysis results showed that 68D was able to distinguish the phosphorylated sites and non-phosphorylated sites in viral proteins. VPTMpre was integrated into the VPTMdb web server to provide an online phosphorylation site prediction service. Users can choose three classifiers (svm, random forest and na\u00efve Bayes) to predict phosphorylated sites of interests. However, because of data limitations, the prediction of VPTMpre is limited to serine sites. With continuous collection of new viral PTM data, we expect that VPTMpre will be extended to predict more types of PTM sites and obtain a better performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "In the future, to respond to the rapid growth of viral PTM data, VPTMdb will be updated regularly and more viral PTM-related data collected to ensure that it provides the most comprehensive information to users. As the first attempt to develop the comprehensive viral PTM database, we sincerely welcome support and suggestions from the research community to improve the VPTMdb database.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "HPIDB 2.0: a curated database for host-pathogen interactions. Database : the journal of biological databases and curation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Ammari",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Influenza A virus uses the aggresome processing machinery for host cell entry",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Banerjee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Science",
+            "volume": "346",
+            "issn": "",
+            "pages": "473--477",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": ") shiny: Web Application Framework for R",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "SMOTE: Synthetic Minority Over-sampling Technique",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Chawla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Journal of Artificial Intelligence Research",
+            "volume": "16",
+            "issn": "",
+            "pages": "321--357",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "iFeature: a Python package and web server for features extraction and selection from protein and peptide sequences",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bioinformatics",
+            "volume": "34",
+            "issn": "",
+            "pages": "2499--2502",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "mRMRe: an R package for parallelized mRMR ensemble feature selection",
+            "authors": [
+                {
+                    "first": "De",
+                    "middle": [],
+                    "last": "Jay",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Bioinformatics",
+            "volume": "29",
+            "issn": "",
+            "pages": "2365--2368",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "CD-HIT: accelerated for clustering the next-generation sequencing data",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Bioinformatics",
+            "volume": "28",
+            "issn": "",
+            "pages": "3150--3152",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Composition, Transition and Distribution (CTD) -A dynamic feature for predictions based on hierarchical structure of cellular sorting",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Govindan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nair",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Feature selection based on mutual information criteria of max-dependency, max-relevance, and min-redundancy",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hanchuan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+            "volume": "27",
+            "issn": "",
+            "pages": "1226--1238",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Research Progress in Protein Post-Translational Modification Site Prediction",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Briefings in Functional Genomics",
+            "volume": "18",
+            "issn": "",
+            "pages": "220--229",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Peptide quantitative structure-activity relationships, a multivariate approach",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hellberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "Journal of medicinal chemistry",
+            "volume": "30",
+            "issn": "",
+            "pages": "1126--1135",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Feature Extractions for Computationally Predicting Protein Post-Translational Modifications",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Current Bioinformatics",
+            "volume": "13",
+            "issn": "",
+            "pages": "387--395",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "ViralPhos: incorporating a recursively statistical method to predict phosphorylation sites on virus proteins",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "BMC bioinformatics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "HIV-1 Tat phosphorylation on Ser-16 residue modulates HIV-1 transcription",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ivanov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Retrovirology",
+            "volume": "15",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Rtsne: T-Distributed Stochastic Neighbor Embedding using a Barnes-Hut Implementation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Krijthe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "2020) caret: Classification and Regression Training",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kuhn",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Time-resolved Global and Chromatin Proteomics during Herpes Simplex Virus Type 1 (HSV-1) Infection",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kulej",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Molecular & cellular proteomics : MCP",
+            "volume": "16",
+            "issn": "",
+            "pages": "92--107",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "BioSeq-Analysis: a platform for DNA, RNA and protein sequence analysis based on machine learning approaches",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Briefings in bioinformatics",
+            "volume": "20",
+            "issn": "",
+            "pages": "1280--1294",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Viral avoidance and exploitation of the ubiquitin system",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Randow",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lehner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Nature cell biology",
+            "volume": "11",
+            "issn": "",
+            "pages": "527--534",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "An orthogonal proteomic survey uncovers novel Zika virus host factors",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Scaturro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nature",
+            "volume": "561",
+            "issn": "",
+            "pages": "253--257",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Collection and motif-based prediction of phosphorylation sites in human viruses",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Schwartz",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Church",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Science signaling",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Predicting protein-protein interactions based only on sequences information",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the National Academy of Sciences of the United States of America",
+            "volume": "104",
+            "issn": "",
+            "pages": "4337--4341",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "ROCR: visualizing classifier performance in R",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Sing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Bioinformatics",
+            "volume": "21",
+            "issn": "",
+            "pages": "3940--3941",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Visualizing High-Dimensional Data Using t-SNE",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "J P"
+                    ],
+                    "last": "Van Der Maaten",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Journal of Machine Learning Research",
+            "volume": "9",
+            "issn": "",
+            "pages": "2579--2605",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "ggplot2: Elegant Graphics for Data Analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Identification of N-linked glycosylation sites in the spike protein and their functional impact on the replication and infectivity of coronavirus infectious bronchitis virus in cell culture",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Virology",
+            "volume": "513",
+            "issn": "",
+            "pages": "65--74",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Overview of VPTMdb: (A) Framework of VPTMdb web server construction. First, PTM data were collected from PubMed and UniProt/Swiss-Prot. Then, VPTMpre was constructed to predict viral protein phosphorylated sites. (B) Statistics of viral PTM data in VPTMdb. (C) The virus-human protein-protein interaction network. Each node represents viral protein or human protein. Each edge represents virus-human association. The post-translational modified proteins in the network are highlighted with colour light-yellow.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Comparison of the z-scale in positive and negative datasets. The vertical axis represents the z-scale values. The X-axis represents the five binary sequences.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "(A) Five-fold cross-validation performance of the three classifiers on different features. (B) t-SNE visualization of positive and negative data using 68D features.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Independent test results. Sensitivity, specificity, AUC, MCC and F1-score of the proposed features in three classifiers.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Summary of training and independent datasets",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Comparison of performance between the single features and fused features with the mRMR method",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Thanks for the anonymous reviewers for their kind suggestions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgment"
+        },
+        {
+            "text": "This work has been supported by the Natural Science Foundation of China (No. 61771331, No. 61922020, No. 31572272), Youth Innovation Promotion Association, (Y62993) and the ten thousand plan -The national youth talent support program.Conflict of Interest: none declared.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Funding"
+        }
+    ]
+}

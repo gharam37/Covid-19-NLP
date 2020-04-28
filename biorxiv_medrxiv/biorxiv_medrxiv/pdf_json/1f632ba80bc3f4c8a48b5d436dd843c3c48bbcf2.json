@@ -1,0 +1,2651 @@
+{
+    "paper_id": "1f632ba80bc3f4c8a48b5d436dd843c3c48bbcf2",
+    "metadata": {
+        "title": "PriSeT: Efficient De Novo Primer Discovery",
+        "authors": [
+            {
+                "first": "Marie",
+                "middle": [],
+                "last": "Hoffmann",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Michael",
+                "middle": [
+                    "T"
+                ],
+                "last": "Monaghan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Knut",
+                "middle": [],
+                "last": "Reinert",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Motivation: DNA metabarcoding is a com-",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "monly applied technique used to infer the species composition of environmental samples. These samples can comprise hundreds of organisms that can be closely or very distantly related in the taxonomic tree of life. DNA metabarcoding combines polymerase chain reaction (PCR) and next-generation sequencing (NGS), whereby a short, homologous sequence of DNA is amplified and sequenced from all members of the community. Sequences are then taxonomically identified based on their match to a reference database. Ideally, each species of interest would have a unique DNA barcode. This short, variable sequence needs to be flanked by relatively conserved regions that can be used as primer binding sites. Appropriate PCR primer pairs would match to a broad evolutionary range of taxa, such that we only need a few to achieve high taxonomic coverage. At the same time however, the DNA barcodes between primer pairs should be different to allow us to distinguish between species to improve resolution. This poses an interesting optimization problem. More specifically: Given a set of references R = {R 1 , R 2 , ..., R m }, the problem is to find a primer set P balancing both: high taxonomic coverage and high resolution. This goal can be captured by filtering for frequent primers and ranking by coverage or variation, i.e. the number of unique barcodes. Here we present the software PriSeT, an offline primer discovery tool that is capable of processing large libraries and is robust against mislabeled or low quality references. It tackles the computationally expensive steps with linear runtime filters and * Equal contribution 1 Institute of Computer Science, Freie Universit\u00e4t Berlin, Takustr. 9, 14195 Berlin, Germany 2 Institute for Biology, Freie Universit\u00e4t Berlin, K\u00f6nigin-Luise-Str. 1-3, 14195 Berlin, Germany 3 Leibniz Institute of Freshwater Ecology and Inland Fisheries (IGB), M\u00fcggelseedamm 301, 12587 Berlin, Germany. Correspondence to: Marie Hoffmann <marie.hoffmann@fuberlin.de>. efficient encodings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "We first evaluated PriSeT on references (mostly 18S rRNA genes) from 19 clades covering eukaryotic organisms that are typical for freshwater plankton samples. PriSeT recovered several published primer sets as well as additional, more chemically suitable primer sets. For these new sets, we compared frequency, taxon coverage, and amplicon variation with published primer sets. For 11 clades we found de novo primer pairs that cover more taxa than the published ones, and for six clades de novo primers resulted in greater sequence (i.e., DNA barcode) variation. We also applied PriSeT to 19 SARS-CoV-2 genomes and computed 114 new primer pairs with the additional constraint that the sequences have no co-occurrences in other taxa. These primer sets would be suitable for empirical testing. Availability:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results:"
+        },
+        {
+            "text": "https://github.com/ mariehoffmann/PriSeT Contact: marie.hoffmann@fu-berlin.de",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results:"
+        },
+        {
+            "text": "In metagenomics, the DNA of hundreds to thousands of species from a single environmental sample is processed in parallel and one goal is to identify all species from a sample. Samples contain many species in what can be very heterogeneous communities. Their identification is usually done via DNA metabarcoding which combines polymerase chain reaction (PCR), nextgeneration sequencing (NGS) and identification via DNA barcodes, i.e. short sequences that are matched against a reference database. In contrast, single DNA probing and assembly would be more precise, but are for many reasons not feasible, e.g., the majority of microorganisms cannot be clonally cultured -a necessity for assembling reference genomes (Rapp\u00e9 & Giovannoni, 2003) . Although the decreasing costs of NGS makes DNA metabarcoding progressively feasible, identification of most microeukaryotes, such as plankton, continues to be done via morphology. This still outperforms molecular methods in some aspects, like abundance estimation, differentiation of life stages, or observation of teratological forms. But metabarcoding of environmental DNA (eDNA) is a far more sensitive method of species detection compared to traditional methods (Smart et al., 2015) provided that a suitable marker is chosen. In the search for a marker, we know that evolutionary pressure is not consistent within genomes. There are regions that vary even within species, or on the other extreme, are conserved for whole clades. For an effective delineation of taxa using DNA metabarcodes, we are interested in regions that are similar or identical to individuals of the same species, but distinctive from other species. Such regions are ideal barcodes, but they need to be surrounded by conserved regions that contain suitable binding sites for primers. Primers are short oligomers, ideally 16 to 25 bases long, which determine the copy starting point of the template. We need flanking conservation, because we batch-process all extracted DNA at once and can add only one primer pair per PCR run 1 . The most frequently applied type of NGS in DNA metabarcoding is the paired-end approach as it allows for longer sequences and error correction for the low quality ends of reads. The two types of primers operate independently, one binds on the forward and the other on the reverse strand of the template. Both are elongated enzymatically to produce a complementary copy. In each PCR cycle the number of amplicons is nearly duplicated. After about 25-35 cycles the reaction is stopped and the amplified DNA amplicons provide a signal for the sequencer machine that is separable from the noise of the original DNA material. After digitization of the reads, an analysis pipeline combines trimming, quality filtering, denoising, and read merging with the aforementioned error correction. Identical or similar sequences are then clustered into operational taxonomic units (OTUs). The underlying hypothesis is that each OTU corresponds to a taxon in the tree of life. An alternative approach is that each sequence variant is analysed rather than being clustered into OTUs. The art herein is to discriminate sequencing errors from variants. A noteworthy denoising algorithm is the Divisive Amplicon Denoising Algorithm 2 (DADA 2) (Callahan et al., 2016) . As described earlier, not all barcodes are specific to a single species and our metabarcoding pipeline will most likely produce OTUs uniting barcodes from taxonomically distinct lineages, even with similarity thresholds set high (i.e., > 97 %). Despite these natural imperfections, ecologists found that the small subunit RNA gene (SSU) is an excellent source for species-specific markers. Hence a large number of entries in the NCBI-GenBank nucleotide database originate from ribosomal subunits (Benson et al., 2012) . Schmidt et al. (2014) demonstrated that OTUs from 16S/18S rRNA reflect the underlying ecological diversity consistently across habitats. In other words, even if OTUs cannot be resolved, their counts correlate to the sample's diversity and are roughly independent from the species composition. Finding the optimal set of primers in terms of coverage and resolution takes many costly iterations of trial and error (Elbrecht et al., 2019) . Scientists encounter problems like missing ground truth and sparsely populated reference databases. Often they would start with primer sequences published in previous studies on similar data sets and then compare OTU diversity between different primer sets. More formally, primer candidates can be described as kmers -DNA oligomers of length k -satisfying a set of sequence constraints C s which are relevant for the success of the PCR and which must hold independent of their matching. C s comprises range limits for melting temperature, CG content or low probabilities for self-annealing. When combining two k-mers to produce a primer pair, both have to fulfill a second set of constraints C p arising from their strand orientation and fitting: avoidance of CG clamps or low probability of cross-annealing.",
+            "cite_spans": [
+                {
+                    "start": 714,
+                    "end": 740,
+                    "text": "(Rapp\u00e9 & Giovannoni, 2003)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1209,
+                    "end": 1229,
+                    "text": "(Smart et al., 2015)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 3270,
+                    "end": 3293,
+                    "text": "(Callahan et al., 2016)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 3792,
+                    "end": 3813,
+                    "text": "(Benson et al., 2012)",
+                    "ref_id": null
+                },
+                {
+                    "start": 3816,
+                    "end": 3837,
+                    "text": "Schmidt et al. (2014)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 4228,
+                    "end": 4251,
+                    "text": "(Elbrecht et al., 2019)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Motivation"
+        },
+        {
+            "text": "A reference sequence of length N contains O(KN 2 ) many k-mer pairs which need to undergo filtering of C s and C p where K is the k-mer length range. We use the k-mer frequency computation on the FM index of the library to quickly identify frequent k-mers -above a thresholdwhich then undergo two processing steps: filtering and combination into pairs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Motivation"
+        },
+        {
+            "text": "In metagenomics, the DNA of hundreds to thousands of species from a single environmental sample is processed in parallel and one goal is to identify all species from a sample. Samples contain many species in what can be very heterogeneous communities. Their identification is usually done via DNA metabarcoding which combines polymerase chain reaction (PCR), nextgeneration sequencing (NGS) and identification via DNA barcodes, i.e. short amplicons that are matched against a reference database. In contrast, single DNA probing and assembly would be more precise, but are for many reasons not feasible, e.g., the majority of microorganisms cannot be clonally cultured -a necessity for assembling reference genomes (Rapp\u00e9 & Giovannoni, 2003) . Although the decreasing costs of NGS makes DNA metabarcoding progressively feasible, identification of most microeukaryotes, such as plankton, continues to be done via morphology. This still outperforms molecular methods in some aspects, like abundance estimation, differentiation of life stages, or observation of teratological forms. But metabarcoding of environmental DNA (eDNA) is a far more sensitive method of species detection compared to tradi-tional methods (Smart et al., 2015) provided that a suitable marker is chosen. In the search for a marker, we know that evolutionary pressure is not consistent within genomes. There are regions that vary even within species, or on the other extreme, are conserved for whole clades. For an effective delineation of taxa using DNA metabarcodes, we are interested in regions that are similar or identical to individuals of the same species, but distinctive from other species. Such regions are ideal barcodes, but they need to be surrounded by conserved regions that contain suitable binding sites for primers. Primers are short oligomers, ideally 16 to 25 bases long, which determine the copy starting point of the template. We need flanking conservation, because we batch-process all extracted DNA at once and can add only one primer pair per PCR run 2 . The most frequently applied type of NGS in DNA metabarcoding is the paired-end approach as it allows for longer sequences and error correction for the low quality ends of reads. The two types of primers operate independently, one binds on the forward and the other on the reverse strand of the template. Both are elongated enzymatically to produce a complementary copy. In each PCR cycle the number of amplicons is nearly duplicated. After about 25-35 cycles the reaction is stopped and the amplified DNA amplicons provide a signal for the sequencer machine that is separable from the noise of the original DNA material. After digitization of the reads, an analysis pipeline combines trimming, quality filtering, denoising, and read merging with the aforementioned error correction. Identical or similar sequences are then clustered into operational taxonomic units (OTUs). The underlying hypothesis is that each OTU corresponds to a taxon in the tree of life. An alternative approach is that each sequence variant is analysed rather than being clustered into OTUs. The art herein is to discriminate sequencing errors from variants. A noteworthy denoising algorithm is the Divisive Amplicon Denoising Algorithm 2 (DADA 2) (Callahan et al., 2016) . As described earlier, not all barcodes are specific to a single species and our metabarcoding pipeline will most likely produce OTUs uniting barcodes from taxonomically distinct lineages, even with similarity thresholds set high (i.e., > 97 %). Despite these natural imperfections, ecologists found that the small subunit RNA gene (SSU) is an excellent source for species-specific markers. Hence a large number of entries in the NCBI-GenBank nucleotide database originate from ribosomal subunits (Benson et al., 2012) . (Schmidt et al., 2014) demonstrated that OTUs from 16S/18S rRNA reflect the underlying ecological diversity consistently across habitats. In other words, even if OTUs cannot be resolved, their counts correlate to the sample's diversity and are roughly independent from the species composition. Finding the optimal set of primers in terms of coverage and resolution takes many costly iterations of trial and error (Elbrecht et al., 2019) . Scientists encounter problems like missing ground truth and sparsely populated reference databases. Often they would start with primer sequences published in previous studies on similar data sets and then compare OTU diversity between different primer sets. More formally, primer candidates can be described as kmers -DNA oligomers of length k -satisfying a set of sequence constraints C s which are relevant for the success of the PCR and which must hold independent of their matching. C s comprises range limits for melting temperature, CG content or low probabilities for self-annealing. When combining two k-mers to produce a primer pair, both have to fulfill a second set of constraints C p arising from their strand orientation and fitting: avoidance of CG clamps or low probability of cross-annealing.",
+            "cite_spans": [
+                {
+                    "start": 714,
+                    "end": 740,
+                    "text": "(Rapp\u00e9 & Giovannoni, 2003)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1210,
+                    "end": 1230,
+                    "text": "(Smart et al., 2015)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 3271,
+                    "end": 3294,
+                    "text": "(Callahan et al., 2016)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 3793,
+                    "end": 3814,
+                    "text": "(Benson et al., 2012)",
+                    "ref_id": null
+                },
+                {
+                    "start": 3817,
+                    "end": 3839,
+                    "text": "(Schmidt et al., 2014)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 4230,
+                    "end": 4253,
+                    "text": "(Elbrecht et al., 2019)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Motivation"
+        },
+        {
+            "text": "A reference sequence of length N contains O(KN 2 ) many k-mer pairs which need to undergo filtering of C s and C p where K is the k-mer length range. We use the k-mer frequency computation on the FM index of the library to quickly identify frequent k-mers -above a thresholdwhich then undergo two processing steps: filtering and combination into pairs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Motivation"
+        },
+        {
+            "text": "There exists computer-assisted approaches in which a manageable subset of references of organisms that are expected to show up, is collected and serves as input to compute a multiple sequence alignment (MSA). Then a variation or entropy score is computed given the nucleotide distribution for each position of the alignment. Low entropy regions are then analyzed for serving as primer templates and regions with high inter-species entropy as barcodes (Hadziavdic et al., 2014) . MSA approaches require the input data set to be small, phylogenetically close, and curated in order to produce meaningful alignments. Needless to say that in metagenomics this approach is only chosen post experimentum when analysing organism groups that turned out to be difficult to detect with PCR. Online tools like Primer Blast/Primer3 3 (Ye et al., 2012) take off the burden to locally set up a software system by providing primer searches as on online service. Users provide as input a GenBank accession or a FASTA file. NCBI's Primer BLAST uses Primer3 to design primer sequences and then submits a BLAST search against a user-provided file. Surprisingly, Primer Blast does not process files with multiple references and is therefore inapplicable in a metabarcoding setup.",
+            "cite_spans": [
+                {
+                    "start": 451,
+                    "end": 476,
+                    "text": "(Hadziavdic et al., 2014)",
+                    "ref_id": null
+                },
+                {
+                    "start": 821,
+                    "end": 838,
+                    "text": "(Ye et al., 2012)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "The Primer Search Tool 4 by Tusnady et al. (2005) uses a dynamic programming approach inspired by Kaempke et al. (2001) . When combining candidate sequences Kaempke et al. (2001) make use of the sequence overlap and re-use computations of the shared substring. The online tool allows the upload of files containing multiple references, but produces errors when header lines contain special characters or sequences contain ambiguous one-letter encodings. A file of 114 KB sequences took 40 seconds to be processed including network traffic 5 . It outputs primer pairs scored by chemical fitness, but does not optimize towards coverage or amplicon variation. PRIMEX (Lexa & Valle, 2004) is intended to provide querying as an online service. The tool performs internally a lookup of k-mers derived from the query string in a prepared library and allows for mismatches. Unfortunately, PRIMEX is currently not available and it is not capable of discovering new primer sequences 6 . One of the few standalone tools is FastPCR (Kalendar et al., 2017) . It supports a variety of PCR protocols and chemical checks. It first computes a hash table with k-mers grouped together by overlap into so called k-tuples with k being 7, 9, or 12 nt long. The derivation of these k-tuples is not described. In a second step, FastPCR uses a sliding window approach to search for matches between k-tuples and reference sequences. Upon match, individual k-tuples are extended in both directions. FastPCR has no preference for frequent k-mers -it is designed to work on single genomes. The authors are not aware of a primer discovery tool suitable for metabarcoding experiments where the aim is a high taxonomic coverage and barcode variation and the input is a directory or source file composed of thousands of reference sequences. Before we explain in detail the data structures and algorithm to solve the problem of primer discovery, we give definitions of some concepts that are essential to make our approach time-efficient.",
+            "cite_spans": [
+                {
+                    "start": 28,
+                    "end": 49,
+                    "text": "Tusnady et al. (2005)",
+                    "ref_id": null
+                },
+                {
+                    "start": 98,
+                    "end": 119,
+                    "text": "Kaempke et al. (2001)",
+                    "ref_id": null
+                },
+                {
+                    "start": 157,
+                    "end": 178,
+                    "text": "Kaempke et al. (2001)",
+                    "ref_id": null
+                },
+                {
+                    "start": 664,
+                    "end": 684,
+                    "text": "(Lexa & Valle, 2004)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1020,
+                    "end": 1043,
+                    "text": "(Kalendar et al., 2017)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "Definition k-mer. With k-mer we refer to a sub-sequence of length k as part of a biological text T . A sequence of length n contains n \u2212 k + 1 k-mers. For an arbitrary alphabet \u03a3, there exist |\u03a3| k different k-mers, i.e. for DNA 4 k unique k-mers. Since DNA is inherently structured, we do not expect k-mers to be uniformly distributed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "Definition (k, e)-frequency. The (k, e)-frequency counts for each of the n \u2212 k + 1 k-mers its frequency within the text T with up to e errors. For example, the (4, 0)-frequency of T = 4 http://bisearch.enzim.hu/?m=genompsearch 5 compared to 1 second by PriSeT (see Figure 6 ) 6 attempt of accession on 24th February 2020 http:// bioinformatics.cribi.unipd.it/primex AACGACGATGCAGTACGAT over \u03a3 = {A,C,G,T} is 7 : i 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 265,
+                    "end": 273,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "A A C G A C G A T G C A G T A C F4,0[i] 1 3 1 1 3 2 1 1 1 1 1 1 1 1 3 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "Definition FM-index. The FM-index is a substring index over a text. It is based on the Burrows-Wheeler transform and adds support data structures that facilitate navigation when searching for query strings. Its efficiency comes from the adjacent location of substrings having prefixes in common. A word of length k can be looked up in O(k) (Ferragina & Manzini, 2000) .",
+            "cite_spans": [
+                {
+                    "start": 340,
+                    "end": 367,
+                    "text": "(Ferragina & Manzini, 2000)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existing Approaches"
+        },
+        {
+            "text": "Given a text index i, the rank of a symbol \u03c3 \u2208 \u03a3, outputs the number of letters equal to \u03c3 until position i, including the text position i itself.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition rank."
+        },
+        {
+            "text": "i 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition rank."
+        },
+        {
+            "text": "1 0 0 1 0 1 1 1 1 0 1 0 0 0 1 rank1[i] 1 1 1 2 2 3 4 5 6 6 7 7 7 7 8 Definition select 1 . Inverse to the rank \u03c3 function, select \u03c3 outputs the index of the k-th occurrence of symbol \u03c3 in the text.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition rank."
+        },
+        {
+            "text": "i 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 T [i] 1 0 0 1 0 1 1 1 1 0 1 0 0 0 1 k 1 2 3 4 5 6 7 8 select1[k] 0 3 5 6 7 8 10 14",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition rank."
+        },
+        {
+            "text": "PriSeT operates in four steps:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm"
+        },
+        {
+            "text": "1. FM Index",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm"
+        },
+        {
+            "text": "Step. As a preprocessing, we compute the FM index on the complete corpus of all references. This needs only to be repeated when the references change.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm"
+        },
+        {
+            "text": "Step. We compute the FM frequency for k in range [\u03ba min : \u03ba max ] and report all those k-mers exceeding a threshold . 7 suffix of length three no displayed . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Step. For each k-mer we check the first set of constraints C s , which must hold independently.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FM Frequency"
+        },
+        {
+            "text": "Step. The remaining k-mers are combined reference-wise and checked for pair-wise fitting C p .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Combine"
+        },
+        {
+            "text": "In order to handle the vast amount of k-mers and k-mer combinations, we use space efficient data structures and data types like bit encoding schemes for k-mers and references, and apply filters at early stages to reduce the number of k-mers before forming combinations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Combine"
+        },
+        {
+            "text": "For indexing and k-mer report we use the recently published GenMap v1.0.1 by Pockrandt et al. (2019) . As library input GenMap accepts a FASTA file or directory of FASTA files. Once computed, the FM index is used to answer frequency queries for arbitrary values of k. We modified GenMap to accept a frequency threshold parameter to avoid temporary storage of low frequent k-mers (see GenMap fork 8 ). Algorithm 1 describes the call given GenMap's interface.",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 100,
+                    "text": "Pockrandt et al. (2019)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "FM Index Step"
+        },
+        {
+            "text": "Algorithm 1 FM index transformation of the library. 1: procedure FMINDEXING(Library) 2:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FM Index Step"
+        },
+        {
+            "text": "Having computed the FM index over the library, we can now submit queries with varying values of k. GenMap's frequency computation of k-mers is based on an algorithm described by Derrien et al. (2012) , but introduces runtime improvements by cutting redundant searches (Pockrandt et al., 2019) . GenMap provides location information of each k-mer by outputting the sequence identifier SeqID referring to the library sequence where a k-mer has been found and a relative position index SeqPos. These locations are collected in the Locations map (see Algorithm 2) with k-mers as keys and an occurrence vector as value.",
+            "cite_spans": [
+                {
+                    "start": 178,
+                    "end": 199,
+                    "text": "Derrien et al. (2012)",
+                    "ref_id": null
+                },
+                {
+                    "start": 268,
+                    "end": 292,
+                    "text": "(Pockrandt et al., 2019)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "FM Frequency Step"
+        },
+        {
+            "text": "Algorithm 2 K-mer frequency computation given FM index and frequency cutoff. return Locations",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FM Frequency Step"
+        },
+        {
+            "text": "Each k-mer has to pass a chemical filter which checks molecular property constraints (see C s in Table 2 ) that have to hold for single primers independent of possible matching partners. Applying the filter directly after the frequency step helps to reduce the number of k-mers by orders of magnitudes before running the combine procedure. The constraints C s that are currently checked by PriSeT are amplicon length range, melting temperature, CG content, mono-or dinucleotide runs, and self-annealing patterns (see Table 2 ). amplicon ranges are constricted, because we first need to ensure that reads will overlap for the read merging step in a metabarcoding pipeline, and secondly, reads are usually trimmed to the same length -a precondition for most OTU clustering algorithms. The melting temperature in a PCR corresponds to the state where half of the DNA duplexes will be dissociated. Only when template DNA is single stranded, primer sequences can bind and the enzymatically driven elongation can take place. The temperature for the denaturation phase can be adjusted, but too high temperatures will lead to irreversible damage of the ingredients. Another criterion for primers being not too associative to the template is their CG content. Not only are C-G bonds twice as strong as A-T bonds, they are also more prone to mis-pairing. The recommended range is 40 -60 % in proportion to their length. Mono-or dinucleotide runs are patterns where a single nucleotide or dinucleotide occurs consecutively repeated, i.e. \u03c3 x or (\u03c3 1 \u03c3 2 ) x with \u03c3 \u2208 \u03a3, \u03c3 1 = \u03c3 2 , and x \u2208 N . These patterns tend to misprime. A maximal accepted number is four. Self-annealing (or self-dimerization) occurs when copies of a primer form stable dimers. If their binding energy is relatively high, a significant amount will rather bind to primers than to the template and thereby deteriorating template am-. CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint plification. The free Gibb's energy is a measure for the bond strength. It numbers the energy that is released during bond formation and should not be below -6 Jmol \u22121 . The amount depends on the positions and types of nucleotides involved, and can only be determined precisely via experiments. When looking at an alignment of two oligomers or primers, as a rule of a thumb, there should be not more than four annealing nucleotides in a row (connected annealing pattern) or not more than 50 % of the sequence (disconnected annealing pattern) involved in the bonding as shown in Figure 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 97,
+                    "end": 104,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 517,
+                    "end": 524,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 2695,
+                    "end": 2703,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Filter Step"
+        },
+        {
+            "text": "The second set of constraints, C p , is used when evaluating primer pair candidates. One k-mer will be determined to be the forward primer on the minus strand from 5' to 3' direction, and the second k-mer the reverse primer on the plus strand. As mentioned earlier, denaturation and annealing phase temperatures can be adjusted, but we need to ensure that roughly the same amount of forward and reverse primers are dissociated to produce similar amounts of PCR products by allowing not more than five Kelvin differences in their melting temperatures. GC clamp refers to the amount of CG in the 5'-end of a primer. Especially at the 5'-end where the elongation takes place, a primer should bind stably, but not too strongly. Since C and G bind twice as strong as A or T, ideally one or two nucleotides should be C or G, but the last three should not be exclusively A or T (AT tail). For example, \u00b7 \u00b7 \u00b7 CGATA-3 and \u00b7 \u00b7 \u00b7 CGTCA-3 are not suitable, whereas \u00b7 \u00b7 \u00b7 AGTCA-3 is a suitable primer tail. Cross-annealing refers to the tendency that forward and reverse primer sequences form dimers (see Figure 1 b) and d)). The guidelines for avoidance are analogous to ones for self-annealing. The implementation of the constraint checks is described in more detail in the subsequent sections. Table 2 . Chemical Constraints for k-mers. The first set of constraints Cs applies to k-mers irrespective of their later orientation (forward or reverse). The second set of constraints Cp depends on the final orientation and the k-mer matching partner. Cs is applied in the filter & transform step and Cp checks in the combine step. not more than 4 same nt in a row Dinucleotide Repeats not more than 4 dinucleotides Self-annealing less than four consecutive nts and less than 50 % bond participation",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1092,
+                    "end": 1100,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1284,
+                    "end": 1291,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Filter Step"
+        },
+        {
+            "text": "Cp \u2206Tm 5 AT tails avoid (A|T)3 tails CG clamp not more than 3 out of 5 nts at 3' end are CG Cross-annealing less than four consecutive nts and less than 50 % bond participation",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Filter Step"
+        },
+        {
+            "text": "The initial amount of k-mers is quite large -up to O((n \u2212 \u03ba min )(\u03ba max \u2212 \u03ba min )) k-mers per reference sequence. For example, the Cryptophyta clade with a library size of 2 MB produces 3.8 million of k-mers 9 . We reduce space occupancy by not storing character strings, but a single unsigned 64 bit integer that holds multiple k-mers sharing the same prefix and location index. For quickly accessing k-mer positions, we use bit vectors in the length of the reference sequences. The next subsections describe in detail the encodings and how we apply the above described chemical constraints as filters on these encodings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Filter Step"
+        },
+        {
+            "text": "When computing the k-mer frequency with varying values for k, one notices that for a specific position i in a reference R, it is likely that we will yield many k-mers of different lengths which successfully passed the frequency filter and start at the same index. In fact there are up to \u03ba max \u2212 \u03ba min + 1 many k-mers for the same location index. We introduce the TKMerID data type stored in a uint64_t, which primarily encodes the longest k-mer found at a specific text position (see Figure 3 ). We use the two bit encoding scheme shown in Table 3 . The reduction to the four basic nucleotides is justified by the observation that substrings containing ambiguous nucleotides are meaningless, since a single mismatch between primer and template may lead to an amplification failure. The two-bit encoding scheme has the property that taking the complement of the integer produces its DNA complement. We use this property to implement a k-linear time annealing test. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 485,
+                    "end": 493,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 541,
+                    "end": 548,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "ENCODING OF K-MERS"
+        },
+        {
+            "text": "The encoding consumes two bits per DNA base. Having at most \u03ba max = 25 nucleotides in a k-mer, 2 \u00d7 25 bits are consumed to store the longest accepted k-mer. We add two closure bits 01 to indicate the head of a k-mer. A prefix of As (00 x ) would be ignored (or over-counted) otherwise. The at most 2 \u00d7 25 + 2 bits are stored in little-endian ordering in the suffix of a TKMerID. Two bits of the suffix will remain unused. The various lengths represented by a single TKMerID are stored in the preceding 10 bits. The j-th 9 after applying a frequency cutoff of 5 % . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint highest bit corresponds to k = \u03ba min + j \u2212 1 (see Figure 3 ). Whenever we analyse the chemical properties of the encoded k-mers, we first mask out the prefix and then process the sequence starting with the lowest two bits. If a chemical constraint is not fulfilled for some k , we only delete the prefix bit that corresponds to length k . As long as the prefix is non-zero, we keep processing that TKMerID as a candidate primer.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 839,
+                    "end": 847,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "ENCODING OF K-MERS"
+        },
+        {
+            "text": "After the FM index computation, the original reference sequences are only needed once to lookup and encode frequent k-mers (see Filter Step). However, when combining k-mer candidates to form pairs, we need location informationbecause k-mers need to refer to the same reference and have to be in an offset range of [\u03c4 min : \u03c4 max ] nt. We use two data structures per reference -a list to store the set of TKMerIDs in order of occurrence and a compact data structure in form of a bit vector B in the length of the last k-mer occurrence. A set bit indicates the presence of a TKMerID. I.e., the i-th set bit in B corresponds to the i-th TKMerID in the KMerIDs list. The compact data structure is augmented with rank 1 and select 1 support, which have O(1) runtime for queries 10 . Figure 3 illustrates the k-mer combination search over the transformed reference.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 778,
+                    "end": 786,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "ENCODING OF K-MER LOCATIONS"
+        },
+        {
+            "text": "After having transformed the frequent k-mers into TKMerIDs, each k-mer it represents needs to satisfy a set of constraints which must hold independently (see constraint set C s in Table 2 ). All these constraint filters process 10 Concretely, we use the sdsl::bit_vector by Gog et al. (2014) combined with sdsl::rank_support_v5 and sdsl::select_support_mcl occupying at most 0.0625n, and 0.2n extra bits, respectively (Vigna, 2008; Clark, 1998) . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Figure 3 . Encoding of TKMerID locations. Relative to a reference R PriSeT utilizes a sdsl::bit_vector with rank1 and select1 support in O(1). In this example the reference from which the bit vector originates from, has k-mers starting at the indices 0, 2, 3, 6, and so forth. Note, that in practice, we omit storing trailing zeros and the length of the bit vector corresponds to the position of the last k-mer occurrence. When searching for possible k-mer combinations to produce forward and reverse primer pairs, we have to parse for each forward TKmerID at a position i the window [i + \u03bamin + \u03c4min : i + \u03bamax + \u03c4max].",
+            "cite_spans": [
+                {
+                    "start": 274,
+                    "end": 291,
+                    "text": "Gog et al. (2014)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 418,
+                    "end": 431,
+                    "text": "(Vigna, 2008;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 432,
+                    "end": 444,
+                    "text": "Clark, 1998)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 180,
+                    "end": 187,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 671,
+                    "end": 679,
+                    "text": "Figure 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "TKMerIDs linearly. For computing the melting temperature we use the Wallace rule which simply combines AT and CG counts linearly:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "If for a length k l the melting temperature exceeds Tm max , we can reset all length bits corresponding to lengths larger or equal to k l , because Tm grows monotonously with the length of the sequence. We count the nucleotides by comparing the last two bits with the single nucleotide codes (see Table 3 ), and then apply a right shift of two until we reach the closure bit. The CG count can then directly be used to check for the CG content, which is recommended to be in the range of 40-60 %. However, since the CG content is relative to the sequence length, we have to check it for all encoded lengths of a TKMerID. Patterns like mono-or dinucleotide runs are detected by comparing tailing bits of the code with the two-bit encoded patterns. For example, code to detect five consecutive cytosines:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 297,
+                    "end": 304,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "uint64_t tail = (0b1111111111 & code); bool has_run = (tail == 0b0101010101);",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "These patterns can be infixes of a k-mer. We therefore apply a right shift and comparison iteratively until 10 bits remain. In a similar fashion we proceed for dinucleotide runs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "With regard to our encodings, self-annealing can be determined by checking the shiftings of the original sequence against itself and its reversed copy (cross-annealing is analog). There are at most 2\u03ba max \u22122\u00b78 possible alignments and for each alignment we apply the \u2295 (XOR) operator to translate complementary nucleotides into 0b11 blocks. Critical self-annealing patterns then correspond to eight consecutive set bits starting at an even position, or an occurrence count of 0b11 exceeding k/2. In both cases, the presence can be detected in O(1) by counting bits in parallel and masking bits at indices of power of two in three steps.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "Algorithm 3 puts together the previously described encodings of k-mers and their locations. TKMerIDs need to be in order of occurrence, but k-mers are not processed in order. The strategy is to first set bits in the reference bit vector for k-mers, secondly to determine which values of k occur at a specific index, and thirdly, to fill the TKMerID vector.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FILTER C s FOR SINGLE K-MERS"
+        },
+        {
+            "text": "In the final combining step, we form pairs of two k-mers if they satisfy the second chemical constraint set C p (see Table 2 ). We add rank 1 and select 1 support on every B \u2208 B to directly access single k-mer locations in O(1). When iterating over TKMerIDs, select 1 gives us its position index relative to the reference sequence. The search window of combinable reverse primers is then accessed by adding the amplicon length range. Again we apply rank 1 on the window indices to address the associated TKMerIDs in the list (see Algorithm 4). Pairs satisfying the matchability constraints C p are output and can be ranked by coverage or barcode variation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 117,
+                    "end": 124,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "K-mer Combiner"
+        },
+        {
+            "text": "We evaluated two scenarios for PriSeT. We applied PriSeT on an explicitly uncurated data set (data set for plankton) of short sequences (mostly 18S) taken from large clades to compute primer pairs exhibiting a large taxonomic coverage, and on complete viral genomes (SARS-CoV-2 genomes) to compute primer pairs producing species-distinctive amplicons. As a proof of concept test we additionally searched the primer result set on plankton data for primer pairs used in previous metabarcoding studies. At last, PriSeT's runtime . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Algorithm 3 Lookup and encoding of DNA k-mers and references. First the last k-mer occurrence for each reference is determined and a new bit vector instance resized accordingly. Each location L from the input map is associated with a concrete value for k and a list of occurrences represented as tuples of sequence identifiers and positions. The number of bit vector transformed references is referred to as n. In the first loop (line 4-6) bits are set in the bit vector for each kmer occurrence. The second loop (line 8-12) composes the prefix by accumulating the length bits. The third loop (line 13-24) does the sequence lookup for the largest k occurring at a specific position. return Pairs was analized on the plankton data set.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "As a reference library, we sampled from NCBI GenBank's nt dataset (Benson et al., 2012) 11 , which contains non-human sequences from various sources. The prevalent sequence length range is between 400 to 2500 bases. We picked 19 clades that include Eukarya typically found in freshwater plankton samples ranging from phyto-to zooplankton and fungi. For each taxon within a clade that contained at least one accession assigned to it, we sampled at most three accessions to remove the sequence bias introduced by highly populated taxa. Table 4 lists the clades, the number of taxa, taxa with at least one accession (Covered), the total number of accessions and the library size in megabytes (MB). Between 1.38 (Rotifera) to 2.5 (Charophyceae) accessions were sampled from covered nodes, which indicates the sparse population of the reference library. The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Table 4 . Data set used for the primer verification test, the de novo search, and the runtime analysis. Taxonomic identifiers in the clade column follow the NCBI nomenclatura, Taxa refers to the total number of nodes (including virtual ancestors), Covered the number of taxa having at least one accession assigned to it, Accs to the total number of collected accessions and Lib Size to the size of the fasta file containing all accessions. trained experts. Their role in ecosystem function and for environmental monitoring and water quality assessment cannot be underestimated -they contribute approximately 20 % of global oxygen production and represent nearly half of the organic material in the oceans. The DIV4 primer pair (see Table 5 ) was specifically designed for Bacillariophyta by Visco et al. (2015) with an expected amplicon length of \u223c280 nt. Hadziavdic et al. (2014) Stoeck et al. (2010) for the V9 region of marine Eukaryota, EUKAF/R by Moreno et al. (2018) for the 18S region of Protozoa (EA hereafter), G18S4/22R by Blaxter et al. (1998) for Nematoda (nSSU hereafter), and SSU556F/SSU911R by Kirsty et al. (2017) for Dinoflagellata (SSU hereafter). Some of these primers were designed with respect to a specific organism group, however, it is expected that they are also effective in other clades. Table 5 lists the 10 selected primer pairs targeting 18S that we searched for in the reference library. It is remarkable that not a single pair has chemically optimal properties. At least one sequence of a pair shows a self-annealing pattern, seven pairs differ significantly in melting temperatures (independent of computation method, i.e. Wallace rule or nearestneighbour method), three sequences have CG clamps at their 3' ends, eight sequences have exceeding CG contents, 23S forward contains a run of five adenine bases (R substitutes A or G), and SSU911R has an (A|T) 3 tail. We therefore relaxed the chemical constraints for the verification experiment by allowing a larger melting temperature range and difference in \u2206Tm, a larger CG content range, and we deactivated the self-annealing filter (see column 'Verification' in Table 6 ).",
+            "cite_spans": [
+                {
+                    "start": 66,
+                    "end": 87,
+                    "text": "(Benson et al., 2012)",
+                    "ref_id": null
+                },
+                {
+                    "start": 88,
+                    "end": 90,
+                    "text": "11",
+                    "ref_id": null
+                },
+                {
+                    "start": 1782,
+                    "end": 1801,
+                    "text": "Visco et al. (2015)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1847,
+                    "end": 1871,
+                    "text": "Hadziavdic et al. (2014)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1872,
+                    "end": 1892,
+                    "text": "Stoeck et al. (2010)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1943,
+                    "end": 1963,
+                    "text": "Moreno et al. (2018)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 2024,
+                    "end": 2045,
+                    "text": "Blaxter et al. (1998)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 2100,
+                    "end": 2120,
+                    "text": "Kirsty et al. (2017)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 534,
+                    "end": 541,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 991,
+                    "end": 998,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1723,
+                    "end": 1730,
+                    "text": "Table 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 2306,
+                    "end": 2313,
+                    "text": "Table 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 3138,
+                    "end": 3145,
+                    "text": "Table 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Data Set for Plankton"
+        },
+        {
+            "text": "Given the sampled library, we first computed the ground truth by searching directly for the known primer sequences. We used a simple linear text search and marked all data sets having at least one accession with forward and reverse . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Table 5 . Selected primer sequences for the verification experiment. Sequences are noted in 5' to 3' direction. Melting temperatures are computed using a modified nearest-neighbor method described by Breslauer et al. (1986) assuming a primer concentration of 0.5 \u00b5m and salt 50 mM. For ambiguous encodings, the average of both extrema is computed. Sequence parameters violating primer design recommendations are written bold. Critical structures are marked: self-annealing (\u03b1), mononucleotid runs (\u03b2), CG clamps (\u03b3), exceeding \u2206Tm (\u03b4), (A|T)3 tails ( ), and exceeding CG content ranges (\u03b3). (1) or absence (0) bit in the denominator of each cell in Table 7 . We then ran PriSeT with the relaxed constraints listed in the Verification column of Table 6 and searched its result set for the published primers listed in Table 5 . We indicated their presence or absence in the nominator. We could recover all those primer sequences that satisfied the relaxed constraints. The forward primer of DIV4, and both primers of CV did not pass the relaxed Tm filter (above 65 \u2022 C) and failed therefore for C s , and the primer pairs E15 and EA failed for C p because of their excessive differences for Tm (more than 8 Kelvin).",
+            "cite_spans": [
+                {
+                    "start": 658,
+                    "end": 681,
+                    "text": "Breslauer et al. (1986)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 458,
+                    "end": 465,
+                    "text": "Table 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 1107,
+                    "end": 1114,
+                    "text": "Table 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 1202,
+                    "end": 1209,
+                    "text": "Table 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 1274,
+                    "end": 1281,
+                    "text": "Table 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Verifying Established Primer Pairs for Plankton"
+        },
+        {
+            "text": "To yield chemically uncritical primer pairs, we reset the constraints to the recommended ranges (see column 'De Novo' of Table 6 ) and reported the 50 most frequent k-mer pairs for each clade (labeled with hash values computed from forward and reverse sequence). We additionally computed frequency, coverage, and variation for the published primers (Table 5 ) via text search without that they underwent PriSeT's filtering.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 121,
+                    "end": 128,
+                    "text": "Table 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 349,
+                    "end": 357,
+                    "text": "(Table 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "De Novo Computation for Plankton"
+        },
+        {
+            "text": "The de novo and published primer result sets were either ranked by taxon coverage (columns 2-4 in Table 8 ) or by amplicon variation (columns 5-7 in Table 8 ). From the de novo set and the published primers set, we reported only the highest ranked ones. For example, for Charophyceae (clade 304574), the highest ranked primer by coverage is d8d47dc9b873d02b -a de novo computed primer, and the highest ranked published primer is EUK14. In the joint set, however, there are more de novo primer pairs that have a higher rank than EUK14, but are not reported here for the sake of briefty. When ranking by coverage, for 11 out of 19 clades a de novo primer outperformed all published primers. Since coverage optimizes towards broadness and variation towards amplicon distinguishability, we expect that the top primers for the two ranking methods may differ. In 14 out of 38 cases the top primers of the de novo or published sets are identical. In 24 cases higher variation is paid with lower coverage and vice versa. When ranking by number of unique amplicons (variation), we could identify seven de novo primers that performed equally well (see Table 8 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 98,
+                    "end": 105,
+                    "text": "Table 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 149,
+                    "end": 156,
+                    "text": "Table 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 1142,
+                    "end": 1149,
+                    "text": "Table 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "De Novo Computation for Plankton"
+        },
+        {
+            "text": "In spite of the reference sparsity and sequential diversity -references not only come from 18S, but other genomic regions, PriSeT could identify for some clades new primer pairs that fit chemically while having a greater coverage or variation. Because of the known problem of data sparseness for plankton clades and the obvious fact that GenBank's reference sequences stem from PCR amplicons with already published primer sets, we had lower expectations. Published primers outperform de novo primers by at most 7 %, and de novo the published ones by at most 70 % for coverage. However, there may exist other performant primer pairs for specific clades that we are not aware of. We chose the most promising ones found in the PR2 database 12 . We also tested EUKA/B from Medlin et al. (1988) , Cerc479F/Cerc750R by Harder et al. (2016) , and DimA/DimB by Cannon et al. (2018) , which either did not show up or they occurred with very low frequencies.",
+            "cite_spans": [
+                {
+                    "start": 769,
+                    "end": 789,
+                    "text": "Medlin et al. (1988)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 813,
+                    "end": 833,
+                    "text": "Harder et al. (2016)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 853,
+                    "end": 873,
+                    "text": "Cannon et al. (2018)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "De Novo Computation for Plankton"
+        },
+        {
+            "text": "From the published primer set EUK14 and EUKA seem to be very versatile primer pairs. However, they do not satisfy C s or C p and might require more experience when applied in a PCR. The complete list of top performing primers is available on GitHub 13 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "De Novo Computation for Plankton"
+        },
+        {
+            "text": "We selected 19 complete SARS-CoV-2 genomes 14 from the subgenus Sarbecovirus for PriSeT to compute primer pairs satisfying the RT-PCR constrains listed in Table 6 . The single genome size was roughly 30,000 bp. In order to filter for primer pairs producing amplicons with no occurrences in other Orthocoronavirinae genomes, we selected all available genomes from GenBank -24 Alphacoronavirus, 5 Betacoronavirus (excluding Sarbecovirus), and 2 Gammacoronavirus genomes (see Figure 4 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 155,
+                    "end": 162,
+                    "text": "Table 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 473,
+                    "end": 481,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Dataset for SARS-CoV-2"
+        },
+        {
+            "text": "PriSeT produced 286 primer pairs. We subsequently filtered for those producing sequences that cannot be found in one of the other 39 coronavirus genomes based on a 100 % sequence identity. For the 114 remaining primer pairs, we ensured amplicon distinction by launching two BLAST queries for each of the 114 amplicons against GenBank's 12 https://pr2-database.org 13 https://github.com/mariehoffmann/PriSeT_ denovo 14 Downloaded from GenBank on 3rd April 2020. Concrete accession identifiers can be requested from the first author.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Table 7 . Primer presence test for established primer pairs. x/y refers to found by PriSeT (x = 1) or not (x = 0) versus found in the library (y = 1) or not (y = 0). Primers not discovered by PriSeT did not pass either the first chemical filter set Cs (labeled with * ) or the pair filter set Cp (labeled with * * ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 226,
+                    "end": 233,
+                    "text": "Table 7",
+                    "ref_id": null
+                }
+            ],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": "Clade 23S CHL CV * DIA DIV4 * E14 E15 * * EA * * nSSU SSU Phytoplankton 33849 1/1 0/0 0/0 1/1 0/1 1/1 0/1 0/1 1/1 1/1 304574 1/1 0/0 0/0 0/0 0/0 1/1 0/1 0/1 0/0 1/1 3041 1/1 1/1 0/0 1/1 0/0 1/1 0/1 0/1 1/1 1/1 2825 0/0 0/0 0/0 1/1 0/1 1/1 0/1 0/1 1/1 1/1 3027 1/1 0/0 0/0 0/0 0/0 1/1 0/1 0/1 1/1 1/1 2864 1/1 0/0 0/1 1/1 0/1 1/1 0/1 0/1 1/1 1/1 33682 1/1 0/0 0/0 0/0 0/0 1/1 0/1 0/0 0/0 0/0 5747 1/1 1/1 0/0 1/1 0/0 1/1 0/1 0/1 1/1 1/1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": "Zooplankton 554915 The numbers indicate how many complete genomes were used for the primer de novo search of each subgenus. From the Sarbecovirus subgenus all 19 genomes are assigned to the species SARS-CoV-2. Their proximity to Bat SARSr-CoV (another Sarbecovirus) was observed in the amplicon analysis (see experimental section.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": "nucleotide collection (nt/nr) online 15 . The first query was run on the complete nt/nr data set and the second on the complete nt/nr data set except SARS-CoV-2 (taxid 2697049) to ensure that we did not miss relevant matches with non SARS-CoV-2 entries. None of the primer pairs produced amplicons with 100 % identity and 100 % coverage for non Sarbecoviruses. Of the 114 primer pairs 5 pairs had 100 % sequence identity with a single accession of a Sarbecovirus isolated from the 15 on 3rd of April 2020 pangolin, but no other relevant matches. There were 109 primer pairs producing amplicons with no other occurrences. Out of the 109 primer pairs, there were 12 pairs with amplicons that were distant from even closely related viruses, i.e. sequence identity < 97 %, and 97 had a proximity (but not identity) to at most two other accessions, namely, two Sarbecovirus species isolated from a bat and the pangolin. The first one is associated with the recent pneumonia outbreak (Zhou et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 978,
+                    "end": 997,
+                    "text": "(Zhou et al., 2020)",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": "The complete list of primer sequences, amplicons, and comments about closest matches can be found in the supplements (primer_priset_covid19.csv). The approximate amplicon locations relative to the genome are shown in Figure 5 . For the sake of brevity only the first four digits of the primer identifier (first column in corresponding file) is noted down.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 217,
+                    "end": 225,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "De Novo Computation for SARS-CoV-2"
+        },
+        {
+            "text": "For each clade we measured the step-wise runtimes and the total runtime excluding the FM index computation (see Figure 6 ). The index computation needs to be done only once and upon updates of the original library. For our data set, the FM index consumed about 4.2 times more space than the library it is computed on.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 112,
+                    "end": 120,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Performance on Plankton Data Set"
+        },
+        {
+            "text": "We set the relative frequency cutoff to 5%. The number of k-mer locations grows therefore linearly with the library size. We have chosen not to show the performance on a synthetic data set, because k-mer frequencies and dropout . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Table 8 . De novo computation and statistical comparison with published primers ranked by Coverage (left) or Variation (right). Of both sets the top performing primer pair in terms of coverage or variation were picked. Frequency reflects the raw number of occurrences in the clade, whereas Coverage computes how many taxa of each clade were covered in proportion to taxa with references, and Variation the total number of amplicons. Note, that PriSeT computed primer pairs with narrowed constraints -primer pairs like SSU, EUKA, etc., would not emerge in the result set (see Table 6 ). When ranking by coverage, for 11 out of 19 clades PriSeT identifies at least one new primer pair with a higher coverage rate than the published primers. Whereas when ranking by amplicon variation for seven out of 19 clades PriSeT found at least one more or equally performant primer pair. . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint rates are defined by inherent sequence properties (entropy, repeats, etc.), which are obviously not homogeneous over all clades. A single clade or synthetic data set would produce non-representative, and even misleading results. For example clade 6657 has a library being 7 MB larger than the one of clade 3041. Surprisingly, clade 6657 produces only 4.83 million k-mers, compared to 43,9 million k-mers of clade 3041 (see Figure 7 ). For the largest data set (clade 451864 of Dikarya), we had to raise the frequency cutoff to 10 %, for not running into memory issues caused by the vast amount of k-mers (see Discussion 5). We sorted the data sets by size (abscissa) and log 2 -scaled abscissa and ordinate for readability. The total runtime for the smallest data set Perkinsidae (clade 27999 with 0.13 MB) is \u2264 1 second, for Fungi (clade 112252 with 10.21 MB) 33 seconds, and for a large dataset like Nematoda (clade 6231 with 82.55 MB) 70 min. The frequency computation contributes the most to the total runtime. This is due to the large number of possible k-mers within a library. After the filter & transform step the number of k-mers is reduced drastically, s.t. the expensive combine step with a runtime in the size of all k-mer positions times the window size remains relatively low. The k-mer dropout rate during filter & transform and combine is highly dependent on the sequence structure within the clades as indicated by the non-linearity of filter & transform and combine runtimes in proportion to the original library size. Theoretical upper limits can be seen in Table 9 . The frequency computation performs a single k-mer look-up in O(k) where k is the length of the k-mer to be looked up. Additionally, all occurrence locations need to be gathered, which depend on the number of occurrences occ and the total library length N . This can be done in O(k + occ) by exploiting the lexicographical ordering of the index (Ferragina & Manzini, 2000) . Taking into account at most N \u2212 k + 1 different k-mers, the upper limit is O(N (k + occ)) (see Table 9 ). All chemical filters in the filter & transform step analyse the encoded sequences in a single-or multi-pass fashion. Some require simple counting (Tm, CG content) or pattern match (dinucleotide runs, (A|T) 3 tails). The most complex one is the self-annnealing filter in which a k-mer is shifted at most 2k times and XORed against its complement or reverse complement. The identification of a connected self-annealing pattern of size four (corresponding to a 0b11111111 pattern) can be done in constant time by using bit parallelism (see code on GitHub for details). Filtering is done on at most N k-mers, giving us a total runtime of O(kN ). For storing the bit vector transformed references, and the ranked TKmerIDs we need O(N ) space. During the combine step we additionally store matching k-mers. A reference has an expected length of N n bases. For each forward k-mer we search with an offset of \u03c4 min a candidates' window of size \u03c4 max \u2212 \u03c4 min . Hence, we have at most O(( N n \u2212 \u03c4 min )(\u03c4 max \u2212 \u03c4 min )) pairs per reference (\u03ba min , \u03ba max are dropped here). For each pair a matchability check is done linear in the expected length of the two k-mers, i.e. in O(k) (see C p in Table 2 ). Altogether we have n references, giving us a total combination runtime of O(nk( N n \u2212 \u03c4 min )(\u03c4 max \u2212 \u03c4 min )). Space occupancy is linear for the FM index, frequency, and filter & transform steps. Per text position we use at most one 64 bit unsigned integer independent of how many k-mers with varying lengths occur at a specific position (see compression scheme described in Section 3.3.1) and",
+            "cite_spans": [
+                {
+                    "start": 3486,
+                    "end": 3513,
+                    "text": "(Ferragina & Manzini, 2000)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 454,
+                    "end": 461,
+                    "text": "Table 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 1029,
+                    "end": 1036,
+                    "text": "Table 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 1978,
+                    "end": 1986,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 3132,
+                    "end": 3139,
+                    "text": "Table 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 3611,
+                    "end": 3618,
+                    "text": "Table 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 4803,
+                    "end": 4810,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Performance on Plankton Data Set"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint bit vectors for location encoding in the length of the library (see Section 3.3.2). In the filter & transform step k-mers get cancelled out by resetting length bits in the prefixes of the k-mer codes; no additional space is required. When finally combining the remaining set of k-mers, we have up to O(n( N n \u2212 \u03c4 min )(\u03c4 max \u2212 \u03c4 min )) many pairs as described above in detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance on Plankton Data Set"
+        },
+        {
+            "text": "Despite the reference database has a low sequence coverage for plankton taxa, we found some new primer pairs offering a larger coverage or barcode variation than published ones and are chemically suitable for a paired-end PCR (see Table  2 ). PriSeT correctly output primer pairs that are known to be present in the library if and only if they pass the constraint sets C s and C p (see Table 2 ). When having complete genomes available for primer discovery too many candidates are produced and it is necessary to narrow down the primer sequence constraints or filter in a post-processing step, e.g., for pairs producing amplicons that are distinctive or span exons. The experiments showed that when searching primer pairs for metabarcoding experiments, it is appropriate to use frequency as an initial filtering heuristic. Only k-mers occurring with a minimum frequency will later satisfy sufficient coverage or amplicon variation. The FM index is a transformation that supports frequency queries with lower costs compared to a seed-and-extend approach, e.g. FastPCR by Kalendar et al. (2017) , or a MSA-based approach, which requires manageable data sets in order to identify conserved regions serving as primer binding sites. None of the existing primer search tools that we found is capable of processing multi-sequence libraries and optimizing for frequent primer pairs at the same time. PriSeT is built to fill this gap. Its heuristic approach additionally avoids the necessity to curate an existing library and makes it robust against mislabeled or poor quality references. This in turn gives users more resources to focus on the actual analysis. With sinking costs of NGS, databases are growing on a daily basis, making curation even infeasible and with regard to the sparseness of some clades, we cannot afford to exclude resources. Since GenBank has no standard specification for labeling sequences by their origin upon upload (e.g. as 18S or COI), our sampling approach also collected non-18S sequences, which explains the relatively low values for coverage and amplicon variation. When a user evaluates PriSeT's computed primer pairs and their statistics, the heterogeneity of the database has to be taken into consideration. The PriSeT version at hand does not include coverage or amplicon variation criteria into the filtering for not limiting options -the benefit of a higher coverage is in many cases paid with a lower number of distinct reads (see results in Table 8 ). We leave it up to the user to decide when coverage is favored over amplicon variation and vice versa. However, the recent coronavirus outbreak demonstrated the importance of scenarios where the goal is to yield barcodes being discriminators of clades.",
+            "cite_spans": [
+                {
+                    "start": 1070,
+                    "end": 1092,
+                    "text": "Kalendar et al. (2017)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 231,
+                    "end": 239,
+                    "text": "Table  2",
+                    "ref_id": null
+                },
+                {
+                    "start": 386,
+                    "end": 393,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 2475,
+                    "end": 2482,
+                    "text": "Table 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "PriSeT operates batch-wise, i.e. all k-mers with frequencies exceeding are collected at once into a single data structure, filtered chemically, and combined reference-wise. To give an example, Dikarya from the Fungi realm (clade 451864) produces 119.4 million k-mers. The main memory occupation of the location map received from GenMap represents the current bottleneck of PriSeT. Processing libraries beyond 500 MB is currently only feasible when increasing the k-mer frequency cutoff, s.t. not more than roughly 120 million k-mers (\u2248 1 Gigabyte) are produced 16 . In a future PriSeT version this can be tackled by interweaving k-mer frequency and filtering: a frequent k-mer immediately undergoes filtering, and is only collected when satisfying the frequency threshold and constraint set C s . This reduces the overall amount of temporarily stored k-mers. Input libraries composed of multiple reference sequences would additionally profit from reference-wise partitioning approach. This strategy can be carried on to the combine step, since k-mers are only combinable if they refer to the same sequence; each of the references is processible in parallel. The current version of PriSeT does not use any thread or process parallelism. The computationally most expensive part of PriSeT is the combine step with a runtime quadratic in N where the window size plays in. It is therefore important to set the target read lengths sizes as tight as possible (see Table 9 ). Stable binding of primer to template is crucial for the success of a PCR. A single mismatch, especially at the 3'-end, may result in an ineffective PCR. On that account PriSeT is using the (k, 0)-frequency to gather only k-mer locations with 100 % sequence identity. A future version of PriSeT may allow for up to four errors e (or mismatches) for primer sequences in case there are calls for it. When allowing errors, a single k-mer occurrence is counted into all location collections associated to k-mers with Hamming distances \u2264 e. This has a huge impact on the collection sizes and will have to be chosen carefully. In metabarcoding we are sometimes interested in primer pairs enclosing barcodes which allow guaranteed distinction of species from clade X from species of another clade Y. If we take as an example the recent SARS-CoV-2 outbreak, one question is, given a sputum sample of a person with flu-like symptoms, does it contain viruses of influenza or corona? We do not want the test to produce false negatives, 16 exemplary for a desktop computer with 16 GB RAM . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint Figure 6 . Runtimes for all clade data sets broken down to frequency computation, filter & transform, and combine step. The k-mer frequency cutoff was set to 5% w.r.t. the number of references per clade. The results for Fungi (clade 451864, 500 MB large) are omitted here due to the necessity of setting the cutoff to 10%, which results in runtimes comparable with clade 6231 (82 MB). Both axes are log 2 -scaled. Figure 7 . K-mer Counts for all clade data sets broken down to frequency computation, filter & transform, and combine step. K-Mers for all clade data sets counted after the frequency computation, filter & transform, and combine steps. For the combine step pairs are counted, not k-mers. The settings are the same as for Figure 6 . Table 9 . Runtime classes and space occupation module-wise with N as the total library size, n the number of references per library, \u03bamax the largest k-mer length, \u03c9 the window width, and \u03c4 the amplicon length. . CC-BY-NC-ND 4.0 International license author/funder. It is made available under a The copyright holder for this preprint (which was not peer-reviewed) is the . https://doi.org/10.1101/2020.04.06.027961 doi: bioRxiv preprint because the variant is either not sequenced yet or the amplicon has a critical sequence proximity to other viruses. For the de novo computation for SARS-CoV-2 submitted online BLAST queries to assure that we access all sequences currently available to GenBank. For a better workflow this feature can be implemented into PriSeT via the NCBI's Entrez Programming Utilities.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1457,
+                    "end": 1464,
+                    "text": "Table 9",
+                    "ref_id": null
+                },
+                {
+                    "start": 2769,
+                    "end": 2777,
+                    "text": "Figure 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 3183,
+                    "end": 3191,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 3503,
+                    "end": 3511,
+                    "text": "Figure 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 3514,
+                    "end": 3521,
+                    "text": "Table 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Outlook"
+        },
+        {
+            "text": "Top 1 list of de novo sequences per clade computed by PriSeT. All chemical sequence properties are within the constraints listed in Table 2 . A more comprehensive list (most 50 frequent primer pairs) can be found on GitHub.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 132,
+                    "end": 139,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Additional Files"
+        },
+        {
+            "text": "De novo primers for SARS-CoV-2 satisfying RT-PCR constraints and producing theoretical amplicons with no occurrences outside the Sarbecovirus subspecies. The computation is based on 19 SARS-CoV-2 genomes and the amplicon checks were done online against GenBank's nr/nt data set.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary File -S2_Primers_PriSeT_SARS-CoV-2.csv"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A molecular evolutionary framework for the phylum nematoda",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Blaxter",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ley",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Garey",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "X"
+                    ],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Scheldeman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vierstraete",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vanfleteren",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mackey",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dorris",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Frisse",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Vida",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "Nature",
+            "volume": "392",
+            "issn": "",
+            "pages": "71--76",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/32160"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Strengths and biases of high-throughput sequencing data in the characterization of freshwater ciliate microbiomes",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Boscaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rossi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Vannini",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Verni",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Fokin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Petroni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Microbial Ecology",
+            "volume": "73",
+            "issn": "",
+            "pages": "865--875",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s00248-016-0912-8"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Predicting dna duplex stability from the base sequence. Proceedings of the National Academy of Sciences of the United States of America",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Breslauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Bl\u00f6cker",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Marky",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "",
+            "volume": "83",
+            "issn": "",
+            "pages": "3746--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.83.11.3746"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "High-resolution sample inference from illumina amplicon data",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Callahan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mcmurdie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rosen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Holmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dada2",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nmeth.3869"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A high-throughput sequencing assay to comprehensively detect and characterize unicellular eukaryotes and helminths from biological and environmental samples",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cannon",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Bogale",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rutt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Humphrys",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Korpe",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Duggal",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ravel",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Serre",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s40168-018-0581-6"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Compact Pat Trees",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Clark",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Fast computation and applications of genome mappability",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Derrien",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Estell\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Marco Sola",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Knowles",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Raineri",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Guig\u00f3",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ribeca",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "PLOS ONE",
+            "volume": "7",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0030377"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Validation of coi metabarcoding primers for terrestrial arthropods",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Elbrecht",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W A"
+                    ],
+                    "last": "Braukmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Ivanova",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "W J"
+                    ],
+                    "last": "Prosser",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hajibabaei",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wright",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Zakharov",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "D N"
+                    ],
+                    "last": "Hebert",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Steinke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PeerJ",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj.7745"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Opportunistic data structures with applications",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ferragina",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Manzini",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "390--398",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/SFCS.2000.892127"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "From theory to practice: Plug and play with succinct data structures",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gog",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Beller",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Moffat",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Petri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "13th International Symposium on Experimental Algorithms",
+            "volume": "",
+            "issn": "",
+            "pages": "326--337",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Characterization of the 18s rrna gene for designing universal eukaryote specific primers",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hadziavdic",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Lekang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lanzen",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Jonassen",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Troedsson",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "PLOS ONE",
+            "volume": "9",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0087624"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Local diversity of heathland cercozoa explored by in-depth sequencing",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Harder",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "R\u00f8nn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Brejnrod",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bass",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Abu Al-Soud",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ekelund",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "The ISME Journal",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/ismej.2016.31"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Fastpcr: An in silico tool for fast primer and probe design and advanced sequence analysis",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kalendar",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Khassenov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ramankulov",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Samuilova",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Ivanov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Genomics",
+            "volume": "109",
+            "issn": "3",
+            "pages": "312--319",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ygeno.2017.05.005.URLhttp:/www.sciencedirect.com/science/article/pii/S0888754317300368"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Efficient primer design algorithms",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "K\u00e4mpke",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kieninger",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mecklenburg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Bioinformatics",
+            "volume": "17",
+            "issn": "",
+            "pages": "214--239",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/17.3.214"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Rapid identification of oligonucleotide matches in whole genomes",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lexa",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Valle",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Primex",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "19",
+            "issn": "",
+            "pages": "2486--2494",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btg350"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "The characterization of enzymatically amplified eukaryotic 16s-like rrna-coding regions",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Medlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Elwood",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Stickel",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sogin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1988,
+            "venue": "Gene",
+            "volume": "71",
+            "issn": "2",
+            "pages": "491--499",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/0378-1119(88)90066-2.URLhttp:/www.sciencedirect.com/science/article/pii/0378111988900662"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Multiple identification of most important waterborne protozoa in surface water used for irrigation purposes by 18s rrna amplicon-based metagenomics",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Moreno",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Moreno-Mesonero",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Amor\u00f3s",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "P\u00e9rez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Morillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alonso",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "International Journal of Hygiene and Environmental Health",
+            "volume": "221",
+            "issn": "1",
+            "pages": "102--111",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijheh.2017.10.008.URLhttp:/www.sciencedirect.com/science/article/pii/S1438463917305850"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Fast and exact computation of genome mappability. bioRxiv",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Pockrandt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Alzamel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Iliopoulos",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Reinert",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Genmap",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/611160"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The uncultured microbial majority",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Rapp\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Giovannoni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Annual Review of Microbiology",
+            "volume": "57",
+            "issn": "1",
+            "pages": "369--394",
+            "other_ids": {
+                "DOI": [
+                    "10.1146/annurev.micro.57.030502.090759"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Ecological consistency of ssu rrna-based operational taxonomic units at a global scale",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schmidt",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rodrigues",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Mering",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "PLoS computational biology",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pcbi.1003594"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Environmental dna sampling is more sensitive than a traditional survey technique for detecting an aquatic invader",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Smart",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tingley",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Weeks",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Van Rooyen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mccarthy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Ecological Applications",
+            "volume": "25",
+            "issn": "7",
+            "pages": "1944--1952",
+            "other_ids": {
+                "DOI": [
+                    "https:/esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1751.1"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Assessment of the metabarcoding approach for community analysis of benthic-epiphytic dinoflagellates using mock communities",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Kohli",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Rhodes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "New Zealand Journal of Marine and Freshwater Research",
+            "volume": "51",
+            "issn": "4",
+            "pages": "555--576",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/00288330.2017.1298632"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Multiple marker parallel tag environmental dna sequencing reveals a highly complex eukaryotic community in marine anoxic water",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Stoeck",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bass",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nebel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Christen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D M"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-W",
+                    "middle": [],
+                    "last": "Breiner",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Richards",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Molecular Ecology",
+            "volume": "19",
+            "issn": "s1",
+            "pages": "21--31",
+            "other_ids": {
+                "DOI": [
+                    "https:/onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-294X.2009.04480.x"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "BiSearch: primer-design and search tool for PCR on bisulfite-treated genomes",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Tusn\u00e1dy",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Simon",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "V\u00e1radi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ar\u00e1nyi",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nucleic Acids Research",
+            "volume": "33",
+            "issn": "1",
+            "pages": "9--9",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gni012"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "New design strategy for development of specific primer sets for pcr-based detection of chlorophyceae and bacillariophyceae in environmental samples",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Valiente Moro",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Crouzet",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Rasconi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Thouvenot",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Coffe",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Batisson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bohatier",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Applied and Environmental Microbiology",
+            "volume": "75",
+            "issn": "17",
+            "pages": "5729--5733",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/AEM.00509-09"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Broadword implementation of rank/select queries",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Vigna",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Experimental Algorithms",
+            "volume": "",
+            "issn": "",
+            "pages": "154--168",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Environmental monitoring: Inferring the diatom index from next-generation sequencing data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Visco",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Apoth\u00e9loz-Perret-Gentil",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cordonier",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Esling",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Pillet",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Pawlowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Environmental Science & Technology",
+            "volume": "49",
+            "issn": "13",
+            "pages": "7597--7605",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/es506158m"
+                ],
+                "PMID": [
+                    "26052741"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Primer-blast: a tool to design targetspecific primers for polymerase chain reaction. bmc bioinform 13:134",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Coulouris",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Zaretskaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Cutcutache",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Rozen",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Madden",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "BMC bioinformatics",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/1471-2105-13-134"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Development of a cost-effective metabarcoding strategy for analysis of the marine phytoplankton community. PeerJ, 4:e2115",
+            "authors": [
+                {
+                    "first": "T.-H",
+                    "middle": [],
+                    "last": "Yoon",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-E",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-K",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "D.-H",
+                    "middle": [],
+                    "last": "Ahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hyun-Woo",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj.2115"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X.-G",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-R",
+                    "middle": [],
+                    "last": "Si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-L",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-D",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R.-D",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-Q",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X.-R",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wang",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2012-7"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Barcoding diatoms: Evaluation of the v4 subregion on the 18s rrna",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zimmermann",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Jahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gemeinholzer",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Critical annealing patterns. Oligomers in a) and b) have four self-annealing nucleotides in a row. In c) and d) more than half of the nucleotides participate in bonds. The oligomer orientation can be the same (-/-) or opposite (-/+).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "K-Mer encoding scheme. Top: All k-mers with the same start index also share the prefix. Redundancy is reduced by encoding the longest k-mer only. Bottom: In this example we encode the oligomer TAAGGGATCAAAGACAACCAGA with length bits set for 16, 18, and 22 in the prefix. The underlying data type is an uint64_t.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Bacillariophyta (diatoms) and green algae (mostly Chlorophyta) are among the most abundant organisms in freshwater and marine plankton communities. Bacillariophyta are small (2 -200 \u00b5m) and their characteristic silica cell walls allow morphological identification by 11 accessed on 29.03.2019",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Taxonomy of Orthocoronavirinae to subgenus level.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Approximate amplicon locations of de novo computed primer pairs for SARS-CoV-2. The amplicon identifiers are the first four digits of the primer pair identifiers in the supplemental file primer_priset_SARS-CoV-2.csv.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "O(N ) O(N (\u03ba max + occ)) O(\u03ba max N ) O(n\u03ba max ( N n \u2212 \u03c4 min )(\u03c4 max \u2212 \u03c4 min )) Space O(N ) O(N ) O(N ) O(n( N n \u2212 \u03c4 min )(\u03c4 max \u2212 \u03c4 min ))",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "List of symbols and their units or membership.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Two bit encoding of single nucleotides. Note that the bitwise complement operator produces the complement of an encoded nucleotide.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "for all SeqID, SeqPos \u2190 L.occurences() do Combine k-mers sequence-wise. For each position referring to a TKMerID in the bit vector transformed reference, we address candidates by adding an offset in the target amplicon length range. By using the rank 1 on the window range, we only iterate over indices associated with TKMerIDs. Then for each forward and reverse k-mer com-",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Table 6. Filter Settings in PriSeT. Unlisted properties follow the recommended ones inTable 2.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}
